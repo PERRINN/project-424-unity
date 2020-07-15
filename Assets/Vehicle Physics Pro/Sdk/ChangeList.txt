@@ -1,0 +1,569 @@
+
+== Vehicle Physics Pro potentially breaking changes ==
+
+This file lists the changes that may potentially break the compilation and/or behavior of a
+working setup. Most times it should be easily to adapt the project by following the indications here.
+
+Potentially breaking changes will appear here when they land in the master branch.
+Most recent first.
+
+For general news and updates please read the changelog and the Twitter feed:
+https://vehiclephysics.com/about/changelog/
+https://twitter.com/VehiclePhysics
+
+
+----------------------------------------------------------------------------------------------------
+2020-06
+----------------------------------------------------------------------------------------------------
+
+TireFriction renamed to TireFrictionLegacy.
+
+VPTireAudio:
+
+	Slip parameters now use normalized slip units:
+	    < 1.0 no skid
+	    1.0 the tire is at its maximum force point (just starting to skid)
+	    > 1.0 the tire is skidding.
+
+VehicleBase:
+
+	Removed contactAngleAffectsTireForce. Camber sensitivity is now applied by the tire model.
+
+VPTelemetry:
+
+	Removed tireData option.
+	GroundMaterial data is now shown permanently.
+
+Differential:
+
+	Several calculations corrected. Differentials should work more realistically now, but it's
+	recommended to test the vehicles for the new differential behavior.
+
+	If you want to preserve the previous behavior strictly:
+
+	- Preload in Viscous and Clutch Pack: multiply the value by 2 (was being applied twice).
+	- Clutch pack friction: multiply the value by 2 (was being applied twice).
+	- Preload in Torque Bias: set to 0 (wasn't being used).
+
+	Torque Bias differential wasn't working properly. Now it reaches the lock state without delays.
+
+VPVisualEffects:
+
+	"Degrees Of Rotation" removed. This value is now configured in the vehicle's Steering settings
+	as "Steering Wheel Range".
+
+VPDeviceInput:
+
+	New parameter configuredWheelRange to report the physical degrees of rotation the wheel device.
+	This value is typically configured in the wheel's control panel. Reporting it here allows to
+	match the rotation with the virtual wheel as configured in the Steering settings.
+
+	Note: Reporting the wheel range here does NOT modify the physical degrees of rotation in the
+	physical wheel device.
+
+
+Other, mostly internal, renames:
+
+	InspectorGraph -> InspectorCanvas
+	RealtimeGraphicBase -> RuntimeCanvasBase
+
+
+----------------------------------------------------------------------------------------------------
+2020-05-28
+----------------------------------------------------------------------------------------------------
+
+VPCameraController:
+
+- "Attach To" camera mode renamed to "Driver".
+- New property "Driver Camera Fov" to configure the field of view of the camera driver
+
+Actions:
+
+- The propery VPCameraCotroller.attachTo is now VPCameraCotroller.driver.
+- Modifying Camera.fieldOfView no longer have effect. Use VPCameraController.driverCameraFov instead.
+
+
+----------------------------------------------------------------------------------------------------
+2020-04-22
+----------------------------------------------------------------------------------------------------
+
+VehicleBase.cs:
+
+	VehicleBase.WheelData.downforce renamed to VehicleBase.WheelData.verticalForce
+
+VPWheelCollider.cs:
+
+	runtimeExtraDownforce refactored to runtimeExtraSuspensionForce
+
+VPTelemetry.cs:
+
+	showData renamed as showTelemetry
+	Options contactDepthAsSuspension and showLoadInKg replaced with showSuspensionAs and loadUnits.
+
+	Telemetry now shows friction and ground material data instead of forces and slip by default.
+	Use the new option tireData for showing the forces and slip data.
+
+VPForceCones.cs:
+
+	showDownforce renamed to showVerticalForce
+
+
+----------------------------------------------------------------------------------------------------
+2020-03-12
+----------------------------------------------------------------------------------------------------
+
+VPDeviceInput.cs:
+
+VPDeviceInput.Model.Trustmaster renamed to VPDeviceInput.Model.Thrustmaster
+
+
+----------------------------------------------------------------------------------------------------
+2020-03-11
+----------------------------------------------------------------------------------------------------
+
+Deprecated:
+
+	VPWheelCollider.runtimeSuspensionTravel
+	VPWheelCollider.lastRuntimeSuspensionTravel
+
+Actions if your code use any of the above:
+
+	Use VPWheelCollider.suspensionDistance to modify the suspension travel.
+	Note that changes to VPWheelCollider.suspensionDistance are permanent!
+	Making temporary modifications requires storing / restoring the original value.
+
+Removed old backwards compatibility. Unity version compatibility is now as follows:
+
+	Minimum version for the VPP core files:		Unity 5.6
+	Minimum version for the sandbox project:	Unity 2017.2
+	Recommended Unity version:					Unity 2018+ LTS
+	Scripting Runtime Version:					.NET 4.x Equivalent
+	API Compatibility Level:					.NET 4.x
+
+
+----------------------------------------------------------------------------------------------------
+2020-03-09	(! IMPORTANT UPDATE !)
+----------------------------------------------------------------------------------------------------
+
+ADHERENT TIRE FRICTION IMPROVED
+
+The adherent state of the tire friction model has been significantly improved.
+Most vehicles should just work better after this update.
+Still, reviewing the tire friction settings and the handling is highly recommended.
+Audio and visual effects should also be reviewed, as the tires may now operate at larger slip ranges.
+
+- Deprecated TireFriction.Settings.adherent
+- TireFriction.Settings.adherent.y is now TireFriction.Settings.adherentFriction
+- Steering Aids: the default value for Limit Proportionality is now 1.0 (was 0.9)
+
+Per-tire model changes:
+
+- TireFriction.Model.Lineal renamed to TireFriction.Model.Linear
+- Model.Flat: now uses TireFriction.Settings.peak instead of TireFriction.Settings.adherent
+- Model.Parametric: the default value for "A" is now 0.7 (was 0)
+
+These settings will be updated automatically the next time scenes and prefabs are opened/saved:
+
+- Old Settings.adherent.y is copied to new Settings.adherentFriction
+- Flat tire model only: Settings.adherent is copied to Settings.peak
+
+Actions:
+
+- Test your vehicles' handling and behavior. You may need to adjust the Tire Friction and/or
+	Anti-roll bars.
+
+- If using the Parametric curve verify the setting "A" to be around the new default value, 0.7.
+	Specifically, avoid the old default value (0) and low values.
+
+- If using the Steering Limit function you may need to review the "Custom Slip" value. Check out the
+	resulting sideways slip (Sx in the Telemetry) and compare it with the tire's Peak slip.
+	Also, it's recommended to configure "Limit Proportionality" to 1.0 for better control.
+
+- If using VPAudio you may need to increase the "Skid Min Slip" value if the skid audio plays
+	too frequently. Check out the combined slip (Sc in Telemetry) to find a good value.
+
+- If using VPTireEffects you may need to increase the "Min Slip" value if the tire marks are
+	drawn too frequently. Check out the combined slip (Sc in Telemetry) to find a good value.
+
+
+----------------------------------------------------------------------------------------------------
+2020-03-04
+----------------------------------------------------------------------------------------------------
+
+VPAntiRollBar:
+
+The parameter Rigidity has been deprecated and removed. It turned out that it was causing issues
+in the WheelCollider, causing a degradation in the handling.
+
+Actions:
+
+- Test your vehicles that use VPAntiRollBar. They should behave better now. They only might require
+	some front-rear re-balancing by tweaking the anti-roll settings.
+- Heavy vehicles (i.e. cargo trucks) may need the anti-roll bar stiffness to be greatly increased.
+- Remove any script references to VPAntiRollBar.rigidity. You will receive a deprecation
+	warning, and it will be removed from the code in a future update.
+
+
+----------------------------------------------------------------------------------------------------
+2019-11-14
+----------------------------------------------------------------------------------------------------
+
+Engine.cs:
+
+Engine.ClutchType.DiskFriction renamed to Engine.ClutchType.FrictionDisc
+
+
+----------------------------------------------------------------------------------------------------
+2019-11-05
+----------------------------------------------------------------------------------------------------
+
+VPWheelCollider:
+
+The local rotation of the visual wheel and caliper are stored the fist time the component is
+enabled, and when this mesh is changed in runtime. These original rotations are then used as base
+for applying further steering and spin rotations.
+
+Actions:
+
+If you're constructing your vehicles in runtime, verify that your visual wheels work in all
+conditions (instance / enable / modify / etc).
+
+
+----------------------------------------------------------------------------------------------------
+2019-08-26
+----------------------------------------------------------------------------------------------------
+
+DrivingAids.cs, class SteeringAids:
+
+	public enum Priority { HelpFirst, LimitFirst };
+
+has been changed to:
+
+	public enum Priority { PreferDrifting, PreferGoStraight };
+
+Actions:
+
+If you're using SteeringAids.Priority in your code then simply update the definition.
+
+
+----------------------------------------------------------------------------------------------------
+2019-08-08
+----------------------------------------------------------------------------------------------------
+
+VPVehicleJoint:
+
+-	The Limited mode is deprecated. Use maxAngle in DampedSpring mode.
+
+
+----------------------------------------------------------------------------------------------------
+2019-08-05
+----------------------------------------------------------------------------------------------------
+
+VPVisualEffects:
+
+-	Former headLightsOn / headLightsOff properties in the Dashboard section are no longer available.
+	Use the new headLightsOn and headLightsOff arrays.
+
+-	The arrays brakeLightsGlow and reverseLightsGlow are now brakeLightsOn and reverseLightsOn.
+
+
+----------------------------------------------------------------------------------------------------
+2019-05-04
+----------------------------------------------------------------------------------------------------
+
+The input components now clean the state of the pedals and ignition key after being disabled.
+
+	VPStandardInput
+	VPDeviceInput
+	VPXboxInput
+	VPCloneInput
+
+These inputs are cleaned:
+
+	Throttle
+	Brake
+	Clutch
+	Key
+
+Actions:
+
+If you rely on the residual inputs after disabling an input component (i.e. leaving brakes pressed),
+then you should explicitly write the desired values to the Input channel *after* disabling the input
+component.
+
+Note that the Handbrake input is *not* cleaned, and will conserve its value after disabling the
+input component.
+
+
+----------------------------------------------------------------------------------------------------
+2019-05-03
+----------------------------------------------------------------------------------------------------
+
+VPVehicleController - Traction Control (TCS) and Anti-Sping (ASR)
+
+TCS now uses information from the grounded wheels only. If a drive wheel is lifted, it will be
+ignored TCS-wise. This makes TCS more efficient when both TCS and ASR are in effect.
+
+Actions:
+
+You may now reduce Max Speed in the ASR settings, so it won't interfere with the new TCS.
+ASR Max Speed default has been reduced from 30 to 20 km/h (5.5 m/s).
+
+
+----------------------------------------------------------------------------------------------------
+2019-05-01
+----------------------------------------------------------------------------------------------------
+
+VPCameraController:
+
+If the target includes a VPCameraTarget component with the option "Use Custom Cameras" enabled
+then the camera keys specified in VPCameraController won't be monitored. Instead, the custom
+cameras in VPCameraTarget now include a "Key" field.
+
+Actions:
+
+No action unless you enable "Use Custom Cameras" in the component VPCameraTarget in any of your
+vehicles. If so, then configure the camera keys there instead of in VPCameraController.
+
+
+VPDeviceInput:
+
+The option "axisCountForClutch" has been replaced with "disableClutchInput".
+
+The detection of the clutch pedal based con axis count is highly unreliable, so the old option
+has been replaced with an explicit option for disabling it.
+
+Actions:
+
+If you're exposing configurable device options in your project, you should add an option for
+disabling the clutch pedal.
+
+
+----------------------------------------------------------------------------------------------------
+2019-04-16
+----------------------------------------------------------------------------------------------------
+
+VPStandardInput:
+
+The "reset vehicle" feature from VPStandardInput has been removed (properties enableResetVehicle
+and resetVehicleKey) and the feature moved to a separate component, VPResetVehicle.
+
+Actions:
+
+Add a component VPResetVehicle to the vehicles that use the Reset Vehicle feature.
+
+
+Gearbox:
+
+Improved auto-shift behavior in Manual Mode:
+
+- Gears may now be manually engaged with the vehicle stopped and brakes applied.
+- Applying throttle with brakes applied no longer tries to engage the first gear repeatedly.
+- Moving in a direction opposite to the gear (i.e. moving backwards with a forward gear engaged)
+	no longer disengages the gear to Neutral. This allows maneuvers like hill starts properly, where
+	the vehicle rolls back slightly before gaining speed forward.
+
+Actions:
+
+Check that your vehicles that use Manual Transmission with Auto-Shift work properly in your specific
+situations. Behavior should be more realistic anyways.
+
+
+----------------------------------------------------------------------------------------------------
+2019-04-11
+----------------------------------------------------------------------------------------------------
+
+VPCameraController:
+
+Camera's field of view is no longer changed when an XR device is present.
+
+
+----------------------------------------------------------------------------------------------------
+2019-03-16
+----------------------------------------------------------------------------------------------------
+
+Gearbox:
+
+Settings.automaticStartGear has been renamed to Settings.automaticInitialGearForward
+
+
+----------------------------------------------------------------------------------------------------
+2019-03-21
+----------------------------------------------------------------------------------------------------
+
+Differentials that get detached from the driveline as result of setting DrivelineLock to Force
+Unlocked (2) in the DataBus are now forcefully configured to Open.
+
+This happens when setting DrivelineLock to Force Unlocked (2) in the data bus while using a Torque
+Splitter as center part of the driveline. The secondary axle(s) would get detached from the
+driveline and won't receive any torque.
+
+Actions:
+
+Test your AWD or 4WD vehicles that use a Torque Splitter to behave correctly in all setups. It's
+expected them to behave better when configuring DrivelineLock to Unlocked to force them to be 2WD.
+
+
+----------------------------------------------------------------------------------------------------
+2019-03-12
+----------------------------------------------------------------------------------------------------
+
+VPStandardInput: the option unlockDrivelineOnHandbrake is ignored on overridden DrivelineLock
+setting.
+
+This means that if other component is already modifying the DrivelineLock setting in the DataBus
+(i.e. a transmission lock switch) then unlockDrivelineOnHandbrake won't have effect.
+
+Affected usage cases:
+
+AWD or 4WD vehicles that use VPStandardInput and expect the handbrake to allow sideways sliding.
+If other component is locking the driveline, then the handbrake will act on all wheels, not only
+in rear wheels, so the vehicle won't slide laterally.
+
+Actions:
+
+Test the AWD or 4WD vehicles that use VPStandardInput for the handbrake to work as before,
+especially if you have some other component configuring the driveline via DataBus.
+
+
+----------------------------------------------------------------------------------------------------
+2019-02-12
+----------------------------------------------------------------------------------------------------
+
+MathUtility.FastLerp renamed to MathUtility.UnclampedLerp.
+This reflects the difference with Mathf.Lerp, as UnclampledLerp doesn't restrict the input
+ratio to [0-1].
+
+
+----------------------------------------------------------------------------------------------------
+2019-01-25
+----------------------------------------------------------------------------------------------------
+
+IMPORTANT - COMPATIBILITY UPDATE THAT CHANGES COMPONENT GUIDs - PATCH PROVIDED
+
+Some component ids have changed in this revision due to a compatibility update. As result, many
+missing references will appear along the project.
+
+Fixing missing references:
+
+ 1- Update all VPP repositories to the master branch.
+ 2- From Unity's Project window locate the folder "Upgrades" in the VPP folder. Default locations:
+
+		Enterprise:
+			Assets/Vehicle Physics Pro/Core/Vehicle Physics Core/Upgrades
+		Professional:
+			Assets/Vehicle Physics Pro/SDK/Upgrades
+
+ 3- Select the file "2019-01-25 Compatibility Update"
+ 4- Read the Patch Notes in the Inspector.
+ 5- Click Apply Patch and wait for completion.
+
+Missing references will now be fixed and you can continue working in your project normally.
+
+
+----------------------------------------------------------------------------------------------------
+2019-01-21
+----------------------------------------------------------------------------------------------------
+
+VPPerformanceDisplay: Independent display settings for chart and text transparency.
+
+- backgroundAlpha renamed to chartAlpha.
+- Added textAlpha.
+- backgroundColor.alpha has now effect.
+- New default colors and transparencies.
+
+
+----------------------------------------------------------------------------------------------------
+2018-11-09
+----------------------------------------------------------------------------------------------------
+
+The VPChassisInertia component has been renamed to VPVehicleInertia.
+
+
+----------------------------------------------------------------------------------------------------
+2018-09-27
+----------------------------------------------------------------------------------------------------
+
+Engine:
+
+Corrected the engine load calculation in a number of situations. This affects the fuel consumption
+calculation as well. Applications requiring precise fuel consumption data may need the vehicles to
+be revised (Engine > Max Fuel Per Rev).
+
+The load and fuel consumption values will be more coherent now, but they will differ from past
+versions in these situations:
+
+	- Torque Cap enabled and Torque Cap Limit affecting the torque curve.
+	- allowedFuelRatio configured to a value < 1.
+
+If none of the above apply, then the fuel consumption data won't change from past versions.
+
+The engine specifications now include the rpms for the Specific Fuel Consumption (BSFC):
+
+	Engine.EngineSpecs.specificFuelConsumptionRpm
+
+This value will match Engine.EngineSpecs.peakRpm unless Torque Cap affects the torque curve.
+
+
+----------------------------------------------------------------------------------------------------
+2018-09-19
+----------------------------------------------------------------------------------------------------
+
+Engine:
+
+Fixed an inactive zone appearing at the beginning of the throttle travel when the engine is
+at idle rpms. The behavior of the throttle might be different in the boundary of the idle rpms.
+
+Two new parameters in the Engine block control the throttle mapping when Idle Control = Active.
+The default values improve the response of the throttle in most situations.
+
+	Active Idle Range		default: 0.5
+	Active Idle Bias		default: 0.25
+
+The new dotted white line in the engine chart represents the mapped range and shape.
+
+How to preserve the previous behavior:
+
+	Active Idle Range = 0
+
+Details:
+
+Engine requires an amount of throttle to keep the idle state. This automatically-applied throttle
+caused an inactive zone in the beginning of the throttle travel on idle.
+
+Now the throttle input is mapped to the engine throttle based on the rpms. This way the engine
+responds to all the input range.
+
+The minimum throttle is smoothly mapped along the RPM range according to the new parameters. The
+result of these parameters is represented in the engine chart (dotted white line).
+
+
+----------------------------------------------------------------------------------------------------
+2018-07-22
+----------------------------------------------------------------------------------------------------
+
+VPProgressiveSuspension:
+
+Removed the parameter springRateOffsetAtMinDepth. It's now assumed to be 0 always.
+Any value of springRateOffsetAtMinDepth should be added to the VPWheelCollider spring parameter.
+
+The parameter springRateOffsetAtMaxDepth has been renamed to maxSpringRateOffset.
+
+
+----------------------------------------------------------------------------------------------------
+2018-05-06
+----------------------------------------------------------------------------------------------------
+
+Gearbox block: Automatic transmission in Manual mode now reads the manualGearInput for selecting
+the current gear:
+
+	vehicle.data(Channel.Input, InputData.ManualGear)
+
+This data bus value will be overriden while the Automatic gearbox operates in non-manual modes.
+In Manual [M] mode the value will be read for changes and written with the currently selected gear.
+
+Rule: Write to [Channel.Input, InputData.ManualGear] only when something changes, not per-frame.
+
+For example, use Input.GetKeyDown() but not Input.GetKey() for querying for the joystick buttons
+of a gear shifter device.
+

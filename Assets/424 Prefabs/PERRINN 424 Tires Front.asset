@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 569079004, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: PERRINN 424 Tires Front
+  m_EditorClassIdentifier: 
+  tireSettings:
+    longitudinalPeakSlip: 0.12
+    longitudinalPeakFriction: 1.8
+    longitudinalLimitSlip: 0.8
+    longitudinalLimitFriction: 1.5
+    longitudinalA: 0.502
+    longitudinalB: 1
+    longitudinalC: 0
+    lateralPeakSlip: 10
+    lateralPeakFriction: 1.8
+    lateralLimitSlip: 60
+    lateralLimitFriction: 1.5
+    lateralA: 0.502
+    lateralB: 0
+    lateralC: 0
+    combinationShapeFactor: 2.2
+    zeroVSlipVelocity: 0.5
+    nominalLoad: 4000
+    longitudinalLoadSensMax: 1.15
+    longitudinalLoadSensMin: 0.85
+    longitudinalZeroLoadPeak: 1
+    longitudinalLoadSensOnly: 1
+    lateralLoadSensMax: 1.3
+    lateralLoadSensMin: 0.2
+    lateralZeroLoadPeak: 0.6
+    version: 1
