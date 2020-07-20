@@ -1,6 +1,8 @@
 # Project 424
 Simulation of the 424 in Unity using Vehicle Physics Pro
 
+[Hot Lap video](https://www.youtube.com/watch?v=OMoQGtA3gCs)
+
 ## Requirements
 
 - Unity 2019.4 LTS (using 2019.4.3 at the time of writing this)
