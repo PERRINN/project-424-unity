@@ -131,7 +131,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3749886}
   - component: {fileID: 3749888}
-  - component: {fileID: 3749887}
   m_Layer: 9
   m_Name: Camera
   m_TagString: Untagged
@@ -153,14 +152,6 @@ Transform:
   m_Father: {fileID: 526999681}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &3749887
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3749885}
-  m_Enabled: 1
 --- !u!20 &3749888
 Camera:
   m_ObjectHideFlags: 0
@@ -800,6 +791,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PERRINN 424 Mesh
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4729384033056834893, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -1631,6 +1627,7 @@ MonoBehaviour:
   speedMph: {fileID: 378077409}
   gear: {fileID: 446123183}
   rpm: {fileID: 790572893}
+  kakaka: {fileID: 0}
 --- !u!114 &526999683
 MonoBehaviour:
   m_ObjectHideFlags: 0
