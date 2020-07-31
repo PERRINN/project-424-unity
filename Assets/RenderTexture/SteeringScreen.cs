@@ -11,7 +11,7 @@ using UnityEngine.UI;
 namespace VehiclePhysics.UI
 {
 
-public class BasicDashboard : MonoBehaviour
+public class SteeringScreen : MonoBehaviour
 	{
 	public VehicleBase target;
 	[Header("UI")]
@@ -19,8 +19,9 @@ public class BasicDashboard : MonoBehaviour
 	public Text speedMph;
 	public Text gear;
 	public Text rpm;
+		public Text kakaka;
 
-	void Update ()
+		void Update ()
 		{
 		if (target == null) return;
 
