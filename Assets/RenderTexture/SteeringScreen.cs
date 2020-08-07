@@ -4,6 +4,7 @@
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,61 +12,86 @@ using UnityEngine.UI;
 namespace VehiclePhysics.UI
 {
 
-public class SteeringScreen : MonoBehaviour
-	{
-	public VehicleBase target;
-	[Header("UI")]
-	public Text speedKph;
-	public Text speedMph;
-	public Text gear;
-	public Text rpm;
-		public Text kakaka;
+    public class SteeringScreen : MonoBehaviour
+    {
+        public VehicleBase target;
+        [Header("UI")]
+        public Text speedMps;
+        public Text speedKph;
+        public Text gear;
+        public Text frontWheelRpm;
+        public Text backWheelRpm;
+        public Text enginePower;
+        public Image dsrImage;
 
-		void Update ()
-		{
-		if (target == null) return;
+        void Update()
+        {
+            if (target == null) return;
 
-		int[] vehicleData = target.data.Get(Channel.Vehicle);
+            int[] vehicleData = target.data.Get(Channel.Vehicle);
 
-		// Speed
+            // Speed
 
-		float speed = vehicleData[VehicleData.Speed] / 1000.0f;
+            float speed = vehicleData[VehicleData.Speed] / 1000.0f;
 
-		if (speedKph != null)
-			speedKph.text = (speed * 3.6f).ToString("0");
+            if (speedMps != null) // m/s
+                speedMps.text = speed.ToString("0");
 
-		if (speedMph != null)
-			speedMph.text = (speed * 2.237f).ToString("0") + " mph";
+            if (speedKph != null) // km/h
+                speedKph.text = (speed * 3.6f).ToString("0");            
 
-		// Gear
+            // Gear
 
-		if (gear != null)
-			{
-			int gearId = vehicleData[VehicleData.GearboxGear];
-			bool switchingGear = vehicleData[VehicleData.GearboxShifting] != 0;
+            if (gear != null)
+            {
+                int gearId = vehicleData[VehicleData.GearboxGear];
+                bool switchingGear = vehicleData[VehicleData.GearboxShifting] != 0;
 
-			if (gearId == 0)
-				gear.text = switchingGear? " " : "N";
-			else
-			if (gearId > 0)
-				gear.text = gearId.ToString();
-			else
-				{
-				if (gearId == -1)
-					gear.text = "R";
-				else
-					gear.text = "R" + (-gearId).ToString();
-				}
-			}
+                if (gearId == 0)
+                    gear.text = switchingGear ? " " : "N";
+                else
+                if (gearId > 0)
+                    gear.text = "D"; //gearId.ToString();
+                else
+                {
+                    if (gearId == -1)
+                        gear.text = "R";
+                    else
+                        gear.text = "R" + (-gearId).ToString();
+                }
+            }
 
-		// Rpm
+            // DSR signal
+            if (dsrImage != null)
+            {
+                dsrImage.color = new Color32(255, 255, 255, 0);
 
-		if (rpm != null)
-			{
-			int rpmValue = vehicleData[VehicleData.EngineRpm] / 1000;
-			rpm.text = rpmValue.ToString();
-			}
-		}
-	}
+                if (speed * 2.237f > 100)
+                {
+                    dsrImage.color = new Color32(255, 255, 255, 255);
+                }
+            }
+
+            // Rpm
+
+            if (frontWheelRpm != null)
+            {
+                int rpmValue = vehicleData[VehicleData.EngineRpm] / 1000;
+                frontWheelRpm.text = rpmValue.ToString();
+            }
+
+            // EnginePower
+
+            if (enginePower != null)
+            {
+                int powerValue = vehicleData[VehicleData.EnginePower] / 1000;
+
+                if (powerValue > 0)
+                    enginePower.text = "+" + powerValue.ToString();
+                else
+                    enginePower.text = powerValue.ToString();
+            }
+        }
+    }
 
 }
