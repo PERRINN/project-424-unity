@@ -76,8 +76,10 @@ namespace VehiclePhysics.UI
 
             if (frontWheelRpm != null)
             {
-                int rpmValue = vehicleData[VehicleData.EngineRpm] / 1000;
-                frontWheelRpm.text = rpmValue.ToString();
+                //int rpmValue = vehicleData[VehicleData.EngineRpm] / 1000;
+                //frontWheelRpm.text = rpmValue.ToString();
+                VehicleBase.WheelState ws = target.wheelState[1];
+                frontWheelRpm.text = (ws.angularVelocity).ToString(); // (ws.angularVelocity * ws.wheelCol.radius * 3.6f).ToString();
             }
 
             // EnginePower
