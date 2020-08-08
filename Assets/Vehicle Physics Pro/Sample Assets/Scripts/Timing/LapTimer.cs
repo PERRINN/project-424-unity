@@ -60,7 +60,15 @@ public class LapTimer : MonoBehaviour
 	GUIStyle m_style = new GUIStyle();
 	GUIStyle m_bigStyle = new GUIStyle();
 
-
+		// display best lap time
+		void Start()
+        {
+			float laptime = PlayerPrefs.GetFloat("BestLap");
+			if (laptime != null || laptime != 0f)
+            {
+				m_bestTime = laptime;
+			}
+		}
 
 	void OnValidate ()
 		{
@@ -151,6 +159,10 @@ public class LapTimer : MonoBehaviour
 				// Best lap
 
 				m_bestTime = lapTime;
+
+					// Save Best lap time to file
+
+					PlayerPrefs.SetFloat("BestLap", lapTime);
 				}
 			}
 

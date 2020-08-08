@@ -22,7 +22,7 @@ namespace VehiclePhysics.UI
         public Text frontWheelRpm;
         public Text backWheelRpm;
         public Text enginePower;
-        public Image dsrImage;
+        public Image drsImage;
 
         void Update()
         {
@@ -62,21 +62,22 @@ namespace VehiclePhysics.UI
                 }
             }
 
-            // DSR signal
-            if (dsrImage != null)
+            // DRS signal
+            if (drsImage != null)
             {
-                dsrImage.color = new Color32(255, 255, 255, 0);
+                drsImage.color = new Color32(255, 255, 255, 0);
 
                 if (speed * 2.237f > 100)
                 {
-                    dsrImage.color = new Color32(255, 255, 255, 255);
+                    drsImage.color = new Color32(255, 255, 255, 255);
                 }
             }
 
-            // Wheel Rpm
+            // Vehicle's input
             float brake = inputData[InputData.Brake] / 10000.0f;
             float handBrake = inputData[InputData.Handbrake] / 10000.0f;
 
+            // Front wheel rpm
             if (frontWheelRpm != null)
             {
                 VehicleBase.WheelState frontWheelState = target.wheelState[0];
@@ -90,6 +91,7 @@ namespace VehiclePhysics.UI
                 }
             }
 
+            // Back wheel rpm
             if (backWheelRpm != null)
             {
                 VehicleBase.WheelState backWheelState = target.wheelState[3];
