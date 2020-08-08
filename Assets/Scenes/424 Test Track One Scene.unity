@@ -477,6 +477,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 873071434}
     m_Modifications:
+    - target: {fileID: 1289217017458572, guid: 6866a68f6d01023479669e8823f3d4ac, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 114237501673827756, guid: 6866a68f6d01023479669e8823f3d4ac,
         type: 3}
       propertyPath: target
@@ -686,6 +690,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2397977189475865303, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3055192643540711865, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -1625,8 +1634,8 @@ MonoBehaviour:
   speedMps: {fileID: 378077409}
   speedKph: {fileID: 46024160}
   gear: {fileID: 446123183}
-  frontWheelRpm: {fileID: 0}
-  backWheelRpm: {fileID: 0}
+  frontWheelRpm: {fileID: 790572893}
+  backWheelRpm: {fileID: 1107035832}
   enginePower: {fileID: 1660738909}
   dsrImage: {fileID: 1111596112}
 --- !u!1 &570728392
@@ -2825,36 +2834,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1338682935}
   m_CullTransparentMesh: 0
---- !u!1 &1426669087
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1426669088}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1426669088
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1426669087}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.3568363, y: -1.343974, z: 282.37717}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1454153066
 PrefabInstance:
   m_ObjectHideFlags: 0

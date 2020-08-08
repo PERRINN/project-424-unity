@@ -29,6 +29,7 @@ namespace VehiclePhysics.UI
             if (target == null) return;
 
             int[] vehicleData = target.data.Get(Channel.Vehicle);
+            int[] inputData = target.data.Get(Channel.Input);
 
             // Speed
 
@@ -72,14 +73,34 @@ namespace VehiclePhysics.UI
                 }
             }
 
-            // Rpm
+            // Wheel Rpm
+            float brake = inputData[InputData.Brake] / 10000.0f;
+            float handBrake = inputData[InputData.Handbrake] / 10000.0f;
 
             if (frontWheelRpm != null)
             {
-                //int rpmValue = vehicleData[VehicleData.EngineRpm] / 1000;
-                //frontWheelRpm.text = rpmValue.ToString();
-                VehicleBase.WheelState ws = target.wheelState[1];
-                frontWheelRpm.text = (ws.angularVelocity).ToString(); // (ws.angularVelocity * ws.wheelCol.radius * 3.6f).ToString();
+                VehicleBase.WheelState frontWheelState = target.wheelState[0];
+                if (speed == 0 && (brake > 0 || handBrake > 0))
+                {
+                    frontWheelRpm.text = "0.";
+                }
+                else
+                {
+                    frontWheelRpm.text = ((int)Math.Round(frontWheelState.angularVelocity * 9.549f)).ToString();
+                }
+            }
+
+            if (backWheelRpm != null)
+            {
+                VehicleBase.WheelState backWheelState = target.wheelState[3];
+                if (speed == 0 && (brake > 0 || handBrake > 0))
+                {
+                    backWheelRpm.text = "0.";
+                }
+                else
+                {
+                    backWheelRpm.text = ((int)Math.Round(backWheelState.angularVelocity * 9.549f)).ToString();
+                }
             }
 
             // EnginePower
