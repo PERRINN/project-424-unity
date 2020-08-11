@@ -25,7 +25,7 @@ public class GhostManager : MonoBehaviour
     public bool playing;
 
     private List<GhostTransform> recordedGhostTransform = new List<GhostTransform>();
-    private GhostTransform lastRecordedGhostFrame;
+    private GhostTransform lastRecordedGhostTransform;
 
     private void Start()
     {
@@ -36,12 +36,12 @@ public class GhostManager : MonoBehaviour
     {
         if (recording)
         {
-            if (vehicle.position != lastRecordedGhostFrame.position || vehicle.rotation != lastRecordedGhostFrame.rotation)
+            if (vehicle.position != lastRecordedGhostTransform.position || vehicle.rotation != lastRecordedGhostTransform.rotation)
             {
                 var newGhostTransform = new GhostTransform(vehicle);
                 recordedGhostTransform.Add(newGhostTransform);
 
-                lastRecordedGhostFrame = newGhostTransform;
+                lastRecordedGhostTransform = newGhostTransform;
             }
 
         }
@@ -52,10 +52,16 @@ public class GhostManager : MonoBehaviour
         }
     }
 
+    void SaveRecording()
+    {
+        //PlayerPrefs.SetString("ReplayRecord", lastRecordedGhostTransform);
+    }
+
     void Play()
     {
         ghostVehicle.gameObject.SetActive(true);
         StartCoroutine(StartGhost());
+
         playing = false;
     }
 
