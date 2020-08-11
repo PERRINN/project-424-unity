@@ -60,8 +60,6 @@ public class LapTimer : MonoBehaviour
 	GUIStyle m_style = new GUIStyle();
 	GUIStyle m_bigStyle = new GUIStyle();
 
-
-
 	void OnValidate ()
 		{
 		if (sectors < 1) sectors = 1;
@@ -151,6 +149,7 @@ public class LapTimer : MonoBehaviour
 				// Best lap
 
 				m_bestTime = lapTime;
+
 				}
 			}
 
