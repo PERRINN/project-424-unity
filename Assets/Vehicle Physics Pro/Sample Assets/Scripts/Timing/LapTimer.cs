@@ -15,11 +15,6 @@ namespace VehiclePhysics.Timing
 
 public class LapTimer : MonoBehaviour
 	{
-		// wintec
-		public GhostManager ghostManager;
-		public bool saveRecord = true;
-
-
 	[Range(1,10)]
 	public int sectors = 3;
 	public float minLapTime = 30.0f;
@@ -66,14 +61,8 @@ public class LapTimer : MonoBehaviour
 	GUIStyle m_bigStyle = new GUIStyle();
 
 
-        // wintec
-        void Start()
-        {
-			//PlayerPrefs.SetFloat("BestLap", 900);
-			m_bestTime = PlayerPrefs.GetFloat("BestLap");
-        }
 
-        void OnValidate ()
+	void OnValidate ()
 		{
 		if (sectors < 1) sectors = 1;
 		UpdateTextProperties();
@@ -105,7 +94,6 @@ public class LapTimer : MonoBehaviour
 
 	void Update ()
 		{
-			Debug.Log(saveRecord);
 		if (enableTestKeys)
 			{
 			if (Input.GetKeyDown(KeyCode.Alpha1)) OnTimerHit(0, Time.time);
@@ -152,10 +140,6 @@ public class LapTimer : MonoBehaviour
 
 	void NewLap (float t)
 		{
-			// wintec
-			//ghostManager.recording = true;
-
-
 		m_laps.Add(t);
 
 		m_lastTime = t;
@@ -167,12 +151,6 @@ public class LapTimer : MonoBehaviour
 				// Best lap
 
 				m_bestTime = lapTime;
-
-
-					// wintec
-					PlayerPrefs.SetFloat("BestLap", lapTime);
-					ghostManager.recording = false;
-
 				}
 			}
 
