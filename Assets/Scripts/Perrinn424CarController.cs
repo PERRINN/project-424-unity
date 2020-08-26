@@ -475,15 +475,13 @@ public class Perrinn424CarController : VehicleBase
 
 		// Engine Power: sum of the powers of both motors
 
-		float frontEnginePower = m_frontPowertrain.mgu.sensorRotorTorque * m_frontPowertrain.mgu.sensorRpm / Block.RpmToW;
-		float rearEnginePower = m_rearPowertrain.mgu.sensorRotorTorque * m_rearPowertrain.mgu.sensorRpm / Block.RpmToW;
-		vehicleData[VehicleData.EnginePower] = (int)(frontEnginePower + rearEnginePower);
+		float enginePower = m_frontPowertrain.mgu.sensorElectricalPower + m_rearPowertrain.mgu.sensorElectricalPower;
+		vehicleData[VehicleData.EnginePower] = (int)(enginePower * 1000.0f);
 
-        // Engine Load: sum of the loads of both motors
-		// Negative means regenerative braking. Use average.
+        // Engine Load: average of the loads of both motors
+		// Negative means regenerative braking.
 
 		float engineLoad = (m_frontPowertrain.mgu.sensorLoad + m_rearPowertrain.mgu.sensorLoad) * 0.5f;
-		if (engineLoad < 0.0f) engineLoad *= 0.5f;
 		vehicleData[VehicleData.EngineLoad] = (int)(engineLoad * 1000.0f);
 
 		// Driving aids

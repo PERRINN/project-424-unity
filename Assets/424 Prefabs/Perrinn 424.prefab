@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 4116892635276943221}
   - component: {fileID: 2809703011807798502}
   - component: {fileID: 4116892635276943223}
-  - component: {fileID: 5343754112605901103}
+  - component: {fileID: 4682684200946408111}
   - component: {fileID: 3654773149151551392}
   m_Layer: 8
   m_Name: Perrinn 424
@@ -563,7 +563,7 @@ MonoBehaviour:
   showTireForces: 1
   showSurfaceForces: 0
   useLogScale: 1
---- !u!114 &5343754112605901103
+--- !u!114 &4682684200946408111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -786,14 +786,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4116892635404004745}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.151, y: 0.786, z: -1.128}
+  m_LocalRotation: {x: 0.03489949, y: 0, z: 0, w: 0.99939084}
+  m_LocalPosition: {x: -0.151, y: 0.766, z: -1.128}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4116892635011510442}
   m_Father: {fileID: 4116892635070111524}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 4, y: 0, z: 0}
 --- !u!114 &4116892635404004751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -955,7 +955,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4116892635859074611}
-  m_Material: {fileID: 13400000, guid: 7515e581c07a9e44ba750ef43524533c, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1478,7 +1478,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1687483099166392, guid: f35e340fdbe2f3442b8d0b017344a429, type: 3}
       propertyPath: m_Name
-      value: Tonza Transponder
+      value: Transponder
       objectReference: {fileID: 0}
     - target: {fileID: 1687483099166392, guid: f35e340fdbe2f3442b8d0b017344a429, type: 3}
       propertyPath: m_Layer
@@ -3258,16 +3258,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4116892635276943222}
     m_Modifications:
-    - target: {fileID: 114290347395367456, guid: 900d97410ebe6a2498cb8dc92ac53e64,
-        type: 3}
-      propertyPath: skidMinPitch
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 114290347395367456, guid: 900d97410ebe6a2498cb8dc92ac53e64,
-        type: 3}
-      propertyPath: skidMaxPitch
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 1757942647432846808, guid: 900d97410ebe6a2498cb8dc92ac53e64,
         type: 3}
       propertyPath: m_Name
