@@ -651,10 +651,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1687483632421604, guid: 89f86da0002dfa549bb80908bb13bad3, type: 3}
-      propertyPath: m_Name
-      value: Transponder
-      objectReference: {fileID: 0}
     - target: {fileID: 32892170189242124, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Layer
@@ -795,15 +791,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4116892635404004750, guid: 89f86da0002dfa549bb80908bb13bad3,
+    - target: {fileID: 4116892635335174824, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 4
+      propertyPath: screenPosition.y
+      value: -10
       objectReference: {fileID: 0}
-    - target: {fileID: 4116892636251889785, guid: 89f86da0002dfa549bb80908bb13bad3,
+    - target: {fileID: 4116892635335174825, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
-      propertyPath: m_Name
-      value: PERRINN 424 Mesh
+      propertyPath: smallDisplay.height
+      value: 850
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892635335174825, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: largeDisplay.width
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892635335174825, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: largeDisplay.height
+      value: 850
       objectReference: {fileID: 0}
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -2045,6 +2051,10 @@ PrefabInstance:
     - target: {fileID: 1250697637994672, guid: 86b82e439dfe9d14ba03b3cf291d4690, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512130833603358, guid: 86b82e439dfe9d14ba03b3cf291d4690, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1979619986263644, guid: 86b82e439dfe9d14ba03b3cf291d4690, type: 3}
       propertyPath: m_IsActive

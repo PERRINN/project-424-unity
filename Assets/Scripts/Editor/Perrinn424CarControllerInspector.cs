@@ -34,34 +34,32 @@ public class Perrinn424CarControllerInspector : VPInspector
 
 		DrawHeader("Powertrain and dynamics");
 
-		DrawProperty("electricMotor");
+		DrawProperty("input");
+		DrawProperty("frontMgu");
+		DrawProperty("rearMgu");
 		Space();
-		DrawProperty("frontToRearBalance");
 		DrawProperty("frontDifferential");
 		DrawProperty("rearDifferential");
 		Space();
 		DrawProperty("steering");
-		DrawProperty("brakes");
 
 		DrawHeader("Driving Aids");
-
 		DrawProperty("steeringAids");
 		DrawProperty("speedControl");
 
 		DrawHeader("Safety Aids");
-
-		DrawProperty("antiLock", "Anti-Lock Braking (ABS)");
 		DrawProperty("tractionControl", "Traction Control (TCS)");
-		DrawProperty("stabilityControl", "Stability Control (ESC)");
-		DrawProperty("antiSpin", "Anti-Spin (ASR)");
 
-		DrawHeader("Advanced / experimental settings");
-
-		SetMinLabelWidth(150);
-		DrawProperty("tireSideDeflection");
-		DrawProperty("tireSideDeflectionRate");
+		DrawHeader("Advanced");
+		SetMinLabelWidth(165);
+		DrawProperty("integrationSteps");
+		DrawProperty("integrationUseRK4");
 		DrawProperty("wheelSleepVelocity");
 		DrawProperty("tireAdherentImpulseRatio");
+
+		DrawHeader("Experimental");
+		DrawProperty("tireSideDeflection");
+		DrawProperty("tireSideDeflectionRate");
 
 		Space();
 		SetMinLabelWidth(190);
@@ -70,10 +68,6 @@ public class Perrinn424CarControllerInspector : VPInspector
 		DrawProperty("suspensionDamperLimitFactor");
 		GUI.enabled = true;
 
-		Space();
-		SetMinLabelWidth(165);
-		DrawProperty("integrationSteps");
-		DrawProperty("integrationUseRK4");
 		}
 
 
