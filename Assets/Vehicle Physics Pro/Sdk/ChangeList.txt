@@ -69,6 +69,26 @@ Other, mostly internal, renames:
 
 
 ----------------------------------------------------------------------------------------------------
+2020-08-12
+----------------------------------------------------------------------------------------------------
+
+VPVehicleJoint:
+- Removed AngularJointMotion.Mode.Limited. Use AngularJointMotion.Mode.DampedSpring with maxAngle > 0.
+
+----------------------------------------------------------------------------------------------------
+2020-06-30
+----------------------------------------------------------------------------------------------------
+
+VPVehicleToolkit:
+
+- "Start Engine On Enable" renamed to "Start Engine"
+- "Press Brake" renamed to "Press Brakes"
+- "Set Automatic Mode" renamed to "Set Automatic Gear"
+- "Default Automatic Mode" renamed to "Automatic Gear Mode"
+- VPVehicleToolkit.AutomaticMode renamed to VPVehicleToolkit.AutomaticMode
+
+
+----------------------------------------------------------------------------------------------------
 2020-05-28
 ----------------------------------------------------------------------------------------------------
 
