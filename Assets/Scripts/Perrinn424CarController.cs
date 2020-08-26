@@ -12,6 +12,32 @@ using EdyCommonTools;
 using VehiclePhysics;
 
 
+// Assignments of the custom channel for the 424 in the data bus
+
+public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EXAMPLE
+	{
+	public const int ThrottleInput				= 0;		// Throttle input sent to mgu			ratio		1000			1000 = 1.0 = 100%
+	public const int BrakePressure				= 1;		// Brake circuit pressure				bar			1000			30500 = 30.5 bar
+
+	// MGU data. Combine base ID with values.
+
+	public const int FrontMguBase				= 10;		// Base ID for front MGU data
+	public const int RearMguBase				= 20;		// Base ID for rear MGU data
+
+	public const int Rpm						= 0;		// Motor rpm							rpm			1000			1200000 = 1200 rpm
+	public const int Load						= 1;		// Motor load. Negative = renerative	ratio		1000			900 = 0.9 = 90%
+	public const int Efficiency					= 2;		// Efficiency							ratio		1000			945 = 0.945
+	public const int ElectricalPower			= 3;		// Generated electrical power			kW			1000			250000 = 250 kW
+	public const int ElectricalTorque			= 4;		// Generated electrical torque			Nm			1000			50000 = 50 Nm
+	public const int MechanicalTorque			= 5;		// Generated mechanical torque			Nm			1000			50000 = 50 Nm
+	public const int StatorTorque				= 6;		// Pre-inertia torque					Nm			1000			55000 = 55 Nm
+	public const int RotorTorque				= 7;		// Final torque in the mgu rotor		Nm			1000			50600 = 50.6 Nm
+	public const int WheelsTorque				= 8;		// Sum of torques at wheels				Nm			1000			150600 = 150.6 Nm
+	}
+
+
+// Custom car controller for Perrinn 424
+
 public class Perrinn424CarController : VehicleBase
 	{
 	public Inertia.Settings inertia = new Inertia.Settings();
@@ -19,23 +45,19 @@ public class Perrinn424CarController : VehicleBase
 	public VPAxle frontAxle;
 	public VPAxle rearAxle;
 
+	public TireDataContainerBase frontTires;
+	public TireDataContainerBase rearTires;
+
 	// Powertrain and dynamics
 
-	public float maxDriveTorque = 600.0f;
-	public float maxDriveRpm = 2000.0f;
-	[Range(0,1)]
-	public float frontToRearBalance = 0.5f;		// 0 = front, 1 = rear
-	[UnityEngine.Serialization.FormerlySerializedAs("differential")]
+	public InputSettings input = new InputSettings();
+	public MotorGeneratorUnit.Settings frontMgu = new MotorGeneratorUnit.Settings();
+	public MotorGeneratorUnit.Settings rearMgu = new MotorGeneratorUnit.Settings();
+
 	public Differential.Settings frontDifferential = new Differential.Settings();
 	public Differential.Settings rearDifferential = new Differential.Settings();
 
 	public Steering.Settings steering = new Steering.Settings();
-	public Brakes.Settings brakes = new Brakes.Settings();
-
-	public TireDataContainerBase frontTires;
-	public TireDataContainerBase rearTires;
-
-	public ElectricMotor.Settings electricMotor = new ElectricMotor.Settings();
 
 	// Driving aids
 
@@ -44,26 +66,29 @@ public class Perrinn424CarController : VehicleBase
 
 	// Safety aids
 
-	public Brakes.AbsSettings antiLock = new Brakes.AbsSettings();
 	public TractionControl.Settings tractionControl = new TractionControl.Settings();
-	public StabilityControl.Settings stabilityControl = new StabilityControl.Settings();
-	public AntiSpin.Settings antiSpin = new AntiSpin.Settings();
 
 	// Mostly internal settings not exposed in the inspector
 
 	[System.NonSerialized]
 	public float gearChangeMaxSpeed = 1.0f;
 
+	// Motor input is ignored when brake pressure is beyond this value
+
+	[System.NonSerialized]
+	public float brakePressureThreshold = 3.0f;
+
+
 	// Private members
+
+	Powertrain m_frontPowertrain;
+	Powertrain m_rearPowertrain;
 
 	Inertia m_inertia;
 	Steering m_steering;
-	Brakes m_brakes;
 
-	StabilityControl m_stabilityControl;
-	AntiSpin m_frontAntiSpin;
-	AntiSpin m_rearAntiSpin;
-
+	float m_throttleInput;
+	float m_brakePressure;
 	int m_gearMode;
 	int m_prevGearMode;
 
@@ -72,22 +97,65 @@ public class Perrinn424CarController : VehicleBase
 
 	class Powertrain
 		{
-		public ElectricMotor electricMotor;
+		public MotorGeneratorUnit mgu;
 		public Differential differential;
+
+		Wheel m_leftWheel;
+		Wheel m_rightWheel;
 
 
 		public Powertrain (Wheel leftWheelBlock, Wheel rightWheelBlock)
 			{
-			electricMotor = new ElectricMotor();
+			mgu = new MotorGeneratorUnit();
 			differential = new Differential();
 
 			Block.Connect(leftWheelBlock, differential, 0);
 			Block.Connect(rightWheelBlock, differential, 1);
-			Block.Connect(differential, electricMotor);
+			Block.Connect(differential, mgu);
+
+			m_leftWheel = leftWheelBlock;
+			m_rightWheel = rightWheelBlock;
 			}
 
 
-		// Overrides to the differential and driveline settings
+		public void SetInputs (int gearInput, float throttleInput, float brakePressure)
+			{
+			// MGU
+
+			mgu.gearInput = gearInput;
+			mgu.throttleInput = throttleInput;
+			mgu.brakePressure = brakePressure;
+
+			// Wheel brakes
+
+			float brakeTorque = mgu.GetWheelBrakeTorque(brakePressure);
+			m_leftWheel.AddBrakeTorque(brakeTorque);
+			m_rightWheel.AddBrakeTorque(brakeTorque);
+			}
+
+
+		public void FillDataBus (int[] channel, int baseId)
+			{
+			channel[baseId + Perrinn424Data.Rpm] = (int)(mgu.sensorRpm * 1000);
+			channel[baseId + Perrinn424Data.Load] = (int)(mgu.sensorLoad * 1000);
+			channel[baseId + Perrinn424Data.Efficiency] = (int)(mgu.sensorEfficiency * 1000);
+			channel[baseId + Perrinn424Data.ElectricalPower] = (int)(mgu.sensorElectricalPower * 1000);
+			channel[baseId + Perrinn424Data.ElectricalTorque] = (int)(mgu.sensorElectricalTorque * 1000);
+			channel[baseId + Perrinn424Data.MechanicalTorque] = (int)(mgu.sensorMechanicalTorque * 1000);
+			channel[baseId + Perrinn424Data.StatorTorque] = (int)(mgu.sensorStatorTorque * 1000);
+			channel[baseId + Perrinn424Data.RotorTorque] = (int)(mgu.sensorRotorTorque * 1000);
+			channel[baseId + Perrinn424Data.WheelsTorque] = (int)((m_leftWheel.driveTorque + m_rightWheel.driveTorque) * 1000);
+			}
+
+
+		public string GetDebutStr ()
+			{
+			float power = mgu.sensorRpm * Block.RpmToW * mgu.sensorElectricalTorque;
+			return $"{power/1000:0.0} kW";
+			}
+
+
+		// Overrides to the differential and driveline settings.
 		// The DifferentialOverride enum matches the override values at the Data Bus
 
 		public enum DifferentialOverride { None, ForceLocked, ForceUnlocked };
@@ -129,9 +197,6 @@ public class Perrinn424CarController : VehicleBase
 			}
 		}
 
-	Powertrain m_frontPowertrain;
-	Powertrain m_rearPowertrain;
-
 
 	// Initialization section
 	// ---------------------------------------------------------------------------------------------
@@ -152,7 +217,7 @@ public class Perrinn424CarController : VehicleBase
 
 	protected override void OnInitialize ()
 		{
-		// Prepare the internal helpers: inertia, steering, brakes
+		// Prepare the internal helpers: inertia, steering
 
 		m_inertia = new Inertia();
 		m_inertia.settings = inertia;
@@ -160,10 +225,6 @@ public class Perrinn424CarController : VehicleBase
 
 		m_steering = new Steering();
 		m_steering.settings = steering;
-
-		m_brakes = new Brakes();
-		m_brakes.settings = brakes;
-		m_brakes.absSettings = antiLock;
 
 		// Declare the number of wheels
 
@@ -201,26 +262,12 @@ public class Perrinn424CarController : VehicleBase
 		// Configure an independent powertrain per axle
 
         m_frontPowertrain = new Powertrain(wheels[0], wheels[1]);
-		m_frontPowertrain.electricMotor.settings = electricMotor;
+		m_frontPowertrain.mgu.settings = frontMgu;
 		m_frontPowertrain.differential.settings = frontDifferential;
 
         m_rearPowertrain = new Powertrain(wheels[2], wheels[3]);
-		m_rearPowertrain.electricMotor.settings = electricMotor;
+		m_rearPowertrain.mgu.settings = rearMgu;
 		m_rearPowertrain.differential.settings = rearDifferential;
-
-		// Initialize driving aids
-
-		m_stabilityControl = new StabilityControl();
-		m_stabilityControl.settings = stabilityControl;
-
-		m_frontAntiSpin = new AntiSpin();
-		m_rearAntiSpin = new AntiSpin();
-		m_frontAntiSpin.settings = antiSpin;
-		m_rearAntiSpin.settings = antiSpin;
-
-		// Stability control requires knowing the wheelbase
-
-		m_stabilityControl.wheelbase = Mathf.Abs(GetAxleLocalPosition(frontAxle) - GetAxleLocalPosition(rearAxle));
 
 		// Initialize internal data
 
@@ -251,11 +298,6 @@ public class Perrinn424CarController : VehicleBase
 			m_steering.AddWheel(leftWheelState, GetWheelLocalPosition(axle.leftWheel), axle.steeringMode, axle.steeringRatio);
 			m_steering.AddWheel(rightWheelState, GetWheelLocalPosition(axle.rightWheel), axle.steeringMode, axle.steeringRatio);
 			}
-
-		// Configure brakes
-
-		m_brakes.AddWheel(leftWheelState, leftWheelBlock, axle.brakeCircuit, Brakes.LateralPosition.Left);
-		m_brakes.AddWheel(rightWheelState, rightWheelBlock, axle.brakeCircuit, Brakes.LateralPosition.Right);
 		}
 
 
@@ -311,10 +353,10 @@ public class Perrinn424CarController : VehicleBase
 		int[] inputData = data.Get(Channel.Input);
 		int[] settingsData = data.Get(Channel.Settings);
 
-		float brakeInput = Mathf.Clamp01(inputData[InputData.Brake] / 10000.0f);
-		float handbrakeInput = Mathf.Clamp01(inputData[InputData.Handbrake] / 10000.0f);
-		float throttleInput = Mathf.Clamp01(inputData[InputData.Throttle] / 10000.0f);
-		float steerInput = Mathf.Clamp(inputData[InputData.Steer] / 10000.0f, -1.0f, 1.0f);
+		float brakePosition = Mathf.Clamp01(inputData[InputData.Brake] / 10000.0f);
+		float handbrakePosition = Mathf.Clamp01(inputData[InputData.Handbrake] / 10000.0f);
+		float throttlePosition = Mathf.Clamp01(inputData[InputData.Throttle] / 10000.0f);
+		float steerPosition = Mathf.Clamp(inputData[InputData.Steer] / 10000.0f, -1.0f, 1.0f);
 
 		int automaticGearInput = inputData[InputData.AutomaticGear];
 		int ignitionInput = inputData[InputData.Key];
@@ -339,18 +381,29 @@ public class Perrinn424CarController : VehicleBase
 		// No throttle if the vehicle is switched off.
 
 		if (ignitionInput < 0)
-			throttleInput = 0.0f;
+			throttlePosition = 0.0f;
 		else
-			throttleInput = SpeedControl.GetThrottle(speedControl, inputData, data.Get(Channel.Vehicle));
+			throttlePosition = SpeedControl.GetThrottle(speedControl, inputData, data.Get(Channel.Vehicle));
 
-		// Electric motors
+		// Process inputs
+		// Input settings are configured in the car independently of the torque maps.
+		// Being in a separate class allows all intermediate steps to be traced separately
+		// (pedal > input > electrical torque > mechanical torque > wheel torque)
 
 		int gear = m_gearMode - (int)Gearbox.AutomaticGear.N;
+		m_throttleInput = input.GetThrottleInput(throttlePosition);
+		m_brakePressure = input.GetBrakePressure(brakePosition);
+		if (m_brakePressure > brakePressureThreshold) m_throttleInput = 0.0f;
+
+		m_frontPowertrain.SetInputs(gear, m_throttleInput, m_brakePressure);
+		m_rearPowertrain.SetInputs(gear, m_throttleInput, m_brakePressure);
+
+		// Traction control
 
 		if (gear != 0)
 			{
 			// Independent traction control per axle
-
+			/*
 			int tcsOverride = settingsData[SettingsData.TcsOverride];
 			if (tractionControl.enabled && tcsOverride != 2 || tcsOverride == 1)
 				{
@@ -363,49 +416,25 @@ public class Perrinn424CarController : VehicleBase
 				// m_frontPowertrain.directDrive.maxRpm = maxFrontRpm;
 				// m_rearPowertrain.directDrive.maxRpm = maxRearRpm;
 				}
-
+			*/
 			// Apply motor input
-
-			float motorInput = throttleInput * Mathf.Sign(gear);
+			/*
+			float motorInput = throttlePosition * Mathf.Sign(gear);
 			m_rearPowertrain.electricMotor.motorInput = motorInput * frontToRearBalance;
 			m_frontPowertrain.electricMotor.motorInput = motorInput * (1.0f - frontToRearBalance);
-			}
-		else
-			{
-			m_frontPowertrain.electricMotor.motorInput = 0.0f;
-			m_rearPowertrain.electricMotor.motorInput = 0.0f;
+			*/
 			}
 
 		// Steering
 
 		if (settingsData[SettingsData.SteeringAidsOverride] != 2)
-			SteeringAids.Apply(this, steering, steeringAids, ref steerInput);
-		m_steering.steerInput = steerInput;
+			SteeringAids.Apply(this, steering, steeringAids, ref steerPosition);
+		m_steering.steerInput = steerPosition;
 		m_steering.DoUpdate();
-
-        // Stability Control (ECS) and Anti-Slip (ASR)
-		// Applied before brakes as they trigger brake signals at the Brakes helper
-
-		ApplyStabilityControl();
-		ApplyAntiSpin(m_frontAntiSpin, 0, 1);
-		ApplyAntiSpin(m_rearAntiSpin, 2, 3);
-
-		// Brakes
-
-		m_brakes.brakeInput = brakeInput;
-		m_brakes.handbrakeInput = handbrakeInput;
-		m_brakes.DoUpdate();
 
 		// Track changes in the inertia settings
 
 		m_inertia.DoUpdate(cachedRigidbody);
-
-		// Implement supported values from the Settings channel
-
-		m_brakes.absOverride = (Brakes.AbsOverride)settingsData[SettingsData.AbsOverride];
-		m_stabilityControl.escOverride = (StabilityControl.Override)settingsData[SettingsData.EscOverride];
-		m_frontAntiSpin.asrOverride = (AntiSpin.Override)settingsData[SettingsData.AsrOverride];
-		m_rearAntiSpin.asrOverride = (AntiSpin.Override)settingsData[SettingsData.AsrOverride];
 
 		// Differential overrides
 
@@ -435,35 +464,31 @@ public class Perrinn424CarController : VehicleBase
 
 		// Engine rpm: maximum of both motors
 
-		float engineRpm = MathUtility.MaxAbs(m_frontPowertrain.electricMotor.angularVelocity, m_rearPowertrain.electricMotor.angularVelocity) * Block.WToRpm;
+		float engineRpm = MathUtility.MaxAbs(m_frontPowertrain.mgu.sensorRpm, m_rearPowertrain.mgu.sensorRpm);
 		vehicleData[VehicleData.EngineRpm] = (int)(engineRpm * 1000.0f);
 
 		// Engine torque: sum of both motors
 		// The resulting maximum should be the configured maximum
 
-		float engineTorque = m_frontPowertrain.electricMotor.torque + m_rearPowertrain.electricMotor.torque;
+		float engineTorque = m_frontPowertrain.mgu.sensorRotorTorque + m_rearPowertrain.mgu.sensorRotorTorque;
 		vehicleData[VehicleData.EngineTorque] = (int)(engineTorque * 1000.0f);
 
 		// Engine Power: sum of the powers of both motors
 
-		float frontEnginePower = m_frontPowertrain.electricMotor.torque * m_frontPowertrain.electricMotor.angularVelocity;
-		float rearEnginePower = m_rearPowertrain.electricMotor.torque * m_rearPowertrain.electricMotor.angularVelocity;
+		float frontEnginePower = m_frontPowertrain.mgu.sensorRotorTorque * m_frontPowertrain.mgu.sensorRpm / Block.RpmToW;
+		float rearEnginePower = m_rearPowertrain.mgu.sensorRotorTorque * m_rearPowertrain.mgu.sensorRpm / Block.RpmToW;
 		vehicleData[VehicleData.EnginePower] = (int)(frontEnginePower + rearEnginePower);
 
         // Engine Load: sum of the loads of both motors
 		// Negative means regenerative braking. Use average.
 
-		float engineLoad = m_frontPowertrain.electricMotor.sensorLoad + m_rearPowertrain.electricMotor.sensorLoad;
+		float engineLoad = (m_frontPowertrain.mgu.sensorLoad + m_rearPowertrain.mgu.sensorLoad) * 0.5f;
 		if (engineLoad < 0.0f) engineLoad *= 0.5f;
 		vehicleData[VehicleData.EngineLoad] = (int)(engineLoad * 1000.0f);
 
 		// Driving aids
 
-		vehicleData[VehicleData.AbsEngaged] = m_brakes.sensorAbsEngaged? 1 : 0;
-		vehicleData[VehicleData.EscEngaged] = m_stabilityControl.sensorEngaged? 1 : 0;
-		vehicleData[VehicleData.AsrEngaged] = m_frontAntiSpin.sensorEngaged || m_rearAntiSpin.sensorEngaged? 1 : 0;
-
-		// TO-DO: Implement with electric motors.
+		// TODO: Implement TC with electric motors.
 		// bool tcsEngaged =
 			// m_frontPowertrain.directDrive.sensorLoad < m_frontPowertrain.directDrive.motorInput && m_frontPowertrain.directDrive.maxRpm < maxDriveRpm
 			// || m_rearPowertrain.directDrive.sensorLoad < m_rearPowertrain.directDrive.motorInput && m_rearPowertrain.directDrive.maxRpm < maxDriveRpm;
@@ -479,60 +504,18 @@ public class Perrinn424CarController : VehicleBase
 		// They may force the state of actual input elements, as gearbox stick / lever.
 
 		inputData[InputData.AutomaticGear] = m_gearMode;
-		}
+
+		// Fill the custom data bus
+
+		int[] customData = data.Get(Channel.Custom);
+		customData[Perrinn424Data.ThrottleInput] = (int)(m_throttleInput * 1000.0f);
+		customData[Perrinn424Data.BrakePressure] = (int)(m_brakePressure * 1000.0f);
+
+		m_frontPowertrain.FillDataBus(customData, Perrinn424Data.FrontMguBase);
+		m_rearPowertrain.FillDataBus(customData, Perrinn424Data.RearMguBase);
 
 
- 	// Helpers for safety aids
-
-
-	void ApplyStabilityControl ()
-		{
-		m_stabilityControl.stateVehicleSpeed = speed;
-		m_stabilityControl.stateVehicleSpeedAngle = speedAngle;
-		m_stabilityControl.stateVehicleRotationRate = cachedRigidbody.angularVelocity.y;
-		m_stabilityControl.stateVehicleSteeringAngle = steering.maxSteerAngle * m_steering.steerInput;
-		m_stabilityControl.DoUpdate();
-
-		// No need to apply further settings if disabled.
-		// DoUpdate is invoked above to ensure sensors are cleared.
-
-		if (!stabilityControl.enabled) return;
-
-		m_brakes.AddBrakeRatio(m_stabilityControl.sensorBrakeFL, Brakes.BrakeCircuit.Front, Brakes.LateralPosition.Left);
-		m_brakes.AddBrakeRatio(m_stabilityControl.sensorBrakeFR, Brakes.BrakeCircuit.Front, Brakes.LateralPosition.Right);
-		m_brakes.AddBrakeRatio(m_stabilityControl.sensorBrakeRL, Brakes.BrakeCircuit.Rear, Brakes.LateralPosition.Left);
-		m_brakes.AddBrakeRatio(m_stabilityControl.sensorBrakeRR, Brakes.BrakeCircuit.Rear, Brakes.LateralPosition.Right);
-
-		// Cut drive power while ECS is stabilizing the vehicle
-
-		float frontBrakes = Mathf.Max(m_stabilityControl.sensorBrakeFL, m_stabilityControl.sensorBrakeFR);
-		float rearBrakes = Mathf.Max(m_stabilityControl.sensorBrakeRL, m_stabilityControl.sensorBrakeRR);
-		float ecsBrakes = Mathf.Clamp01(Mathf.Max(frontBrakes, rearBrakes));
-
-		if (ecsBrakes > 0.0f)
-			{
-			float ecsFactor = (1.0f - ecsBrakes);
-
-			m_frontPowertrain.electricMotor.motorInput *= ecsFactor;
-			m_rearPowertrain.electricMotor.motorInput *= ecsFactor;
-			}
-		}
-
-
-	void ApplyAntiSpin (AntiSpin antiSpinInstance, int wheelIndexL, int wheelIndexR)
-		{
-		antiSpinInstance.stateVehicleSpeed = speed;
-		antiSpinInstance.stateAngularVelocityL = wheelState[wheelIndexL].angularVelocity;
-		antiSpinInstance.stateAngularVelocityR = wheelState[wheelIndexR].angularVelocity;
-		antiSpinInstance.DoUpdate();
-
-		// No need to apply further settings if disabled.
-		// DoUpdate is invoked above to ensure sensors are cleared.
-
-		if (!antiSpinInstance.settings.enabled) return;
-
-		wheels[wheelIndexL].AddBrakeTorque(antiSpinInstance.sensorBrakeTorqueL);
-		wheels[wheelIndexR].AddBrakeTorque(antiSpinInstance.sensorBrakeTorqueR);
+		// VPTelemetry.customData = $"Front MGU: {m_frontPowertrain.GetDebutStr()}\nRear MGU:  {m_rearPowertrain.GetDebutStr()}";
 		}
 
 
