@@ -3578,7 +3578,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2018912039}
   - component: {fileID: 2018912041}
-  - component: {fileID: 2018912040}
   m_Layer: 8
   m_Name: Rear-View Camera
   m_TagString: Untagged
@@ -3600,14 +3599,6 @@ Transform:
   m_Father: {fileID: 207221087}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 10, y: 180, z: 0}
---- !u!81 &2018912040
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2018912038}
-  m_Enabled: 1
 --- !u!20 &2018912041
 Camera:
   m_ObjectHideFlags: 0
@@ -3644,7 +3635,7 @@ Camera:
   m_TargetTexture: {fileID: 8400000, guid: 3b0ac9a8aa2eab44eb6f8225be83c410, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 1
+  m_HDR: 0
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
