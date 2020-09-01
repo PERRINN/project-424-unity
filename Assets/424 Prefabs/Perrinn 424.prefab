@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4116892634923485601}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.32, z: -1.63852}
+  m_LocalPosition: {x: 0, y: 0.32, z: -1.68852}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4116892635276943222}
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 25
   radius: 0.34
   center: {x: 0.14, y: 0, z: 0}
   suspensionDistance: 0.07
@@ -334,7 +334,7 @@ MonoBehaviour:
   m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 25
   radius: 0.34
   center: {x: 0.14, y: 0, z: 0}
   suspensionDistance: 0.06
@@ -467,16 +467,16 @@ MonoBehaviour:
   input:
     throttleShape: 1.6
     brakeShape: 2
-    brakePedalGain: 1
+    brakePedalGain: 0.9
   frontMgu:
     torqueMap: {fileID: 11400000, guid: 05ff9bb249be3ec4caa5acdf502661fc, type: 2}
-    inertia: 0.1
+    inertia: 0.008
     mu1: 1
     mu2: 0
     mu3: 0
   rearMgu:
     torqueMap: {fileID: 11400000, guid: 6ae7b46e44b181742b578c816f9865ee, type: 2}
-    inertia: 0.1
+    inertia: 0.016
     mu1: 1
     mu2: 0
     mu3: 0
@@ -644,24 +644,24 @@ MonoBehaviour:
   chart: 3
   visible: 1
   dataRecordingTime: 60
-  refreshInterval: 0.02
+  refreshInterval: 0.2
   startRecording: 1
   panRate: 0.5
   zoomRate: 1
   viewMode: 0
   smallDisplay:
     x: -10
-    y: 10
+    y: 220
     width: 512
-    height: 256
+    height: 850
     backgroundColor: {r: 0, g: 0, b: 0, a: 0.9}
     chartAlpha: 0.6
     textAlpha: 1
   largeDisplay:
     x: -10
-    y: 10
-    width: 1024
-    height: 512
+    y: 220
+    width: 512
+    height: 850
     backgroundColor: {r: 0, g: 0, b: 0, a: 0.95}
     chartAlpha: 1
     textAlpha: 1
@@ -868,7 +868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragCoefficient: 0.275
-  downforceCoefficient: 1.5
+  downforceCoefficient: 1.6
   showDebugLabel: 0
 --- !u!1 &4116892635620062691
 GameObject:
@@ -914,7 +914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragCoefficient: 0.275
-  downforceCoefficient: 1.25
+  downforceCoefficient: 1.15
   showDebugLabel: 0
 --- !u!1 &4116892635859074611
 GameObject:
@@ -1004,7 +1004,7 @@ MonoBehaviour:
   m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 25
   radius: 0.34
   center: {x: -0.14, y: 0, z: 0}
   suspensionDistance: 0.07
@@ -1096,7 +1096,7 @@ MonoBehaviour:
   m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 25
   radius: 0.34
   center: {x: -0.14, y: 0, z: 0}
   suspensionDistance: 0.06

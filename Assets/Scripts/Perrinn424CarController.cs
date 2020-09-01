@@ -32,7 +32,8 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	public const int MechanicalTorque			= 5;		// Generated mechanical torque			Nm			1000			50000 = 50 Nm
 	public const int StatorTorque				= 6;		// Pre-inertia torque					Nm			1000			55000 = 55 Nm
 	public const int RotorTorque				= 7;		// Final torque in the mgu rotor		Nm			1000			50600 = 50.6 Nm
-	public const int WheelsTorque				= 8;		// Sum of torques at wheels				Nm			1000			150600 = 150.6 Nm
+	public const int ShaftsTorque				= 8;		// Sum of torques at drive shafts		Nm			1000			150600 = 150.6 Nm
+	public const int WheelsTorque				= 9;		// Sum of torques at wheels				Nm			1000			150600 = 150.6 Nm
 	}
 
 
@@ -144,7 +145,11 @@ public class Perrinn424CarController : VehicleBase
 			channel[baseId + Perrinn424Data.MechanicalTorque] = (int)(mgu.sensorMechanicalTorque * 1000);
 			channel[baseId + Perrinn424Data.StatorTorque] = (int)(mgu.sensorStatorTorque * 1000);
 			channel[baseId + Perrinn424Data.RotorTorque] = (int)(mgu.sensorRotorTorque * 1000);
-			channel[baseId + Perrinn424Data.WheelsTorque] = (int)((m_leftWheel.driveTorque + m_rightWheel.driveTorque) * 1000);
+			channel[baseId + Perrinn424Data.ShaftsTorque] = (int)((m_leftWheel.driveTorque + m_rightWheel.driveTorque) * 1000);
+
+			float leftWheelTorque = m_leftWheel.driveTorque + m_leftWheel.brakeTorque * Mathf.Sign(-m_leftWheel.contact.localVelocity.y);
+			float rightWheelTorque = m_rightWheel.driveTorque + m_rightWheel.brakeTorque * Mathf.Sign(-m_rightWheel.contact.localVelocity.y);
+			channel[baseId + Perrinn424Data.WheelsTorque] = (int)((leftWheelTorque + rightWheelTorque) * 1000);
 			}
 
 

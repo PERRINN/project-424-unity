@@ -42,6 +42,7 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		float frontMechanical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
 		float frontStator = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.StatorTorque] / 1000.0f;
 		float frontRotor = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.RotorTorque] / 1000.0f;
+		float frontShafts = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ShaftsTorque] / 1000.0f;
 		float frontWheels = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
 
 		float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
@@ -52,21 +53,23 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		float rearMechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
 		float rearStator = custom[Perrinn424Data.RearMguBase + Perrinn424Data.StatorTorque] / 1000.0f;
 		float rearRotor = custom[Perrinn424Data.RearMguBase + Perrinn424Data.RotorTorque] / 1000.0f;
+		float rearShafts = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ShaftsTorque] / 1000.0f;
 		float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
 
-		m_text  = "                  Throttle      Brake    \n";
-		m_text += $"Pedal               {throttlePosition*100,3:0.} %        {brakePosition*100,3:0.} %   \n";
-		m_text += $"Input               {throttleInput*100,3:0.} %      {brakePressure,5:0.0} bar \n\n";
-		m_text += "                  MGU Front    MGU Rear    Balance (%)\n";
-		m_text += $"Rpm                {frontRpm,6:0.}      {rearRpm,6:0.}        {GetBalanceStr(frontRpm, rearRpm),5}\n";
-		m_text += $"Load (%)           {frontLoad*100,6:0.0}      {rearLoad*100,6:0.0}        {GetBalanceStr(frontLoad, rearLoad),5}\n\n";
-		m_text += $"Electrical (kW)    {frontPower,6:0.0}      {rearPower,6:0.0}        {GetBalanceStr(frontPower, rearPower),5}\n";
-		m_text += $"Electrical (Nm)    {frontElectrical,6:0.}      {rearElectrical,6:0.}        {GetBalanceStr(frontElectrical, rearElectrical),5}\n";
-		m_text += $"Efficiency (%)     {frontEfficiency*100,6:0.0}      {rearEfficiency*100,6:0.0}        {GetBalanceStr(frontEfficiency, rearEfficiency),5}  \n\n";
-		m_text += $"Mechanical (Nm)    {frontMechanical,6:0.}      {rearMechanical,6:0.}        {GetBalanceStr(frontMechanical, rearMechanical),5}\n";
-		m_text += $"Stator (Nm)        {frontStator,6:0.}      {rearStator,6:0.}        {GetBalanceStr(frontStator, rearStator),5}\n";
-		m_text += $"Rotor (Nm)         {frontRotor,6:0.}      {rearRotor,6:0.}        {GetBalanceStr(frontRotor, rearRotor),5}\n";
-		m_text += $"Wheels (Nm) ×2     {frontWheels,6:0.}      {rearWheels,6:0.}        {GetBalanceStr(frontWheels, rearWheels),5}\n";
+		m_text  = "                    Throttle      Brake    \n";
+		m_text += $"Pedal Position        {throttlePosition*100,3:0.} %        {brakePosition*100,3:0.} %   \n";
+		m_text += $"Input                 {throttleInput*100,3:0.} %      {brakePressure,5:0.0} bar \n\n";
+		m_text += "                    MGU Front    MGU Rear    Balance (%)\n";
+		m_text += $"Rpm                  {frontRpm,6:0.}      {rearRpm,6:0.}        {GetBalanceStr(frontRpm, rearRpm),5}\n";
+		m_text += $"Load (%)             {frontLoad*100,6:0.0}      {rearLoad*100,6:0.0}        {GetBalanceStr(frontLoad, rearLoad),5}\n\n";
+		m_text += $"Electrical (kW)      {frontPower,6:0.0}      {rearPower,6:0.0}        {GetBalanceStr(frontPower, rearPower),5}\n";
+		m_text += $"Electrical (Nm)      {frontElectrical,6:0.}      {rearElectrical,6:0.}        {GetBalanceStr(frontElectrical, rearElectrical),5}\n";
+		m_text += $"Efficiency (%)       {frontEfficiency*100,6:0.0}      {rearEfficiency*100,6:0.0}        {GetBalanceStr(frontEfficiency, rearEfficiency),5}  \n\n";
+		m_text += $"Mechanical (Nm)      {frontMechanical,6:0.}      {rearMechanical,6:0.}        {GetBalanceStr(frontMechanical, rearMechanical),5}\n";
+		m_text += $"Stator (Nm)          {frontStator,6:0.}      {rearStator,6:0.}        {GetBalanceStr(frontStator, rearStator),5}\n";
+		m_text += $"Rotor (Nm)           {frontRotor,6:0.}      {rearRotor,6:0.}        {GetBalanceStr(frontRotor, rearRotor),5}\n";
+		m_text += $"Drive Shafts (Nm) ×2 {frontShafts,6:0.}      {rearShafts,6:0.}        {GetBalanceStr(frontShafts, rearShafts),5}\n";
+		m_text += $"Wheels Total (Nm) ×2 {frontWheels,6:0.}      {rearWheels,6:0.}        {GetBalanceStr(frontWheels, rearWheels),5}\n";
 		}
 
 
