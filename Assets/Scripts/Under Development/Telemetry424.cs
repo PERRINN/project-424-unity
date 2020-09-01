@@ -22,13 +22,17 @@ namespace Project424
 [RequireComponent(typeof(VPPerformanceDisplay))]
 public class Telemetry424 : MonoBehaviour
 	{
+        //enums are static constants that can be called from another class
 	public enum Charts { AbsDiagnostics, AxleSuspension, SuspensionAnalysis, KineticEnergy };
-	public Charts chart = Charts.AbsDiagnostics;
 
+        //shows dropdown list in Unity Inspector
+    public Charts chart = Charts.AbsDiagnostics;
+        
+        //vars for inspector
 	public int monitoredWheel = 0;
 	public float maxBrakeTorque = 3200.0f;
 
-
+        //the array of charts
 	PerformanceChart[] m_charts = new PerformanceChart[]
 		{
 		new AbsDiagnosticsChart(),
@@ -53,13 +57,12 @@ public class Telemetry424 : MonoBehaviour
 		AbsDiagnosticsChart absChart = m_charts[(int)Charts.AbsDiagnostics] as AbsDiagnosticsChart;
 		absChart.monitoredWheel = monitoredWheel;
 		absChart.maxBrakeTorque = maxBrakeTorque;
-
+        
 		// Apply the selected custom chart
 
 		m_perfComponent.customChart = m_charts[(int)chart];
 		}
 	}
-
 
 // Abs Diagnostics
 
@@ -177,8 +180,7 @@ public class AbsDiagnosticsChart : PerformanceChart
 			m_slip.Write(ws.tireSlip.y);
 		}
 	}
-
-
+    
 
 // Axle suspension
 
@@ -295,6 +297,7 @@ public class AxleSuspensionChart : PerformanceChart
 		VehicleBase.WheelState wsLeft = vehicle.wheelState[leftWheel];
 		VehicleBase.WheelState wsRight = vehicle.wheelState[rightWheel];
 
+        
 		float averageSteerAngle = 0.5f * (wsLeft.steerAngle + wsRight.steerAngle);
 		float yawRate = vehicle.cachedRigidbody.angularVelocity.y * Mathf.Rad2Deg;
 
