@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4116892634923485601}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.32, z: -1.63852}
+  m_LocalPosition: {x: 0, y: 0.32, z: -1.68852}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4116892635276943222}
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 25
   radius: 0.34
   center: {x: 0.14, y: 0, z: 0}
   suspensionDistance: 0.07
@@ -334,7 +334,7 @@ MonoBehaviour:
   m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 25
   radius: 0.34
   center: {x: 0.14, y: 0, z: 0}
   suspensionDistance: 0.06
@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 4116892635276943221}
   - component: {fileID: 2809703011807798502}
   - component: {fileID: 4116892635276943223}
+  - component: {fileID: 4682684200946408111}
   - component: {fileID: 3654773149151551392}
   m_Layer: 8
   m_Name: Perrinn 424
@@ -461,9 +462,24 @@ MonoBehaviour:
     brakeCircuit: 2
     steeringMode: 0
     steeringRatio: 1
-  maxDriveTorque: 600
-  maxDriveRpm: 2000
-  frontToRearBalance: 0.66
+  frontTires: {fileID: 11400000, guid: 241a78e0c87b99541ac1a9aab456a6bc, type: 2}
+  rearTires: {fileID: 11400000, guid: 6f11b0452d6a6fb4bb6162bd33ccda5e, type: 2}
+  input:
+    throttleShape: 1.6
+    brakeShape: 2
+    brakePedalGain: 0.9
+  frontMgu:
+    torqueMap: {fileID: 11400000, guid: 05ff9bb249be3ec4caa5acdf502661fc, type: 2}
+    inertia: 0.008
+    mu1: 1
+    mu2: 0
+    mu3: 0
+  rearMgu:
+    torqueMap: {fileID: 11400000, guid: 6ae7b46e44b181742b578c816f9865ee, type: 2}
+    inertia: 0.016
+    mu1: 1
+    mu2: 0
+    mu3: 0
   frontDifferential:
     type: 1
     gearRatio: 7.35
@@ -497,30 +513,6 @@ MonoBehaviour:
     ackermanReference: {fileID: 4116892634984285925}
     ratioReference: {fileID: 0}
     steeringWheelRange: 400
-  brakes:
-    maxBrakeTorque: 7000
-    brakeBias: 0.66
-    handbrakeTorque: 1500
-    handbrakeAxle: 0
-  frontTires: {fileID: 11400000, guid: 241a78e0c87b99541ac1a9aab456a6bc, type: 2}
-  rearTires: {fileID: 11400000, guid: 6f11b0452d6a6fb4bb6162bd33ccda5e, type: 2}
-  electricMotor:
-    maxDriveTorque: 960
-    maxBrakeTorque: 10
-    d0: {x: 0, y: 1}
-    d1: {x: 7000, y: 1}
-    d2: {x: 19000, y: 0.4}
-    d3: {x: 20000, y: 0}
-    a: 0
-    b: 0
-    c: 0.6
-    d: 0.07
-    e: 0.3
-    f: 0.3
-    b0: {x: 0, y: 0}
-    b1: {x: 1000, y: 1}
-    g: 0
-    h: 0
   steeringAids:
     priority: 1
     helpMode: 0
@@ -536,37 +528,13 @@ MonoBehaviour:
     minSpeedForCC: 4.166667
     speedLimiter: 0
     speedLimit: 13.888889
+    limitReverseSpeed: 0
     throttleSlope: 1
-  antiLock:
-    enabled: 0
-    mode: 0
-    trigger: 0
-    minSlipOffset: 0.3
-    maxSlipOffset: 1.5
-    minSlip: 0.5
-    maxSlip: 5
-    minPressureRatio: 0.25
-    valvePositions: 2
   tractionControl:
     enabled: 0
     mode: 0
     ratio: 1
     customSlip: 2
-  stabilityControl:
-    enabled: 0
-    minSpeed: 6
-    understeerMinRate: 0.5
-    understeerMaxRate: 1.5
-    understeerMinSpeed: 6
-    oversteerMinAngle: 4
-    oversteerMaxAngle: 12
-    oversteerMinSpeed: 10
-  antiSpin:
-    enabled: 0
-    maxSpeed: 5.555556
-    minRotationDiffRpm: 100
-    maxRotationDiffRpm: 400
-    maxBrakeTorque: 1000
 --- !u!114 &4116892635276943223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,9 +563,7 @@ MonoBehaviour:
   showTireForces: 1
   showSurfaceForces: 0
   useLogScale: 1
-  fuelConsumptionCorrection: 3.6
-  fuelDensity: 0.745
---- !u!114 &3654773149151551392
+--- !u!114 &4682684200946408111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -605,6 +571,22 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4116892635276943217}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3ffb2f89c0b4774484014a90ea87d9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 8, y: 290}
+  font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
+  fontSize: 10
+  fontColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &3654773149151551392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4116892635276943217}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -133266412, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
@@ -662,14 +644,14 @@ MonoBehaviour:
   chart: 3
   visible: 1
   dataRecordingTime: 60
-  refreshInterval: 0.02
+  refreshInterval: 0.2
   startRecording: 1
   panRate: 0.5
   zoomRate: 1
   viewMode: 0
   smallDisplay:
     x: -10
-    y: 10
+    y: 220
     width: 512
     height: 850
     backgroundColor: {r: 0, g: 0, b: 0, a: 0.9}
@@ -677,7 +659,7 @@ MonoBehaviour:
     textAlpha: 1
   largeDisplay:
     x: -10
-    y: 10
+    y: 220
     width: 512
     height: 850
     backgroundColor: {r: 0, g: 0, b: 0, a: 0.95}
@@ -811,7 +793,7 @@ Transform:
   - {fileID: 4116892635011510442}
   m_Father: {fileID: 4116892635070111524}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 4, y: 0, z: 0}
 --- !u!114 &4116892635404004751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -886,7 +868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragCoefficient: 0.275
-  downforceCoefficient: 1.5
+  downforceCoefficient: 1.6
   showDebugLabel: 0
 --- !u!1 &4116892635620062691
 GameObject:
@@ -932,7 +914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragCoefficient: 0.275
-  downforceCoefficient: 1.25
+  downforceCoefficient: 1.15
   showDebugLabel: 0
 --- !u!1 &4116892635859074611
 GameObject:
@@ -1022,7 +1004,7 @@ MonoBehaviour:
   m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 25
   radius: 0.34
   center: {x: -0.14, y: 0, z: 0}
   suspensionDistance: 0.07
@@ -1114,7 +1096,7 @@ MonoBehaviour:
   m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 25
   radius: 0.34
   center: {x: -0.14, y: 0, z: 0}
   suspensionDistance: 0.06
@@ -1496,7 +1478,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1687483099166392, guid: f35e340fdbe2f3442b8d0b017344a429, type: 3}
       propertyPath: m_Name
-      value: Tonza Transponder
+      value: Transponder
       objectReference: {fileID: 0}
     - target: {fileID: 1687483099166392, guid: f35e340fdbe2f3442b8d0b017344a429, type: 3}
       propertyPath: m_Layer
@@ -3239,18 +3221,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a4b6fd82edeaca4292e4305d978d18d, type: 3}
---- !u!4 &4116892636251469279 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400716, guid: 4a4b6fd82edeaca4292e4305d978d18d,
-    type: 3}
-  m_PrefabInstance: {fileID: 4116892636251859091}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &4116892636251468889 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400586, guid: 4a4b6fd82edeaca4292e4305d978d18d,
-    type: 3}
-  m_PrefabInstance: {fileID: 4116892636251859091}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4116892636251469273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400714, guid: 4a4b6fd82edeaca4292e4305d978d18d,
@@ -3263,9 +3233,21 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &4116892636251468889 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400586, guid: 4a4b6fd82edeaca4292e4305d978d18d,
+    type: 3}
+  m_PrefabInstance: {fileID: 4116892636251859091}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4116892636251469277 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400718, guid: 4a4b6fd82edeaca4292e4305d978d18d,
+    type: 3}
+  m_PrefabInstance: {fileID: 4116892636251859091}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4116892636251469279 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400716, guid: 4a4b6fd82edeaca4292e4305d978d18d,
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
