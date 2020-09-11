@@ -13,31 +13,29 @@ public class PID : MonoBehaviour
     public GameObject cubeTwo;
     public GameObject cubeCar;
     public VPReplayController replayController;
-    public bool autoUpdate = false;
+    public bool showPosition = true;
 
     List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
-    int count;
 
-    // Start is called before the first frame update
+    float height;
+
     void Start()
     {
         recordedReplay = replayController.predefinedReplay.recordedData;
-        //count = recordedReplay.Count;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (autoUpdate) { getDistance(); }
-        
+        getDistance();
+
     }
 
     void OnGUI()
     {
-        if (GUI.Button(new Rect(216, Screen.height - 50, 150, 20), "GET DISTANCE"))
-        {
-            getDistance();
-        }
+        string errorDistance = "";
+        errorDistance += height;
+        GUI.Box(new Rect(185, Screen.height - 90, 100, 50), "Error");
+        GUI.Label(new Rect(200, Screen.height - 65, 100, 50), errorDistance);
     }
 
     void getDistance()
@@ -59,8 +57,6 @@ public class PID : MonoBehaviour
 
         for (int i = 0; i < 100; i++)
         {
-            //print(sectionSize * i);
-
             float x = recordedReplay[sectionSize * i].position.x - currentPosX;
             float z = recordedReplay[sectionSize * i].position.z - currentPosZ;
 
@@ -78,7 +74,6 @@ public class PID : MonoBehaviour
                 frame2 = sectionSize * i;
                 minDistance2 = distance;
             }
-
         }
 
         if (frame1 > frame2)
@@ -117,21 +112,23 @@ public class PID : MonoBehaviour
         float s = (minDistance + minDistance2 + minDistance3) / 2;
 
         float area = (float)Math.Sqrt(s * (s - minDistance) * (s - minDistance2) * (s - minDistance3));
-        float height = area * 2 / minDistance3;
+        height = area * 2 / minDistance3;
 
-        cubeOne.transform.position = recordedReplay[frame3].position;
-        cubeTwo.transform.position = recordedReplay[frame4].position;
-        cubeCar.transform.position = target.recordedData[currentFrame].position;
+        if (showPosition)
+        {
+            cubeOne.transform.position = recordedReplay[frame3].position;
+            cubeTwo.transform.position = recordedReplay[frame4].position;
+            cubeCar.transform.position = target.recordedData[currentFrame].position;
+        }
 
 
-
-        print("Frame 1: " + frame3 + "   Frame 2: " + frame4);
-        print("Car position: " + target.recordedData[currentFrame].position);
-        //print("Dummy1 position: " + recordedReplay[frame3].position);
-        //print("Dummy2 position: " + recordedReplay[frame4].position);
-        print("Car - Dummy1 distance: " + minDistance);
-        print("Car - Dummy2 distance: " + minDistance2);
-        print("Dummy1 - Dummy2 distance: " + minDistance3);
-        print("Height: " + height);
+        //print("Frame 1: " + frame3 + "   Frame 2: " + frame4);
+        //print("Car position: " + target.recordedData[currentFrame].position);
+        ////print("Dummy1 position: " + recordedReplay[frame3].position);
+        ////print("Dummy2 position: " + recordedReplay[frame4].position);
+        //print("Car - Dummy1 distance: " + minDistance);
+        //print("Car - Dummy2 distance: " + minDistance2);
+        //print("Dummy1 - Dummy2 distance: " + minDistance3);
+        //print("Height: " + height);
     }
 }
