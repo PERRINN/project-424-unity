@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.059738647, g: 0.076523386, b: 0.09403866, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.05970783, g: 0.076506756, b: 0.09413897, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -799,6 +799,26 @@ PrefabInstance:
         type: 3}
       propertyPath: screenPosition.y
       value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892635335174824, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892635335174825, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892635335174830, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892635335174830, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: chart
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -2361,6 +2381,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930581524}
   m_CullTransparentMesh: 0
+--- !u!54 &981200018 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 4116892635276943221, guid: 89f86da0002dfa549bb80908bb13bad3,
+    type: 3}
+  m_PrefabInstance: {fileID: 207221086}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1056226494
 GameObject:
   m_ObjectHideFlags: 0
@@ -3328,6 +3354,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660738907}
   m_CullTransparentMesh: 0
+--- !u!1 &1706217101 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4116892635335174826, guid: 89f86da0002dfa549bb80908bb13bad3,
+    type: 3}
+  m_PrefabInstance: {fileID: 207221086}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1706217103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706217101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf60e66e10e9c1409ff28e12f142804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Perrinn424: {fileID: 981200018}
+  StartLine: {fileID: 0}
+  chart: 0
 --- !u!1 &1831695002
 GameObject:
   m_ObjectHideFlags: 0
