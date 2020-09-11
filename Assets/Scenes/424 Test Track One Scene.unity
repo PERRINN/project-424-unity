@@ -330,7 +330,7 @@ GameObject:
   - component: {fileID: 115895571}
   - component: {fileID: 115895570}
   m_Layer: 9
-  m_Name: ElecData
+  m_Name: ElecTorqueBalance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -841,6 +841,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b6f679968f6278446a64f24a875b924d,
         type: 2}
+    - target: {fileID: 4682684200946408111, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4729384033056834893, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -1447,7 +1452,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 2a543b2a68024224ea93bcb7e2be2a9e, type: 3}
     m_FontSize: 70
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 70
     m_Alignment: 4
@@ -1712,13 +1717,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 429478693}
+  windowSeconds: 6
   speedMps: {fileID: 378077409}
   speedKph: {fileID: 46024160}
   gear: {fileID: 446123183}
-  frontWheelRpm: {fileID: 790572893}
-  backWheelRpm: {fileID: 1107035832}
-  enginePower: {fileID: 1660738909}
+  frontMGURpm: {fileID: 790572893}
+  rearMGURpm: {fileID: 1107035832}
+  totalElecPower: {fileID: 1660738909}
   drsImage: {fileID: 1450267887}
+  minIndicator: {fileID: 857481682}
+  elecTorqueBal: {fileID: 115895570}
+  mechTorqueBal: {fileID: 1071089667}
 --- !u!1 &570728392
 GameObject:
   m_ObjectHideFlags: 0
@@ -1849,7 +1858,7 @@ GameObject:
   - component: {fileID: 790572894}
   - component: {fileID: 790572893}
   m_Layer: 9
-  m_Name: RpmData1
+  m_Name: FrontMGURpm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1914,6 +1923,84 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790572891}
+  m_CullTransparentMesh: 0
+--- !u!1 &857481680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 857481681}
+  - component: {fileID: 857481683}
+  - component: {fileID: 857481682}
+  m_Layer: 9
+  m_Name: MIN
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &857481681
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857481680}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.3, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1899555012}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 391.7, y: -20}
+  m_SizeDelta: {x: 200, y: 100}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &857481682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857481680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 2a543b2a68024224ea93bcb7e2be2a9e, type: 3}
+    m_FontSize: 40
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 2
+    m_MaxSize: 50
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: MIN
+--- !u!222 &857481683
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857481680}
   m_CullTransparentMesh: 0
 --- !u!1 &873071430
 GameObject:
@@ -2477,7 +2564,7 @@ GameObject:
   - component: {fileID: 1071089668}
   - component: {fileID: 1071089667}
   m_Layer: 9
-  m_Name: TrqData
+  m_Name: MecTorqueBalance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2567,7 +2654,7 @@ GameObject:
   - component: {fileID: 1107035833}
   - component: {fileID: 1107035832}
   m_Layer: 9
-  m_Name: RpmData2
+  m_Name: RearMGURpm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3288,7 +3375,7 @@ GameObject:
   - component: {fileID: 1660738910}
   - component: {fileID: 1660738909}
   m_Layer: 9
-  m_Name: KwData
+  m_Name: TotalPower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3490,6 +3577,7 @@ RectTransform:
   - {fileID: 446123182}
   - {fileID: 1338682936}
   - {fileID: 1056226495}
+  - {fileID: 857481681}
   m_Father: {fileID: 1473237317}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

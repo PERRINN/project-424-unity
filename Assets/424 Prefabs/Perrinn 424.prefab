@@ -787,7 +787,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4116892635404004745}
   m_LocalRotation: {x: 0.03489949, y: 0, z: 0, w: 0.99939084}
-  m_LocalPosition: {x: -0.151, y: 0.766, z: -1.128}
+  m_LocalPosition: {x: -0.151, y: 0.766, z: -1.158}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4116892635011510442}
@@ -801,28 +801,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4116892635404004745}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 163649085, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateMode: 0
+  updateMode: 2
   longitudinal:
     mode: 1
-    springRate: 50
-    damperRate: 10
+    springRate: 5
+    damperRate: 3
   lateral:
-    mode: 2
-    springRate: 200
-    damperRate: 20
+    mode: 0
+    springRate: 800
+    damperRate: 50
   vertical:
     mode: 0
-    springRate: 200
-    damperRate: 10
+    springRate: 300
+    damperRate: 30
   tiltRadius: 0.5
   maxDistance: 0.2
-  maxTiltAngle: 10
-  inertialMass: 0.5
+  maxTiltAngle: 2
+  inertialMass: 0
   useGravity: 1
 --- !u!1 &4116892635474530981
 GameObject:
