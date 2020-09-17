@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.059738647, g: 0.076523386, b: 0.09403866, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.05970783, g: 0.076506756, b: 0.09413897, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -885,6 +885,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 207221086}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &207221088 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2334922576331618837, guid: 89f86da0002dfa549bb80908bb13bad3,
+    type: 3}
+  m_PrefabInstance: {fileID: 207221086}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &207221089 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2397977189475865303, guid: 89f86da0002dfa549bb80908bb13bad3,
+    type: 3}
+  m_PrefabInstance: {fileID: 207221086}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &207221090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207221089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fcc9fd186826244cbcf99c71e42ab33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vehicle: {fileID: 429478693}
+  increasingValueTRQ: 0.000139
+  increaseingValueRPM: 0.000139
+  basePitch: 0.22
+  baseVolume: 0.45
+  engineAudio: {fileID: 207221088}
 --- !u!1 &339809609
 GameObject:
   m_ObjectHideFlags: 0
