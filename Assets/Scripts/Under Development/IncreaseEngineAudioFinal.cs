@@ -21,7 +21,8 @@ public class IncreaseEngineAudioFinal : MonoBehaviour
 
     void Start()
     {
-        
+        engineAudio.pitch = basePitch;
+        engineAudio.volume = baseVolume;
     }
 
     void Update()
