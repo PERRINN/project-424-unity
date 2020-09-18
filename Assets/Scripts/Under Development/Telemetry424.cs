@@ -22,7 +22,7 @@ namespace Project424
 [RequireComponent(typeof(VPPerformanceDisplay))]
 public class Telemetry424 : MonoBehaviour
 	{
-	public enum Charts { AbsDiagnostics, AxleSuspension, SuspensionAnalysis, KineticEnergy };
+	public enum Charts { AbsDiagnostics, AxleSuspension, SuspensionAnalysis, KineticEnergy, PID };
 	public Charts chart = Charts.AbsDiagnostics;
 
 	public int monitoredWheel = 0;
@@ -35,6 +35,7 @@ public class Telemetry424 : MonoBehaviour
 		new AxleSuspensionChart(),
 		new SuspensionAnalysisChart(),
 		new KineticEnergyChart(),
+		new PIDChart(),
 		};
 
 	VPPerformanceDisplay m_perfComponent;
@@ -521,5 +522,43 @@ public class KineticEnergyChart : PerformanceChart
 		}
 	}
 
+
+	//PID Graph
+
+	public class PIDChart : PerformanceChart
+	{
+		DataLogger.Channel m_error;
+
+		public override string Title()
+		{
+			return "PID Error Display";
+		}
+
+		public override void Initialize()
+		{
+			dataLogger.topLimit = 40.0f;
+			dataLogger.bottomLimit = -10.0f;
+		}
+
+		public override void ResetView()
+		{
+			dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+		}
+
+		public override void SetupChannels()
+		{
+			m_error = dataLogger.NewChannel("Error");
+			m_error.color = GColor.blue;
+			m_error.SetOriginAndSpan(9.0f, 6.0f, 100.0f);
+			m_error.valueFormat = "0.00";
+			m_error.captionPositionY = 0;
+		}
+
+		public override void RecordData()
+		{
+			float errorDistance = PID.height;
+			m_error.Write(errorDistance);
+		}
+	}
 #endif
 }
