@@ -22,19 +22,20 @@ namespace Project424
 [RequireComponent(typeof(VPPerformanceDisplay))]
 public class Telemetry424 : MonoBehaviour
 	{
-	public enum Charts { AbsDiagnostics, AxleSuspension, SuspensionAnalysis, KineticEnergy, PID };
-	public Charts chart = Charts.AbsDiagnostics;
+	public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID };
+	public Charts chart = Charts.ForceFeedback;
 
-	public int monitoredWheel = 0;
-	public float maxBrakeTorque = 3200.0f;
+	// public int monitoredWheel = 0;
+	// public float maxBrakeTorque = 3200.0f;
 
 
 	PerformanceChart[] m_charts = new PerformanceChart[]
 		{
-		new AbsDiagnosticsChart(),
+		new ForceFeedbackChart(),
+		// new AbsDiagnosticsChart(),
 		new AxleSuspensionChart(),
 		new SuspensionAnalysisChart(),
-		new KineticEnergyChart(),
+		// new KineticEnergyChart(),
 		new PIDChart(),
 		};
 
@@ -50,10 +51,11 @@ public class Telemetry424 : MonoBehaviour
 	void FixedUpdate ()
 		{
 		// Pass the exposed parameters to their corresponding charts
-
+		/*
 		AbsDiagnosticsChart absChart = m_charts[(int)Charts.AbsDiagnostics] as AbsDiagnosticsChart;
 		absChart.monitoredWheel = monitoredWheel;
 		absChart.maxBrakeTorque = maxBrakeTorque;
+		*/
 
 		// Apply the selected custom chart
 
@@ -62,6 +64,64 @@ public class Telemetry424 : MonoBehaviour
 	}
 
 
+public class ForceFeedbackChart : PerformanceChart
+	{
+	DataLogger.Channel m_forceFactor;
+	DataLogger.Channel m_damperFactor;
+
+	VPDeviceInput m_deviceInput;
+
+
+	public override string Title ()
+		{
+		return "Force Feedback";
+		}
+
+
+	public override void Initialize ()
+		{
+		dataLogger.topLimit = 12.0f;
+		dataLogger.bottomLimit = -0.5f;
+
+		m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
+		}
+
+
+	public override void ResetView ()
+		{
+		dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+		}
+
+
+	public override void SetupChannels ()
+		{
+		m_damperFactor = dataLogger.NewChannel("Damper");
+		m_damperFactor.color = GColor.Alpha(GColor.orange, 1.0f);
+		m_damperFactor.SetOriginAndSpan(0.0f, 5.0f);
+		m_damperFactor.valueFormat = "0.0 %";
+
+		m_forceFactor = dataLogger.NewChannel("Force");
+		m_forceFactor.color = GColor.Alpha(GColor.accentBlue, 1.0f);
+		m_forceFactor.SetOriginAndSpan(5.0f, 5.0f);
+		m_forceFactor.valueFormat = "0.0 %";
+		}
+
+	public override void RecordData ()
+		{
+		if (m_deviceInput == null) return;
+
+		m_forceFactor.Write(m_deviceInput.currentForceFactor);
+		m_damperFactor.Write(m_deviceInput.currentDamperFactor);
+		}
+
+	}
+
+
+
+
+
+
+/*
 // Abs Diagnostics
 
 
@@ -178,7 +238,7 @@ public class AbsDiagnosticsChart : PerformanceChart
 			m_slip.Write(ws.tireSlip.y);
 		}
 	}
-
+*/
 
 
 // Axle suspension
@@ -414,6 +474,7 @@ public class SuspensionAnalysisChart : PerformanceChart
 	}
 
 
+/*
 // Kinetic Energy Chart
 
 
@@ -521,7 +582,7 @@ public class KineticEnergyChart : PerformanceChart
 		m_lastAngularEnergy = angularEnergy;
 		}
 	}
-
+*/
 
 	//PID Graph
 
