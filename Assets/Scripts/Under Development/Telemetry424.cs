@@ -527,17 +527,29 @@ public class KineticEnergyChart : PerformanceChart
 
 	public class PIDChart : PerformanceChart
 	{
+		PidController pidController = new PidController();
+
+		public static float errorDistance { get; set; }
+		public static float proportional { get; set; }
+		public static float integral { get; set; }
+		public static float derivative { get; set; }
+		public static float output { get; set; }
+
 		DataLogger.Channel m_error;
+		DataLogger.Channel m_proportional;
+		DataLogger.Channel m_integral;
+		DataLogger.Channel m_derivative;
+		DataLogger.Channel m_PID;
 
 		public override string Title()
 		{
-			return "PID Error Display";
+			return "PID Display";
 		}
 
 		public override void Initialize()
 		{
-			dataLogger.topLimit = 40.0f;
-			dataLogger.bottomLimit = -10.0f;
+			dataLogger.topLimit = 100.0f;
+			dataLogger.bottomLimit = 0.0f;
 		}
 
 		public override void ResetView()
@@ -548,16 +560,43 @@ public class KineticEnergyChart : PerformanceChart
 		public override void SetupChannels()
 		{
 			m_error = dataLogger.NewChannel("Error");
-			m_error.color = GColor.blue;
-			m_error.SetOriginAndSpan(9.0f, 6.0f, 100.0f);
+			m_error.color = GColor.gray;
+			m_error.SetOriginAndSpan(11.0f, 6.0f, 100.0f);
 			m_error.valueFormat = "0.00";
-			m_error.captionPositionY = 0;
+			m_error.captionPositionY = 1;
+
+			m_proportional = dataLogger.NewChannel("P");
+			m_proportional.color = GColor.red;
+			m_proportional.SetOriginAndSpan(11f, 6.0f, 100.0f);
+			m_proportional.valueFormat = "0.00";
+			m_proportional.captionPositionY = 0;
+
+			m_integral = dataLogger.NewChannel("I");
+			m_integral.color = GColor.green;
+			m_integral.SetOriginAndSpan(9.0f, 6.0f, 500.0f);
+			m_integral.valueFormat = "0.00";
+			m_integral.captionPositionY = 0;
+
+			m_derivative = dataLogger.NewChannel("D");
+			m_derivative.color = GColor.blue;
+			m_derivative.SetOriginAndSpan(6.5f, 6.0f, 500.0f);
+			m_derivative.valueFormat = "0.00";
+			m_derivative.captionPositionY = 0;
+
+			m_PID = dataLogger.NewChannel("PID");
+			m_PID.color = GColor.white;
+			m_PID.SetOriginAndSpan(5.0f, 6.0f, 500.0f);
+			m_PID.valueFormat = "0.00";
+			m_PID.captionPositionY = 0;
 		}
 
 		public override void RecordData()
 		{
-			float errorDistance = PID.height;
 			m_error.Write(errorDistance);
+			m_proportional.Write(proportional);
+			m_integral.Write(integral);
+			m_derivative.Write(derivative);
+			m_PID.Write(output);
 		}
 	}
 #endif
