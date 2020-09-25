@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections;
+using EdyCommonTools;
+using Project424;
+using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 using VehiclePhysics;
 
 public class PID : MonoBehaviour
 {
+    public Rigidbody vehicleBase424;
     public VPReplay target;
     public GameObject cubeOne;
     public GameObject cubeTwo;
@@ -17,8 +17,13 @@ public class PID : MonoBehaviour
 
     List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
 
+    PidController edyPID = new PidController();
+    public float kp, ki, kd;
+    public bool autopilotON = false;
+
     int cuts;
-    public static float height = 0;
+    float height = 0;
+    Vector3 appliedForceV3;
 
     void Start()
     {
@@ -31,15 +36,37 @@ public class PID : MonoBehaviour
         if (recordedReplay.Count >= cuts)
         {
             getDistance();
+            if (autopilotON) { vehicleBase424.AddForceAtPosition(appliedForceV3, transform.position); }
         }
     }
 
     void OnGUI()
     {
+        GUIStyle styleON = new GUIStyle(GUI.skin.button);
+
+        if (autopilotON) { styleON.normal.textColor = Color.green; }
+        else { styleON.normal.textColor = Color.red; }
+
         string errorDistance = "";
+        string forceX = "";
+        string forceZ = "";
         errorDistance += height;
-        GUI.Box(new Rect(185, Screen.height - 90, 100, 50), "Error");
-        GUI.Label(new Rect(200, Screen.height - 65, 100, 50), errorDistance);
+        forceX += appliedForceV3.x;
+        forceZ += appliedForceV3.z;
+
+        GUI.Box(new Rect(185, Screen.height - 90, 150, 80), "");
+        if (GUI.Button(new Rect(200, Screen.height - 85, 40, 20), "ON", styleON))
+        {
+            if (autopilotON) { autopilotON = false; }
+            else
+            {
+                autopilotON = true;
+                edyPID.Reset();
+            }
+        }
+        GUI.Label(new Rect(200, Screen.height - 65, 200, 50), "Error    : " + errorDistance);
+        GUI.Label(new Rect(200, Screen.height - 50, 200, 50), "Force X: " + forceX);
+        GUI.Label(new Rect(200, Screen.height - 35, 200, 50), "Force Z: " + forceZ);
     }
 
     void getDistance()
@@ -114,22 +141,30 @@ public class PID : MonoBehaviour
             }
         }
 
+
+        // get height
         float a = recordedReplay[frame3].position.x - recordedReplay[frame4].position.x;
         float b = recordedReplay[frame3].position.z - recordedReplay[frame4].position.z;
         float minDistance3 = (float)Math.Sqrt((a * a) + (b * b));
         float s = (minDistance1 + minDistance2 + minDistance3) / 2;
         float area = (float)Math.Sqrt(s * (s - minDistance1) * (s - minDistance2) * (s - minDistance3));
 
-        float abcX = recordedReplay[frame3].position.x - currentPosX;
-        float abcZ = recordedReplay[frame3].position.z - currentPosZ;
+        float errX = recordedReplay[frame3].position.x - currentPosX;
+        float errZ = recordedReplay[frame3].position.z - currentPosZ;
         float degree = -(float)(Math.PI * recordedReplay[frame3].rotation.eulerAngles.y / 180);
         float cosD = (float)Math.Cos(degree);
         float sinD = (float)Math.Sin(degree);
-        float abcXX = (abcX * cosD) + (abcZ * sinD);
+        float carPosX = (errX * cosD) + (errZ * sinD);
 
         float checkHeight = area * 2 / minDistance3;
 
-        height = (abcXX > 0) ? checkHeight : -checkHeight;
+        height = (carPosX > 0) ? -checkHeight : checkHeight;
+
+        PIDChart.errorDistance = height;
+        PIDChart.proportional = edyPID.proportional;
+        PIDChart.integral = edyPID.integral;
+        PIDChart.derivative = edyPID.derivative;
+        PIDChart.output = edyPID.output;
 
         if (showPosition)
         {
@@ -137,5 +172,16 @@ public class PID : MonoBehaviour
             cubeTwo.transform.position = recordedReplay[frame4].position;
             cubeCar.transform.position = target.recordedData[currentFrame].position;
         }
+
+
+        //get error force
+        edyPID.SetParameters(kp, ki, kd);
+        edyPID.input = height;
+        edyPID.Compute();
+
+        appliedForceV3.x = edyPID.output * cosD * 1.000f;
+        appliedForceV3.y = 0;
+        appliedForceV3.z = edyPID.output * sinD * 1.000f;
     }
+
 }
