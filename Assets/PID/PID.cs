@@ -164,10 +164,10 @@ public class PID : MonoBehaviour
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
         PIDChart.errorDistance = height;
-        PIDChart.proportional = edyPID.proportional;
-        PIDChart.integral = edyPID.integral;
-        PIDChart.derivative = edyPID.derivative;
-        PIDChart.output = edyPID.output;
+        PIDChart.proportional = ClampByOutput(edyPID.proportional);
+        PIDChart.integral = ClampByOutput(edyPID.integral);
+        PIDChart.derivative = ClampByOutput(edyPID.derivative);
+        PIDChart.output = ClampByOutput(edyPID.output);
 
         if (showPosition)
         {
