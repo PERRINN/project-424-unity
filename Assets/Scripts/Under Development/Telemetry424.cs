@@ -1,6 +1,6 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright � 2011-2020 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -231,21 +231,21 @@ public class AxleSuspensionChart : PerformanceChart
 		m_steerAngle = dataLogger.NewChannel("Steer Angle (avg)");
 		m_steerAngle.color = GColor.Alpha(Color.Lerp(GColor.teal, GColor.green, 0.75f), 0.7f);
 		m_steerAngle.SetOriginAndSpan(4.5f, -1.0f, 35.0f);
-		m_steerAngle.valueFormat = "0.00 °";
+		m_steerAngle.valueFormat = "0.00 �";
 		m_steerAngle.alphaBlend = true;
 		m_steerAngle.captionPositionY = 2;
 
 		m_roll = dataLogger.NewChannel("Roll");
 		m_roll.color = GColor.Alpha(GColor.teal, 0.7f);
 		m_roll.SetOriginAndSpan(4.5f, -1.0f, 10.0f);
-		m_roll.valueFormat = "0.00 °";
+		m_roll.valueFormat = "0.00 �";
 		m_roll.alphaBlend = true;
 		m_roll.captionPositionY = 0;
 
 		m_yawRate = dataLogger.NewChannel("Turn Rate");
 		m_yawRate.color = GColor.Alpha(GColor.red, 0.6f);
 		m_yawRate.SetOriginAndSpan(4.5f, -1.0f, 35.0f);
-		m_yawRate.valueFormat = "0.0 °/s";
+		m_yawRate.valueFormat = "0.0 �/s";
 		// m_yawRate.alphaBlend = true;
 		m_yawRate.captionPositionY = -1;
 
@@ -484,18 +484,18 @@ public class KineticEnergyChart : PerformanceChart
 		m_totalEnergy.valueFormat = energyFormat;
 		m_totalEnergy.captionPositionY = 3;
 
-		m_linearEnergyDelta = dataLogger.NewChannel("Linear Δ");
+		m_linearEnergyDelta = dataLogger.NewChannel("Linear ?");
 		m_linearEnergyDelta.color = GColor.green;
 		m_linearEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
 		m_linearEnergyDelta.valueFormat = energyFormat;
 
-		m_angularEnergyDelta = dataLogger.NewChannel("Angular Δ");
+		m_angularEnergyDelta = dataLogger.NewChannel("Angular ?");
 		m_angularEnergyDelta.color = GColor.cyan;
 		m_angularEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
 		m_angularEnergyDelta.valueFormat = energyFormat;
 		m_angularEnergyDelta.captionPositionY = 2;
 
-		m_totalEnergyDelta = dataLogger.NewChannel("Total Δ");
+		m_totalEnergyDelta = dataLogger.NewChannel("Total ?");
 		m_totalEnergyDelta.color = GColor.red;
 		m_totalEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
 		m_totalEnergyDelta.valueFormat = energyFormat;
@@ -561,31 +561,31 @@ public class KineticEnergyChart : PerformanceChart
 		{
 			m_error = dataLogger.NewChannel("Error");
 			m_error.color = GColor.gray;
-			m_error.SetOriginAndSpan(11.0f, 6.0f, 100.0f);
+			m_error.SetOriginAndSpan(10.0f, 6.0f, 1.0f);
 			m_error.valueFormat = "0.00";
 			m_error.captionPositionY = 1;
 
 			m_proportional = dataLogger.NewChannel("P");
 			m_proportional.color = GColor.red;
-			m_proportional.SetOriginAndSpan(11f, 6.0f, 100.0f);
+			m_proportional.SetOriginAndSpan(8.0f, 6.0f, 500000.0f);
 			m_proportional.valueFormat = "0.00";
 			m_proportional.captionPositionY = 0;
 
 			m_integral = dataLogger.NewChannel("I");
 			m_integral.color = GColor.green;
-			m_integral.SetOriginAndSpan(9.0f, 6.0f, 500.0f);
+			m_integral.SetOriginAndSpan(6.0f, 6.0f, 500.0f);
 			m_integral.valueFormat = "0.00";
 			m_integral.captionPositionY = 0;
 
 			m_derivative = dataLogger.NewChannel("D");
 			m_derivative.color = GColor.blue;
-			m_derivative.SetOriginAndSpan(6.5f, 6.0f, 500.0f);
+			m_derivative.SetOriginAndSpan(4.0f, 6.0f, 500000.0f);
 			m_derivative.valueFormat = "0.00";
 			m_derivative.captionPositionY = 0;
 
 			m_PID = dataLogger.NewChannel("PID");
 			m_PID.color = GColor.white;
-			m_PID.SetOriginAndSpan(5.0f, 6.0f, 500.0f);
+			m_PID.SetOriginAndSpan(2.0f, 6.0f, 500000.0f);
 			m_PID.valueFormat = "0.00";
 			m_PID.captionPositionY = 0;
 		}

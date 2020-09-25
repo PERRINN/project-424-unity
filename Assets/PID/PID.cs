@@ -1,4 +1,4 @@
-﻿using EdyCommonTools;
+using EdyCommonTools;
 using Project424;
 using System;
 using System.Collections.Generic;
@@ -24,13 +24,11 @@ public class PID : MonoBehaviour
     int cuts;
     float height = 0;
     Vector3 appliedForceV3;
-    float mass;
 
     void Start()
     {
         recordedReplay = replayController.predefinedReplay.recordedData;
         cuts = recordedReplay.Count / 500;
-        mass = vehicleBase424.GetComponent<Rigidbody>().mass;
     }
 
     void Update()
@@ -181,9 +179,9 @@ public class PID : MonoBehaviour
         edyPID.input = height;
         edyPID.Compute();
 
-        appliedForceV3.x = kp * edyPID.output * cosD * mass * 1.000f;
+        appliedForceV3.x = edyPID.output * cosD * 1.000f;
         appliedForceV3.y = 0;
-        appliedForceV3.z = kp * edyPID.output * sinD * mass * 1.000f;
+        appliedForceV3.z = edyPID.output * sinD * 1.000f;
     }
 
 }
