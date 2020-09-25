@@ -19,6 +19,7 @@ public class PID : MonoBehaviour
 
     PidController edyPID = new PidController();
     public float kp, ki, kd;
+    public float maxForce;
     public bool autopilotON = false;
 
     int cuts;
@@ -33,6 +34,16 @@ public class PID : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (autopilotON) { autopilotON = false; }
+            else
+            {
+                autopilotON = true;
+                edyPID.Reset();
+            }
+        }
+
         if (recordedReplay.Count >= cuts)
         {
             getDistance();
@@ -55,15 +66,7 @@ public class PID : MonoBehaviour
         forceZ += appliedForceV3.z;
 
         GUI.Box(new Rect(185, Screen.height - 90, 150, 80), "");
-        if (GUI.Button(new Rect(200, Screen.height - 85, 40, 20), "ON", styleON))
-        {
-            if (autopilotON) { autopilotON = false; }
-            else
-            {
-                autopilotON = true;
-                edyPID.Reset();
-            }
-        }
+        GUI.Button(new Rect(200, Screen.height - 85, 40, 20), "ON", styleON);
         GUI.Label(new Rect(200, Screen.height - 65, 200, 50), "Error    : " + errorDistance);
         GUI.Label(new Rect(200, Screen.height - 50, 200, 50), "Force X: " + forceX);
         GUI.Label(new Rect(200, Screen.height - 35, 200, 50), "Force Z: " + forceZ);
@@ -175,13 +178,20 @@ public class PID : MonoBehaviour
 
 
         //get error force
+        edyPID.minOutput = maxForce * -1.0f;
+        edyPID.maxOutput = maxForce * 1.0f;
         edyPID.SetParameters(kp, ki, kd);
         edyPID.input = height;
         edyPID.Compute();
 
-        appliedForceV3.x = edyPID.output * cosD * 1.000f;
+        appliedForceV3.x = ClampByOutput(edyPID.output * cosD * 1.000f);
         appliedForceV3.y = 0;
-        appliedForceV3.z = edyPID.output * sinD * 1.000f;
+        appliedForceV3.z = ClampByOutput(edyPID.output * sinD * 1.000f);
     }
 
+    float ClampByOutput(float value)
+    {
+        float clampedForce = Mathf.Clamp(value, -maxForce, maxForce);
+        return clampedForce;
+    }
 }
