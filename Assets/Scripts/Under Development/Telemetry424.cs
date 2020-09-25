@@ -32,20 +32,21 @@ namespace Project424
         public static float m_totalDistance { get; private set; }
         public static float m_lapDistance;
 
-        public enum Charts { AbsDiagnostics, AxleSuspension, SuspensionAnalysis, KineticEnergy, PID, TotalDistanceChart, LapDistanceChart, };
-        public Charts chart = Charts.AbsDiagnostics;
+        public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID, TotalDistanceChart, LapDistanceChart };
+        public Charts chart = Charts.ForceFeedback;
 
-        public int monitoredWheel = 0;
-        public float maxBrakeTorque = 3200.0f;
+        // public int monitoredWheel = 0;
+        // public float maxBrakeTorque = 3200.0f;
 
 
         PerformanceChart[] m_charts = new PerformanceChart[]
             {
-        new AbsDiagnosticsChart(),
-        new AxleSuspensionChart(),
+        new ForceFeedbackChart(),
+		// new AbsDiagnosticsChart(),
+		new AxleSuspensionChart(),
         new SuspensionAnalysisChart(),
-        new KineticEnergyChart(),
-        new PIDChart(),
+		// new KineticEnergyChart(),
+		new PIDChart(),
         new TotalDistanceChart(),
         new LapDistanceChart(),
             };
@@ -68,10 +69,11 @@ namespace Project424
         void FixedUpdate()
         {
             // Pass the exposed parameters to their corresponding charts
-
+            /*
             AbsDiagnosticsChart absChart = m_charts[(int)Charts.AbsDiagnostics] as AbsDiagnosticsChart;
             absChart.monitoredWheel = monitoredWheel;
             absChart.maxBrakeTorque = maxBrakeTorque;
+            */
 
             // Calculates the total distance travelled by subtracting lastPosition from current position
 
@@ -83,7 +85,6 @@ namespace Project424
             m_totalDistance += distance;
             m_lapDistance += distance;
 
-
             // Apply the selected custom chart
 
             m_perfComponent.customChart = m_charts[(int)chart];
@@ -91,11 +92,69 @@ namespace Project424
     }
 
 
+    public class ForceFeedbackChart : PerformanceChart
+    {
+        DataLogger.Channel m_forceFactor;
+        DataLogger.Channel m_damperFactor;
+
+        VPDeviceInput m_deviceInput;
+
+
+        public override string Title()
+        {
+            return "Force Feedback";
+        }
+
+
+        public override void Initialize()
+        {
+            dataLogger.topLimit = 12.0f;
+            dataLogger.bottomLimit = -0.5f;
+
+            m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
+        }
+
+
+        public override void ResetView()
+        {
+            dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+        }
+
+
+        public override void SetupChannels()
+        {
+            m_damperFactor = dataLogger.NewChannel("Damper");
+            m_damperFactor.color = GColor.Alpha(GColor.orange, 1.0f);
+            m_damperFactor.SetOriginAndSpan(0.0f, 5.0f);
+            m_damperFactor.valueFormat = "0.0 %";
+
+            m_forceFactor = dataLogger.NewChannel("Force");
+            m_forceFactor.color = GColor.Alpha(GColor.accentBlue, 1.0f);
+            m_forceFactor.SetOriginAndSpan(5.0f, 5.0f);
+            m_forceFactor.valueFormat = "0.0 %";
+        }
+
+        public override void RecordData()
+        {
+            if (m_deviceInput == null) return;
+
+            m_forceFactor.Write(m_deviceInput.currentForceFactor);
+            m_damperFactor.Write(m_deviceInput.currentDamperFactor);
+        }
+
+    }
+
+
+
+
+
+
+    /*
     // Abs Diagnostics
 
 
     public class AbsDiagnosticsChart : PerformanceChart
-    {
+        {
         // Channels
 
         DataLogger.Channel m_speed;
@@ -111,27 +170,27 @@ namespace Project424
         public float maxBrakeTorque = 3200.0f;
 
 
-        public override string Title()
-        {
+        public override string Title ()
+            {
             return "Abs Diagnostics";
-        }
+            }
 
 
-        public override void Initialize()
-        {
+        public override void Initialize ()
+            {
             dataLogger.topLimit = 12.0f;
             dataLogger.bottomLimit = -0.5f;
-        }
+            }
 
 
-        public override void ResetView()
-        {
+        public override void ResetView ()
+            {
             dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
-        }
+            }
 
 
-        public override void SetupChannels()
-        {
+        public override void SetupChannels ()
+            {
             // Channels will be drawn in the same order they're created
 
             m_slip = dataLogger.NewChannel("Slip");
@@ -173,11 +232,11 @@ namespace Project424
             m_speed.color = GColor.cyan;
             m_speed.SetOriginAndSpan(4.0f, 5.0f, reference.maxSpeed * 3.6f);
             m_speed.valueFormat = "0.0 km/h";
-        }
+            }
 
 
-        public override void RecordData()
-        {
+        public override void RecordData ()
+            {
             // Gather information
 
             int[] vehicleData = vehicle.data.Get(Channel.Vehicle);
@@ -201,13 +260,13 @@ namespace Project424
             // float brakeSlip = Mathf.Clamp01((vf - vw) / vf);
             // float tractionSlip = Mathf.Clamp01((vw - vf) / vw);
             // if (vf > 0.1f && vf - vw > 0.1f)
-            // m_slip.Write(brakeSlip);
+                // m_slip.Write(brakeSlip);
 
             if (ws.tireSlip.y > -0.1f)
                 m_slip.Write(ws.tireSlip.y);
+            }
         }
-    }
-
+    */
 
 
     // Axle suspension
@@ -443,11 +502,12 @@ namespace Project424
     }
 
 
+    /*
     // Kinetic Energy Chart
 
 
     public class KineticEnergyChart : PerformanceChart
-    {
+        {
         // Channels
 
         // Energy per unit (assuming mass = 1, inertia = Identity)
@@ -466,35 +526,35 @@ namespace Project424
         float m_lastAngularEnergy;
 
 
-        public override string Title()
-        {
+        public override string Title ()
+            {
             return "Kinetic Energy";
-        }
+            }
 
 
-        public override void Initialize()
-        {
+        public override void Initialize ()
+            {
             dataLogger.topLimit = 25.0f;
             dataLogger.bottomLimit = -12.5f;
 
             m_lastTotalEnergy = RigidbodyUtility.GetNormalizedKineticEnergy(vehicle.cachedRigidbody);
             m_lastLinearEnergy = RigidbodyUtility.GetNormalizedLinearKineticEnergy(vehicle.cachedRigidbody);
             m_lastAngularEnergy = RigidbodyUtility.GetNormalizedAngularKineticEnergy(vehicle.cachedRigidbody);
-        }
+            }
 
 
-        public override void ResetView()
-        {
+        public override void ResetView ()
+            {
             dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 13.5f);
-        }
+            }
 
 
-        public override void SetupChannels()
-        {
+        public override void SetupChannels ()
+            {
             // Channels will be drawn in the same order they're created
 
             string energyFormat = "0.0 J";
-            float energyScale = 0.5f * reference.maxSpeed * reference.maxSpeed;
+            float energyScale = 0.5f*reference.maxSpeed*reference.maxSpeed;
 
             m_linearEnergy = dataLogger.NewChannel("Linear");
             m_linearEnergy.color = GColor.accentGreen;
@@ -529,11 +589,11 @@ namespace Project424
             m_totalEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
             m_totalEnergyDelta.valueFormat = energyFormat;
             m_totalEnergyDelta.captionPositionY = 3;
-        }
+            }
 
 
-        public override void RecordData()
-        {
+        public override void RecordData ()
+            {
             float totalEnergy = RigidbodyUtility.GetNormalizedKineticEnergy(vehicle.cachedRigidbody);
             m_totalEnergy.Write(totalEnergy);
             m_totalEnergyDelta.Write(totalEnergy - m_lastTotalEnergy);
@@ -548,11 +608,11 @@ namespace Project424
             m_angularEnergy.Write(angularEnergy);
             m_angularEnergyDelta.Write(angularEnergy - m_lastAngularEnergy);
             m_lastAngularEnergy = angularEnergy;
+            }
         }
-    }
+    */
 
-
-    // PID Graph
+    //PID Graph
 
     public class PIDChart : PerformanceChart
     {
@@ -654,7 +714,7 @@ namespace Project424
         {
             dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
         }
-        
+
         public override void SetupChannels()
         {
             // Lap Distance
@@ -672,5 +732,6 @@ namespace Project424
             m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 2.0f, 1700f);
         }
     }
+
 #endif
 }
