@@ -32,7 +32,7 @@ namespace Project424
         public static float m_totalDistance { get; private set; }
         public static float m_lapDistance;
 
-        public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID, TotalDistanceChart, LapDistanceChart };
+        public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID, DistanceChart };
         public Charts chart = Charts.ForceFeedback;
 
         // public int monitoredWheel = 0;
@@ -47,8 +47,7 @@ namespace Project424
         new SuspensionAnalysisChart(),
 		// new KineticEnergyChart(),
 		new PIDChart(),
-        new TotalDistanceChart(),
-        new LapDistanceChart(),
+        new DistanceChart(),
             };
 
         VPPerformanceDisplay m_perfComponent;
@@ -650,16 +649,17 @@ namespace Project424
         }
     }
 
-    // Total Distance Chart
+    // Distance Chart
 
-    public class TotalDistanceChart : PerformanceChart
+    public class DistanceChart : PerformanceChart
     {
         // Creates channels for distance travelled
         DataLogger.Channel m_totalDistanceTravelled;
+        DataLogger.Channel m_lapDistanceTravelled;
 
         public override string Title()
         {
-            return "Total Distance Travelled";
+            return "Distance Travelled";
         }
 
         public override void Initialize()
@@ -677,10 +677,17 @@ namespace Project424
         {
             // Total Distance
             m_totalDistanceTravelled = dataLogger.NewChannel("Total Distance");
-            m_totalDistanceTravelled.color = GColor.gray;
-            m_totalDistanceTravelled.SetOriginAndSpan(3.5f, 2.0f, 1.0f);
+            m_totalDistanceTravelled.color = GColor.blue;
+            m_totalDistanceTravelled.SetOriginAndSpan(4.6f, 1.0f, 10000f);
             m_totalDistanceTravelled.valueFormat = "0 m";
             m_totalDistanceTravelled.captionPositionY = 1;
+
+            // Lap Distance
+            m_lapDistanceTravelled = dataLogger.NewChannel("Lap Distance");
+            m_lapDistanceTravelled.color = GColor.red;
+            m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
+            m_lapDistanceTravelled.valueFormat = "0 m";
+            m_lapDistanceTravelled.captionPositionY = 1;
         }
 
         public override void RecordData()
@@ -688,48 +695,11 @@ namespace Project424
             // Passes the distance to the datalogger to write on the chart
             // Total Distance
             m_totalDistanceTravelled.Write(Telemetry424.m_totalDistance);
-            m_totalDistanceTravelled.SetOriginAndSpan(3.5f, 2.0f, 10000f);
-        }
-    }
+            m_totalDistanceTravelled.SetOriginAndSpan(4.6f, 1.0f, 10000f);
 
-    // Lap Distance Chart
-
-    public class LapDistanceChart : PerformanceChart
-    {
-        // Creates channels for distance travelled
-        DataLogger.Channel m_lapDistanceTravelled;
-
-        public override string Title()
-        {
-            return "Lap Distance Travelled";
-        }
-
-        public override void Initialize()
-        {
-            dataLogger.topLimit = 1000f;
-            dataLogger.bottomLimit = 0f;
-        }
-
-        public override void ResetView()
-        {
-            dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
-        }
-
-        public override void SetupChannels()
-        {
-            // Lap Distance
-            m_lapDistanceTravelled = dataLogger.NewChannel("Lap Distance");
-            m_lapDistanceTravelled.color = GColor.gray;
-            m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 2.0f, 1700f);
-            m_lapDistanceTravelled.valueFormat = "0 m";
-            m_lapDistanceTravelled.captionPositionY = 1;
-        }
-
-        public override void RecordData()
-        {
             // Lap Distance
             m_lapDistanceTravelled.Write(Telemetry424.m_lapDistance);
-            m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 2.0f, 1700f);
+            m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
         }
     }
 
