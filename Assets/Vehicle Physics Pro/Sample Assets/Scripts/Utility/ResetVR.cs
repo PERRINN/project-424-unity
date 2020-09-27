@@ -5,6 +5,7 @@
 //--------------------------------------------------------------
 
 using UnityEngine;
+using EdyCommonTools;
 
 
 namespace VehiclePhysics.Utility
@@ -16,11 +17,8 @@ public class ResetVR : MonoBehaviour
 
 	void Update ()
 		{
-		// Surprisingly...
-		#if !UNITY_XBOXONE
 		if (Input.GetKeyDown(recenterKey))
-			UnityEngine.XR.InputTracking.Recenter();
-		#endif
+			VrUtility.Recenter();
 		}
 	}
 
