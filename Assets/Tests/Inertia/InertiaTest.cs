@@ -35,7 +35,6 @@ public class InertiaTest : MonoBehaviour
 
 	Rigidbody m_rigidbody;
 	Vector3 m_lastAngularVelocity;
-	// Vector3 m_applicationPoint;
 	Inertia m_inertiaHelper = new Inertia();
 	float m_internalTime;
 	int m_internalFrame;
@@ -58,7 +57,6 @@ public class InertiaTest : MonoBehaviour
 		m_inertiaHelper.settings = inertia;
 		m_inertiaHelper.Apply(m_rigidbody);
 		m_lastAngularVelocity = m_rigidbody.angularVelocity;
-		// m_applicationPoint = m_rigidbody.worldCenterOfMass + forcePosition;
 
 		Time.timeScale = timeScale;
 		Time.fixedDeltaTime = deltaTime;
@@ -81,6 +79,7 @@ public class InertiaTest : MonoBehaviour
 		m_smallTextStyle.normal.textColor = fontColor;
 
 		m_inertiaHelper.DoUpdate(m_rigidbody);
+		DebugUtility.DrawCrossMark(m_rigidbody.worldCenterOfMass, GColor.brown, 0.2f);
 		}
 
 
@@ -101,7 +100,7 @@ public class InertiaTest : MonoBehaviour
 		m_text = $"Frame / Time:         #{m_internalFrame,-3} {m_internalTime.ToString("0.000")}\n\nAngular Velocity:     {m_lastAngularVelocity.ToString("0.00000")}\nAngular Acceleration: {angularAcceleration.ToString("0.00000")}\n";
 
 		if (m_internalTime < forceStart * 2 + forceDuration)
-			m_results += $"#{m_internalFrame,-3} {m_internalTime,5:0.000} {angularAcceleration.x,10:0.0000000} {angularAcceleration.y,10:0.0000000} {angularAcceleration.z,10:0.0000000}\n";
+			m_results += $"#{m_internalFrame,-3} {m_internalTime,5:0.000} {angularAcceleration.x,10:0.000000} {angularAcceleration.y,10:0.000000} {angularAcceleration.z,10:0.000000}\n";
 
 		// Advance physics time
 
@@ -113,8 +112,12 @@ public class InertiaTest : MonoBehaviour
 
 	void ApplyForce ()
 		{
-		m_rigidbody.AddForceAtPosition(forceVector, m_rigidbody.worldCenterOfMass + forcePosition);
-		// m_rigidbody.AddForceAtPosition(forceVector, m_applicationPoint);
+		Vector3 applicationPoint = m_rigidbody.transform.TransformPoint(forcePosition);
+
+		DebugUtility.DrawCrossMark(applicationPoint, GColor.solidRed, 0.2f);
+		Debug.DrawLine(applicationPoint, applicationPoint + forceVector / 1000);
+
+	 	m_rigidbody.AddForceAtPosition(forceVector, applicationPoint);
 		}
 
 
