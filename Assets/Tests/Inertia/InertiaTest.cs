@@ -6,7 +6,7 @@ using EdyCommonTools;
 
 
 [RequireComponent(typeof(Rigidbody))]
-public class InertiaTests : MonoBehaviour
+public class InertiaTest : MonoBehaviour
 	{
 	public Inertia.Settings inertia = new Inertia.Settings();
 
@@ -33,6 +33,7 @@ public class InertiaTests : MonoBehaviour
 
 	Rigidbody m_rigidbody;
 	Vector3 m_lastAngularVelocity;
+	// Vector3 m_applicationPoint;
 	Inertia m_inertiaHelper = new Inertia();
 	float m_internalTime;
 	int m_internalFrame;
@@ -53,6 +54,7 @@ public class InertiaTests : MonoBehaviour
 		m_inertiaHelper.settings = inertia;
 		m_inertiaHelper.Apply(m_rigidbody);
 		m_lastAngularVelocity = m_rigidbody.angularVelocity;
+		// m_applicationPoint = m_rigidbody.worldCenterOfMass + forcePosition;
 
 		Time.timeScale = timeScale;
 		Time.fixedDeltaTime = deltaTime;
@@ -100,6 +102,7 @@ public class InertiaTests : MonoBehaviour
 	void ApplyForce ()
 		{
 		m_rigidbody.AddForceAtPosition(forceVector, m_rigidbody.worldCenterOfMass + forcePosition);
+		// m_rigidbody.AddForceAtPosition(forceVector, m_applicationPoint);
 		}
 
 
