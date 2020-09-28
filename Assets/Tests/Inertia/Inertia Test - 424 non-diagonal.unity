@@ -199,10 +199,11 @@ MonoBehaviour:
   forceStart: 0.1
   forceDuration: 0.1
   deltaTime: 0.005
-  timeScale: 0.02
+  timeScale: 1
   position: {x: 8, y: 8}
   font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
-  fontSize: 17
+  fontSize: 13
+  smallFontSize: 11
   fontColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!54 &190634341
 Rigidbody:
@@ -218,7 +219,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
 --- !u!4 &190634342
 Transform:
@@ -245,6 +246,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 8d8414ffbc5332746aa59de5fea186d0, type: 3}
       propertyPath: m_Name
       value: Brick Flat 10x10 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8d8414ffbc5332746aa59de5fea186d0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8d8414ffbc5332746aa59de5fea186d0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -293,7 +298,7 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: 8d8414ffbc5332746aa59de5fea186d0, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f3891c86d1373d84d87f14e6f6f66f15, type: 2}
+      objectReference: {fileID: 2100000, guid: 7e5215c2c4d5ab44ab2fb2191a86de19, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d8414ffbc5332746aa59de5fea186d0, type: 3}
 --- !u!4 &448887569 stripped
@@ -465,7 +470,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115187951}
   m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: 8, z: -8}
+  m_LocalPosition: {x: 0, y: 8, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

@@ -23,8 +23,10 @@ public class InertiaTest : MonoBehaviour
 	[Header("Display")]
 	public Vector2 position = new Vector2(8, 8);
 	public Font font;
-	[Range(6,100)]
-	public int fontSize = 17;
+	[Range(6,50)]
+	public int fontSize = 16;
+	[Range(6,50)]
+	public int smallFontSize = 10;
 	public Color fontColor = Color.white;
 
 
@@ -38,8 +40,10 @@ public class InertiaTest : MonoBehaviour
 	float m_internalTime;
 	int m_internalFrame;
 
+	string m_text;
 	string m_results;
 	GUIStyle m_textStyle = new GUIStyle();
+	GUIStyle m_smallTextStyle = new GUIStyle();
 	float m_boxWidth;
 	float m_boxHeight;
 
@@ -61,6 +65,7 @@ public class InertiaTest : MonoBehaviour
 		m_internalTime = 0.0f;
 		m_internalFrame = 0;
 
+		m_text = "";
 		m_results = "";
 		}
 
@@ -70,6 +75,10 @@ public class InertiaTest : MonoBehaviour
 		m_textStyle.font = font;
 		m_textStyle.fontSize = fontSize;
 		m_textStyle.normal.textColor = fontColor;
+
+		m_smallTextStyle.font = font;
+		m_smallTextStyle.fontSize = smallFontSize;
+		m_smallTextStyle.normal.textColor = fontColor;
 
 		m_inertiaHelper.DoUpdate(m_rigidbody);
 		}
@@ -89,7 +98,10 @@ public class InertiaTest : MonoBehaviour
 		Vector3 angularAcceleration = (m_rigidbody.angularVelocity - m_lastAngularVelocity) / deltaTime;
 		m_lastAngularVelocity = m_rigidbody.angularVelocity;
 
-		m_results = $"Frame / Time:         #{m_internalFrame,-3} {m_internalTime.ToString("0.000")}\n\nAngular Velocity:     {m_lastAngularVelocity.ToString("0.00000")}\nAngular Acceleration: {angularAcceleration.ToString("0.00000")}\n";
+		m_text = $"Frame / Time:         #{m_internalFrame,-3} {m_internalTime.ToString("0.000")}\n\nAngular Velocity:     {m_lastAngularVelocity.ToString("0.00000")}\nAngular Acceleration: {angularAcceleration.ToString("0.00000")}\n";
+
+		if (m_internalTime < forceStart * 2 + forceDuration)
+			m_results += $"#{m_internalFrame,-3} {m_internalTime,5:0.000} {angularAcceleration.x,10:0.0000000} {angularAcceleration.y,10:0.0000000} {angularAcceleration.z,10:0.0000000}\n";
 
 		// Advance physics time
 
@@ -110,7 +122,7 @@ public class InertiaTest : MonoBehaviour
 		{
 		// Compute box size
 
-		Vector2 contentSize = m_textStyle.CalcSize(new GUIContent(m_results));
+		Vector2 contentSize = m_textStyle.CalcSize(new GUIContent(m_text));
 		float margin = m_textStyle.lineHeight * 1.2f;
 		float headerHeight = GUI.skin.box.lineHeight;
 
@@ -124,8 +136,10 @@ public class InertiaTest : MonoBehaviour
 
 		// Draw telemetry box
 
-		GUI.Box(new Rect (xPos, yPos, m_boxWidth, m_boxHeight), "Inertia Results");
-		GUI.Label(new Rect (xPos + margin / 2, yPos + margin / 2 + headerHeight, Screen.width, Screen.height), m_results, m_textStyle);
+		GUI.Box(new Rect(xPos, yPos, m_boxWidth, m_boxHeight), "Inertia Results");
+		GUI.Label(new Rect(xPos + margin / 2, yPos + margin / 2 + headerHeight, Screen.width, Screen.height), m_text, m_textStyle);
+
+		GUI.Label(new Rect(xPos, yPos + m_boxHeight + margin / 2, Screen.width, Screen.height), m_results, m_smallTextStyle);
 		}
 
 
