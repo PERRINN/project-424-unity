@@ -18,6 +18,7 @@ public class InertiaTests : MonoBehaviour
 
 	[Header("Conditions")]
 	public float deltaTime = 0.005f;
+	public float timeScale = 0.01f;
 
 	[Header("Display")]
 	public Vector2 position = new Vector2(8, 8);
@@ -31,8 +32,10 @@ public class InertiaTests : MonoBehaviour
 
 
 	Rigidbody m_rigidbody;
+	Vector3 m_lastAngularVelocity;
 	Inertia m_inertiaHelper = new Inertia();
 	float m_internalTime;
+	int m_internalFrame;
 
 	string m_results;
 	GUIStyle m_textStyle = new GUIStyle();
@@ -49,9 +52,12 @@ public class InertiaTests : MonoBehaviour
 
 		m_inertiaHelper.settings = inertia;
 		m_inertiaHelper.Apply(m_rigidbody);
+		m_lastAngularVelocity = m_rigidbody.angularVelocity;
 
+		Time.timeScale = timeScale;
 		Time.fixedDeltaTime = deltaTime;
 		m_internalTime = 0.0f;
+		m_internalFrame = 0;
 
 		m_results = "";
 		}
@@ -78,12 +84,16 @@ public class InertiaTests : MonoBehaviour
 
 		// Retrieve results
 
+		Vector3 angularAcceleration = (m_rigidbody.angularVelocity - m_lastAngularVelocity) / deltaTime;
+		m_lastAngularVelocity = m_rigidbody.angularVelocity;
 
+		m_results = $"Frame / Time:         #{m_internalFrame,-3} {m_internalTime.ToString("0.000")}\n\nAngular Velocity:     {m_lastAngularVelocity.ToString("0.00000")}\nAngular Acceleration: {angularAcceleration.ToString("0.00000")}\n";
 
 		// Advance physics time
 
 		m_internalTime += deltaTime;
 		m_internalTime = MathUtility.RoundDecimals(m_internalTime, 3);
+		m_internalFrame++;
 		}
 
 
