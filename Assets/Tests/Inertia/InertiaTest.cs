@@ -80,6 +80,8 @@ public class InertiaTest : MonoBehaviour
 
 		m_inertiaHelper.DoUpdate(m_rigidbody);
 		DebugUtility.DrawCrossMark(m_rigidbody.worldCenterOfMass, GColor.brown, 0.2f);
+
+		Time.timeScale = timeScale;
 		}
 
 
