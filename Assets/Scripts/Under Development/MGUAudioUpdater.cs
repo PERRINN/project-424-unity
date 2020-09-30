@@ -23,6 +23,7 @@ public class MGUAudioUpdater : MonoBehaviour
     float frontMechanical;
     float rearRpm;
     float rearMechanical;
+    bool playOnce = false;
 
     void Start()
     {
@@ -32,6 +33,25 @@ public class MGUAudioUpdater : MonoBehaviour
         rearEngineAudio.volume = baseVolumeOfRearMGU;
     }
 
+    void FixedUpdate()
+    {
+        if(playOnce == false)
+        {
+            if (frontRpm > 0 && rearRpm > 0)
+            {
+                frontEngineAudio.Play();
+                rearEngineAudio.Play();
+                playOnce = true;
+            }
+            else
+            {
+                frontEngineAudio.Stop();
+                rearEngineAudio.Stop();
+            }
+        }
+        
+    }
+
     void Update()
     {
         int[] custom = vehicle.data.Get(Channel.Custom);
@@ -39,8 +59,6 @@ public class MGUAudioUpdater : MonoBehaviour
         frontMechanical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
         rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
         rearMechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
-
-        //print(frontMechanical);
 
         UpdateFrontEngine();
         UpdateRearEngine();
