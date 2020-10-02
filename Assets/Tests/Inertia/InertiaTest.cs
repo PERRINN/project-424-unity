@@ -83,7 +83,7 @@ public class InertiaTest : MonoBehaviour
 		m_smallTextStyle.normal.textColor = fontColor;
 
 		m_inertiaHelper.DoUpdate(m_rigidbody);
-		DebugUtility.DrawCrossMark(m_rigidbody.worldCenterOfMass, GColor.brown, 0.2f);
+		DebugUtility.DrawCrossMark(m_rigidbody.worldCenterOfMass, m_rigidbody.transform, GColor.accentPurple, 0.2f);
 
 		Time.timeScale = timeScale;
 		}
