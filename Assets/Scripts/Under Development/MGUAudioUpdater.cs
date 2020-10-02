@@ -62,6 +62,23 @@ public class MGUAudioUpdater : MonoBehaviour
 
         UpdateFrontEngine();
         UpdateRearEngine();
+
+        if (frontEngineAudio.pitch < basePitchOfFrontMGU)
+        {
+            frontEngineAudio.pitch = basePitchOfFrontMGU;
+        }
+        if(frontEngineAudio.volume < baseVolumeOfFrontMGU)
+        {
+            frontEngineAudio.volume = baseVolumeOfFrontMGU;
+        }
+        if (rearEngineAudio.pitch < basePitchOfRearMGU)
+        {
+            rearEngineAudio.pitch = basePitchOfRearMGU;
+        }
+        if (rearEngineAudio.volume < baseVolumeOfRearMGU)
+        {
+            rearEngineAudio.volume = baseVolumeOfRearMGU;
+        }
     }
 
     public void UpdateFrontEngine()
