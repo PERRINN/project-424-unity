@@ -34,10 +34,13 @@ public class InertiaTest : MonoBehaviour
 
 
 	Rigidbody m_rigidbody;
+	Inertia m_inertiaHelper = new Inertia();
 	Vector3 m_lastAngularVelocity;
 	Vector3 m_lastEulerAngles;
 	Vector3 m_lastEulerVelocity;
-	Inertia m_inertiaHelper = new Inertia();
+	Vector3 m_minEulerAngles;
+	Vector3 m_maxEulerAngles;
+
 	float m_internalTime;
 	int m_internalFrame;
 
@@ -61,6 +64,8 @@ public class InertiaTest : MonoBehaviour
 		m_lastAngularVelocity = m_rigidbody.angularVelocity;
 		m_lastEulerAngles = m_rigidbody.rotation.eulerAngles;
 		m_lastEulerVelocity = Vector3.zero;
+		m_minEulerAngles = Vector3.zero;
+		m_maxEulerAngles = Vector3.zero;
 
 		Time.timeScale = timeScale;
 		Time.fixedDeltaTime = deltaTime;
@@ -115,11 +120,21 @@ public class InertiaTest : MonoBehaviour
 		eulerVelocity *= Mathf.Deg2Rad;
 		eulerAcceleration *= Mathf.Deg2Rad;
 
-		m_text = $"Frame / Time:         #{m_internalFrame,-3} {m_internalTime.ToString("0.000")}\n\nAngular Velocity:     {FormatVector(m_lastAngularVelocity, 5)}\nAngular Acceleration: {FormatVector(angularAcceleration, 5)}\n";
+		Vector3 zeroBasedAngles = new Vector3(
+			Mathf.DeltaAngle(0.0f, eulerAngles.x),
+			Mathf.DeltaAngle(0.0f, eulerAngles.y),
+			Mathf.DeltaAngle(0.0f, eulerAngles.z));
 
+		m_minEulerAngles = Vector3.Min(m_minEulerAngles, zeroBasedAngles);
+		m_maxEulerAngles = Vector3.Max(m_maxEulerAngles, zeroBasedAngles);
+
+		m_text = $"#{m_internalFrame,-6} {m_internalTime,7:N3}s          X        Y        Z\n\nAngular Velocity:     {FormatVector(m_lastAngularVelocity, 5)}\nAngular Acceleration: {FormatVector(angularAcceleration, 5)}\n";
+
+		m_text += $"\nEuler Angles Min:     {FormatVector(m_minEulerAngles,3,3)}\n             Max:     {FormatVector(m_maxEulerAngles,3,3)}\n";
+		m_text += $"\nInertia Tensor:       {FormatVector(m_rigidbody.inertiaTensor,2,4)}\n      Rotation:       {FormatVector(m_rigidbody.inertiaTensorRotation.eulerAngles,3,3)}\n";
 		m_text += $"\nEuler Velocity:       {FormatVector(eulerVelocity,5)}\nEuler Acceleration:   {FormatVector(eulerAcceleration,5)}\n";
 
-		if (m_internalTime < forceStart * 2 + forceDuration)
+		if (m_internalTime > forceStart / 2 && m_internalTime < forceStart * 2 + forceDuration)
 			m_results += $"#{m_internalFrame,-3} {m_internalTime,5:0.000} {angularAcceleration.x,10:0.000000} {angularAcceleration.y,10:0.000000} {angularAcceleration.z,10:0.000000}\n";
 
 		// Advance physics time
@@ -166,15 +181,22 @@ public class InertiaTest : MonoBehaviour
 		}
 
 
-	string FormatVector (Vector3 v, int decimals = 1)
+	string FormatVector (Vector3 v, int decimals = 1, int integers = 1)
 		{
 		// string[] formats = { ":N0", ":N1", "0.00", "0.000", "0.0000", "0.00000" };
 
 		decimals = Mathf.Clamp(decimals, 0, 5);
-		string format = string.Format("{0}:N{1}", decimals+3, decimals);
-
+		string format = $"{decimals+integers+2}:N{decimals}";
 		return string.Format($"{{0,{format}}} {{1,{format}}} {{2,{format}}}", v.x, v.y, v.z);
 		}
 
+
+	Vector3 DeltaAngle (Vector3 fromAngles, Vector3 toAngles)
+		{
+		return new Vector3(
+			Mathf.DeltaAngle(fromAngles.x, toAngles.x),
+			Mathf.DeltaAngle(fromAngles.y, toAngles.y),
+			Mathf.DeltaAngle(fromAngles.z, toAngles.z));
+		}
 
 	}
