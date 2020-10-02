@@ -650,7 +650,7 @@ public class KineticEnergyChart : PerformanceChart
 		{
 			m_error = dataLogger.NewChannel("Error");
 			m_error.color = GColor.gray;
-			m_error.SetOriginAndSpan(10.0f, 6.0f, 1.0f);
+			m_error.SetOriginAndSpan(10.0f, 6.0f, 5.0f);
 			m_error.valueFormat = "0.00";
 			m_error.captionPositionY = 1;
 
@@ -662,7 +662,7 @@ public class KineticEnergyChart : PerformanceChart
 
 			m_integral = dataLogger.NewChannel("I");
 			m_integral.color = GColor.green;
-			m_integral.SetOriginAndSpan(6.0f, 6.0f, 500.0f);
+			m_integral.SetOriginAndSpan(6.0f, 6.0f, 5000000.0f);
 			m_integral.valueFormat = "0.00";
 			m_integral.captionPositionY = 0;
 
