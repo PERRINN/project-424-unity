@@ -107,14 +107,16 @@ public class InertiaTest : MonoBehaviour
 		Vector3 eulerVelocity = new Vector3(
 			Mathf.DeltaAngle(m_lastEulerAngles.x, eulerAngles.x),
 			Mathf.DeltaAngle(m_lastEulerAngles.y, eulerAngles.y),
-			Mathf.DeltaAngle(m_lastEulerAngles.z, eulerAngles.z)) / deltaTime * Mathf.Deg2Rad;
+			Mathf.DeltaAngle(m_lastEulerAngles.z, eulerAngles.z)) / deltaTime;
 		Vector3 eulerAcceleration = (eulerVelocity - m_lastEulerVelocity) / deltaTime;
 		m_lastEulerAngles = eulerAngles;
 		m_lastEulerVelocity = eulerVelocity;
 
+		eulerVelocity *= Mathf.Deg2Rad;
+		eulerAcceleration *= Mathf.Deg2Rad;
+
 		m_text = $"Frame / Time:         #{m_internalFrame,-3} {m_internalTime.ToString("0.000")}\n\nAngular Velocity:     {FormatVector(m_lastAngularVelocity, 5)}\nAngular Acceleration: {FormatVector(angularAcceleration, 5)}\n";
 
-		// m_text += $"\nEuler Velocity:       {eulerVelocity.ToString("0.00000")}\nEuler Acceleration:    {eulerAcceleration.ToString("0.00000")}\n";
 		m_text += $"\nEuler Velocity:       {FormatVector(eulerVelocity,5)}\nEuler Acceleration:   {FormatVector(eulerAcceleration,5)}\n";
 
 		if (m_internalTime < forceStart * 2 + forceDuration)
