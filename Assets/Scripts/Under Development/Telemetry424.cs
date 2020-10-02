@@ -22,7 +22,17 @@ namespace Project424
 [RequireComponent(typeof(VPPerformanceDisplay))]
 public class Telemetry424 : MonoBehaviour
 	{
-	public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID };
+    // Variables to hold data for the Car & Start-Line
+
+    public Rigidbody Perrinn424;
+
+    // Member variables for distance
+
+    private Vector3 m_lastPosition;
+    public static float m_totalDistance { get; private set; }
+    public static float m_lapDistance;
+
+    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID, DistanceChart };
 	public Charts chart = Charts.ForceFeedback;
 
 	// public int monitoredWheel = 0;
@@ -37,29 +47,47 @@ public class Telemetry424 : MonoBehaviour
 		new SuspensionAnalysisChart(),
 		// new KineticEnergyChart(),
 		new PIDChart(),
-		};
+        new DistanceChart(),
+        };
 
 	VPPerformanceDisplay m_perfComponent;
 
 
-	void OnEnable ()
-		{
-		m_perfComponent = GetComponent<VPPerformanceDisplay>();
-		}
+    void OnEnable()
+    {
+        m_perfComponent = GetComponent<VPPerformanceDisplay>();
+
+        // Initialises the variables for distance travelled
+
+        m_lastPosition = Perrinn424.position;
+        m_totalDistance = 0;
+        m_lapDistance = 0;
+    }
 
 
 	void FixedUpdate ()
 		{
-		// Pass the exposed parameters to their corresponding charts
-		/*
-		AbsDiagnosticsChart absChart = m_charts[(int)Charts.AbsDiagnostics] as AbsDiagnosticsChart;
-		absChart.monitoredWheel = monitoredWheel;
-		absChart.maxBrakeTorque = maxBrakeTorque;
-		*/
+        // Pass the exposed parameters to their corresponding charts
+        /*
+        AbsDiagnosticsChart absChart = m_charts[(int)Charts.AbsDiagnostics] as AbsDiagnosticsChart;
+        absChart.monitoredWheel = monitoredWheel;
+        absChart.maxBrakeTorque = maxBrakeTorque;
+        */
 
-		// Apply the selected custom chart
+        // Calculates the total distance travelled by subtracting lastPosition from current position
 
-		m_perfComponent.customChart = m_charts[(int)chart];
+        float distance = (Perrinn424.position - m_lastPosition).magnitude;
+
+        // Updates lastPosition to current position and increment totalDistance
+
+        m_lastPosition = Perrinn424.position;
+        m_totalDistance += distance;
+        m_lapDistance += distance;
+
+        // Apply the selected custom chart
+
+        m_perfComponent.customChart = m_charts[(int)chart];
+
 		}
 	}
 
@@ -660,5 +688,60 @@ public class KineticEnergyChart : PerformanceChart
 			m_PID.Write(output);
 		}
 	}
+
+    // Distance Chart
+
+    public class DistanceChart : PerformanceChart
+    {
+        // Creates channels for distance travelled
+        DataLogger.Channel m_totalDistanceTravelled;
+        DataLogger.Channel m_lapDistanceTravelled;
+
+        public override string Title()
+        {
+            return "Distance Travelled";
+        }
+
+        public override void Initialize()
+        {
+            dataLogger.topLimit = 1000f;
+            dataLogger.bottomLimit = 0f;
+        }
+
+        public override void ResetView()
+        {
+            dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+        }
+
+        public override void SetupChannels()
+        {
+            // Total Distance
+            m_totalDistanceTravelled = dataLogger.NewChannel("Total Distance");
+            m_totalDistanceTravelled.color = GColor.blue;
+            m_totalDistanceTravelled.SetOriginAndSpan(4.6f, 1.0f, 10000f);
+            m_totalDistanceTravelled.valueFormat = "0 m";
+            m_totalDistanceTravelled.captionPositionY = 1;
+
+            // Lap Distance
+            m_lapDistanceTravelled = dataLogger.NewChannel("Lap Distance");
+            m_lapDistanceTravelled.color = GColor.red;
+            m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
+            m_lapDistanceTravelled.valueFormat = "0 m";
+            m_lapDistanceTravelled.captionPositionY = 1;
+        }
+
+        public override void RecordData()
+        {
+            // Passes the distance to the datalogger to write on the chart
+            // Total Distance
+            m_totalDistanceTravelled.Write(Telemetry424.m_totalDistance);
+            m_totalDistanceTravelled.SetOriginAndSpan(4.6f, 1.0f, 10000f);
+
+            // Lap Distance
+            m_lapDistanceTravelled.Write(Telemetry424.m_lapDistance);
+            m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
+        }
+    }
+
 #endif
 }
