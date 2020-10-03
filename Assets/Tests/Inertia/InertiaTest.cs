@@ -64,8 +64,8 @@ public class InertiaTest : MonoBehaviour
 		m_lastAngularVelocity = m_rigidbody.angularVelocity;
 		m_lastEulerAngles = m_rigidbody.rotation.eulerAngles;
 		m_lastEulerVelocity = Vector3.zero;
-		m_minEulerAngles = Vector3.zero;
-		m_maxEulerAngles = Vector3.zero;
+		m_minEulerAngles = m_lastEulerAngles;
+		m_maxEulerAngles = m_lastEulerAngles;
 
 		Time.timeScale = timeScale;
 		Time.fixedDeltaTime = deltaTime;
@@ -109,10 +109,7 @@ public class InertiaTest : MonoBehaviour
 		m_lastAngularVelocity = m_rigidbody.angularVelocity;
 
 		Vector3 eulerAngles = m_rigidbody.rotation.eulerAngles;
-		Vector3 eulerVelocity = new Vector3(
-			Mathf.DeltaAngle(m_lastEulerAngles.x, eulerAngles.x),
-			Mathf.DeltaAngle(m_lastEulerAngles.y, eulerAngles.y),
-			Mathf.DeltaAngle(m_lastEulerAngles.z, eulerAngles.z)) / deltaTime;
+		Vector3 eulerVelocity = DeltaAngle(m_lastEulerAngles, eulerAngles) / deltaTime;
 		Vector3 eulerAcceleration = (eulerVelocity - m_lastEulerVelocity) / deltaTime;
 		m_lastEulerAngles = eulerAngles;
 		m_lastEulerVelocity = eulerVelocity;
@@ -120,19 +117,16 @@ public class InertiaTest : MonoBehaviour
 		eulerVelocity *= Mathf.Deg2Rad;
 		eulerAcceleration *= Mathf.Deg2Rad;
 
-		Vector3 zeroBasedAngles = new Vector3(
-			Mathf.DeltaAngle(0.0f, eulerAngles.x),
-			Mathf.DeltaAngle(0.0f, eulerAngles.y),
-			Mathf.DeltaAngle(0.0f, eulerAngles.z));
-
-		m_minEulerAngles = Vector3.Min(m_minEulerAngles, zeroBasedAngles);
-		m_maxEulerAngles = Vector3.Max(m_maxEulerAngles, zeroBasedAngles);
+		eulerAngles = DeltaAngle(Vector3.zero, eulerAngles);
+		m_minEulerAngles = Vector3.Min(m_minEulerAngles, eulerAngles);
+		m_maxEulerAngles = Vector3.Max(m_maxEulerAngles, eulerAngles);
 
 		m_text = $"#{m_internalFrame,-6} {m_internalTime,7:N3}s          X        Y        Z\n\nAngular Velocity:     {FormatVector(m_lastAngularVelocity, 5)}\nAngular Acceleration: {FormatVector(angularAcceleration, 5)}\n";
 
 		m_text += $"\nEuler Angles Min:     {FormatVector(m_minEulerAngles,3,3)}\n             Max:     {FormatVector(m_maxEulerAngles,3,3)}\n";
-		m_text += $"\nInertia Tensor:       {FormatVector(m_rigidbody.inertiaTensor,2,4)}\n      Rotation:       {FormatVector(m_rigidbody.inertiaTensorRotation.eulerAngles,3,3)}\n";
-		m_text += $"\nEuler Velocity:       {FormatVector(eulerVelocity,5)}\nEuler Acceleration:   {FormatVector(eulerAcceleration,5)}\n";
+		m_text += $"\nInertia Tensor:       {FormatVector(m_rigidbody.inertiaTensor,2,4)}\n      Rotation:       {FormatVector(DeltaAngle(Vector3.zero,m_rigidbody.inertiaTensorRotation.eulerAngles),3,3)}\n";
+
+		m_text += $"\nEuler Angles:         {FormatVector(eulerAngles,3,3)}\nEuler Velocity:       {FormatVector(eulerVelocity,5)}\nEuler Acceleration:   {FormatVector(eulerAcceleration,5)}\n";
 
 		if (m_internalTime > forceStart / 2 && m_internalTime < forceStart * 2 + forceDuration)
 			m_results += $"#{m_internalFrame,-3} {m_internalTime,5:0.000} {angularAcceleration.x,10:0.000000} {angularAcceleration.y,10:0.000000} {angularAcceleration.z,10:0.000000}\n";
