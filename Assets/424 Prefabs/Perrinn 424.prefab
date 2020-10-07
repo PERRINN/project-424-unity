@@ -450,9 +450,9 @@ MonoBehaviour:
     inertiaBias: -0.5
     inertiaTensor: {x: 1182, y: 1280, z: 131}
     inertiaTensorRotation: {x: 0, y: 0, z: 0}
-    inertiaRow0: {x: 1182, y: 1, z: -1}
-    inertiaRow1: {x: 1, y: 1280, z: -12}
-    inertiaRow2: {x: -1, y: -12, z: 131}
+    inertiaRow0: {x: 1182, y: 0, z: 0}
+    inertiaRow1: {x: 0, y: 1280, z: 0}
+    inertiaRow2: {x: 0, y: 0, z: 131}
   frontAxle:
     leftWheel: {fileID: 4116892636246546279}
     rightWheel: {fileID: 4116892635251014035}
@@ -1456,11 +1456,11 @@ MonoBehaviour:
   front:
     applicationPoint: {fileID: 4116892635620062688}
     dragCoefficient: 0.275
-    downforceCoefficient: 1.15
+    downforceCoefficient: 1.2
   rear:
     applicationPoint: {fileID: 4116892635474530970}
     dragCoefficient: 0.275
-    downforceCoefficient: 1.6
+    downforceCoefficient: 1.55
   drag:
     applicationPoint: {fileID: 0}
     dragCoefficient: 1
