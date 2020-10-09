@@ -32,7 +32,7 @@ public class Telemetry424 : MonoBehaviour
     public static float m_totalDistance { get; private set; }
     public static float m_lapDistance;
 
-    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID, DistanceChart };
+    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart };
 	public Charts chart = Charts.ForceFeedback;
 
 	// public int monitoredWheel = 0;
@@ -46,7 +46,7 @@ public class Telemetry424 : MonoBehaviour
 		new AxleSuspensionChart(),
 		new SuspensionAnalysisChart(),
 		// new KineticEnergyChart(),
-		new PIDChart(),
+		new AutopilotChart(),
         new DistanceChart(),
         };
 
@@ -612,18 +612,20 @@ public class KineticEnergyChart : PerformanceChart
 	}
 */
 
-	//PID Graph
+	//Autopilot Graph
 
-	public class PIDChart : PerformanceChart
+	public class AutopilotChart : PerformanceChart
 	{
 		PidController pidController = new PidController();
 
+		public static int errorFrames { get; set; }
 		public static float errorDistance { get; set; }
 		public static float proportional { get; set; }
 		public static float integral { get; set; }
 		public static float derivative { get; set; }
 		public static float output { get; set; }
 
+		DataLogger.Channel m_frame;
 		DataLogger.Channel m_error;
 		DataLogger.Channel m_proportional;
 		DataLogger.Channel m_integral;
@@ -632,7 +634,7 @@ public class KineticEnergyChart : PerformanceChart
 
 		public override string Title()
 		{
-			return "PID Display";
+			return "Autopilot Display";
 		}
 
 		public override void Initialize()
@@ -648,6 +650,12 @@ public class KineticEnergyChart : PerformanceChart
 
 		public override void SetupChannels()
 		{
+			m_frame = dataLogger.NewChannel("Frames");
+			m_frame.color = GColor.yellow;
+			m_frame.SetOriginAndSpan(11.5f, 1.0f, 5.0f);
+			m_frame.valueFormat = "0.00";
+			m_frame.captionPositionY = 0;
+
 			m_error = dataLogger.NewChannel("Error");
 			m_error.color = GColor.gray;
 			m_error.SetOriginAndSpan(10.0f, 6.0f, 5.0f);
@@ -681,6 +689,7 @@ public class KineticEnergyChart : PerformanceChart
 
 		public override void RecordData()
 		{
+			m_frame.Write(errorFrames);
 			m_error.Write(errorDistance);
 			m_proportional.Write(proportional);
 			m_integral.Write(integral);
