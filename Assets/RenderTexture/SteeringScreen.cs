@@ -61,7 +61,6 @@ namespace VehiclePhysics.UI
                     else { speedMps.text = minSpeed.ToString("0"); }
 
                     if (systemTime - minSpdTime > 0.02f) { minIndicator.gameObject.SetActive(true); }
-                    print(systemTime - minSpdTime);
                 }
                 else
                 {

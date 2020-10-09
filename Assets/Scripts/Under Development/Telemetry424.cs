@@ -1,6 +1,6 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright � 2011-2020 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -22,45 +22,134 @@ namespace Project424
 [RequireComponent(typeof(VPPerformanceDisplay))]
 public class Telemetry424 : MonoBehaviour
 	{
-	public enum Charts { AbsDiagnostics, AxleSuspension, SuspensionAnalysis, KineticEnergy };
-	public Charts chart = Charts.AbsDiagnostics;
+    // Variables to hold data for the Car & Start-Line
 
-	public int monitoredWheel = 0;
-	public float maxBrakeTorque = 3200.0f;
+    public Rigidbody Perrinn424;
+
+    // Member variables for distance
+
+    private Vector3 m_lastPosition;
+    public static float m_totalDistance { get; private set; }
+    public static float m_lapDistance;
+
+    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID, DistanceChart };
+	public Charts chart = Charts.ForceFeedback;
+
+	// public int monitoredWheel = 0;
+	// public float maxBrakeTorque = 3200.0f;
 
 
 	PerformanceChart[] m_charts = new PerformanceChart[]
 		{
-		new AbsDiagnosticsChart(),
+		new ForceFeedbackChart(),
+		// new AbsDiagnosticsChart(),
 		new AxleSuspensionChart(),
 		new SuspensionAnalysisChart(),
-		new KineticEnergyChart(),
-		};
+		// new KineticEnergyChart(),
+		new PIDChart(),
+        new DistanceChart(),
+        };
 
 	VPPerformanceDisplay m_perfComponent;
 
 
-	void OnEnable ()
-		{
-		m_perfComponent = GetComponent<VPPerformanceDisplay>();
-		}
+    void OnEnable()
+    {
+        m_perfComponent = GetComponent<VPPerformanceDisplay>();
+
+        // Initialises the variables for distance travelled
+
+        m_lastPosition = Perrinn424.position;
+        m_totalDistance = 0;
+        m_lapDistance = 0;
+    }
 
 
 	void FixedUpdate ()
 		{
-		// Pass the exposed parameters to their corresponding charts
+        // Pass the exposed parameters to their corresponding charts
+        /*
+        AbsDiagnosticsChart absChart = m_charts[(int)Charts.AbsDiagnostics] as AbsDiagnosticsChart;
+        absChart.monitoredWheel = monitoredWheel;
+        absChart.maxBrakeTorque = maxBrakeTorque;
+        */
 
-		AbsDiagnosticsChart absChart = m_charts[(int)Charts.AbsDiagnostics] as AbsDiagnosticsChart;
-		absChart.monitoredWheel = monitoredWheel;
-		absChart.maxBrakeTorque = maxBrakeTorque;
+        // Calculates the total distance travelled by subtracting lastPosition from current position
 
-		// Apply the selected custom chart
+        float distance = (Perrinn424.position - m_lastPosition).magnitude;
 
-		m_perfComponent.customChart = m_charts[(int)chart];
+        // Updates lastPosition to current position and increment totalDistance
+
+        m_lastPosition = Perrinn424.position;
+        m_totalDistance += distance;
+        m_lapDistance += distance;
+
+        // Apply the selected custom chart
+
+        m_perfComponent.customChart = m_charts[(int)chart];
+
 		}
 	}
 
 
+public class ForceFeedbackChart : PerformanceChart
+	{
+	DataLogger.Channel m_forceFactor;
+	DataLogger.Channel m_damperFactor;
+
+	VPDeviceInput m_deviceInput;
+
+
+	public override string Title ()
+		{
+		return "Force Feedback";
+		}
+
+
+	public override void Initialize ()
+		{
+		dataLogger.topLimit = 12.0f;
+		dataLogger.bottomLimit = -0.5f;
+
+		m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
+		}
+
+
+	public override void ResetView ()
+		{
+		dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+		}
+
+
+	public override void SetupChannels ()
+		{
+		m_damperFactor = dataLogger.NewChannel("Damper");
+		m_damperFactor.color = GColor.Alpha(GColor.orange, 1.0f);
+		m_damperFactor.SetOriginAndSpan(0.0f, 5.0f);
+		m_damperFactor.valueFormat = "0.0 %";
+
+		m_forceFactor = dataLogger.NewChannel("Force");
+		m_forceFactor.color = GColor.Alpha(GColor.accentBlue, 1.0f);
+		m_forceFactor.SetOriginAndSpan(5.0f, 5.0f);
+		m_forceFactor.valueFormat = "0.0 %";
+		}
+
+	public override void RecordData ()
+		{
+		if (m_deviceInput == null) return;
+
+		m_forceFactor.Write(m_deviceInput.currentForceFactor);
+		m_damperFactor.Write(m_deviceInput.currentDamperFactor);
+		}
+
+	}
+
+
+
+
+
+
+/*
 // Abs Diagnostics
 
 
@@ -177,7 +266,7 @@ public class AbsDiagnosticsChart : PerformanceChart
 			m_slip.Write(ws.tireSlip.y);
 		}
 	}
-
+*/
 
 
 // Axle suspension
@@ -230,21 +319,21 @@ public class AxleSuspensionChart : PerformanceChart
 		m_steerAngle = dataLogger.NewChannel("Steer Angle (avg)");
 		m_steerAngle.color = GColor.Alpha(Color.Lerp(GColor.teal, GColor.green, 0.75f), 0.7f);
 		m_steerAngle.SetOriginAndSpan(4.5f, -1.0f, 35.0f);
-		m_steerAngle.valueFormat = "0.00 °";
+		m_steerAngle.valueFormat = "0.00 �";
 		m_steerAngle.alphaBlend = true;
 		m_steerAngle.captionPositionY = 2;
 
 		m_roll = dataLogger.NewChannel("Roll");
 		m_roll.color = GColor.Alpha(GColor.teal, 0.7f);
 		m_roll.SetOriginAndSpan(4.5f, -1.0f, 10.0f);
-		m_roll.valueFormat = "0.00 °";
+		m_roll.valueFormat = "0.00 �";
 		m_roll.alphaBlend = true;
 		m_roll.captionPositionY = 0;
 
 		m_yawRate = dataLogger.NewChannel("Turn Rate");
 		m_yawRate.color = GColor.Alpha(GColor.red, 0.6f);
 		m_yawRate.SetOriginAndSpan(4.5f, -1.0f, 35.0f);
-		m_yawRate.valueFormat = "0.0 °/s";
+		m_yawRate.valueFormat = "0.0 �/s";
 		// m_yawRate.alphaBlend = true;
 		m_yawRate.captionPositionY = -1;
 
@@ -413,6 +502,7 @@ public class SuspensionAnalysisChart : PerformanceChart
 	}
 
 
+/*
 // Kinetic Energy Chart
 
 
@@ -483,18 +573,18 @@ public class KineticEnergyChart : PerformanceChart
 		m_totalEnergy.valueFormat = energyFormat;
 		m_totalEnergy.captionPositionY = 3;
 
-		m_linearEnergyDelta = dataLogger.NewChannel("Linear Δ");
+		m_linearEnergyDelta = dataLogger.NewChannel("Linear ?");
 		m_linearEnergyDelta.color = GColor.green;
 		m_linearEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
 		m_linearEnergyDelta.valueFormat = energyFormat;
 
-		m_angularEnergyDelta = dataLogger.NewChannel("Angular Δ");
+		m_angularEnergyDelta = dataLogger.NewChannel("Angular ?");
 		m_angularEnergyDelta.color = GColor.cyan;
 		m_angularEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
 		m_angularEnergyDelta.valueFormat = energyFormat;
 		m_angularEnergyDelta.captionPositionY = 2;
 
-		m_totalEnergyDelta = dataLogger.NewChannel("Total Δ");
+		m_totalEnergyDelta = dataLogger.NewChannel("Total ?");
 		m_totalEnergyDelta.color = GColor.red;
 		m_totalEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
 		m_totalEnergyDelta.valueFormat = energyFormat;
@@ -520,6 +610,138 @@ public class KineticEnergyChart : PerformanceChart
 		m_lastAngularEnergy = angularEnergy;
 		}
 	}
+*/
+
+	//PID Graph
+
+	public class PIDChart : PerformanceChart
+	{
+		PidController pidController = new PidController();
+
+		public static float errorDistance { get; set; }
+		public static float proportional { get; set; }
+		public static float integral { get; set; }
+		public static float derivative { get; set; }
+		public static float output { get; set; }
+
+		DataLogger.Channel m_error;
+		DataLogger.Channel m_proportional;
+		DataLogger.Channel m_integral;
+		DataLogger.Channel m_derivative;
+		DataLogger.Channel m_PID;
+
+		public override string Title()
+		{
+			return "PID Display";
+		}
+
+		public override void Initialize()
+		{
+			dataLogger.topLimit = 100.0f;
+			dataLogger.bottomLimit = 0.0f;
+		}
+
+		public override void ResetView()
+		{
+			dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+		}
+
+		public override void SetupChannels()
+		{
+			m_error = dataLogger.NewChannel("Error");
+			m_error.color = GColor.gray;
+			m_error.SetOriginAndSpan(10.0f, 6.0f, 5.0f);
+			m_error.valueFormat = "0.00";
+			m_error.captionPositionY = 1;
+
+			m_proportional = dataLogger.NewChannel("P");
+			m_proportional.color = GColor.red;
+			m_proportional.SetOriginAndSpan(8.0f, 6.0f, 500000.0f);
+			m_proportional.valueFormat = "0.00";
+			m_proportional.captionPositionY = 0;
+
+			m_integral = dataLogger.NewChannel("I");
+			m_integral.color = GColor.green;
+			m_integral.SetOriginAndSpan(6.0f, 6.0f, 5000000.0f);
+			m_integral.valueFormat = "0.00";
+			m_integral.captionPositionY = 0;
+
+			m_derivative = dataLogger.NewChannel("D");
+			m_derivative.color = GColor.blue;
+			m_derivative.SetOriginAndSpan(4.0f, 6.0f, 500000.0f);
+			m_derivative.valueFormat = "0.00";
+			m_derivative.captionPositionY = 0;
+
+			m_PID = dataLogger.NewChannel("PID");
+			m_PID.color = GColor.white;
+			m_PID.SetOriginAndSpan(2.0f, 6.0f, 500000.0f);
+			m_PID.valueFormat = "0.00";
+			m_PID.captionPositionY = 0;
+		}
+
+		public override void RecordData()
+		{
+			m_error.Write(errorDistance);
+			m_proportional.Write(proportional);
+			m_integral.Write(integral);
+			m_derivative.Write(derivative);
+			m_PID.Write(output);
+		}
+	}
+
+    // Distance Chart
+
+    public class DistanceChart : PerformanceChart
+    {
+        // Creates channels for distance travelled
+        DataLogger.Channel m_totalDistanceTravelled;
+        DataLogger.Channel m_lapDistanceTravelled;
+
+        public override string Title()
+        {
+            return "Distance Travelled";
+        }
+
+        public override void Initialize()
+        {
+            dataLogger.topLimit = 1000f;
+            dataLogger.bottomLimit = 0f;
+        }
+
+        public override void ResetView()
+        {
+            dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+        }
+
+        public override void SetupChannels()
+        {
+            // Total Distance
+            m_totalDistanceTravelled = dataLogger.NewChannel("Total Distance");
+            m_totalDistanceTravelled.color = GColor.blue;
+            m_totalDistanceTravelled.SetOriginAndSpan(4.6f, 1.0f, 10000f);
+            m_totalDistanceTravelled.valueFormat = "0 m";
+            m_totalDistanceTravelled.captionPositionY = 1;
+
+            // Lap Distance
+            m_lapDistanceTravelled = dataLogger.NewChannel("Lap Distance");
+            m_lapDistanceTravelled.color = GColor.red;
+            m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
+            m_lapDistanceTravelled.valueFormat = "0 m";
+            m_lapDistanceTravelled.captionPositionY = 1;
+        }
+
+        public override void RecordData()
+        {
+            // Passes the distance to the datalogger to write on the chart
+            // Total Distance
+            m_totalDistanceTravelled.Write(Telemetry424.m_totalDistance);
+            m_totalDistanceTravelled.SetOriginAndSpan(4.6f, 1.0f, 10000f);
+
+            // Lap Distance
+            m_lapDistanceTravelled.Write(Telemetry424.m_lapDistance);
+            m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
+        }
+    }
 
 #endif
 }
