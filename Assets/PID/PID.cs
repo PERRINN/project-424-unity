@@ -6,23 +6,21 @@ using System.Threading;
 using UnityEngine;
 using VehiclePhysics;
 
-public class Autopilot : MonoBehaviour
+public class PID : MonoBehaviour
 {
-    Rigidbody rigidBody424;
-    VehicleBase vehicleBase;
-    VPReplay target;
-    VPReplayController replayController;
-    List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
-    readonly PidController edyPID = new PidController();
-
+    public Rigidbody rigidBody424;
+    public VehicleBase vehicleBase;
+    public VPReplay target;
     public GameObject cubeOne;
     public GameObject cubeTwo;
     public GameObject cubeCar;
+    public VPReplayController replayController;
     public bool showPosition = true;
 
+    List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
+    readonly PidController edyPID = new PidController();
     public float kp, ki, kd;
     public float maxForce;
-    public float errorRateLimit = 0.1f;
     public bool autopilotON = false;
     public int throttleControl = 100;
     public int brakeControl = 100;
@@ -39,18 +37,9 @@ public class Autopilot : MonoBehaviour
     VPDeviceInput m_deviceInput;
     float m_ffbForceIntensity;
     float m_ffbDamperCoefficient;
-    int previousFrame;
-
-    float time = 0;
-    int timeCount = 1;
 
     void OnEnable()
     {
-        rigidBody424 = GetComponent<Rigidbody>();
-        vehicleBase = GetComponent<VehicleBase>();
-        target = GetComponentInChildren<VPReplay>();
-        replayController = GetComponentInChildren<VPReplayController>();
-
         recordedReplay = replayController.predefinedReplay.recordedData;
         cuts = recordedReplay.Count / 500;
 
@@ -91,18 +80,14 @@ public class Autopilot : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Time.time > 0.01)
+        if (runOnce == false)
         {
-            if (runOnce == false)
-            {
-                frame1 = AutopilotOnStart().Item1;
-                frame2 = AutopilotOnStart().Item2;
-                runOnce = true;
-            }
-
-            GetDistance();
+            frame1 = AutopilotOnStart().Item1;
+            frame2 = AutopilotOnStart().Item2;
+            runOnce = true;
         }
 
+        GetDistance();
     }
 
     void OnGUI()
@@ -268,14 +253,11 @@ public class Autopilot : MonoBehaviour
         float checkHeight = area * 2 / minDistance3;
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
-        AutopilotChart.errorFrames = frame3 - previousFrame;
-        AutopilotChart.errorDistance = height;
-        AutopilotChart.proportional = ClampByOutput(edyPID.proportional);
-        AutopilotChart.integral = ClampByOutput(edyPID.integral);
-        AutopilotChart.derivative = ClampByOutput(edyPID.derivative);
-        AutopilotChart.output = ClampByOutput(edyPID.output);
-
-        previousFrame = frame3;
+        PIDChart.errorDistance = height;
+        PIDChart.proportional = ClampByOutput(edyPID.proportional);
+        PIDChart.integral = ClampByOutput(edyPID.integral);
+        PIDChart.derivative = ClampByOutput(edyPID.derivative);
+        PIDChart.output = ClampByOutput(edyPID.output);
 
         if (showPosition)
         {
@@ -285,31 +267,13 @@ public class Autopilot : MonoBehaviour
         }
 
 
-        //errorRateLimit [m/s]
-        //float clampedHeight = height;
-
-        //if (Time.time - time >= 0.1 && checkHeight > errorRateLimit)
-        //{
-        //    clampedHeight = height / 10 * timeCount;
-        //    print(timeCount + " " + time);
-        //    timeCount++;
-        //    time = Time.time;
-        //    if (timeCount > 10) { timeCount = 1; }
-        //}
-        //else if (checkHeight <= errorRateLimit)
-        //{
-        //    clampedHeight = height;
-        //    timeCount = 1;
-        //    print("else");
-        //}
-
-
         //get error force
         edyPID.minOutput = maxForce * -1.0f;
         edyPID.maxOutput = maxForce * 1.0f;
         edyPID.SetParameters(kp, ki, kd);
         edyPID.input = height;
         edyPID.Compute();
+
 
         appliedForceV3.x = ClampByOutput(edyPID.output * cosD * 1.000f);
         appliedForceV3.y = 0;
@@ -371,10 +335,5 @@ public class Autopilot : MonoBehaviour
     {
         float clampedForce = Mathf.Clamp(value, -maxForce, maxForce);
         return clampedForce;
-    }
-
-    void StartTimer()
-    {
-        time = Time.time;
     }
 }
