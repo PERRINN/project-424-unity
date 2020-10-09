@@ -7,11 +7,11 @@ using UnityEngine.UI;
 
 namespace VehiclePhysics.UI
 {
-
     public class SteeringScreen : MonoBehaviour
     {
-        public VehicleBase target;
+        VehicleBase target;
         public float windowSeconds = 4.0f;
+        public float setMinSpeed = 10.0f;
         [Header("Display Channel")]
         public Text speedMps;
         public Text speedKph;
@@ -28,6 +28,12 @@ namespace VehiclePhysics.UI
         float minSpeed = float.MaxValue;
         float minSpdTime;
         bool minSpdWindow = false;
+        bool setMinSpdTrigger = false;
+
+        void OnEnable()
+        {
+            target = GetComponentInParent<VehicleBase>();
+        }
 
         void Update()
         {
@@ -37,10 +43,19 @@ namespace VehiclePhysics.UI
             int[] custom = target.data.Get(Channel.Custom);
             float speed = vehicleData[VehicleData.Speed] / 1000.0f;
 
+            if (speed > setMinSpeed) { setMinSpdTrigger = true; }
+            else
+            {
+                setMinSpdTrigger = false;
+                minSpdWindow = false;
+                maxSpeed = float.MinValue;
+                minSpeed = float.MaxValue;
+            }
+
             // Speed in m/s & minimum speed window
             if (speedMps != null)
             {
-                if (minSpeed > speed)
+                if (minSpeed > speed && setMinSpdTrigger)
                 {
                     minSpeed = speed;
                     StartTimer();
