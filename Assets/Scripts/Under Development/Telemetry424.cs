@@ -32,7 +32,7 @@ public class Telemetry424 : MonoBehaviour
     public static float m_totalDistance { get; private set; }
     public static float m_lapDistance;
 
-    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, PID, DistanceChart };
+    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart };
 	public Charts chart = Charts.ForceFeedback;
 
 	// public int monitoredWheel = 0;
@@ -46,7 +46,7 @@ public class Telemetry424 : MonoBehaviour
 		new AxleSuspensionChart(),
 		new SuspensionAnalysisChart(),
 		// new KineticEnergyChart(),
-		new PIDChart(),
+		new AutopilotChart(),
         new DistanceChart(),
         };
 
@@ -502,128 +502,130 @@ public class SuspensionAnalysisChart : PerformanceChart
 	}
 
 
-/*
-// Kinetic Energy Chart
+	/*
+	// Kinetic Energy Chart
 
 
-public class KineticEnergyChart : PerformanceChart
-	{
-	// Channels
-
-	// Energy per unit (assuming mass = 1, inertia = Identity)
-
-	DataLogger.Channel m_totalEnergy;
-	DataLogger.Channel m_linearEnergy;
-	DataLogger.Channel m_angularEnergy;
-
-	DataLogger.Channel m_totalEnergyDelta;
-	DataLogger.Channel m_linearEnergyDelta;
-	DataLogger.Channel m_angularEnergyDelta;
-
-
-	float m_lastTotalEnergy;
-	float m_lastLinearEnergy;
-	float m_lastAngularEnergy;
-
-
-	public override string Title ()
+	public class KineticEnergyChart : PerformanceChart
 		{
-		return "Kinetic Energy";
+		// Channels
+
+		// Energy per unit (assuming mass = 1, inertia = Identity)
+
+		DataLogger.Channel m_totalEnergy;
+		DataLogger.Channel m_linearEnergy;
+		DataLogger.Channel m_angularEnergy;
+
+		DataLogger.Channel m_totalEnergyDelta;
+		DataLogger.Channel m_linearEnergyDelta;
+		DataLogger.Channel m_angularEnergyDelta;
+
+
+		float m_lastTotalEnergy;
+		float m_lastLinearEnergy;
+		float m_lastAngularEnergy;
+
+
+		public override string Title ()
+			{
+			return "Kinetic Energy";
+			}
+
+
+		public override void Initialize ()
+			{
+			dataLogger.topLimit = 25.0f;
+			dataLogger.bottomLimit = -12.5f;
+
+			m_lastTotalEnergy = RigidbodyUtility.GetNormalizedKineticEnergy(vehicle.cachedRigidbody);
+			m_lastLinearEnergy = RigidbodyUtility.GetNormalizedLinearKineticEnergy(vehicle.cachedRigidbody);
+			m_lastAngularEnergy = RigidbodyUtility.GetNormalizedAngularKineticEnergy(vehicle.cachedRigidbody);
+			}
+
+
+		public override void ResetView ()
+			{
+			dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 13.5f);
+			}
+
+
+		public override void SetupChannels ()
+			{
+			// Channels will be drawn in the same order they're created
+
+			string energyFormat = "0.0 J";
+			float energyScale = 0.5f*reference.maxSpeed*reference.maxSpeed;
+
+			m_linearEnergy = dataLogger.NewChannel("Linear");
+			m_linearEnergy.color = GColor.accentGreen;
+			m_linearEnergy.SetOriginAndSpan(0.0f, 12.0f, energyScale);
+			m_linearEnergy.valueFormat = energyFormat;
+
+			m_angularEnergy = dataLogger.NewChannel("Angular");
+			m_angularEnergy.color = GColor.accentCyan;
+			m_angularEnergy.SetOriginAndSpan(0.0f, 12.0f, energyScale);
+			m_angularEnergy.valueFormat = energyFormat;
+			m_angularEnergy.captionPositionY = 2;
+
+			m_totalEnergy = dataLogger.NewChannel("Total");
+			m_totalEnergy.color = GColor.accentRed;
+			m_totalEnergy.SetOriginAndSpan(0.0f, 12.0f, energyScale);
+			m_totalEnergy.valueFormat = energyFormat;
+			m_totalEnergy.captionPositionY = 3;
+
+			m_linearEnergyDelta = dataLogger.NewChannel("Linear ?");
+			m_linearEnergyDelta.color = GColor.green;
+			m_linearEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
+			m_linearEnergyDelta.valueFormat = energyFormat;
+
+			m_angularEnergyDelta = dataLogger.NewChannel("Angular ?");
+			m_angularEnergyDelta.color = GColor.cyan;
+			m_angularEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
+			m_angularEnergyDelta.valueFormat = energyFormat;
+			m_angularEnergyDelta.captionPositionY = 2;
+
+			m_totalEnergyDelta = dataLogger.NewChannel("Total ?");
+			m_totalEnergyDelta.color = GColor.red;
+			m_totalEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
+			m_totalEnergyDelta.valueFormat = energyFormat;
+			m_totalEnergyDelta.captionPositionY = 3;
+			}
+
+
+		public override void RecordData ()
+			{
+			float totalEnergy = RigidbodyUtility.GetNormalizedKineticEnergy(vehicle.cachedRigidbody);
+			m_totalEnergy.Write(totalEnergy);
+			m_totalEnergyDelta.Write(totalEnergy - m_lastTotalEnergy);
+			m_lastTotalEnergy = totalEnergy;
+
+			float linearEnergy = RigidbodyUtility.GetNormalizedLinearKineticEnergy(vehicle.cachedRigidbody);
+			m_linearEnergy.Write(linearEnergy);
+			m_linearEnergyDelta.Write(linearEnergy - m_lastLinearEnergy);
+			m_lastLinearEnergy = linearEnergy;
+
+			float angularEnergy = RigidbodyUtility.GetNormalizedAngularKineticEnergy(vehicle.cachedRigidbody);
+			m_angularEnergy.Write(angularEnergy);
+			m_angularEnergyDelta.Write(angularEnergy - m_lastAngularEnergy);
+			m_lastAngularEnergy = angularEnergy;
+			}
 		}
+	*/
 
+	//Autopilot Graph
 
-	public override void Initialize ()
-		{
-		dataLogger.topLimit = 25.0f;
-		dataLogger.bottomLimit = -12.5f;
-
-		m_lastTotalEnergy = RigidbodyUtility.GetNormalizedKineticEnergy(vehicle.cachedRigidbody);
-		m_lastLinearEnergy = RigidbodyUtility.GetNormalizedLinearKineticEnergy(vehicle.cachedRigidbody);
-		m_lastAngularEnergy = RigidbodyUtility.GetNormalizedAngularKineticEnergy(vehicle.cachedRigidbody);
-		}
-
-
-	public override void ResetView ()
-		{
-		dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 13.5f);
-		}
-
-
-	public override void SetupChannels ()
-		{
-		// Channels will be drawn in the same order they're created
-
-		string energyFormat = "0.0 J";
-		float energyScale = 0.5f*reference.maxSpeed*reference.maxSpeed;
-
-		m_linearEnergy = dataLogger.NewChannel("Linear");
-		m_linearEnergy.color = GColor.accentGreen;
-		m_linearEnergy.SetOriginAndSpan(0.0f, 12.0f, energyScale);
-		m_linearEnergy.valueFormat = energyFormat;
-
-		m_angularEnergy = dataLogger.NewChannel("Angular");
-		m_angularEnergy.color = GColor.accentCyan;
-		m_angularEnergy.SetOriginAndSpan(0.0f, 12.0f, energyScale);
-		m_angularEnergy.valueFormat = energyFormat;
-		m_angularEnergy.captionPositionY = 2;
-
-		m_totalEnergy = dataLogger.NewChannel("Total");
-		m_totalEnergy.color = GColor.accentRed;
-		m_totalEnergy.SetOriginAndSpan(0.0f, 12.0f, energyScale);
-		m_totalEnergy.valueFormat = energyFormat;
-		m_totalEnergy.captionPositionY = 3;
-
-		m_linearEnergyDelta = dataLogger.NewChannel("Linear ?");
-		m_linearEnergyDelta.color = GColor.green;
-		m_linearEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
-		m_linearEnergyDelta.valueFormat = energyFormat;
-
-		m_angularEnergyDelta = dataLogger.NewChannel("Angular ?");
-		m_angularEnergyDelta.color = GColor.cyan;
-		m_angularEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
-		m_angularEnergyDelta.valueFormat = energyFormat;
-		m_angularEnergyDelta.captionPositionY = 2;
-
-		m_totalEnergyDelta = dataLogger.NewChannel("Total ?");
-		m_totalEnergyDelta.color = GColor.red;
-		m_totalEnergyDelta.SetOriginAndSpan(8.0f, 4.0f, energyScale / 32.0f);
-		m_totalEnergyDelta.valueFormat = energyFormat;
-		m_totalEnergyDelta.captionPositionY = 3;
-		}
-
-
-	public override void RecordData ()
-		{
-		float totalEnergy = RigidbodyUtility.GetNormalizedKineticEnergy(vehicle.cachedRigidbody);
-		m_totalEnergy.Write(totalEnergy);
-		m_totalEnergyDelta.Write(totalEnergy - m_lastTotalEnergy);
-		m_lastTotalEnergy = totalEnergy;
-
-		float linearEnergy = RigidbodyUtility.GetNormalizedLinearKineticEnergy(vehicle.cachedRigidbody);
-		m_linearEnergy.Write(linearEnergy);
-		m_linearEnergyDelta.Write(linearEnergy - m_lastLinearEnergy);
-		m_lastLinearEnergy = linearEnergy;
-
-		float angularEnergy = RigidbodyUtility.GetNormalizedAngularKineticEnergy(vehicle.cachedRigidbody);
-		m_angularEnergy.Write(angularEnergy);
-		m_angularEnergyDelta.Write(angularEnergy - m_lastAngularEnergy);
-		m_lastAngularEnergy = angularEnergy;
-		}
-	}
-*/
-
-	//PID Graph
-
-	public class PIDChart : PerformanceChart
+	public class AutopilotChart : PerformanceChart
 	{
 		PidController pidController = new PidController();
 
+		public static int errorFrames { get; set; }
 		public static float errorDistance { get; set; }
 		public static float proportional { get; set; }
 		public static float integral { get; set; }
 		public static float derivative { get; set; }
 		public static float output { get; set; }
 
+		DataLogger.Channel m_frame;
 		DataLogger.Channel m_error;
 		DataLogger.Channel m_proportional;
 		DataLogger.Channel m_integral;
@@ -632,7 +634,7 @@ public class KineticEnergyChart : PerformanceChart
 
 		public override string Title()
 		{
-			return "PID Display";
+			return "Autopilot Display";
 		}
 
 		public override void Initialize()
@@ -648,6 +650,12 @@ public class KineticEnergyChart : PerformanceChart
 
 		public override void SetupChannels()
 		{
+			m_frame = dataLogger.NewChannel("Frames");
+			m_frame.color = GColor.yellow;
+			m_frame.SetOriginAndSpan(11.5f, 1.0f, 5.0f);
+			m_frame.valueFormat = "0.00";
+			m_frame.captionPositionY = 0;
+
 			m_error = dataLogger.NewChannel("Error");
 			m_error.color = GColor.gray;
 			m_error.SetOriginAndSpan(10.0f, 6.0f, 5.0f);
@@ -681,6 +689,7 @@ public class KineticEnergyChart : PerformanceChart
 
 		public override void RecordData()
 		{
+			m_frame.Write(errorFrames);
 			m_error.Write(errorDistance);
 			m_proportional.Write(proportional);
 			m_integral.Write(integral);
@@ -689,9 +698,9 @@ public class KineticEnergyChart : PerformanceChart
 		}
 	}
 
-    // Distance Chart
+	// Distance Chart
 
-    public class DistanceChart : PerformanceChart
+	public class DistanceChart : PerformanceChart
     {
         // Creates channels for distance travelled
         DataLogger.Channel m_totalDistanceTravelled;
