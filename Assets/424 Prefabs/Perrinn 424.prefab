@@ -2648,18 +2648,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2b8382abce58a4fa29d765c21913be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showTelemetry: 1
+  position: {x: 8, y: 550}
+  font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
+  fontSize: 10
+  fontColor: {r: 1, g: 1, b: 1, a: 1}
+  airDensity: 1.225
+  frontRideHeight: 40
+  rearRideHeight: 50
+  flapAngle: 0
+  dRSActivationDelay: 1
+  dRSActivationTime: 0.25
   front:
     applicationPoint: {fileID: 4116892635620062688}
-    dragCoefficient: 0.275
-    downforceCoefficient: 1.2
+    constant: 3.77
+    frontRideHeightCoefficient: -0.076
+    frontRideHeight2Coefficient: 0.000557
+    rearRideHeightCoefficient: 0.01
+    rearRideHeight2Coefficient: 0
+    absoluteYawCoefficient: -0.0063
+    absoluteSteerCoefficient: -0.0117
+    absoluteRollCoefficient: -0.1367
+    dRS_Coefficient: -0.1
+    frontFlapCoefficient: 0.07
   rear:
     applicationPoint: {fileID: 4116892635474530970}
-    dragCoefficient: 0.275
-    downforceCoefficient: 1.55
+    constant: 2.29
+    frontRideHeightCoefficient: 0
+    frontRideHeight2Coefficient: 0
+    rearRideHeightCoefficient: 0.0148
+    rearRideHeight2Coefficient: -0.000249
+    absoluteYawCoefficient: -0.0087
+    absoluteSteerCoefficient: -0.0034
+    absoluteRollCoefficient: -0.1074
+    dRS_Coefficient: -0.5
+    frontFlapCoefficient: -0.022
   drag:
-    applicationPoint: {fileID: 0}
-    dragCoefficient: 1
-    downforceCoefficient: 1
+    applicationPoint: {fileID: 4116892635620062688}
+    constant: 0.93
+    frontRideHeightCoefficient: 0
+    frontRideHeight2Coefficient: 0
+    rearRideHeightCoefficient: 0
+    rearRideHeight2Coefficient: 0
+    absoluteYawCoefficient: 0.0017
+    absoluteSteerCoefficient: 0.001
+    absoluteRollCoefficient: -0.0104
+    dRS_Coefficient: -0.2
+    frontFlapCoefficient: 0.002
 --- !u!1 &4308158035254949368
 GameObject:
   m_ObjectHideFlags: 0
@@ -2978,8 +3013,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10968d37f1acb20469b51382049f6f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 2809703011807798502}
   windowSeconds: 6
+  setMinSpeed: 10
   speedMps: {fileID: 6546174655295048549}
   speedKph: {fileID: 6947664858088880813}
   gear: {fileID: 600512336860410052}

@@ -204,9 +204,11 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			m_text += $"Cx              : {-SCx * dynamicPressure / 9.80665, 6:0} kg\n";
 			m_text += $"DRS logic       : {DRSlogic, 6:0.000}\n";
 			m_text += $"DRS position    : {DRS, 6:0.000}\n";
-			m_text += $"Abs roll angle  : {rollAngle,6:0.0} deg\n";
-			m_text += $"Abs yaw angle   : {yawAngle,6:0.0} deg\n";
-			m_text += $"Abs steer angle : {steerAngle,6:0.0} deg\n";
+			m_text += $"Ride height F	: {frontRideHeight,6:0.0} mm\n";
+			m_text += $"Ride height R	: {rearRideHeight,6:0.0} mm\n";
+			m_text += $"Yaw angle abs	: {yawAngle,6:0.0} deg\n";
+			m_text += $"Steer angle abs	: {steerAngle,6:0.0} deg\n";
+			m_text += $"Roll angle abs	: {rollAngle,6:0.0} deg\n";
 		}
 			
 		
