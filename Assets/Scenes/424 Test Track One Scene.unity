@@ -562,6 +562,31 @@ PrefabInstance:
       propertyPath: forceFeedbackGui
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: brakeRangeMin
+      value: 0.0076260567
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: brakeRangeMax
+      value: 0.99999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: selectedDevice
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: configuredWheelRange
+      value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: clutchRangeMax
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4116892636824451342, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: predefinedReplay
@@ -602,6 +627,202 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: newAeroModel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: airDensity
+      value: 1.225
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: frontRideHeight
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rearRideHeight
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: flapAngle
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.constant
+      value: 3.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.frontRideHeightCoefficient
+      value: -0.076
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.frontRideHeight2Coefficient
+      value: 0.000557
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.rearRideHeightCoefficient
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.rearRideHeight2Coefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.absoluteYawCoefficient
+      value: -0.0063
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.absoluteSteerCoefficient
+      value: -0.0117
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.absoluteRollCoefficient
+      value: -0.1367
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.dRS_Coefficient
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.frontFlapCoefficient
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.constant
+      value: 2.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.frontRideHeightCoefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.frontRideHeight2Coefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.rearRideHeightCoefficient
+      value: 0.0148
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.rearRideHeight2Coefficient
+      value: -0.000249
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.absoluteYawCoefficient
+      value: -0.0087
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.absoluteSteerCoefficient
+      value: -0.0034
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.absoluteRollCoefficient
+      value: -0.1074
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.dRS_Coefficient
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.frontFlapCoefficient
+      value: -0.022
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.constant
+      value: 0.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.frontRideHeightCoefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.frontRideHeight2Coefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.rearRideHeightCoefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.rearRideHeight2Coefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.absoluteYawCoefficient
+      value: 0.0017
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.absoluteSteerCoefficient
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.absoluteRollCoefficient
+      value: -0.0104
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.dRS_Coefficient
+      value: -0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.frontFlapCoefficient
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: dRSActivationTime
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: dRSActivationDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: font
+      value: 
+      objectReference: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626,
+        type: 3}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: fontSize
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6131166578853825015, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -1906,7 +2127,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1451115906}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77378aab0a444c64a87c593007304373, type: 3}
   m_Name: 
