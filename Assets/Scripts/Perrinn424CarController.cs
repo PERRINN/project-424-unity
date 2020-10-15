@@ -18,6 +18,7 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	{
 	public const int ThrottleInput				= 0;		// Throttle input sent to mgu			ratio		1000			1000 = 1.0 = 100%
 	public const int BrakePressure				= 1;		// Brake circuit pressure				bar			1000			30500 = 30.5 bar
+	public const int DrsPosition				= 2;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
 
 	// MGU data. Combine base ID with values.
 
