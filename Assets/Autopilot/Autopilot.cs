@@ -50,6 +50,14 @@ public class Autopilot : MonoBehaviour
         target = GetComponentInChildren<VPReplay>();
         replayController = GetComponentInChildren<VPReplayController>();
 
+        // Disable autopilot when no replay data is available
+
+        if (replayController == null || replayController.predefinedReplay == null)
+        {
+            enabled = false;
+            return;
+        }
+
         recordedReplay = replayController.predefinedReplay.recordedData;
         cuts = recordedReplay.Count / 500;
 
@@ -278,9 +286,9 @@ public class Autopilot : MonoBehaviour
 
         if (showPosition)
         {
-            cubeOne.transform.position = recordedReplay[frame3].position;
-            cubeTwo.transform.position = recordedReplay[frame4].position;
-            cubeCar.transform.position = target.recordedData[currentFrame].position;
+            if (cubeOne != null) cubeOne.transform.position = recordedReplay[frame3].position;
+            if (cubeTwo != null) cubeTwo.transform.position = recordedReplay[frame4].position;
+            if (cubeCar != null) cubeCar.transform.position = target.recordedData[currentFrame].position;
         }
 
         //get error force
@@ -316,7 +324,7 @@ public class Autopilot : MonoBehaviour
 
         if (autopilotON)
         {
-            rigidBody424.AddForceAtPosition(appliedForceV3, transform.position); // transform.position rigidBody424.centerOfMass 
+            rigidBody424.AddForceAtPosition(appliedForceV3, transform.position); // transform.position rigidBody424.centerOfMass
 
             float nextFrameX = recordedReplay[frame4].position.x - currentPosX;
             float nextFrameZ = recordedReplay[frame4].position.z - currentPosZ;
