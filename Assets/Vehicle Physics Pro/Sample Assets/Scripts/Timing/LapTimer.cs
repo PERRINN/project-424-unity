@@ -36,6 +36,10 @@ public class LapTimer : MonoBehaviour
 	public VPReplay replayComponent;
 	#endif
 
+	// Event delegate called on each valid lap registered
+
+	public Action<float> onLap;
+
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
 	// except for the best time, which is preserved.
@@ -162,6 +166,8 @@ public class LapTimer : MonoBehaviour
 			externalDisplay.lapTime = t;
 			externalDisplay.LapPass();
 			}
+
+		if (onLap != null) onLap(m_lastTime);
 		}
 
 

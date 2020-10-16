@@ -603,6 +603,21 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5932580745775428947, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: cubeOne
+      value: 
+      objectReference: {fileID: 1556256872}
+    - target: {fileID: 5932580745775428947, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: cubeTwo
+      value: 
+      objectReference: {fileID: 630876085}
+    - target: {fileID: 5932580745775428947, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: cubeCar
+      value: 
+      objectReference: {fileID: 1047179105}
     - target: {fileID: 6131166578853825015, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Layer
@@ -918,7 +933,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 207221086}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451115906}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ecfffc18ce3aa4b4f95d46ba88aa1212, type: 3}
@@ -1893,36 +1908,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1451115906 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4116892635276943217, guid: 89f86da0002dfa549bb80908bb13bad3,
-    type: 3}
-  m_PrefabInstance: {fileID: 207221086}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1451115907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451115906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77378aab0a444c64a87c593007304373, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cubeOne: {fileID: 1556256872}
-  cubeTwo: {fileID: 630876085}
-  cubeCar: {fileID: 1047179105}
-  showPosition: 1
-  kp: 300000
-  ki: 0
-  kd: 10000
-  maxForce: 50000
-  errorRateLimit: 0.1
-  autopilotON: 0
-  throttleControl: 75
-  brakeControl: 100
 --- !u!54 &1451115911 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 4116892635276943221, guid: 89f86da0002dfa549bb80908bb13bad3,
