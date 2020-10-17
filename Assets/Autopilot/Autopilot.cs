@@ -41,8 +41,7 @@ public class Autopilot : MonoBehaviour
     float m_ffbDamperCoefficient;
     int previousFrame;
 
-    float time = 0;
-    int timeCount = 1;
+    float progressivePIDOutput = 0;
 
     void OnEnable()
     {
@@ -50,6 +49,14 @@ public class Autopilot : MonoBehaviour
         vehicleBase = GetComponent<VehicleBase>();
         target = GetComponentInChildren<VPReplay>();
         replayController = GetComponentInChildren<VPReplayController>();
+
+        // Disable autopilot when no replay data is available
+
+        if (replayController == null || replayController.predefinedReplay == null)
+        {
+            enabled = false;
+            return;
+        }
 
         recordedReplay = replayController.predefinedReplay.recordedData;
         cuts = recordedReplay.Count / 500;
@@ -91,7 +98,7 @@ public class Autopilot : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Time.time > 0.01)
+        if (Time.time > 0)
         {
             if (runOnce == false)
             {
@@ -279,30 +286,10 @@ public class Autopilot : MonoBehaviour
 
         if (showPosition)
         {
-            cubeOne.transform.position = recordedReplay[frame3].position;
-            cubeTwo.transform.position = recordedReplay[frame4].position;
-            cubeCar.transform.position = target.recordedData[currentFrame].position;
+            if (cubeOne != null) cubeOne.transform.position = recordedReplay[frame3].position;
+            if (cubeTwo != null) cubeTwo.transform.position = recordedReplay[frame4].position;
+            if (cubeCar != null) cubeCar.transform.position = target.recordedData[currentFrame].position;
         }
-
-
-        //errorRateLimit [m/s]
-        //float clampedHeight = height;
-
-        //if (Time.time - time >= 0.1 && checkHeight > errorRateLimit)
-        //{
-        //    clampedHeight = height / 10 * timeCount;
-        //    print(timeCount + " " + time);
-        //    timeCount++;
-        //    time = Time.time;
-        //    if (timeCount > 10) { timeCount = 1; }
-        //}
-        //else if (checkHeight <= errorRateLimit)
-        //{
-        //    clampedHeight = height;
-        //    timeCount = 1;
-        //    print("else");
-        //}
-
 
         //get error force
         edyPID.minOutput = maxForce * -1.0f;
@@ -311,9 +298,19 @@ public class Autopilot : MonoBehaviour
         edyPID.input = height;
         edyPID.Compute();
 
-        appliedForceV3.x = ClampByOutput(edyPID.output * cosD * 1.000f);
+        //errorRateLimit [m/s]
+        if (checkHeight > 0.05)
+        {
+            progressivePIDOutput = edyPID.output * errorRateLimit * 5000 / kp;
+        }
+        else
+        {
+            progressivePIDOutput = edyPID.output;
+        }
+
+        appliedForceV3.x = ClampByOutput(progressivePIDOutput * cosD * 1.000f);
         appliedForceV3.y = 0;
-        appliedForceV3.z = ClampByOutput(edyPID.output * sinD * 1.000f);
+        appliedForceV3.z = ClampByOutput(progressivePIDOutput * sinD * 1.000f);
 
 
         //get recorded driver input
@@ -327,7 +324,7 @@ public class Autopilot : MonoBehaviour
 
         if (autopilotON)
         {
-            rigidBody424.AddForceAtPosition(appliedForceV3, transform.position);
+            rigidBody424.AddForceAtPosition(appliedForceV3, transform.position); // transform.position rigidBody424.centerOfMass
 
             float nextFrameX = recordedReplay[frame4].position.x - currentPosX;
             float nextFrameZ = recordedReplay[frame4].position.z - currentPosZ;
@@ -336,22 +333,22 @@ public class Autopilot : MonoBehaviour
             int progressive = (int)((minDistance3 - abc) / minDistance3 * 100);
 
             // Steer angle
-            int steerERR = recordedReplay[frame4].inputData[InputData.Steer] - recordedReplay[frame3].inputData[InputData.Steer];
-            showSteer = (steerERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Steer];
+            int steerERR = recordedReplay[frame4].inputData[InputData.Steer] - recordedReplay[previousFrame].inputData[InputData.Steer];
+            showSteer = (steerERR * progressive / 100) + recordedReplay[previousFrame].inputData[InputData.Steer];
             vehicleBase.data.Set(Channel.Input, InputData.Steer, showSteer);
 
             // Brake
-            int brakeERR = recordedReplay[frame4].inputData[InputData.Brake] - recordedReplay[frame3].inputData[InputData.Brake];
-            showBrake = (brakeERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Brake];
+            int brakeERR = recordedReplay[frame4].inputData[InputData.Brake] - recordedReplay[previousFrame].inputData[InputData.Brake];
+            showBrake = (brakeERR * progressive / 100) + recordedReplay[previousFrame].inputData[InputData.Brake];
             vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake * brakeControl / 100);
 
             // Throttle
-            int throttleERR = recordedReplay[frame4].inputData[InputData.Throttle] - recordedReplay[frame3].inputData[InputData.Throttle];
-            showThrottle = (throttleERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Throttle];
+            int throttleERR = recordedReplay[frame4].inputData[InputData.Throttle] - recordedReplay[previousFrame].inputData[InputData.Throttle];
+            showThrottle = (throttleERR * progressive / 100) + recordedReplay[previousFrame].inputData[InputData.Throttle];
             vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle * throttleControl / 100);
 
             // AutomaticGear
-            vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[frame3].inputData[InputData.AutomaticGear]);
+            vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[previousFrame].inputData[InputData.AutomaticGear]);
 
         }
 
@@ -373,8 +370,4 @@ public class Autopilot : MonoBehaviour
         return clampedForce;
     }
 
-    void StartTimer()
-    {
-        time = Time.time;
-    }
 }

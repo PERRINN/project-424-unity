@@ -32,7 +32,7 @@ public class Telemetry424 : MonoBehaviour
     public static float m_totalDistance { get; private set; }
     public static float m_lapDistance;
 
-    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart };
+    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart, Aerodynamics };
 	public Charts chart = Charts.ForceFeedback;
 
 	// public int monitoredWheel = 0;
@@ -48,6 +48,7 @@ public class Telemetry424 : MonoBehaviour
 		// new KineticEnergyChart(),
 		new AutopilotChart(),
         new DistanceChart(),
+		new AerodynamicsChart(),
         };
 
 	VPPerformanceDisplay m_perfComponent;
@@ -751,6 +752,98 @@ public class SuspensionAnalysisChart : PerformanceChart
             m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
         }
     }
+
+	public class AerodynamicsChart : PerformanceChart
+    {
+		// Creates channels for distance travelled
+		DataLogger.Channel m_aeroDRS;
+		DataLogger.Channel m_aeroCoeffFront;
+		DataLogger.Channel m_aeroCoeffRear;
+		DataLogger.Channel m_aeroCoeffDrag;
+		DataLogger.Channel m_aeroCoeffForceFront; 
+		DataLogger.Channel m_aeroCoeffForceRear;
+		DataLogger.Channel m_aeroCoeffForceDrag;
+
+		Perrinn424Aerodynamics m_aero = new Perrinn424Aerodynamics();
+
+		public override string Title()
+		{
+			return "Aerodynamics";
+		}
+
+		public override void Initialize()
+		{
+			dataLogger.topLimit = 18f;
+			dataLogger.bottomLimit = 0f;
+			m_aero = vehicle.GetComponentInChildren<Perrinn424Aerodynamics>();
+		}
+
+		public override void ResetView()
+		{
+			dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+		}
+
+		public override void SetupChannels()
+		{
+			// FrontAero
+			m_aeroDRS = dataLogger.NewChannel("DRS Position");
+			m_aeroDRS.color = GColor.blue;
+			m_aeroDRS.SetOriginAndSpan(11.4f, 1.5f, 3.0f);
+			m_aeroDRS.valueFormat = "0.0";
+			m_aeroDRS.captionPositionY = 0;
+
+			m_aeroCoeffFront = dataLogger.NewChannel("SCzFront");
+			m_aeroCoeffFront.color = GColor.yellow;
+			m_aeroCoeffFront.SetOriginAndSpan(8.0f, 0.5f, 1.5f);
+			m_aeroCoeffFront.valueFormat = "0.00";
+			m_aeroCoeffFront.captionPositionY = 1;
+
+			m_aeroCoeffRear = dataLogger.NewChannel("SCzRear");
+			m_aeroCoeffRear.color = GColor.red;
+			m_aeroCoeffRear.SetOriginAndSpan(8.0f, 1.0f, 1.5f);
+			m_aeroCoeffRear.valueFormat = "0.0";
+			m_aeroCoeffRear.captionPositionY = 0;
+
+			m_aeroCoeffDrag = dataLogger.NewChannel("SCx");
+			m_aeroCoeffDrag.color = GColor.green;
+			m_aeroCoeffDrag.SetOriginAndSpan(7.0f, 1.0f, 1.5f);
+			m_aeroCoeffDrag.valueFormat = "0.0";
+			m_aeroCoeffDrag.captionPositionY = 4;
+
+			m_aeroCoeffForceFront = dataLogger.NewChannel("Downforce Front [kg]");
+			m_aeroCoeffForceFront.color = GColor.cyan;
+			m_aeroCoeffForceFront.SetOriginAndSpan(4.0f, 10.0f, 5000.0f);
+			m_aeroCoeffForceFront.valueFormat = "0.00";
+			m_aeroCoeffForceFront.captionPositionY = 1;
+
+			m_aeroCoeffForceRear = dataLogger.NewChannel("Downforce Rear [kg]");
+			m_aeroCoeffForceRear.color = GColor.yellow;
+			m_aeroCoeffForceRear.SetOriginAndSpan(4.0f, 10.0f, 5000.0f);
+			m_aeroCoeffForceRear.valueFormat = "0.0";
+			m_aeroCoeffForceRear.captionPositionY = 0;
+
+			m_aeroCoeffForceDrag = dataLogger.NewChannel("Drag force [kg]");
+			m_aeroCoeffForceDrag.color = GColor.pink;
+			m_aeroCoeffForceDrag.SetOriginAndSpan(4.0f, 10.0f, 2500.0f);
+			m_aeroCoeffForceDrag.valueFormat = "0.0";
+			m_aeroCoeffForceDrag.captionPositionY = -1;
+
+		}
+
+		public override void RecordData()
+		{
+			// Passes the distance to the datalogger to write on the chart
+			// Total Distance
+			m_aeroDRS.Write(m_aero.DRS);
+			m_aeroCoeffFront.Write(m_aero.SCzFront);
+			m_aeroCoeffRear.Write(m_aero.SCzRear);
+			m_aeroCoeffDrag.Write(m_aero.SCx);
+			m_aeroCoeffForceFront.Write(m_aero.downforceFront);
+			m_aeroCoeffForceRear.Write(m_aero.downforceRear);
+			m_aeroCoeffForceDrag.Write(m_aero.dragForce);
+
+		}
+	}
 
 #endif
 }

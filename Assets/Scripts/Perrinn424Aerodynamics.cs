@@ -51,10 +51,23 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public AeroSettings rear = new AeroSettings();
 	public AeroSettings drag = new AeroSettings();
 
-	private float DRStime = 0;
-	private float DRS = 0;
-	private bool DRSlogic = false;
-	
+	float DRStime    = 0;
+	bool DRSStatus   = false;
+	bool DRSclosing  = false;
+	public float DRS = 0;
+
+	public float SCzFront = 0;
+	public float SCzRear  = 0;
+	public float SCx      = 0;
+
+	public float downforceFront = 0;
+	public float downforceRear = 0;
+	public float dragForce = 0;
+
+	public float yawAngle = 0;
+	public float steerAngle = 0;
+	public float rollAngle = 0;
+
 	//%  Function Name: CalcAeroCoeff 
 	//%  This function calculates a given aerodynamic coefficient based on:
 	//% 
@@ -68,7 +81,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//%	 [IN]	flapAngle_deg [deg]
 	//%
 	//%	 [OUT]	SCn [m2]
-	private float CalcAeroCoeff(AeroSettings aeroSetting, float fRH_mm, float rRH_mm, float yawAngle_deg, float steerAngle_deg, float rollAngle_deg, float DRSpos, float flapAngle_deg)
+	float CalcAeroCoeff(AeroSettings aeroSetting, float fRH_mm, float rRH_mm, float yawAngle_deg, float steerAngle_deg, float rollAngle_deg, float DRSpos, float flapAngle_deg)
 	{
 		// Assigning return variable
 		float SCn;
@@ -103,7 +116,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//%
 	//%	 [OUT]	angle_deg [deg]
 	//%********************************************************************
-	private float ConvertAngle(float angle_deg)
+	float ConvertAngle(float angle_deg)
     {
 		if (angle_deg > 180)
 			angle_deg -= 360;
@@ -122,18 +135,23 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//%
 	//%	 [OUT]	DRSpos: 0 to 1 [-]
 	//%********************************************************************
-	private float CalcDRSPosition(float throttlePos, float brakePos, float DRSpos)
+	float CalcDRSPosition(float throttlePos, float brakePos, float DRSpos)
 	{
-		if (throttlePos == 1 && brakePos == 0)
-        {
-			DRSlogic = true;
+		if (throttlePos == 1 && brakePos == 0 && !DRSclosing)
+		{
+			DRSStatus = true;
 			DRStime -= Time.deltaTime;
 			if (DRStime <= 0.0f)
 				DRSpos += Time.deltaTime * (1 / dRSActivationTime);
 		}
-        else
-        {
-			DRSlogic = false;
+		else
+		{
+			DRSclosing = true;
+			if (DRSpos == 0)
+			{
+				DRSclosing = false;
+			}
+			DRSStatus = false;
 			DRSpos -= Time.deltaTime * (1 / dRSActivationTime);
 			DRStime = dRSActivationDelay;
 		}
@@ -153,24 +171,23 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		Rigidbody rb = vehicle.cachedRigidbody;
 		float vSquared        = rb.velocity.sqrMagnitude;
 		float dynamicPressure = (float)(airDensity * vSquared / 2.0);
-        float yawAngle        = Math.Abs(vehicle.speedAngle);
-	    float steerAngle      = Math.Abs(vehicle.wheelState[0].steerAngle + vehicle.wheelState[1].steerAngle) / 2;
-		float SCzFront        = 0;
-		float SCzRear         = 0;
-		float SCx             = 0;
+		
+		yawAngle   = Math.Min(Math.Max(Math.Abs(vehicle.speedAngle), 0), 10);
+		steerAngle = Math.Min(Math.Max(Math.Abs(Math.Abs(vehicle.wheelState[0].steerAngle + vehicle.wheelState[1].steerAngle) / 2), 0), 20);
 
         // Normalizing roll angle to -180/+180
         // NOTE: THIS ANGLE IS NOT THE ACTUAL BODY ROLL DUE TO SUSPENSION KINEMATICS, BUT THE WORLD-BASED ROLL
-        float rollAngle = Math.Abs(ConvertAngle(rb.rotation.eulerAngles[2]));
+        rollAngle = Math.Abs(ConvertAngle(rb.rotation.eulerAngles[2]));
 
         // Getting driver's input
         int[] input = vehicle.data.Get(Channel.Input);
 		float throttlePosition = input[InputData.Throttle] / 10000.0f;
 		float brakePosition = input[InputData.Brake] / 10000.0f;
 
-		// Calculating DRS position
+		// Calculating DRS position and feeding to the car data bus
 		DRS = CalcDRSPosition(throttlePosition, brakePosition, DRS);
-
+		vehicle.data.Set(Channel.Custom, Perrinn424Data.DrsPosition, Mathf.RoundToInt(DRS * 1000));
+		
 		// Calculating aero forces
 		if (front.applicationPoint != null)
 		{
@@ -193,16 +210,20 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			rb.AddForceAtPosition(VEC_SCx, drag.applicationPoint.position);
 		}
 
+		downforceFront = (float)(SCzFront * dynamicPressure / 9.80665);
+		downforceRear = (float)(SCzRear * dynamicPressure / 9.80665);
+		dragForce = (float)(SCx * dynamicPressure / 9.80665);
+
 		if (showTelemetry)
         {
 			m_text = "";
 			m_text += $"SCz Front       : {SCzFront, 6:0.000}\n";
 			m_text += $"SCz Rear        : {SCzRear, 6:0.000}\n";
 			m_text += $"SCx             : {SCx, 6:0.000}\n";
-			m_text += $"Cz Front        : {-SCzFront * dynamicPressure / 9.80665, 6:0} kg\n";
-			m_text += $"Cz Rear         : {-SCzRear * dynamicPressure / 9.80665, 6:0} kg\n";
-			m_text += $"Cx              : {-SCx * dynamicPressure / 9.80665, 6:0} kg\n";
-			m_text += $"DRS logic       : {DRSlogic, 6:0.000}\n";
+			m_text += $"Front Downforce : {SCzFront * dynamicPressure / 9.80665, 6:0} kg\n";
+			m_text += $"Rear Downforce  : {SCzRear * dynamicPressure / 9.80665, 6:0} kg\n";
+			m_text += $"Drag Force      : {SCx * dynamicPressure / 9.80665, 6:0} kg\n";
+			m_text += $"DRS logic       : {DRSStatus, 6:0.000}\n";
 			m_text += $"DRS position    : {DRS, 6:0.000}\n";
 			m_text += $"Ride height F	: {frontRideHeight,6:0.0} mm\n";
 			m_text += $"Ride height R	: {rearRideHeight,6:0.0} mm\n";

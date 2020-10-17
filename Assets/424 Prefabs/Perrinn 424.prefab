@@ -1558,6 +1558,7 @@ GameObject:
   - component: {fileID: 4116892635276943223}
   - component: {fileID: 4682684200946408111}
   - component: {fileID: 3654773149151551392}
+  - component: {fileID: 5932580745775428947}
   m_Layer: 8
   m_Name: Perrinn 424
   m_TagString: Untagged
@@ -1794,6 +1795,30 @@ MonoBehaviour:
   showTireForce: 1
   combinedTireForce: 1
   useLogScale: 1
+--- !u!114 &5932580745775428947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4116892635276943217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77378aab0a444c64a87c593007304373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeOne: {fileID: 0}
+  cubeTwo: {fileID: 0}
+  cubeCar: {fileID: 0}
+  showPosition: 1
+  kp: 300000
+  ki: 0
+  kd: 10000
+  maxForce: 50000
+  errorRateLimit: 0.1
+  autopilotON: 0
+  throttleControl: 75
+  brakeControl: 100
 --- !u!1 &4116892635335174826
 GameObject:
   m_ObjectHideFlags: 0
