@@ -1,7 +1,6 @@
 using UnityEngine;
 using VehiclePhysics;
 using System;
-using System.Collections;
 
 // THINGS TO MODIFY:
 // bodyRoll: Change to the correct vehicle body roll due to suspension kinematics
@@ -40,7 +39,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 	float DRStime    = 0;
     bool DRSStatus   = false;
-	bool DRSclosing  = false;
+	public bool DRSclosing  = false;
 	public float DRS = 0;
 
 	public float SCzFront = 0;
@@ -51,9 +50,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public float downforceRear  = 0;
 	public float dragForce      = 0;
 
-	public float yawAngle   = 0;
-	public float steerAngle = 0;
-	public float rollAngle  = 0;
+	public float yawAngle       = 0;
+	public float steerAngle     = 0;
+	public float rollAngle      = 0;
 
 	//%  Function Name: CalcAeroCoeff 
 	//%  This function calculates a given aerodynamic coefficient based on:
