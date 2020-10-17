@@ -43,7 +43,9 @@ public class Autopilot : MonoBehaviour
 
     float time = 0;
     int timeCount = 1;
-    float progressivePIDOutput = 0;
+    float errorRate;
+    float progressivePIDOutput;
+    float clampedHeight = 0;
 
     void OnEnable()
     {
@@ -54,6 +56,7 @@ public class Autopilot : MonoBehaviour
 
         recordedReplay = replayController.predefinedReplay.recordedData;
         cuts = recordedReplay.Count / 500;
+        errorRate = errorRateLimit * 0.002f;
 
         m_deviceInput = vehicleBase.GetComponentInChildren<VPDeviceInput>();
         if (m_deviceInput != null)
@@ -80,6 +83,7 @@ public class Autopilot : MonoBehaviour
             {
                 autopilotON = true;
                 edyPID.Reset();
+                clampedHeight = 0;
 
                 if (m_deviceInput != null)
                 {
@@ -271,24 +275,16 @@ public class Autopilot : MonoBehaviour
 
 
         //errorRateLimit [m/s]
-        float clampedHeight = 0;
+        if (clampedHeight + errorRate < height)
+        {
+            clampedHeight += errorRate;
+        }
+        else if (clampedHeight - errorRate > height)
+        {
+            clampedHeight -= errorRate;
+        }
+        else { clampedHeight = height; }
 
-        if (autopilotON)
-        {
-            if (checkHeight > errorRateLimit)
-            {
-                clampedHeight = (carPosX > 0) ? -errorRateLimit : errorRateLimit;
-            }
-            else
-            {
-                clampedHeight = height;
-            }
-        }
-        else
-        {
-            clampedHeight = height;
-        }
-        
 
         AutopilotChart.errorFrames = frame3 - previousFrame;
         AutopilotChart.errorDistance = clampedHeight; // height;
@@ -305,9 +301,6 @@ public class Autopilot : MonoBehaviour
             cubeTwo.transform.position = recordedReplay[frame4].position;
             cubeCar.transform.position = target.recordedData[currentFrame].position;
         }
-
-
-
 
 
         //if (Time.time - time >= 0.1 && checkHeight > errorRateLimit)
@@ -334,14 +327,14 @@ public class Autopilot : MonoBehaviour
         edyPID.Compute();
 
         //errorRateLimit [m/s]
-        //if (checkHeight > 0.05)
-        //{
-        //    progressivePIDOutput = edyPID.output * errorRateLimit * 5000 / kp;
-        //}
-        //else
-        //{
-        //    progressivePIDOutput = edyPID.output;
-        //}
+        if (checkHeight > 0.05)
+        {
+            progressivePIDOutput = edyPID.output * errorRateLimit * 5000 / kp;
+        }
+        else
+        {
+            progressivePIDOutput = edyPID.output;
+        }
 
         appliedForceV3.x = ClampByOutput(edyPID.output * cosD * 1.000f);
         appliedForceV3.y = 0;
