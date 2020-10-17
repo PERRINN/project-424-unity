@@ -10,6 +10,6 @@ public class FlapRotation : MonoBehaviour
     {
         target = GetComponentInParent<VehicleBase>();
         m_aero = target.GetComponentInChildren<Perrinn424Aerodynamics>();
-        transform.Rotate(new Vector3(-m_aero.flapAngle, 0, 0));
+        transform.Rotate(new Vector3(m_aero.flapAngle, 0, 0));
     }
 }

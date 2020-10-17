@@ -37,22 +37,19 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public AeroSettings rear  = new AeroSettings();
 	public AeroSettings drag  = new AeroSettings();
 
-	float DRStime    = 0;
-    bool DRSStatus   = false;
-	public bool DRSclosing  = false;
-	public float DRS = 0;
-
-	public float SCzFront = 0;
-	public float SCzRear  = 0;
-	public float SCx      = 0;
-
-	public float downforceFront = 0;
-	public float downforceRear  = 0;
-	public float dragForce      = 0;
-
-	public float yawAngle       = 0;
-	public float steerAngle     = 0;
-	public float rollAngle      = 0;
+	[HideInInspector] public bool DRSclosing  = false;
+	[HideInInspector] public float DRS = 0;
+	[HideInInspector] public float SCzFront = 0;
+	[HideInInspector] public float SCzRear  = 0;
+	[HideInInspector] public float SCx      = 0;
+	[HideInInspector] public float downforceFront = 0;
+	[HideInInspector] public float downforceRear  = 0;
+	[HideInInspector] public float dragForce      = 0;
+	[HideInInspector] public float yawAngle       = 0;
+	[HideInInspector] public float steerAngle     = 0;
+	[HideInInspector] public float rollAngle      = 0;
+	float DRStime = 0;
+	bool DRSStatus = false;
 
 	//%  Function Name: CalcAeroCoeff 
 	//%  This function calculates a given aerodynamic coefficient based on:
