@@ -22,7 +22,7 @@ public class Autopilot : MonoBehaviour
 
     public float kp, ki, kd;
     public float maxForce;
-    public float errorRateLimit = 0.1f;
+    public float errorRateLimit = 0.0001f;
     public bool autopilotON = false;
     public int throttleControl = 100;
     public int brakeControl = 100;
@@ -82,8 +82,7 @@ public class Autopilot : MonoBehaviour
             else
             {
                 autopilotON = true;
-                edyPID.Reset();
-                clampedHeight = 0;
+                //edyPID.Reset();
 
                 if (m_deviceInput != null)
                 {
@@ -275,15 +274,18 @@ public class Autopilot : MonoBehaviour
 
 
         //errorRateLimit [m/s]
-        if (clampedHeight + errorRate < height)
+        if (clampedHeight + errorRate < height && height > 0 )
         {
             clampedHeight += errorRate;
         }
-        else if (clampedHeight - errorRate > height)
+        else if (clampedHeight - errorRate > height && height < 0)
         {
             clampedHeight -= errorRate;
         }
         else { clampedHeight = height; }
+
+//NP test
+//clampedHeight=Mathf.Clamp(clampedHeight,0.5,-0.5);
 
 
         AutopilotChart.errorFrames = frame3 - previousFrame;

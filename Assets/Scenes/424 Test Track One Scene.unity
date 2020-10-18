@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.05970783, g: 0.076506756, b: 0.09413897, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.059738647, g: 0.076523386, b: 0.09403866, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -550,7 +550,7 @@ PrefabInstance:
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -618,6 +618,16 @@ PrefabInstance:
       propertyPath: cubeCar
       value: 
       objectReference: {fileID: 1047179105}
+    - target: {fileID: 5932580745775428947, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: errorRateLimit
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932580745775428947, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: throttleControl
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 6131166578853825015, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Layer
