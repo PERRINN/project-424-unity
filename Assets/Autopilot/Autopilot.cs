@@ -15,17 +15,10 @@ public class Autopilot : MonoBehaviour
     List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
     readonly PidController edyPID = new PidController();
 
-    public GameObject cubeOne;
-    public GameObject cubeTwo;
-    public GameObject cubeCar;
-    public bool showPosition = true;
-
     public float kp, ki, kd;
-    public float maxForce;
-    public float errorRateLimit = 0.1f;
-    public bool autopilotON = false;
-    public int throttleControl = 100;
-    public int brakeControl = 100;
+    public bool autopilotON;
+    public int throttleControl;
+    public int brakeControl;
 
     int cuts;
     float height = 0;
@@ -40,8 +33,6 @@ public class Autopilot : MonoBehaviour
     float m_ffbForceIntensity;
     float m_ffbDamperCoefficient;
     int previousFrame;
-
-    float progressivePIDOutput = 0;
 
     void OnEnable()
     {
@@ -77,8 +68,6 @@ public class Autopilot : MonoBehaviour
             else
             {
                 autopilotON = true;
-                edyPID.Reset();
-
                 if (m_deviceInput != null)
                 {
                     m_deviceInput.forceIntensity = 0.0f;
@@ -102,31 +91,6 @@ public class Autopilot : MonoBehaviour
             GetDistance();
         }
 
-    }
-
-    void OnGUI()
-    {
-        GUIStyle styleON = new GUIStyle(GUI.skin.button);
-
-        if (autopilotON) { styleON.normal.textColor = Color.green; }
-        else { styleON.normal.textColor = Color.red; }
-
-        string errorDistance = "";
-        string forceX = "";
-        string forceZ = "";
-        errorDistance += height;
-        forceX += appliedForceV3.x;
-        forceZ += appliedForceV3.z;
-
-        GUI.Box(new Rect(185, Screen.height - 90, 300, 80), "");
-        GUI.Button(new Rect(200, Screen.height - 85, 40, 20), "ON", styleON);
-        GUI.Label(new Rect(200, Screen.height - 65, 200, 50), "Error    : " + errorDistance);
-        GUI.Label(new Rect(200, Screen.height - 50, 200, 50), "Force X: " + forceX);
-        GUI.Label(new Rect(200, Screen.height - 35, 200, 50), "Force Z: " + forceZ);
-
-        GUI.Label(new Rect(350, Screen.height - 65, 200, 50), "Steer    : " + showSteer);
-        GUI.Label(new Rect(350, Screen.height - 50, 200, 50), "Brake    : " + showBrake * brakeControl / 100);
-        GUI.Label(new Rect(350, Screen.height - 35, 200, 50), "Throttle : " + showThrottle * throttleControl / 100);
     }
 
     (int, int) AutopilotOnStart()
@@ -269,40 +233,23 @@ public class Autopilot : MonoBehaviour
 
         AutopilotChart.errorFrames = frame3 - previousFrame;
         AutopilotChart.errorDistance = height;
-        AutopilotChart.proportional = ClampByOutput(edyPID.proportional);
-        AutopilotChart.integral = ClampByOutput(edyPID.integral);
-        AutopilotChart.derivative = ClampByOutput(edyPID.derivative);
-        AutopilotChart.output = ClampByOutput(edyPID.output);
+        AutopilotChart.proportional = edyPID.proportional;
+        AutopilotChart.integral = edyPID.integral;
+        AutopilotChart.derivative = edyPID.derivative;
+        AutopilotChart.output = edyPID.output;
 
         previousFrame = frame3;
 
-        if (showPosition)
-        {
-            cubeOne.transform.position = recordedReplay[frame3].position;
-            cubeTwo.transform.position = recordedReplay[frame4].position;
-            cubeCar.transform.position = target.recordedData[currentFrame].position;
-        }
-
         //get error force
-        edyPID.minOutput = maxForce * -1.0f;
-        edyPID.maxOutput = maxForce * 1.0f;
         edyPID.SetParameters(kp, ki, kd);
+        if (checkHeight > 0.05)edyPID.SetParameters(2000,0,2000);
         edyPID.input = height;
         edyPID.Compute();
 
-        //errorRateLimit [m/s]
-        if (checkHeight > 0.05)
-        {
-            progressivePIDOutput = edyPID.output * errorRateLimit * 5000 / kp;
-        }
-        else
-        {
-            progressivePIDOutput = edyPID.output;
-        }
-
-        appliedForceV3.x = ClampByOutput(progressivePIDOutput * cosD * 1.000f);
+        //errorLimit [m/s]
+        appliedForceV3.x = edyPID.output * cosD * 1.000f;
         appliedForceV3.y = 0;
-        appliedForceV3.z = ClampByOutput(progressivePIDOutput * sinD * 1.000f);
+        appliedForceV3.z = edyPID.output * sinD * 1.000f;
 
 
         //get recorded driver input
@@ -316,7 +263,7 @@ public class Autopilot : MonoBehaviour
 
         if (autopilotON)
         {
-            rigidBody424.AddForceAtPosition(appliedForceV3, transform.position); // transform.position rigidBody424.centerOfMass 
+            rigidBody424.AddForceAtPosition(appliedForceV3, transform.position); // transform.position rigidBody424.centerOfMass
 
             float nextFrameX = recordedReplay[frame4].position.x - currentPosX;
             float nextFrameZ = recordedReplay[frame4].position.z - currentPosZ;
@@ -355,11 +302,4 @@ public class Autopilot : MonoBehaviour
             frame2 -= 1;
         }
     }
-
-    float ClampByOutput(float value)
-    {
-        float clampedForce = Mathf.Clamp(value, -maxForce, maxForce);
-        return clampedForce;
-    }
-
 }
