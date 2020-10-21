@@ -15,7 +15,7 @@ public class Autopilot : MonoBehaviour
     List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
     readonly PidController edyPID = new PidController();
 
-    public float kp, ki, kd;
+    public float kp, ki, kd, maxForceP;
     public bool autopilotON;
     public int throttleControl;
     public int brakeControl;
@@ -242,7 +242,7 @@ public class Autopilot : MonoBehaviour
 
         //get error force
         edyPID.SetParameters(kp, ki, kd);
-        if (checkHeight > 0.05)edyPID.SetParameters(2000,0,2000);
+        if (checkHeight > maxForceP / kp)edyPID.SetParameters(maxForceP/checkHeight, ki, kd);
         edyPID.input = height;
         edyPID.Compute();
 
