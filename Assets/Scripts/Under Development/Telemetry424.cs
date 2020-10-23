@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright ï¿½ 2011-2020 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -319,21 +319,21 @@ public class AxleSuspensionChart : PerformanceChart
 		m_steerAngle = dataLogger.NewChannel("Steer Angle (avg)");
 		m_steerAngle.color = GColor.Alpha(Color.Lerp(GColor.teal, GColor.green, 0.75f), 0.7f);
 		m_steerAngle.SetOriginAndSpan(4.5f, -1.0f, 35.0f);
-		m_steerAngle.valueFormat = "0.00 °";
+		m_steerAngle.valueFormat = "0.00 ï¿½";
 		m_steerAngle.alphaBlend = true;
 		m_steerAngle.captionPositionY = 2;
 
 		m_roll = dataLogger.NewChannel("Roll");
 		m_roll.color = GColor.Alpha(GColor.teal, 0.7f);
 		m_roll.SetOriginAndSpan(4.5f, -1.0f, 10.0f);
-		m_roll.valueFormat = "0.00 °";
+		m_roll.valueFormat = "0.00 ï¿½";
 		m_roll.alphaBlend = true;
 		m_roll.captionPositionY = 0;
 
 		m_yawRate = dataLogger.NewChannel("Turn Rate");
 		m_yawRate.color = GColor.Alpha(GColor.red, 0.6f);
 		m_yawRate.SetOriginAndSpan(4.5f, -1.0f, 35.0f);
-		m_yawRate.valueFormat = "0.0 °/s";
+		m_yawRate.valueFormat = "0.0 ï¿½/s";
 		// m_yawRate.alphaBlend = true;
 		m_yawRate.captionPositionY = -1;
 
@@ -618,14 +618,20 @@ public class SuspensionAnalysisChart : PerformanceChart
 	{
 		PidController pidController = new PidController();
 
-		public static int errorFrames { get; set; }
+		public static int frameClosest { get; set; }
+		public static int frameSecondClosest { get; set; }
+		public static int frame2 { get; set; }
+		public static int frame3 { get; set; }
 		public static float errorDistance { get; set; }
 		public static float proportional { get; set; }
 		public static float integral { get; set; }
 		public static float derivative { get; set; }
 		public static float output { get; set; }
 
-		DataLogger.Channel m_frame;
+		DataLogger.Channel m_frameClosest;
+		DataLogger.Channel m_frameSecondClosest;
+		DataLogger.Channel m_frame2;
+		DataLogger.Channel m_frame3;
 		DataLogger.Channel m_error;
 		DataLogger.Channel m_proportional;
 		DataLogger.Channel m_integral;
@@ -650,11 +656,29 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 		public override void SetupChannels()
 		{
-			m_frame = dataLogger.NewChannel("Frames");
-			m_frame.color = GColor.yellow;
-			m_frame.SetOriginAndSpan(11.5f, 1.0f, 5.0f);
-			m_frame.valueFormat = "0.00";
-			m_frame.captionPositionY = 0;
+			m_frameClosest = dataLogger.NewChannel("frameClosest");
+			m_frameClosest.color = GColor.yellow;
+			m_frameClosest.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frameClosest.valueFormat = "0.00";
+			m_frameClosest.captionPositionY = 3;
+
+			m_frameSecondClosest = dataLogger.NewChannel("frameSecondClosest");
+			m_frameSecondClosest.color = GColor.yellow;
+			m_frameSecondClosest.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frameSecondClosest.valueFormat = "0.00";
+			m_frameSecondClosest.captionPositionY = 2;
+
+			m_frame2 = dataLogger.NewChannel("Frame2");
+			m_frame2.color = GColor.yellow;
+			m_frame2.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frame2.valueFormat = "0.00";
+			m_frame2.captionPositionY = 1;
+
+			m_frame3 = dataLogger.NewChannel("Frame3");
+			m_frame3.color = GColor.yellow;
+			m_frame3.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frame3.valueFormat = "0.00";
+			m_frame3.captionPositionY = 0;
 
 			m_error = dataLogger.NewChannel("Error");
 			m_error.color = GColor.gray;
@@ -664,32 +688,35 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 			m_proportional = dataLogger.NewChannel("P");
 			m_proportional.color = GColor.red;
-			m_proportional.SetOriginAndSpan(8.0f, 6.0f, 500000.0f);
+			m_proportional.SetOriginAndSpan(8.0f, 6.0f, 200000.0f);
 			m_proportional.valueFormat = "0.00";
 			m_proportional.captionPositionY = 0;
 
 			m_integral = dataLogger.NewChannel("I");
 			m_integral.color = GColor.green;
-			m_integral.SetOriginAndSpan(6.0f, 6.0f, 5000000.0f);
+			m_integral.SetOriginAndSpan(6.0f, 6.0f, 200000.0f);
 			m_integral.valueFormat = "0.00";
 			m_integral.captionPositionY = 0;
 
 			m_derivative = dataLogger.NewChannel("D");
 			m_derivative.color = GColor.blue;
-			m_derivative.SetOriginAndSpan(4.0f, 6.0f, 500000.0f);
+			m_derivative.SetOriginAndSpan(4.0f, 6.0f, 200000.0f);
 			m_derivative.valueFormat = "0.00";
 			m_derivative.captionPositionY = 0;
 
 			m_PID = dataLogger.NewChannel("PID");
 			m_PID.color = GColor.white;
-			m_PID.SetOriginAndSpan(2.0f, 6.0f, 500000.0f);
+			m_PID.SetOriginAndSpan(2.0f, 6.0f, 200000.0f);
 			m_PID.valueFormat = "0.00";
 			m_PID.captionPositionY = 0;
 		}
 
 		public override void RecordData()
 		{
-			m_frame.Write(errorFrames);
+			m_frameClosest.Write(frameClosest);
+			m_frameSecondClosest.Write(frameSecondClosest);
+			m_frame2.Write(frame2);
+			m_frame3.Write(frame3);
 			m_error.Write(errorDistance);
 			m_proportional.Write(proportional);
 			m_integral.Write(integral);
