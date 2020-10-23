@@ -809,37 +809,34 @@ public class SuspensionAnalysisChart : PerformanceChart
 			m_yaw = dataLogger.NewChannel("Yaw");
 			m_yaw.color = GColor.blue;
 			m_yaw.SetOriginAndSpan(8.6f, 1.0f, 200f);
-			m_yaw.valueFormat = "0 °";
+			m_yaw.valueFormat = "deg/s";
 			m_yaw.captionPositionY = 1;
 
 			// Pitch
 			m_pitch = dataLogger.NewChannel("Pitch");
 			m_pitch.color = GColor.red;
 			m_pitch.SetOriginAndSpan(6.6f, 1.0f, 40f);
-			m_pitch.valueFormat = "0 °";
+			m_pitch.valueFormat = "deg/s";
 			m_pitch.captionPositionY = 2;
 
 			// Roll
 			m_roll = dataLogger.NewChannel("Roll");
 			m_roll.color = GColor.green;
 			m_roll.SetOriginAndSpan(4.5f, 1.0f, 20);
-			m_roll.valueFormat = "0 °";
+			m_roll.valueFormat = "deg/s";
 			m_roll.captionPositionY = 3;
 
         }
 
         public override void RecordData()
 		{
+			// Calculations for yaw, pitch & roll
             float yawRate = vehicle.cachedRigidbody.angularVelocity.y * Mathf.Rad2Deg;
             float pitchRate = vehicle.cachedRigidbody.angularVelocity.x * Mathf.Rad2Deg;
-
-            //float yawRate = vehicle.cachedRigidbody.rotation.eulerAngles.y;
-            //float pitchRate = vehicle.cachedRigidbody.rotation.eulerAngles.x;
-
             float roll = vehicle.cachedRigidbody.rotation.eulerAngles.z;
 			if (roll > 180.0f) roll -= 360.0f;
 
-			// Passes the distance to the datalogger to write on the chart
+			// Passes the data to the datalogger to write on the chart
 
 			// Yaw
 			m_yaw.Write(yawRate);
