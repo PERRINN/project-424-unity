@@ -43,6 +43,13 @@ public class Autopilot : MonoBehaviour
         target = GetComponentInChildren<VPReplay>();
         replayController = GetComponentInChildren<VPReplayController>();
 
+        // Disable autopilot when no replay data is available
+        if (replayController == null || replayController.predefinedReplay == null)
+        {
+            enabled = false;
+            return;
+        }
+
         recordedReplay = replayController.predefinedReplay.recordedData;
         cuts = recordedReplay.Count / 500;
 
