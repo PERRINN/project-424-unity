@@ -188,9 +188,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			rb.AddForceAtPosition(VEC_SCx, drag.applicationPoint.position);
 		}
 
-		downforceFront = (float)(SCzFront * dynamicPressure / 9.80665);
-		downforceRear  = (float)(SCzRear  * dynamicPressure / 9.80665);
-		dragForce      = (float)(SCx      * dynamicPressure / 9.80665);
+		downforceFront = SCzFront * dynamicPressure;
+		downforceRear  = SCzRear  * dynamicPressure;
+		dragForce      = SCx      * dynamicPressure;
 
 	}
 

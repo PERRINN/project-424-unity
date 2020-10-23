@@ -763,6 +763,9 @@ public class SuspensionAnalysisChart : PerformanceChart
 		DataLogger.Channel m_aeroCoeffForceFront; 
 		DataLogger.Channel m_aeroCoeffForceRear;
 		DataLogger.Channel m_aeroCoeffForceDrag;
+		DataLogger.Channel m_aeroYaw;
+		DataLogger.Channel m_aeroSteer;
+		DataLogger.Channel m_aeroRoll;
 
 		Perrinn424Aerodynamics m_aero = new Perrinn424Aerodynamics();
 
@@ -794,39 +797,57 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 			m_aeroCoeffFront = dataLogger.NewChannel("SCzFront");
 			m_aeroCoeffFront.color = GColor.yellow;
-			m_aeroCoeffFront.SetOriginAndSpan(8.0f, 0.5f, 1.5f);
+			m_aeroCoeffFront.SetOriginAndSpan(9.0f, 0.8f, 1.5f);
 			m_aeroCoeffFront.valueFormat = "0.00";
 			m_aeroCoeffFront.captionPositionY = 1;
 
 			m_aeroCoeffRear = dataLogger.NewChannel("SCzRear");
 			m_aeroCoeffRear.color = GColor.red;
-			m_aeroCoeffRear.SetOriginAndSpan(8.0f, 1.0f, 1.5f);
+			m_aeroCoeffRear.SetOriginAndSpan(9.0f, 0.8f, 1.5f);
 			m_aeroCoeffRear.valueFormat = "0.0";
 			m_aeroCoeffRear.captionPositionY = 0;
 
 			m_aeroCoeffDrag = dataLogger.NewChannel("SCx");
 			m_aeroCoeffDrag.color = GColor.green;
-			m_aeroCoeffDrag.SetOriginAndSpan(7.0f, 1.0f, 1.5f);
+			m_aeroCoeffDrag.SetOriginAndSpan(9.0f, 0.8f, 1.5f);
 			m_aeroCoeffDrag.valueFormat = "0.0";
-			m_aeroCoeffDrag.captionPositionY = 4;
+			m_aeroCoeffDrag.captionPositionY = -1;
 
-			m_aeroCoeffForceFront = dataLogger.NewChannel("Downforce Front [kg]");
+			m_aeroCoeffForceFront = dataLogger.NewChannel("Downforce Front [N]");
 			m_aeroCoeffForceFront.color = GColor.cyan;
-			m_aeroCoeffForceFront.SetOriginAndSpan(4.0f, 10.0f, 5000.0f);
+			m_aeroCoeffForceFront.SetOriginAndSpan(7.0f, 10.0f, 60000.0f);
 			m_aeroCoeffForceFront.valueFormat = "0.00";
 			m_aeroCoeffForceFront.captionPositionY = 1;
 
-			m_aeroCoeffForceRear = dataLogger.NewChannel("Downforce Rear [kg]");
+			m_aeroCoeffForceRear = dataLogger.NewChannel("Downforce Rear [N]");
 			m_aeroCoeffForceRear.color = GColor.yellow;
-			m_aeroCoeffForceRear.SetOriginAndSpan(4.0f, 10.0f, 5000.0f);
+			m_aeroCoeffForceRear.SetOriginAndSpan(7.0f, 10.0f, 60000.0f);
 			m_aeroCoeffForceRear.valueFormat = "0.0";
 			m_aeroCoeffForceRear.captionPositionY = 0;
 
-			m_aeroCoeffForceDrag = dataLogger.NewChannel("Drag force [kg]");
+			m_aeroCoeffForceDrag = dataLogger.NewChannel("Drag force [N]");
 			m_aeroCoeffForceDrag.color = GColor.pink;
-			m_aeroCoeffForceDrag.SetOriginAndSpan(4.0f, 10.0f, 2500.0f);
+			m_aeroCoeffForceDrag.SetOriginAndSpan(7.0f, 10.0f, 60000.0f);
 			m_aeroCoeffForceDrag.valueFormat = "0.0";
 			m_aeroCoeffForceDrag.captionPositionY = -1;
+
+			m_aeroRoll = dataLogger.NewChannel("Roll [deg]");
+			m_aeroRoll.color = GColor.cyan;
+			m_aeroRoll.SetOriginAndSpan(4.5f, 1.0f, 10.0f);
+			m_aeroRoll.valueFormat = "0.00";
+			m_aeroRoll.captionPositionY = 1;
+
+			m_aeroSteer = dataLogger.NewChannel("Yaw [deg]");
+			m_aeroSteer.color = GColor.yellow;
+			m_aeroSteer.SetOriginAndSpan(4.5f, 1.0f, 10.0f);
+			m_aeroSteer.valueFormat = "0.0";
+			m_aeroSteer.captionPositionY = 0;
+
+			m_aeroYaw = dataLogger.NewChannel  ("Steer [deg]");
+			m_aeroYaw.color = GColor.pink;
+			m_aeroYaw.SetOriginAndSpan(4.5f, 1.0f, 10.0f);
+			m_aeroYaw.valueFormat = "0.0";
+			m_aeroYaw.captionPositionY = -1;
 
 		}
 
@@ -841,6 +862,9 @@ public class SuspensionAnalysisChart : PerformanceChart
 			m_aeroCoeffForceFront.Write(m_aero.downforceFront);
 			m_aeroCoeffForceRear.Write(m_aero.downforceRear);
 			m_aeroCoeffForceDrag.Write(m_aero.dragForce);
+			m_aeroRoll.Write(m_aero.rollAngle);
+			m_aeroSteer.Write(m_aero.steerAngle);
+			m_aeroYaw.Write(m_aero.yawAngle);
 
 		}
 	}
