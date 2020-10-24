@@ -620,8 +620,8 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 		public static int frameClosest { get; set; }
 		public static int frameSecondClosest { get; set; }
-		public static int frame2 { get; set; }
 		public static int frame3 { get; set; }
+		public static int frame4 { get; set; }
 		public static float errorDistance { get; set; }
 		public static float proportional { get; set; }
 		public static float integral { get; set; }
@@ -630,8 +630,8 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 		DataLogger.Channel m_frameClosest;
 		DataLogger.Channel m_frameSecondClosest;
-		DataLogger.Channel m_frame2;
 		DataLogger.Channel m_frame3;
+		DataLogger.Channel m_frame4;
 		DataLogger.Channel m_error;
 		DataLogger.Channel m_proportional;
 		DataLogger.Channel m_integral;
@@ -668,17 +668,17 @@ public class SuspensionAnalysisChart : PerformanceChart
 			m_frameSecondClosest.valueFormat = "0.00";
 			m_frameSecondClosest.captionPositionY = 2;
 
-			m_frame2 = dataLogger.NewChannel("Frame2");
-			m_frame2.color = GColor.yellow;
-			m_frame2.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
-			m_frame2.valueFormat = "0.00";
-			m_frame2.captionPositionY = 1;
-
 			m_frame3 = dataLogger.NewChannel("Frame3");
 			m_frame3.color = GColor.yellow;
 			m_frame3.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
 			m_frame3.valueFormat = "0.00";
-			m_frame3.captionPositionY = 0;
+			m_frame3.captionPositionY = 1;
+
+			m_frame4 = dataLogger.NewChannel("Frame4");
+			m_frame4.color = GColor.yellow;
+			m_frame4.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frame4.valueFormat = "0.00";
+			m_frame4.captionPositionY = 0;
 
 			m_error = dataLogger.NewChannel("Error");
 			m_error.color = GColor.gray;
@@ -715,8 +715,8 @@ public class SuspensionAnalysisChart : PerformanceChart
 		{
 			m_frameClosest.Write(frameClosest);
 			m_frameSecondClosest.Write(frameSecondClosest);
-			m_frame2.Write(frame2);
 			m_frame3.Write(frame3);
+			m_frame4.Write(frame4);
 			m_error.Write(errorDistance);
 			m_proportional.Write(proportional);
 			m_integral.Write(integral);
