@@ -809,21 +809,21 @@ public class SuspensionAnalysisChart : PerformanceChart
 			m_yaw = dataLogger.NewChannel("Yaw");
 			m_yaw.color = GColor.blue;
 			m_yaw.SetOriginAndSpan(8.6f, 1.0f, 200f);
-			m_yaw.valueFormat = "deg/s";
+			m_yaw.valueFormat = "0.0 deg/s";
 			m_yaw.captionPositionY = 1;
 
 			// Pitch
 			m_pitch = dataLogger.NewChannel("Pitch");
 			m_pitch.color = GColor.red;
 			m_pitch.SetOriginAndSpan(6.6f, 1.0f, 40f);
-			m_pitch.valueFormat = "deg/s";
+			m_pitch.valueFormat = "0.0 deg/s";
 			m_pitch.captionPositionY = 2;
 
 			// Roll
 			m_roll = dataLogger.NewChannel("Roll");
 			m_roll.color = GColor.green;
 			m_roll.SetOriginAndSpan(4.5f, 1.0f, 20);
-			m_roll.valueFormat = "deg/s";
+			m_roll.valueFormat = "0.0 deg/s";
 			m_roll.captionPositionY = 3;
 
         }
@@ -840,12 +840,16 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 			// Yaw
 			m_yaw.Write(yawRate);
+			m_yaw.SetOriginAndSpan(8.6f, 1.0f, 200f);
 
 			// Pitch
 			m_pitch.Write(pitchRate);
+			m_pitch.SetOriginAndSpan(6.6f, 1.0f, 40f);
 
 			// Roll
 			m_roll.Write(roll);
+			m_roll.SetOriginAndSpan(4.5f, 1.0f, 20);
+
 
 		}
 	}
