@@ -32,7 +32,7 @@ public class Telemetry424 : MonoBehaviour
     public static float m_totalDistance { get; private set; }
     public static float m_lapDistance;
 
-    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart };
+    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart, ChassisChart };
 	public Charts chart = Charts.ForceFeedback;
 
 	// public int monitoredWheel = 0;
@@ -48,6 +48,7 @@ public class Telemetry424 : MonoBehaviour
 		// new KineticEnergyChart(),
 		new AutopilotChart(),
         new DistanceChart(),
+		new ChassisChart(),
         };
 
 	VPPerformanceDisplay m_perfComponent;
@@ -778,6 +779,76 @@ public class SuspensionAnalysisChart : PerformanceChart
             m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
         }
     }
+
+	public class ChassisChart : PerformanceChart
+	{
+		// Creates channels for distance travelled
+		DataLogger.Channel m_yaw;
+		DataLogger.Channel m_pitch;
+		DataLogger.Channel m_roll;
+
+		public override string Title()
+		{
+			return "Chassis Yaw/Pitch/Roll";
+		}
+
+		public override void Initialize()
+		{
+			dataLogger.topLimit = 1000f;
+			dataLogger.bottomLimit = 0f;
+		}
+
+		public override void ResetView()
+		{
+			dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+		}
+
+		public override void SetupChannels()
+		{
+			// Yaw
+			m_yaw = dataLogger.NewChannel("Yaw");
+			m_yaw.color = GColor.blue;
+			m_yaw.SetOriginAndSpan(8.6f, 1.0f, 200f);
+			m_yaw.valueFormat = "deg/s";
+			m_yaw.captionPositionY = 1;
+
+			// Pitch
+			m_pitch = dataLogger.NewChannel("Pitch");
+			m_pitch.color = GColor.red;
+			m_pitch.SetOriginAndSpan(6.6f, 1.0f, 40f);
+			m_pitch.valueFormat = "deg/s";
+			m_pitch.captionPositionY = 2;
+
+			// Roll
+			m_roll = dataLogger.NewChannel("Roll");
+			m_roll.color = GColor.green;
+			m_roll.SetOriginAndSpan(4.5f, 1.0f, 20);
+			m_roll.valueFormat = "deg/s";
+			m_roll.captionPositionY = 3;
+
+        }
+
+        public override void RecordData()
+		{
+			// Calculations for yaw, pitch & roll
+            float yawRate = vehicle.cachedRigidbody.angularVelocity.y * Mathf.Rad2Deg;
+            float pitchRate = vehicle.cachedRigidbody.angularVelocity.x * Mathf.Rad2Deg;
+            float roll = vehicle.cachedRigidbody.rotation.eulerAngles.z;
+			if (roll > 180.0f) roll -= 360.0f;
+
+			// Passes the data to the datalogger to write on the chart
+
+			// Yaw
+			m_yaw.Write(yawRate);
+
+			// Pitch
+			m_pitch.Write(pitchRate);
+
+			// Roll
+			m_roll.Write(roll);
+
+		}
+	}
 
 #endif
 }
