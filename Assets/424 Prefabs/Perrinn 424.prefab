@@ -1663,6 +1663,8 @@ MonoBehaviour:
     steeringRatio: 1
   frontTires: {fileID: 11400000, guid: 241a78e0c87b99541ac1a9aab456a6bc, type: 2}
   rearTires: {fileID: 11400000, guid: 6f11b0452d6a6fb4bb6162bd33ccda5e, type: 2}
+  frontAxleReference: {fileID: 4116892635620062688}
+  rearAxleReference: {fileID: 4116892635474530970}
   input:
     throttleShape: 1.6
     brakeShape: 2
@@ -1807,17 +1809,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77378aab0a444c64a87c593007304373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeOne: {fileID: 0}
-  cubeTwo: {fileID: 0}
-  cubeCar: {fileID: 0}
-  showPosition: 1
   kp: 300000
   ki: 0
   kd: 10000
-  maxForce: 50000
-  errorRateLimit: 0.1
+  maxForceP: 10000
   autopilotON: 0
-  throttleControl: 75
+  throttleControl: 85
   brakeControl: 100
 --- !u!1 &4116892635335174826
 GameObject:
@@ -1919,7 +1916,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4116892635335174826}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1851013666, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 1621299329, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showAxleGroups: 1

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright ï¿½ 2011-2020 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -32,7 +32,7 @@ public class Telemetry424 : MonoBehaviour
     public static float m_totalDistance { get; private set; }
     public static float m_lapDistance;
 
-    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart, Aerodynamics };
+    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart, ChassisChart, Aerodynamics };
 	public Charts chart = Charts.ForceFeedback;
 
 	// public int monitoredWheel = 0;
@@ -47,8 +47,10 @@ public class Telemetry424 : MonoBehaviour
 		new SuspensionAnalysisChart(),
 		// new KineticEnergyChart(),
 		new AutopilotChart(),
-        new DistanceChart(),
+	        new DistanceChart(),
+		new ChassisChart(),
 		new AerodynamicsChart(),
+
         };
 
 	VPPerformanceDisplay m_perfComponent;
@@ -320,21 +322,21 @@ public class AxleSuspensionChart : PerformanceChart
 		m_steerAngle = dataLogger.NewChannel("Steer Angle (avg)");
 		m_steerAngle.color = GColor.Alpha(Color.Lerp(GColor.teal, GColor.green, 0.75f), 0.7f);
 		m_steerAngle.SetOriginAndSpan(4.5f, -1.0f, 35.0f);
-		m_steerAngle.valueFormat = "0.00 °";
+		m_steerAngle.valueFormat = "0.00 ï¿½";
 		m_steerAngle.alphaBlend = true;
 		m_steerAngle.captionPositionY = 2;
 
 		m_roll = dataLogger.NewChannel("Roll");
 		m_roll.color = GColor.Alpha(GColor.teal, 0.7f);
 		m_roll.SetOriginAndSpan(4.5f, -1.0f, 10.0f);
-		m_roll.valueFormat = "0.00 °";
+		m_roll.valueFormat = "0.00 ï¿½";
 		m_roll.alphaBlend = true;
 		m_roll.captionPositionY = 0;
 
 		m_yawRate = dataLogger.NewChannel("Turn Rate");
 		m_yawRate.color = GColor.Alpha(GColor.red, 0.6f);
 		m_yawRate.SetOriginAndSpan(4.5f, -1.0f, 35.0f);
-		m_yawRate.valueFormat = "0.0 °/s";
+		m_yawRate.valueFormat = "0.0 ï¿½/s";
 		// m_yawRate.alphaBlend = true;
 		m_yawRate.captionPositionY = -1;
 
@@ -619,14 +621,20 @@ public class SuspensionAnalysisChart : PerformanceChart
 	{
 		PidController pidController = new PidController();
 
-		public static int errorFrames { get; set; }
+		public static int frameClosest { get; set; }
+		public static int frameSecondClosest { get; set; }
+		public static int frame3 { get; set; }
+		public static int frame4 { get; set; }
 		public static float errorDistance { get; set; }
 		public static float proportional { get; set; }
 		public static float integral { get; set; }
 		public static float derivative { get; set; }
 		public static float output { get; set; }
 
-		DataLogger.Channel m_frame;
+		DataLogger.Channel m_frameClosest;
+		DataLogger.Channel m_frameSecondClosest;
+		DataLogger.Channel m_frame3;
+		DataLogger.Channel m_frame4;
 		DataLogger.Channel m_error;
 		DataLogger.Channel m_proportional;
 		DataLogger.Channel m_integral;
@@ -651,11 +659,29 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 		public override void SetupChannels()
 		{
-			m_frame = dataLogger.NewChannel("Frames");
-			m_frame.color = GColor.yellow;
-			m_frame.SetOriginAndSpan(11.5f, 1.0f, 5.0f);
-			m_frame.valueFormat = "0.00";
-			m_frame.captionPositionY = 0;
+			m_frameClosest = dataLogger.NewChannel("frameClosest");
+			m_frameClosest.color = GColor.yellow;
+			m_frameClosest.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frameClosest.valueFormat = "0.00";
+			m_frameClosest.captionPositionY = 3;
+
+			m_frameSecondClosest = dataLogger.NewChannel("frameSecondClosest");
+			m_frameSecondClosest.color = GColor.yellow;
+			m_frameSecondClosest.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frameSecondClosest.valueFormat = "0.00";
+			m_frameSecondClosest.captionPositionY = 2;
+
+			m_frame3 = dataLogger.NewChannel("Frame3");
+			m_frame3.color = GColor.yellow;
+			m_frame3.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frame3.valueFormat = "0.00";
+			m_frame3.captionPositionY = 1;
+
+			m_frame4 = dataLogger.NewChannel("Frame4");
+			m_frame4.color = GColor.yellow;
+			m_frame4.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
+			m_frame4.valueFormat = "0.00";
+			m_frame4.captionPositionY = 0;
 
 			m_error = dataLogger.NewChannel("Error");
 			m_error.color = GColor.gray;
@@ -665,32 +691,35 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 			m_proportional = dataLogger.NewChannel("P");
 			m_proportional.color = GColor.red;
-			m_proportional.SetOriginAndSpan(8.0f, 6.0f, 500000.0f);
+			m_proportional.SetOriginAndSpan(8.0f, 6.0f, 200000.0f);
 			m_proportional.valueFormat = "0.00";
 			m_proportional.captionPositionY = 0;
 
 			m_integral = dataLogger.NewChannel("I");
 			m_integral.color = GColor.green;
-			m_integral.SetOriginAndSpan(6.0f, 6.0f, 5000000.0f);
+			m_integral.SetOriginAndSpan(6.0f, 6.0f, 200000.0f);
 			m_integral.valueFormat = "0.00";
 			m_integral.captionPositionY = 0;
 
 			m_derivative = dataLogger.NewChannel("D");
 			m_derivative.color = GColor.blue;
-			m_derivative.SetOriginAndSpan(4.0f, 6.0f, 500000.0f);
+			m_derivative.SetOriginAndSpan(4.0f, 6.0f, 200000.0f);
 			m_derivative.valueFormat = "0.00";
 			m_derivative.captionPositionY = 0;
 
 			m_PID = dataLogger.NewChannel("PID");
 			m_PID.color = GColor.white;
-			m_PID.SetOriginAndSpan(2.0f, 6.0f, 500000.0f);
+			m_PID.SetOriginAndSpan(2.0f, 6.0f, 200000.0f);
 			m_PID.valueFormat = "0.00";
 			m_PID.captionPositionY = 0;
 		}
 
 		public override void RecordData()
 		{
-			m_frame.Write(errorFrames);
+			m_frameClosest.Write(frameClosest);
+			m_frameSecondClosest.Write(frameSecondClosest);
+			m_frame3.Write(frame3);
+			m_frame4.Write(frame4);
 			m_error.Write(errorDistance);
 			m_proportional.Write(proportional);
 			m_integral.Write(integral);
@@ -752,8 +781,82 @@ public class SuspensionAnalysisChart : PerformanceChart
             m_lapDistanceTravelled.SetOriginAndSpan(3.5f, 1.0f, 10000f);
         }
     }
+	public class ChassisChart : PerformanceChart
+	{
+		// Creates channels for distance travelled
+		DataLogger.Channel m_yaw;
+		DataLogger.Channel m_pitch;
+		DataLogger.Channel m_roll;
 
-	public class AerodynamicsChart : PerformanceChart
+		public override string Title()
+		{
+			return "Chassis Yaw/Pitch/Roll";
+		}
+
+		public override void Initialize()
+		{
+			dataLogger.topLimit = 1000f;
+			dataLogger.bottomLimit = 0f;
+		}
+
+		public override void ResetView()
+		{
+			dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+		}
+
+		public override void SetupChannels()
+		{
+			// Yaw
+			m_yaw = dataLogger.NewChannel("Yaw");
+			m_yaw.color = GColor.blue;
+			m_yaw.SetOriginAndSpan(8.6f, 1.0f, 200f);
+			m_yaw.valueFormat = "0.0 deg/s";
+			m_yaw.captionPositionY = 1;
+
+			// Pitch
+			m_pitch = dataLogger.NewChannel("Pitch");
+			m_pitch.color = GColor.red;
+			m_pitch.SetOriginAndSpan(6.6f, 1.0f, 40f);
+			m_pitch.valueFormat = "0.0 deg/s";
+			m_pitch.captionPositionY = 2;
+
+			// Roll
+			m_roll = dataLogger.NewChannel("Roll");
+			m_roll.color = GColor.green;
+			m_roll.SetOriginAndSpan(4.5f, 1.0f, 20);
+			m_roll.valueFormat = "0.0 deg/s";
+			m_roll.captionPositionY = 3;
+
+        }
+
+        public override void RecordData()
+		{
+			// Calculations for yaw, pitch & roll
+            float yawRate = vehicle.cachedRigidbody.angularVelocity.y * Mathf.Rad2Deg;
+            float pitchRate = vehicle.cachedRigidbody.angularVelocity.x * Mathf.Rad2Deg;
+            float roll = vehicle.cachedRigidbody.rotation.eulerAngles.z;
+			if (roll > 180.0f) roll -= 360.0f;
+
+			// Passes the data to the datalogger to write on the chart
+
+			// Yaw
+			m_yaw.Write(yawRate);
+			m_yaw.SetOriginAndSpan(8.6f, 1.0f, 200f);
+
+			// Pitch
+			m_pitch.Write(pitchRate);
+			m_pitch.SetOriginAndSpan(6.6f, 1.0f, 40f);
+
+			// Roll
+			m_roll.Write(roll);
+			m_roll.SetOriginAndSpan(4.5f, 1.0f, 20);
+
+
+		}
+	}
+
+
+public class AerodynamicsChart : PerformanceChart
     {
 		// Creates channels for distance travelled
 		DataLogger.Channel m_aeroDRS;

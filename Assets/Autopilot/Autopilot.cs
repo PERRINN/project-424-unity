@@ -15,17 +15,10 @@ public class Autopilot : MonoBehaviour
     List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
     readonly PidController edyPID = new PidController();
 
-    public GameObject cubeOne;
-    public GameObject cubeTwo;
-    public GameObject cubeCar;
-    public bool showPosition = true;
-
-    public float kp, ki, kd;
-    public float maxForce;
-    public float errorRateLimit = 0.1f;
-    public bool autopilotON = false;
-    public int throttleControl = 100;
-    public int brakeControl = 100;
+    public float kp, ki, kd, maxForceP;
+    public bool autopilotON;
+    public int throttleControl;
+    public int brakeControl;
 
     int cuts;
     float height = 0;
@@ -34,14 +27,14 @@ public class Autopilot : MonoBehaviour
     int showSteer, showBrake, showThrottle;
     int frame1;
     int frame2;
+    int frameClosestGlobal=0;
+    int frameSecondClosestGlobal=0;
     bool runOnce = false;
 
     VPDeviceInput m_deviceInput;
     float m_ffbForceIntensity;
     float m_ffbDamperCoefficient;
     int previousFrame;
-
-    float progressivePIDOutput = 0;
 
     void OnEnable()
     {
@@ -51,7 +44,6 @@ public class Autopilot : MonoBehaviour
         replayController = GetComponentInChildren<VPReplayController>();
 
         // Disable autopilot when no replay data is available
-
         if (replayController == null || replayController.predefinedReplay == null)
         {
             enabled = false;
@@ -85,8 +77,6 @@ public class Autopilot : MonoBehaviour
             else
             {
                 autopilotON = true;
-                edyPID.Reset();
-
                 if (m_deviceInput != null)
                 {
                     m_deviceInput.forceIntensity = 0.0f;
@@ -104,37 +94,51 @@ public class Autopilot : MonoBehaviour
             {
                 frame1 = AutopilotOnStart().Item1;
                 frame2 = AutopilotOnStart().Item2;
+                frameClosestGlobal=AutopilotSearch(frameClosestGlobal,recordedReplay.Count*2).Item1;
+                frameSecondClosestGlobal=AutopilotSearch(frameSecondClosestGlobal,recordedReplay.Count*2).Item2;
                 runOnce = true;
             }
 
             GetDistance();
         }
 
+        frameClosestGlobal=AutopilotSearch(frameClosestGlobal,20).Item1;
+        frameSecondClosestGlobal=AutopilotSearch(frameSecondClosestGlobal,20).Item2;
+        AutopilotChart.frameClosest = frameClosestGlobal;
+        AutopilotChart.frameSecondClosest = frameSecondClosestGlobal;
+
     }
 
-    void OnGUI()
+    (int,int) AutopilotSearch(int frameCurrent, int scan)
     {
-        GUIStyle styleON = new GUIStyle(GUI.skin.button);
-
-        if (autopilotON) { styleON.normal.textColor = Color.green; }
-        else { styleON.normal.textColor = Color.red; }
-
-        string errorDistance = "";
-        string forceX = "";
-        string forceZ = "";
-        errorDistance += height;
-        forceX += appliedForceV3.x;
-        forceZ += appliedForceV3.z;
-
-        GUI.Box(new Rect(185, Screen.height - 90, 300, 80), "");
-        GUI.Button(new Rect(200, Screen.height - 85, 40, 20), "ON", styleON);
-        GUI.Label(new Rect(200, Screen.height - 65, 200, 50), "Error    : " + errorDistance);
-        GUI.Label(new Rect(200, Screen.height - 50, 200, 50), "Force X: " + forceX);
-        GUI.Label(new Rect(200, Screen.height - 35, 200, 50), "Force Z: " + forceZ);
-
-        GUI.Label(new Rect(350, Screen.height - 65, 200, 50), "Steer    : " + showSteer);
-        GUI.Label(new Rect(350, Screen.height - 50, 200, 50), "Brake    : " + showBrake * brakeControl / 100);
-        GUI.Label(new Rect(350, Screen.height - 35, 200, 50), "Throttle : " + showThrottle * throttleControl / 100);
+      if(frameCurrent==(recordedReplay.Count-1))frameCurrent=0;
+      float currentPosX=target.recordedData[target.recordedData.Count-1].position.x;
+      float currentPosZ=target.recordedData[target.recordedData.Count-1].position.z;
+      float distanceClosest=float.MaxValue;
+      float distanceSecondClosest=float.MaxValue;
+      int frameClosest=0;
+      int frameSecondClosest=0;
+      for(int i=0;i<scan;i++){
+        int frame=(int)(frameCurrent+i-scan/2);
+        if (frame<(recordedReplay.Count)&&frame>=0){
+          float x=recordedReplay[frame].position.x-currentPosX;
+          float z=recordedReplay[frame].position.z-currentPosZ;
+          float distance=(float)Math.Sqrt((x*x)+(z*z));
+          if (distance<distanceClosest){
+            if(distanceClosest<float.MaxValue){
+              frameSecondClosest=frameClosest;
+              distanceSecondClosest=distanceClosest;
+            }
+            frameClosest=frame;
+            distanceClosest=distance;
+          }
+          if (distance<distanceSecondClosest&&distance>distanceClosest){
+            frameSecondClosest=frame;
+            distanceSecondClosest=distance;
+          }
+        }
+      }
+      return (frameClosest,frameSecondClosest);
     }
 
     (int, int) AutopilotOnStart()
@@ -275,42 +279,25 @@ public class Autopilot : MonoBehaviour
         float checkHeight = area * 2 / minDistance3;
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
-        AutopilotChart.errorFrames = frame3 - previousFrame;
+        AutopilotChart.frame3 = frame3;
+        AutopilotChart.frame4 = frame4;
         AutopilotChart.errorDistance = height;
-        AutopilotChart.proportional = ClampByOutput(edyPID.proportional);
-        AutopilotChart.integral = ClampByOutput(edyPID.integral);
-        AutopilotChart.derivative = ClampByOutput(edyPID.derivative);
-        AutopilotChart.output = ClampByOutput(edyPID.output);
+        AutopilotChart.proportional = edyPID.proportional;
+        AutopilotChart.integral = edyPID.integral;
+        AutopilotChart.derivative = edyPID.derivative;
+        AutopilotChart.output = edyPID.output;
 
         previousFrame = frame3;
 
-        if (showPosition)
-        {
-            if (cubeOne != null) cubeOne.transform.position = recordedReplay[frame3].position;
-            if (cubeTwo != null) cubeTwo.transform.position = recordedReplay[frame4].position;
-            if (cubeCar != null) cubeCar.transform.position = target.recordedData[currentFrame].position;
-        }
-
         //get error force
-        edyPID.minOutput = maxForce * -1.0f;
-        edyPID.maxOutput = maxForce * 1.0f;
-        edyPID.SetParameters(kp, ki, kd);
+        edyPID.SetParameters(Mathf.Min(kp,maxForceP/checkHeight),ki,kd);
         edyPID.input = height;
         edyPID.Compute();
 
-        //errorRateLimit [m/s]
-        if (checkHeight > 0.05)
-        {
-            progressivePIDOutput = edyPID.output * errorRateLimit * 5000 / kp;
-        }
-        else
-        {
-            progressivePIDOutput = edyPID.output;
-        }
-
-        appliedForceV3.x = ClampByOutput(progressivePIDOutput * cosD * 1.000f);
+        //errorLimit [m/s]
+        appliedForceV3.x = edyPID.output * cosD * 1.000f;
         appliedForceV3.y = 0;
-        appliedForceV3.z = ClampByOutput(progressivePIDOutput * sinD * 1.000f);
+        appliedForceV3.z = edyPID.output * sinD * 1.000f;
 
 
         //get recorded driver input
@@ -363,11 +350,4 @@ public class Autopilot : MonoBehaviour
             frame2 -= 1;
         }
     }
-
-    float ClampByOutput(float value)
-    {
-        float clampedForce = Mathf.Clamp(value, -maxForce, maxForce);
-        return clampedForce;
-    }
-
 }
