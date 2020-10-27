@@ -901,67 +901,67 @@ public class AerodynamicsChart : PerformanceChart
 			m_aeroDRS.captionPositionY = 0;
 
 			m_aeroCoeffFront = dataLogger.NewChannel("SCzFront");
-			m_aeroCoeffFront.color = GColor.yellow;
+			m_aeroCoeffFront.color = GColor.blue;
 			m_aeroCoeffFront.SetOriginAndSpan(9.0f, 0.8f, 1.5f);
 			m_aeroCoeffFront.valueFormat = "0.00";
 			m_aeroCoeffFront.captionPositionY = 1;
 
 			m_aeroCoeffRear = dataLogger.NewChannel("SCzRear");
-			m_aeroCoeffRear.color = GColor.red;
+			m_aeroCoeffRear.color = GColor.yellow;
 			m_aeroCoeffRear.SetOriginAndSpan(9.0f, 0.8f, 1.5f);
 			m_aeroCoeffRear.valueFormat = "0.0";
 			m_aeroCoeffRear.captionPositionY = 0;
 
 			m_aeroCoeffDrag = dataLogger.NewChannel("SCx");
-			m_aeroCoeffDrag.color = GColor.green;
+			m_aeroCoeffDrag.color = GColor.red;
 			m_aeroCoeffDrag.SetOriginAndSpan(9.0f, 0.8f, 1.5f);
 			m_aeroCoeffDrag.valueFormat = "0.0";
 			m_aeroCoeffDrag.captionPositionY = -1;
 
 			m_aeroCoeffForceFront = dataLogger.NewChannel("Downforce Front [N]");
 			m_aeroCoeffForceFront.color = GColor.cyan;
-			m_aeroCoeffForceFront.SetOriginAndSpan(7.0f, 10.0f, 60000.0f);
+			m_aeroCoeffForceFront.SetOriginAndSpan(7.2f, 10.0f, 80000.0f);
 			m_aeroCoeffForceFront.valueFormat = "0.00";
 			m_aeroCoeffForceFront.captionPositionY = 1;
 
 			m_aeroCoeffForceRear = dataLogger.NewChannel("Downforce Rear [N]");
 			m_aeroCoeffForceRear.color = GColor.yellow;
-			m_aeroCoeffForceRear.SetOriginAndSpan(7.0f, 10.0f, 60000.0f);
+			m_aeroCoeffForceRear.SetOriginAndSpan(7.2f, 10.0f, 80000.0f);
 			m_aeroCoeffForceRear.valueFormat = "0.0";
 			m_aeroCoeffForceRear.captionPositionY = 0;
 
 			m_aeroCoeffForceDrag = dataLogger.NewChannel("Drag force [N]");
 			m_aeroCoeffForceDrag.color = GColor.pink;
-			m_aeroCoeffForceDrag.SetOriginAndSpan(7.0f, 10.0f, 60000.0f);
+			m_aeroCoeffForceDrag.SetOriginAndSpan(7.2f, 10.0f, 80000.0f);
 			m_aeroCoeffForceDrag.valueFormat = "0.0";
 			m_aeroCoeffForceDrag.captionPositionY = -1;
 
 			m_aeroRoll = dataLogger.NewChannel("Roll [deg]");
 			m_aeroRoll.color = GColor.cyan;
-			m_aeroRoll.SetOriginAndSpan(5.5f, 1.0f, 10.0f);
+			m_aeroRoll.SetOriginAndSpan(5.5f, 1.0f, 8.0f);
 			m_aeroRoll.valueFormat = "0.00";
 			m_aeroRoll.captionPositionY = 1;
 
 			m_aeroYaw = dataLogger.NewChannel("Yaw [deg]");
 			m_aeroYaw.color = GColor.yellow;
-			m_aeroYaw.SetOriginAndSpan(5.5f, 1.0f, 10.0f);
+			m_aeroYaw.SetOriginAndSpan(5.5f, 1.0f, 8.0f);
 			m_aeroYaw.valueFormat = "0.0";
 			m_aeroYaw.captionPositionY = 0;
 
 			m_aeroSteer = dataLogger.NewChannel  ("Steer [deg]");
 			m_aeroSteer.color = GColor.pink;
-			m_aeroSteer.SetOriginAndSpan(5.5f, 1.0f, 10.0f);
+			m_aeroSteer.SetOriginAndSpan(5.5f, 1.0f, 8.0f);
 			m_aeroSteer.valueFormat = "0.0";
 			m_aeroSteer.captionPositionY = -1;
 
 			m_frontRideHeight = dataLogger.NewChannel("Front Ride Height [mm]");
-			m_frontRideHeight.color = GColor.yellow;
+			m_frontRideHeight.color = GColor.blue;
 			m_frontRideHeight.SetOriginAndSpan(4.0f, 1.0f, 100.0f);
 			m_frontRideHeight.valueFormat = "0.0";
 			m_frontRideHeight.captionPositionY = 0;
 
 			m_rearRideHeight = dataLogger.NewChannel("Rear Ride Height [mm]");
-			m_rearRideHeight.color = GColor.pink;
+			m_rearRideHeight.color = GColor.yellow;
 			m_rearRideHeight.SetOriginAndSpan(4.0f, 1.0f, 100.0f);
 			m_rearRideHeight.valueFormat = "0.0";
 			m_rearRideHeight.captionPositionY = -1;
