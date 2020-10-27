@@ -26,8 +26,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	}
 
 	public float airDensity         = 1.0f;
-	public float frontRideHeight    = 1.0f;
-	public float rearRideHeight     = 1.0f;
+
 	public float flapAngle          = 1.0f;
 	public float dRSActivationDelay = 1.0f;
 	public float dRSActivationTime  = 1.0f;
@@ -42,12 +41,16 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float SCzFront = 0;
 	[HideInInspector] public float SCzRear  = 0;
 	[HideInInspector] public float SCx      = 0;
-	[HideInInspector] public float downforceFront = 0;
-	[HideInInspector] public float downforceRear  = 0;
-	[HideInInspector] public float dragForce      = 0;
-	[HideInInspector] public float yawAngle       = 0;
-	[HideInInspector] public float steerAngle     = 0;
-	[HideInInspector] public float rollAngle      = 0;
+	[HideInInspector] public float downforceFront  = 1.0f;
+	[HideInInspector] public float downforceRear   = 1.0f;
+	[HideInInspector] public float dragForce       = 1.0f;
+	[HideInInspector] public float yawAngle        = 1.0f;
+	[HideInInspector] public float steerAngle      = 1.0f;
+	[HideInInspector] public float rollAngle       = 1.0f;
+	[HideInInspector] public float fronRollAngle   = 1.0f;
+	[HideInInspector] public float rearRollAngle   = 1.0f;
+	[HideInInspector] public float frontRideHeight = 1.0f;
+	[HideInInspector] public float rearRideHeight  = 1.0f;
 	float DRStime = 0;
 	bool DRSStatus = false;
 
@@ -153,12 +156,15 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		yawAngle   = Math.Min(Math.Max(Math.Abs(vehicle.speedAngle), 0), 10);
 		steerAngle = Math.Min(Math.Max(Math.Abs(Math.Abs(vehicle.wheelState[0].steerAngle + vehicle.wheelState[1].steerAngle) / 2), 0), 20);
 
-        // Normalizing roll angle to -180/+180
-        // NOTE: THIS ANGLE IS NOT THE ACTUAL BODY ROLL DUE TO SUSPENSION KINEMATICS, BUT THE WORLD-BASED ROLL
-        rollAngle = Math.Abs(ConvertAngle(rb.rotation.eulerAngles[2]));
+		fronRollAngle = vehicle.data.Get(Channel.Custom, Perrinn424Data.FrontRollAngle) / 1000.0f;
+		rearRollAngle = vehicle.data.Get(Channel.Custom, Perrinn424Data.RearRollAngle) / 1000.0f;
+		rollAngle = Math.Abs((fronRollAngle + rearRollAngle) / 2);
 
-        // Getting driver's input
-        int[] input = vehicle.data.Get(Channel.Input);
+		frontRideHeight = vehicle.data.Get(Channel.Custom, Perrinn424Data.FrontRideHeight);
+		rearRideHeight  = vehicle.data.Get(Channel.Custom, Perrinn424Data.RearRideHeight);
+
+		// Getting driver's input
+		int[] input = vehicle.data.Get(Channel.Input);
 		float throttlePosition = input[InputData.Throttle] / 10000.0f;
 		float brakePosition = input[InputData.Brake] / 10000.0f;
 

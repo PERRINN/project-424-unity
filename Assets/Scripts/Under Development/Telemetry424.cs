@@ -869,6 +869,8 @@ public class AerodynamicsChart : PerformanceChart
 		DataLogger.Channel m_aeroYaw;
 		DataLogger.Channel m_aeroSteer;
 		DataLogger.Channel m_aeroRoll;
+		DataLogger.Channel m_frontRideHeight;
+		DataLogger.Channel m_rearRideHeight;
 
 		Perrinn424Aerodynamics m_aero = new Perrinn424Aerodynamics();
 
@@ -936,21 +938,33 @@ public class AerodynamicsChart : PerformanceChart
 
 			m_aeroRoll = dataLogger.NewChannel("Roll [deg]");
 			m_aeroRoll.color = GColor.cyan;
-			m_aeroRoll.SetOriginAndSpan(4.5f, 1.0f, 10.0f);
+			m_aeroRoll.SetOriginAndSpan(5.5f, 1.0f, 10.0f);
 			m_aeroRoll.valueFormat = "0.00";
 			m_aeroRoll.captionPositionY = 1;
 
-			m_aeroSteer = dataLogger.NewChannel("Yaw [deg]");
-			m_aeroSteer.color = GColor.yellow;
-			m_aeroSteer.SetOriginAndSpan(4.5f, 1.0f, 10.0f);
-			m_aeroSteer.valueFormat = "0.0";
-			m_aeroSteer.captionPositionY = 0;
-
-			m_aeroYaw = dataLogger.NewChannel  ("Steer [deg]");
-			m_aeroYaw.color = GColor.pink;
-			m_aeroYaw.SetOriginAndSpan(4.5f, 1.0f, 10.0f);
+			m_aeroYaw = dataLogger.NewChannel("Yaw [deg]");
+			m_aeroYaw.color = GColor.yellow;
+			m_aeroYaw.SetOriginAndSpan(5.5f, 1.0f, 10.0f);
 			m_aeroYaw.valueFormat = "0.0";
-			m_aeroYaw.captionPositionY = -1;
+			m_aeroYaw.captionPositionY = 0;
+
+			m_aeroSteer = dataLogger.NewChannel  ("Steer [deg]");
+			m_aeroSteer.color = GColor.pink;
+			m_aeroSteer.SetOriginAndSpan(5.5f, 1.0f, 10.0f);
+			m_aeroSteer.valueFormat = "0.0";
+			m_aeroSteer.captionPositionY = -1;
+
+			m_frontRideHeight = dataLogger.NewChannel("Front Ride Height [mm]");
+			m_frontRideHeight.color = GColor.yellow;
+			m_frontRideHeight.SetOriginAndSpan(4.0f, 1.0f, 100.0f);
+			m_frontRideHeight.valueFormat = "0.0";
+			m_frontRideHeight.captionPositionY = 0;
+
+			m_rearRideHeight = dataLogger.NewChannel("Rear Ride Height [mm]");
+			m_rearRideHeight.color = GColor.pink;
+			m_rearRideHeight.SetOriginAndSpan(4.0f, 1.0f, 100.0f);
+			m_rearRideHeight.valueFormat = "0.0";
+			m_rearRideHeight.captionPositionY = -1;
 
 		}
 
@@ -968,6 +982,8 @@ public class AerodynamicsChart : PerformanceChart
 			m_aeroRoll.Write(m_aero.rollAngle);
 			m_aeroSteer.Write(m_aero.steerAngle);
 			m_aeroYaw.Write(m_aero.yawAngle);
+			m_frontRideHeight.Write(m_aero.frontRideHeight);
+			m_rearRideHeight.Write(m_aero.rearRideHeight);
 
 		}
 	}
