@@ -20,6 +20,11 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	public const int BrakePressure				= 1;		// Brake circuit pressure				bar			1000			30500 = 30.5 bar
 	public const int DrsPosition				= 2;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
 
+	public const int FrontRideHeight			= 3;		// Front ride height					m			1000			230 = 0.23 m = 230 mm
+	public const int FrontRollAngle				= 4;		// Front roll angle (signed)			deg			1000			2334 = 2.345 degrees
+	public const int RearRideHeight				= 5;		// Rear ride height						m			1000			230 = 0.23 m = 230 mm
+	public const int RearRollAngle				= 6;		// Rear roll angle (signed)				deg			1000			2334 = 2.345 degrees
+
 	// MGU data. Combine base ID with values.
 
 	public const int FrontMguBase				= 10;		// Base ID for front MGU data
@@ -49,6 +54,9 @@ public class Perrinn424CarController : VehicleBase
 
 	public TireDataContainerBase frontTires;
 	public TireDataContainerBase rearTires;
+
+	public Transform frontAxleReference;
+	public Transform rearAxleReference;
 
 	// Powertrain and dynamics
 
@@ -93,6 +101,9 @@ public class Perrinn424CarController : VehicleBase
 	float m_brakePressure;
 	int m_gearMode;
 	int m_prevGearMode;
+
+	AxleFrameSensor m_frontAxleSensor = new AxleFrameSensor();
+	AxleFrameSensor m_rearAxleSensor = new AxleFrameSensor();
 
 
 	// Internal Powertrain helper class
@@ -274,6 +285,11 @@ public class Perrinn424CarController : VehicleBase
         m_rearPowertrain = new Powertrain(wheels[2], wheels[3]);
 		m_rearPowertrain.mgu.settings = rearMgu;
 		m_rearPowertrain.differential.settings = rearDifferential;
+
+		// Configure axle sensors
+
+		m_frontAxleSensor.Configure(this, 0);
+		m_rearAxleSensor.Configure(this, 1);
 
 		// Initialize internal data
 
@@ -518,8 +534,21 @@ public class Perrinn424CarController : VehicleBase
 		m_frontPowertrain.FillDataBus(customData, Perrinn424Data.FrontMguBase);
 		m_rearPowertrain.FillDataBus(customData, Perrinn424Data.RearMguBase);
 
+		// Axle values
 
-		// VPTelemetry.customData = $"Front MGU: {m_frontPowertrain.GetDebutStr()}\nRear MGU:  {m_rearPowertrain.GetDebutStr()}";
+		if (frontAxleReference != null)
+			{
+			m_frontAxleSensor.DoUpdate(frontAxleReference);
+			customData[Perrinn424Data.FrontRideHeight] = (int)(m_frontAxleSensor.GetRideHeight() * 1000.0f);
+			customData[Perrinn424Data.FrontRollAngle] = (int)(m_frontAxleSensor.GetRollAngle() * 1000.0f);
+			}
+
+		if (rearAxleReference != null)
+			{
+			m_rearAxleSensor.DoUpdate(rearAxleReference);
+			customData[Perrinn424Data.RearRideHeight] = (int)(m_rearAxleSensor.GetRideHeight() * 1000.0f);
+			customData[Perrinn424Data.RearRollAngle] = (int)(m_rearAxleSensor.GetRollAngle() * 1000.0f);
+			}
 		}
 
 

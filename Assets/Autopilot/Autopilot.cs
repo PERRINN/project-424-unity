@@ -43,6 +43,13 @@ public class Autopilot : MonoBehaviour
         target = GetComponentInChildren<VPReplay>();
         replayController = GetComponentInChildren<VPReplayController>();
 
+        // Disable autopilot when no replay data is available
+        if (replayController == null || replayController.predefinedReplay == null)
+        {
+            enabled = false;
+            return;
+        }
+
         recordedReplay = replayController.predefinedReplay.recordedData;
         cuts = recordedReplay.Count / 500;
 
@@ -272,8 +279,8 @@ public class Autopilot : MonoBehaviour
         float checkHeight = area * 2 / minDistance3;
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
-        AutopilotChart.frame2 = frame2;
         AutopilotChart.frame3 = frame3;
+        AutopilotChart.frame4 = frame4;
         AutopilotChart.errorDistance = height;
         AutopilotChart.proportional = edyPID.proportional;
         AutopilotChart.integral = edyPID.integral;
