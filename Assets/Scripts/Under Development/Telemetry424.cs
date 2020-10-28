@@ -619,8 +619,6 @@ public class SuspensionAnalysisChart : PerformanceChart
 	{
 		PidController pidController = new PidController();
 
-		public static int frameClosest { get; set; }
-		public static int frameSecondClosest { get; set; }
 		public static int frame3 { get; set; }
 		public static int frame4 { get; set; }
 		public static float errorDistance { get; set; }
@@ -629,8 +627,6 @@ public class SuspensionAnalysisChart : PerformanceChart
 		public static float derivative { get; set; }
 		public static float output { get; set; }
 
-		DataLogger.Channel m_frameClosest;
-		DataLogger.Channel m_frameSecondClosest;
 		DataLogger.Channel m_frame3;
 		DataLogger.Channel m_frame4;
 		DataLogger.Channel m_error;
@@ -657,18 +653,6 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 		public override void SetupChannels()
 		{
-			m_frameClosest = dataLogger.NewChannel("frameClosest");
-			m_frameClosest.color = GColor.yellow;
-			m_frameClosest.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
-			m_frameClosest.valueFormat = "0.00";
-			m_frameClosest.captionPositionY = 3;
-
-			m_frameSecondClosest = dataLogger.NewChannel("frameSecondClosest");
-			m_frameSecondClosest.color = GColor.yellow;
-			m_frameSecondClosest.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
-			m_frameSecondClosest.valueFormat = "0.00";
-			m_frameSecondClosest.captionPositionY = 2;
-
 			m_frame3 = dataLogger.NewChannel("Frame3");
 			m_frame3.color = GColor.yellow;
 			m_frame3.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
@@ -714,8 +698,6 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 		public override void RecordData()
 		{
-			m_frameClosest.Write(frameClosest);
-			m_frameSecondClosest.Write(frameSecondClosest);
 			m_frame3.Write(frame3);
 			m_frame4.Write(frame4);
 			m_error.Write(errorDistance);

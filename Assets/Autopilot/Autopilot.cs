@@ -27,8 +27,6 @@ public class Autopilot : MonoBehaviour
     int showSteer, showBrake, showThrottle;
     int frame1;
     int frame2;
-    int frameClosestGlobal=0;
-    int frameSecondClosestGlobal=0;
     bool runOnce = false;
 
     VPDeviceInput m_deviceInput;
@@ -94,51 +92,12 @@ public class Autopilot : MonoBehaviour
             {
                 frame1 = AutopilotOnStart().Item1;
                 frame2 = AutopilotOnStart().Item2;
-                frameClosestGlobal=AutopilotSearch(frameClosestGlobal,recordedReplay.Count*2).Item1;
-                frameSecondClosestGlobal=AutopilotSearch(frameSecondClosestGlobal,recordedReplay.Count*2).Item2;
                 runOnce = true;
             }
 
             GetDistance();
         }
 
-        frameClosestGlobal=AutopilotSearch(frameClosestGlobal,20).Item1;
-        frameSecondClosestGlobal=AutopilotSearch(frameSecondClosestGlobal,20).Item2;
-        AutopilotChart.frameClosest = frameClosestGlobal;
-        AutopilotChart.frameSecondClosest = frameSecondClosestGlobal;
-
-    }
-
-    (int,int) AutopilotSearch(int frameCurrent, int scan)
-    {
-      if(frameCurrent==(recordedReplay.Count-1))frameCurrent=0;
-      float currentPosX=target.recordedData[target.recordedData.Count-1].position.x;
-      float currentPosZ=target.recordedData[target.recordedData.Count-1].position.z;
-      float distanceClosest=float.MaxValue;
-      float distanceSecondClosest=float.MaxValue;
-      int frameClosest=0;
-      int frameSecondClosest=0;
-      for(int i=0;i<scan;i++){
-        int frame=(int)(frameCurrent+i-scan/2);
-        if (frame<(recordedReplay.Count)&&frame>=0){
-          float x=recordedReplay[frame].position.x-currentPosX;
-          float z=recordedReplay[frame].position.z-currentPosZ;
-          float distance=(float)Math.Sqrt((x*x)+(z*z));
-          if (distance<distanceClosest){
-            if(distanceClosest<float.MaxValue){
-              frameSecondClosest=frameClosest;
-              distanceSecondClosest=distanceClosest;
-            }
-            frameClosest=frame;
-            distanceClosest=distance;
-          }
-          if (distance<distanceSecondClosest&&distance>distanceClosest){
-            frameSecondClosest=frame;
-            distanceSecondClosest=distance;
-          }
-        }
-      }
-      return (frameClosest,frameSecondClosest);
     }
 
     (int, int) AutopilotOnStart()
@@ -228,7 +187,7 @@ public class Autopilot : MonoBehaviour
         int frame3 = 0;
         int frame4 = 0;
 
-        if (frame2 + 5 > recordedReplay.Count - 1)
+        if (frame2 + 2 > recordedReplay.Count - 1)
         {
             frame2 = recordedReplay.Count - 1;
             if (frame2 == recordedReplay.Count - 1)
@@ -238,7 +197,7 @@ public class Autopilot : MonoBehaviour
             }
         }
 
-        for (int i = frame1 - 5; i <= frame2 + 5; i++)
+        for (int i = frame1 - 2; i <= frame2 + 2; i++)
         {
             float x = recordedReplay[i].position.x - currentPosX;
             float z = recordedReplay[i].position.z - currentPosZ;
@@ -339,20 +298,15 @@ public class Autopilot : MonoBehaviour
 
         }
 
-        if (frame4 > frame2 && frame4 - frame2 < 3)
+        if (frame4 > frame2)
         {
             frame1 += 1;
             frame2 += 1;
         }
-        else if (frame3 < frame1 && frame1 - frame3 < 3)
+        else if (frame3 < frame1)
         {
             frame1 -= 1;
             frame2 -= 1;
-        }
-        else
-        {
-            frame1 = AutopilotOnStart().Item1;
-            frame2 = AutopilotOnStart().Item2;
         }
     }
 }
