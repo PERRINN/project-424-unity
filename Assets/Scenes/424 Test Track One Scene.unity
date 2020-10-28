@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.05970783, g: 0.076506756, b: 0.09413897, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.059738647, g: 0.076523386, b: 0.09403866, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -558,7 +558,7 @@ PrefabInstance:
     - target: {fileID: 4116892635335174824, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4116892635335174825, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -573,7 +573,7 @@ PrefabInstance:
     - target: {fileID: 4116892635335174830, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: chart
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4116892635335174830, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -613,7 +613,7 @@ PrefabInstance:
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -628,22 +628,22 @@ PrefabInstance:
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: selectedDevice
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: configuredWheelRange
-      value: 900
+      value: 850
       objectReference: {fileID: 0}
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: brakeRangeMin
-      value: 0.014589846
+      value: 0.40317813
       objectReference: {fileID: 0}
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: brakeRangeMax
-      value: 0.98607236
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4116892636824451342, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -706,11 +706,6 @@ PrefabInstance:
       propertyPath: maxForce
       value: 50000000
       objectReference: {fileID: 0}
-    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
-        type: 3}
-      propertyPath: flapAngle
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6131166578853825015, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Layer
@@ -720,6 +715,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7049107296519550534, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: minCompression
+      value: 0.504
       objectReference: {fileID: 0}
     - target: {fileID: 7267821470665640100, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -919,7 +919,7 @@ PrefabInstance:
     - target: {fileID: 224859832676728690, guid: 0c2b33e3c4f3c284eb2adc4e718ddeb4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -5.0000153
+      value: -5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2b33e3c4f3c284eb2adc4e718ddeb4, type: 3}

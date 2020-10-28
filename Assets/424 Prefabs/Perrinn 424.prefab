@@ -1559,6 +1559,7 @@ GameObject:
   - component: {fileID: 4682684200946408111}
   - component: {fileID: 3654773149151551392}
   - component: {fileID: 5932580745775428947}
+  - component: {fileID: 7049107296519550534}
   m_Layer: 8
   m_Name: Perrinn 424
   m_TagString: Untagged
@@ -1816,6 +1817,25 @@ MonoBehaviour:
   autopilotON: 0
   throttleControl: 85
   brakeControl: 100
+--- !u!114 &7049107296519550534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4116892635276943217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -751844543, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axle: 0
+  wheel: 2
+  minCompression: 0.65
+  maxSpringRateOffset: 100000
+  adjustDamper: 0
+  maxDamperRateOffset: 500
+  linearityFactor: 0.5
 --- !u!1 &4116892635335174826
 GameObject:
   m_ObjectHideFlags: 0
@@ -2670,14 +2690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2b8382abce58a4fa29d765c21913be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showTelemetry: 1
-  position: {x: 8, y: 550}
-  font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
-  fontSize: 10
-  fontColor: {r: 1, g: 1, b: 1, a: 1}
   airDensity: 1.225
-  frontRideHeight: 40
-  rearRideHeight: 50
   flapAngle: 0
   dRSActivationDelay: 1
   dRSActivationTime: 0.25
@@ -2717,6 +2730,21 @@ MonoBehaviour:
     absoluteRollCoefficient: -0.0104
     dRS_Coefficient: -0.2
     frontFlapCoefficient: 0.002
+  DRSclosing: 0
+  DRS: 0
+  SCzFront: 0
+  SCzRear: 0
+  SCx: 0
+  downforceFront: 1
+  downforceRear: 1
+  dragForce: 1
+  yawAngle: 1
+  steerAngle: 1
+  rollAngle: 1
+  fronRollAngle: 1
+  rearRollAngle: 1
+  frontRideHeight: 40
+  rearRideHeight: 50
 --- !u!1 &4308158035254949368
 GameObject:
   m_ObjectHideFlags: 0
