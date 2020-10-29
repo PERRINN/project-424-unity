@@ -863,7 +863,7 @@ public class AerodynamicsChart : PerformanceChart
 		DataLogger.Channel m_aeroCoeffFront;
 		DataLogger.Channel m_aeroCoeffRear;
 		DataLogger.Channel m_aeroCoeffDrag;
-		DataLogger.Channel m_aeroCoeffForceFront; 
+		DataLogger.Channel m_aeroCoeffForceFront;
 		DataLogger.Channel m_aeroCoeffForceRear;
 		DataLogger.Channel m_aeroCoeffForceDrag;
 		DataLogger.Channel m_aeroYaw;
@@ -936,23 +936,23 @@ public class AerodynamicsChart : PerformanceChart
 			m_aeroCoeffForceDrag.valueFormat = "0.0";
 			m_aeroCoeffForceDrag.captionPositionY = -1;
 
-			m_aeroRoll = dataLogger.NewChannel("Roll [deg]");
-			m_aeroRoll.color = GColor.cyan;
-			m_aeroRoll.SetOriginAndSpan(5.5f, 1.0f, 8.0f);
-			m_aeroRoll.valueFormat = "0.00";
-			m_aeroRoll.captionPositionY = 1;
-
 			m_aeroYaw = dataLogger.NewChannel("Yaw [deg]");
-			m_aeroYaw.color = GColor.yellow;
+			m_aeroYaw.color = GColor.cyan;
 			m_aeroYaw.SetOriginAndSpan(5.5f, 1.0f, 8.0f);
 			m_aeroYaw.valueFormat = "0.0";
-			m_aeroYaw.captionPositionY = 0;
+			m_aeroYaw.captionPositionY = 1;
 
 			m_aeroSteer = dataLogger.NewChannel  ("Steer [deg]");
-			m_aeroSteer.color = GColor.pink;
+			m_aeroSteer.color = GColor.yellow;
 			m_aeroSteer.SetOriginAndSpan(5.5f, 1.0f, 8.0f);
 			m_aeroSteer.valueFormat = "0.0";
-			m_aeroSteer.captionPositionY = -1;
+			m_aeroSteer.captionPositionY = 0;
+
+			m_aeroRoll = dataLogger.NewChannel("Roll [deg]");
+			m_aeroRoll.color = GColor.pink;
+			m_aeroRoll.SetOriginAndSpan(5.5f, 1.0f, 8.0f);
+			m_aeroRoll.valueFormat = "0.00";
+			m_aeroRoll.captionPositionY = -1;
 
 			m_frontRideHeight = dataLogger.NewChannel("Front Ride Height [mm]");
 			m_frontRideHeight.color = GColor.blue;
