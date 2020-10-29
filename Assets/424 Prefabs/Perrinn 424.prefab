@@ -1559,6 +1559,7 @@ GameObject:
   - component: {fileID: 4682684200946408111}
   - component: {fileID: 3654773149151551392}
   - component: {fileID: 5932580745775428947}
+  - component: {fileID: 7049107296519550534}
   m_Layer: 8
   m_Name: Perrinn 424
   m_TagString: Untagged
@@ -1814,8 +1815,27 @@ MonoBehaviour:
   kd: 10000
   maxForceP: 10000
   autopilotON: 0
-  throttleControl: 85
+  throttleControl: 100
   brakeControl: 100
+--- !u!114 &7049107296519550534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4116892635276943217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -751844543, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axle: 0
+  wheel: 2
+  minCompression: 0.65
+  maxSpringRateOffset: 100000
+  adjustDamper: 0
+  maxDamperRateOffset: 500
+  linearityFactor: 0.5
 --- !u!1 &4116892635335174826
 GameObject:
   m_ObjectHideFlags: 0
@@ -2392,8 +2412,8 @@ MonoBehaviour:
   disableVehicleSteeringAids: 0
   throttleRangeMin: 0
   throttleRangeMax: 1
-  brakeRangeMin: 0.4498266
-  brakeRangeMax: 0.99999994
+  brakeRangeMin: 0.40317813
+  brakeRangeMax: 1
   clutchRangeMin: 0
   clutchRangeMax: 0.6
   ignitionKeyPosition: 0
@@ -2670,18 +2690,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2b8382abce58a4fa29d765c21913be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  airDensity: 1.225
+  flapAngle: 0
+  dRSActivationDelay: 1
+  dRSActivationTime: 0.25
   front:
     applicationPoint: {fileID: 4116892635620062688}
-    dragCoefficient: 0.275
-    downforceCoefficient: 1.2
+    constant: 3.77
+    frontRideHeightCoefficient: -0.076
+    frontRideHeight2Coefficient: 0.000557
+    rearRideHeightCoefficient: 0.01
+    rearRideHeight2Coefficient: 0
+    absoluteYawCoefficient: -0.0063
+    absoluteSteerCoefficient: -0.0117
+    absoluteRollCoefficient: -0.1367
+    dRS_Coefficient: -0.1
+    frontFlapCoefficient: 0.07
   rear:
     applicationPoint: {fileID: 4116892635474530970}
-    dragCoefficient: 0.275
-    downforceCoefficient: 1.55
+    constant: 2.29
+    frontRideHeightCoefficient: 0
+    frontRideHeight2Coefficient: 0
+    rearRideHeightCoefficient: 0.0148
+    rearRideHeight2Coefficient: -0.000249
+    absoluteYawCoefficient: -0.0087
+    absoluteSteerCoefficient: -0.0034
+    absoluteRollCoefficient: -0.1074
+    dRS_Coefficient: -0.5
+    frontFlapCoefficient: -0.022
   drag:
-    applicationPoint: {fileID: 0}
-    dragCoefficient: 1
-    downforceCoefficient: 1
+    applicationPoint: {fileID: 4116892635620062688}
+    constant: 0.93
+    frontRideHeightCoefficient: 0
+    frontRideHeight2Coefficient: 0
+    rearRideHeightCoefficient: 0
+    rearRideHeight2Coefficient: 0
+    absoluteYawCoefficient: 0.0017
+    absoluteSteerCoefficient: 0.001
+    absoluteRollCoefficient: -0.0104
+    dRS_Coefficient: -0.2
+    frontFlapCoefficient: 0.002
+  DRSclosing: 0
+  DRS: 0
+  SCzFront: 0
+  SCzRear: 0
+  SCx: 0
+  downforceFront: 1
+  downforceRear: 1
+  dragForce: 1
+  yawAngle: 1
+  steerAngle: 1
+  rollAngle: 1
+  fronRollAngle: 1
+  rearRollAngle: 1
+  frontRideHeight: 40
+  rearRideHeight: 50
 --- !u!1 &4308158035254949368
 GameObject:
   m_ObjectHideFlags: 0
