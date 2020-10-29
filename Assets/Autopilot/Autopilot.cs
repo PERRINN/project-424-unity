@@ -27,8 +27,6 @@ public class Autopilot : MonoBehaviour
     int showSteer, showBrake, showThrottle;
     int frame1;
     int frame2;
-    int frameClosestGlobal=0;
-    int frameSecondClosestGlobal=0;
     bool runOnce = false;
 
     VPDeviceInput m_deviceInput;
@@ -42,6 +40,13 @@ public class Autopilot : MonoBehaviour
         vehicleBase = GetComponent<VehicleBase>();
         target = GetComponentInChildren<VPReplay>();
         replayController = GetComponentInChildren<VPReplayController>();
+
+        // Disable autopilot when no replay data is available
+        if (replayController == null || replayController.predefinedReplay == null)
+        {
+            enabled = false;
+            return;
+        }
 
         recordedReplay = replayController.predefinedReplay.recordedData;
         cuts = recordedReplay.Count / 500;
@@ -87,51 +92,12 @@ public class Autopilot : MonoBehaviour
             {
                 frame1 = AutopilotOnStart().Item1;
                 frame2 = AutopilotOnStart().Item2;
-                frameClosestGlobal=AutopilotSearch(frameClosestGlobal,recordedReplay.Count*2).Item1;
-                frameSecondClosestGlobal=AutopilotSearch(frameSecondClosestGlobal,recordedReplay.Count*2).Item2;
                 runOnce = true;
             }
 
             GetDistance();
         }
 
-        frameClosestGlobal=AutopilotSearch(frameClosestGlobal,20).Item1;
-        frameSecondClosestGlobal=AutopilotSearch(frameSecondClosestGlobal,20).Item2;
-        AutopilotChart.frameClosest = frameClosestGlobal;
-        AutopilotChart.frameSecondClosest = frameSecondClosestGlobal;
-
-    }
-
-    (int,int) AutopilotSearch(int frameCurrent, int scan)
-    {
-      if(frameCurrent==(recordedReplay.Count-1))frameCurrent=0;
-      float currentPosX=target.recordedData[target.recordedData.Count-1].position.x;
-      float currentPosZ=target.recordedData[target.recordedData.Count-1].position.z;
-      float distanceClosest=float.MaxValue;
-      float distanceSecondClosest=float.MaxValue;
-      int frameClosest=0;
-      int frameSecondClosest=0;
-      for(int i=0;i<scan;i++){
-        int frame=(int)(frameCurrent+i-scan/2);
-        if (frame<(recordedReplay.Count)&&frame>=0){
-          float x=recordedReplay[frame].position.x-currentPosX;
-          float z=recordedReplay[frame].position.z-currentPosZ;
-          float distance=(float)Math.Sqrt((x*x)+(z*z));
-          if (distance<distanceClosest){
-            if(distanceClosest<float.MaxValue){
-              frameSecondClosest=frameClosest;
-              distanceSecondClosest=distanceClosest;
-            }
-            frameClosest=frame;
-            distanceClosest=distance;
-          }
-          if (distance<distanceSecondClosest&&distance>distanceClosest){
-            frameSecondClosest=frame;
-            distanceSecondClosest=distance;
-          }
-        }
-      }
-      return (frameClosest,frameSecondClosest);
     }
 
     (int, int) AutopilotOnStart()
@@ -272,8 +238,8 @@ public class Autopilot : MonoBehaviour
         float checkHeight = area * 2 / minDistance3;
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
-        AutopilotChart.frame2 = frame2;
         AutopilotChart.frame3 = frame3;
+        AutopilotChart.frame4 = frame4;
         AutopilotChart.errorDistance = height;
         AutopilotChart.proportional = edyPID.proportional;
         AutopilotChart.integral = edyPID.integral;
