@@ -187,7 +187,7 @@ public class Autopilot : MonoBehaviour
         int frame3 = 0;
         int frame4 = 0;
 
-        if (frame2 + 2 > recordedReplay.Count - 1)
+        if (frame2 + 5 > recordedReplay.Count - 1)
         {
             frame2 = recordedReplay.Count - 1;
             if (frame2 == recordedReplay.Count - 1)
@@ -197,7 +197,7 @@ public class Autopilot : MonoBehaviour
             }
         }
 
-        for (int i = frame1 - 2; i <= frame2 + 2; i++)
+        for (int i = frame1 - 5; i <= frame2 + 5; i++)
         {
             float x = recordedReplay[i].position.x - currentPosX;
             float z = recordedReplay[i].position.z - currentPosZ;
@@ -298,15 +298,20 @@ public class Autopilot : MonoBehaviour
 
         }
 
-        if (frame4 > frame2)
+        if (frame4 > frame2 && frame4 - frame2 < 3)
         {
             frame1 += 1;
             frame2 += 1;
         }
-        else if (frame3 < frame1)
+        else if (frame3 < frame1 && frame1 - frame3 < 3)
         {
             frame1 -= 1;
             frame2 -= 1;
+        }
+        else
+        {
+            frame1 = AutopilotOnStart().Item1;
+            frame2 = AutopilotOnStart().Item2;
         }
     }
 }
