@@ -36,6 +36,10 @@ public class LapTimer : MonoBehaviour
 	public VPReplay replayComponent;
 	#endif
 
+	// Event delegate called on each valid lap registered
+
+	public Action<float, float[], bool> onLap;
+
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
 	// except for the best time, which is preserved.
@@ -205,21 +209,29 @@ public class LapTimer : MonoBehaviour
 				{
 				float lapTime = hitTime - m_trackStartTime;
 
-				if (!m_invalidLap && lapTime > minLapTime)
+				if (lapTime > minLapTime)
 					{
-					// Okey - we have a lap time
-					// Report last sector and new lap
-
-					SectorPass(sectors, hitTime - m_trackStartTime);
-					NewLap(lapTime);
-
 					m_sectors[sectors-1] = hitTime - m_sectorStartTime;
-					}
-				else
-					{
-					// Starting or invalid lap
+					if (onLap != null) onLap(lapTime, m_sectors, !m_invalidLap);
 
-					ClearSectors();
+					// string dbg = m_invalidLap? $"[{FormatLapTime(lapTime)}] " : $" {FormatLapTime(lapTime)}  ";
+					// for (int i = 0; i < m_sectors.Length; i++) dbg += $"S{i}:{FormatSectorTime(m_sectors[i])} ";
+					// Debug.Log(dbg);
+
+					if (!m_invalidLap)
+						{
+						// Okey - we have a lap time
+						// Report last sector and new lap
+
+						SectorPass(sectors, hitTime - m_trackStartTime);
+						NewLap(lapTime);
+						}
+					else
+						{
+						// Starting or invalid lap
+
+						ClearSectors();
+						}
 					}
 				}
 			else
@@ -228,7 +240,7 @@ public class LapTimer : MonoBehaviour
 
 				if (sector != m_currentSector)
 					{
-					// Bad - missed some sector
+					// Bad - missed some sector. Restart sector times.
 
 					ClearSectors();
 					}
@@ -271,14 +283,23 @@ public class LapTimer : MonoBehaviour
 				}
 			else
 				{
-				// Multiple hits at the same sector are allowed
+				// Multiple hits at the same sector are allowed, but only the first hit counts.
 
 				if (sector != m_currentSector)
 					{
 					// Bad - some sector missing
 
 					m_invalidLap = true;
-					ClearSectors();
+
+					// Clear missed sector(s)
+
+					for (int i = m_currentSector; i < sector; i ++)
+						m_sectors[i] = 0.0f;
+
+					// Record current sector time.
+
+					m_currentSector = sector;
+					m_sectorStartTime = hitTime;
 					}
 				}
 			}
