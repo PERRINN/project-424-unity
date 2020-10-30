@@ -3,38 +3,33 @@ using VehiclePhysics;
 
 public class DRSActivation : MonoBehaviour
 {
+    public float closedAngle = 0.0f;
+    public float openAngle = -90.0f;
+
+
     VehicleBase target;
-    Perrinn424Aerodynamics m_aero = new Perrinn424Aerodynamics();
-    
+    Perrinn424Aerodynamics m_aero;
+
     float drsPosition;
     bool rotating = false;
     bool DRSclosing;
     float degreesPerSecond;
-    
+
 
     void OnEnable()
     {
         target = GetComponentInParent<VehicleBase>();
         m_aero = target.GetComponentInChildren<Perrinn424Aerodynamics>();
         degreesPerSecond = 90 / m_aero.dRSActivationTime;
-        
+
     }
     // Update is called once per frame
     void Update()
     {
         drsPosition = target.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
-        
-        DRSclosing = m_aero.DRSclosing;
-        
-        if (drsPosition > 0 && drsPosition < 1)
-            rotating = true;
-        else
-            rotating = false;
+        drsPosition = Mathf.Clamp01(drsPosition);
 
-        if (rotating && !DRSclosing)
-            transform.Rotate(new Vector3(-degreesPerSecond * Time.deltaTime, 0, 0));
-
-        if (rotating && DRSclosing)
-            transform.Rotate(new Vector3(degreesPerSecond * Time.deltaTime, 0, 0));
+        float drsAngle = Mathf.Lerp(closedAngle, openAngle, drsPosition);
+        transform.localRotation = Quaternion.Euler(drsAngle, 0.0f, 0.0f);
     }
 }
