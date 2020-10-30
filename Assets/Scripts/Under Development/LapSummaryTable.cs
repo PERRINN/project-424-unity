@@ -68,7 +68,8 @@ namespace Project424
             //m_laps.Add(new Lap(8, 55f, 99f, 78f, 90.41231f, false));
             //m_laps.Add(new Lap(9, 22f, 15f, 12f, 91.41231f, false));
             //m_laps.Add(new Lap(101, 40f, 76f, 32f, 92.41231f, false));
-            //m_lapCount = m_laps.Count();
+
+            m_lapCount = m_laps.Count();
 
             UpdateLapTable(m_laps);
         }
@@ -127,7 +128,7 @@ namespace Project424
                 m_text += ("   Lap " + lap.LapNum).PadRight(11, ' ');
 
                 // If its the first lap
-                if (prevIndex == 0 && lap.IsValid == true)
+                if (prevIndex == 0)
                 {
                     m_text +=
                         " | G " + FormatSectorTime(lap.Sector1) +
@@ -135,15 +136,7 @@ namespace Project424
                         " | G " + FormatSectorTime(lap.Sector3) +
                         " | G" + FormatLapTime(lap.TotalLapTime) +
                         "\n";
-                } else if (prevIndex == 0 && lap.IsValid == false) 
-                {
-                    m_text +=
-                        " | G " + FormatSectorTime(lap.Sector1) +
-                        " | G " + FormatSectorTime(lap.Sector2) +
-                        " | G " + FormatSectorTime(lap.Sector3) +
-                        " | G" + FormatLapTime(lap.TotalLapTime) +
-                        "**\n";
-                }                
+                }
 
                 // Else check current sectors against prev sectors         
                 else
