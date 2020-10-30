@@ -16,8 +16,8 @@ public class MGUAudioUpdater : MonoBehaviour
     public float baseVolumeOfFrontMGU;
     public float basePitchOfRearMGU;
     public float baseVolumeOfRearMGU;
-    public AudioSource frontEngineAudio;
-    public AudioSource rearEngineAudio;
+    public AudioSource frontMGUAudio;
+    public AudioSource rearMGUAudio;
 
     float frontRpm;
     float frontMechanical;
@@ -27,10 +27,10 @@ public class MGUAudioUpdater : MonoBehaviour
 
     void Start()
     {
-        frontEngineAudio.pitch = basePitchOfFrontMGU;
-        frontEngineAudio.volume = baseVolumeOfFrontMGU;
-        rearEngineAudio.pitch = basePitchOfRearMGU;
-        rearEngineAudio.volume = baseVolumeOfRearMGU;
+        frontMGUAudio.pitch = basePitchOfFrontMGU;
+        frontMGUAudio.volume = baseVolumeOfFrontMGU;
+        rearMGUAudio.pitch = basePitchOfRearMGU;
+        rearMGUAudio.volume = baseVolumeOfRearMGU;
     }
 
     void FixedUpdate()
@@ -39,14 +39,14 @@ public class MGUAudioUpdater : MonoBehaviour
         {
             if (frontRpm > 0 && rearRpm > 0)
             {
-                frontEngineAudio.Play();
-                rearEngineAudio.Play();
+                frontMGUAudio.Play();
+                rearMGUAudio.Play();
                 playOnce = true;
             }
             else
             {
-                frontEngineAudio.Stop();
-                rearEngineAudio.Stop();
+                frontMGUAudio.Stop();
+                rearMGUAudio.Stop();
             }
         }
         
@@ -60,36 +60,36 @@ public class MGUAudioUpdater : MonoBehaviour
         rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
         rearMechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
 
-        UpdateFrontEngine();
-        UpdateRearEngine();
+        UpdateFrontMGU();
+        UpdateRearMGU();
 
-        if (frontEngineAudio.pitch < basePitchOfFrontMGU)
+        if (frontMGUAudio.pitch < basePitchOfFrontMGU)
         {
-            frontEngineAudio.pitch = basePitchOfFrontMGU;
+            frontMGUAudio.pitch = basePitchOfFrontMGU;
         }
-        if(frontEngineAudio.volume < baseVolumeOfFrontMGU)
+        if(frontMGUAudio.volume < baseVolumeOfFrontMGU)
         {
-            frontEngineAudio.volume = baseVolumeOfFrontMGU;
+            frontMGUAudio.volume = baseVolumeOfFrontMGU;
         }
-        if (rearEngineAudio.pitch < basePitchOfRearMGU)
+        if (rearMGUAudio.pitch < basePitchOfRearMGU)
         {
-            rearEngineAudio.pitch = basePitchOfRearMGU;
+            rearMGUAudio.pitch = basePitchOfRearMGU;
         }
-        if (rearEngineAudio.volume < baseVolumeOfRearMGU)
+        if (rearMGUAudio.volume < baseVolumeOfRearMGU)
         {
-            rearEngineAudio.volume = baseVolumeOfRearMGU;
+            rearMGUAudio.volume = baseVolumeOfRearMGU;
         }
     }
 
-    public void UpdateFrontEngine()
+    public void UpdateFrontMGU()
     {
-        frontEngineAudio.pitch = basePitchOfFrontMGU + Mathf.Abs(frontRpm) * rpmGainFrontMGU;
-        frontEngineAudio.volume = baseVolumeOfFrontMGU + Mathf.Abs(frontMechanical) * trqGainFrontMGU;
+        frontMGUAudio.pitch = basePitchOfFrontMGU + Mathf.Abs(frontRpm) * rpmGainFrontMGU;
+        frontMGUAudio.volume = baseVolumeOfFrontMGU + Mathf.Abs(frontMechanical) * trqGainFrontMGU;
     }
 
-    public void UpdateRearEngine()
+    public void UpdateRearMGU()
     {
-        rearEngineAudio.pitch = basePitchOfRearMGU + Mathf.Abs(rearRpm) * rpmGainRearMGU;
-        rearEngineAudio.volume = baseVolumeOfRearMGU + Mathf.Abs(rearMechanical) * trqGainRearMGU;
+        rearMGUAudio.pitch = basePitchOfRearMGU + Mathf.Abs(rearRpm) * rpmGainRearMGU;
+        rearMGUAudio.volume = baseVolumeOfRearMGU + Mathf.Abs(rearMechanical) * trqGainRearMGU;
     }
 }
