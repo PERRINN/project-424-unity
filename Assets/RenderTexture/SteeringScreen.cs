@@ -3,15 +3,16 @@ using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
+using VehiclePhysics;
 
 
 namespace VehiclePhysics.UI
 {
-
     public class SteeringScreen : MonoBehaviour
     {
-        public VehicleBase target;
+        VehicleBase target;
         public float windowSeconds = 4.0f;
+        public float setMinSpeed = 10.0f;
         [Header("Display Channel")]
         public Text speedMps;
         public Text speedKph;
@@ -28,6 +29,13 @@ namespace VehiclePhysics.UI
         float minSpeed = float.MaxValue;
         float minSpdTime;
         bool minSpdWindow = false;
+        bool setMinSpdTrigger = false;
+        float drsPosition;
+
+        void OnEnable()
+        {
+            target = GetComponentInParent<VehicleBase>();
+        }
 
         void Update()
         {
@@ -37,10 +45,19 @@ namespace VehiclePhysics.UI
             int[] custom = target.data.Get(Channel.Custom);
             float speed = vehicleData[VehicleData.Speed] / 1000.0f;
 
+            if (speed > setMinSpeed) { setMinSpdTrigger = true; }
+            else
+            {
+                setMinSpdTrigger = false;
+                minSpdWindow = false;
+                maxSpeed = float.MinValue;
+                minSpeed = float.MaxValue;
+            }
+
             // Speed in m/s & minimum speed window
             if (speedMps != null)
             {
-                if (minSpeed > speed)
+                if (minSpeed > speed && setMinSpdTrigger)
                 {
                     minSpeed = speed;
                     StartTimer();
@@ -95,11 +112,13 @@ namespace VehiclePhysics.UI
             }
 
             // DRS signal
+            drsPosition = target.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
+
             if (drsImage != null)
             {
                 drsImage.color = new Color32(255, 255, 255, 0);
-
-                if (speed * 2.237f > 100)
+                // drsImage.color = new Color32(255, 255, 255, (byte) (drsPosition * 255));
+                if (drsPosition > 0f)
                 {
                     drsImage.color = new Color32(255, 255, 255, 255);
                 }
