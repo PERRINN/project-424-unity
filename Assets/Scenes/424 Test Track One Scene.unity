@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.059738647, g: 0.076523386, b: 0.09403866, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.05970783, g: 0.076506756, b: 0.09413897, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -719,6 +719,12 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 2228576088281827659, guid: 89f86da0002dfa549bb80908bb13bad3, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 89f86da0002dfa549bb80908bb13bad3, type: 3}
+--- !u!1 &207221087 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4116892635276943217, guid: 89f86da0002dfa549bb80908bb13bad3,
+    type: 3}
+  m_PrefabInstance: {fileID: 207221086}
+  m_PrefabAsset: {fileID: 0}
 --- !u!82 &207221088 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 2334922576331618837, guid: 89f86da0002dfa549bb80908bb13bad3,
@@ -754,6 +760,23 @@ MonoBehaviour:
   baseVolumeOfRearMGU: 0.2
   frontMGUAudio: {fileID: 207221088}
   rearMGUAudio: {fileID: 1466329193}
+--- !u!114 &207221091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207221087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af31100b17d7e99408a0a40bcfad2679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 8, y: 535}
+  font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
+  fontSize: 10
+  fontColor: {r: 1, g: 1, b: 1, a: 1}
+  showGui: 1
 --- !u!1001 &361677192
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1000,7 +1023,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 207221086}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 207221087}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ecfffc18ce3aa4b4f95d46ba88aa1212, type: 3}
