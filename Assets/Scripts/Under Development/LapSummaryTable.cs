@@ -58,16 +58,16 @@ namespace Project424
             if (m_lapTimer != null) m_lapTimer.onLap += GetLapTime;
 
             ///// TEST LAPS /////
-            //m_laps.Add(new Lap(1, 11.11f, 9.11f, 66.11f, 93.41231f, true));
-            //m_laps.Add(new Lap(2, 26.11f, 1f, 12f, 84.41231f, true));
-            //m_laps.Add(new Lap(3, 31.11f, 20f, 999f, 95.41231f, true));
-            //m_laps.Add(new Lap(4, 99.11f, 38f, 50f, 86.41231f, true));
-            //m_laps.Add(new Lap(5, 20.11f, 89f, 42f, 97.41231f, true));
-            //m_laps.Add(new Lap(6, 41.11f, 399f, 34f, 88.41231f, false));
-            //m_laps.Add(new Lap(7, 249.11f, 56f, 36f, 99.41231f, false));
-            //m_laps.Add(new Lap(8, 55f, 99f, 78f, 90.41231f, false));
-            //m_laps.Add(new Lap(9, 22f, 15f, 12f, 91.41231f, false));
-            //m_laps.Add(new Lap(101, 40f, 76f, 32f, 92.41231f, false));
+            m_laps.Add(new Lap(1, 11.11f, 9.11f, 66.11f, 93.41231f, true));
+            m_laps.Add(new Lap(2, 26.11f, 1f, 12f, 84.41231f, true));
+            m_laps.Add(new Lap(3, 31.11f, 20f, 999f, 95.41231f, true));
+            m_laps.Add(new Lap(4, 99.11f, 38f, 50f, 86.41231f, true));
+            m_laps.Add(new Lap(5, 20.11f, 89f, 42f, 97.41231f, true));
+            m_laps.Add(new Lap(6, 41.11f, 399f, 34f, 88.41231f, false));
+            m_laps.Add(new Lap(7, 249.11f, 56f, 36f, 99.41231f, false));
+            m_laps.Add(new Lap(8, 55f, 99f, 78f, 90.41231f, false));
+            m_laps.Add(new Lap(9, 22f, 15f, 12f, 91.41231f, false));
+            m_laps.Add(new Lap(101, 40f, 76f, 32f, 92.41231f, false));
 
             m_lapCount = m_laps.Count();
 
