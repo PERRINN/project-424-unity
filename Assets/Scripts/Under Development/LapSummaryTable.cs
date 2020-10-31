@@ -32,7 +32,6 @@ namespace Project424
         private List<Lap> m_laps = new List<Lap>();
 
         // Variables for text, text style and textbox height/width
-
         string m_text = "";
         GUIStyle m_textStyle = new GUIStyle();
         float m_boxWidth;
@@ -113,12 +112,46 @@ namespace Project424
 
             // Index to store position of foreach loop when iterating through list
 
-            int prevIndex = 0;
+            int bestLapsindex = 0;
+            int index = 0;            
 
+            // Variables to identify which laps have the best sector times
+
+            float bestSec1Time = 0;
+            float bestSec2Time = 0;
+            float bestSec3Time = 0;
+            float bestTotalTime = 0;
+
+            // Finds the best sector/lap times and assigns them before we print them
+
+            foreach (Lap lap in lastTenLaps)
+            {
+                // If its the only lap in the list and its a valid lap, then it is set as the best lap
+                if (bestLapsindex == 0 && lap.IsValid)
+                {
+                    bestSec1Time = lap.Sector1;
+                    bestSec2Time = lap.Sector2;
+                    bestSec3Time = lap.Sector3;
+                    bestTotalTime = lap.TotalLapTime;
+                }
+                // If its not the only lap in the list, we can start checking 
+                else
+                {
+                    if (lap.Sector1 < bestSec1Time && lap.IsValid == true || bestSec1Time == 0 && lap.IsValid)
+                        bestSec1Time = lap.Sector1;
+                    if (lap.Sector2 < bestSec2Time && lap.IsValid == true || bestSec2Time == 0 && lap.IsValid)
+                        bestSec2Time = lap.Sector2;
+                    if (lap.Sector3 < bestSec3Time && lap.IsValid == true || bestSec3Time == 0 && lap.IsValid)
+                        bestSec3Time = lap.Sector3;
+                    if (lap.TotalLapTime < bestTotalTime && lap.IsValid == true || bestTotalTime == 0 && lap.IsValid)
+                        bestTotalTime = lap.TotalLapTime;
+                }
+                bestLapsindex += 1;
+            }
 
             // String to store table's text values
 
-            m_text = " Lap Number |  Sector 1 |  Sector 2 |  Sector 3 | Total Time \n";
+            m_text = " Lap Number | Sector 1 | Sector 2 | Sector 3 | Total Time\n";
 
             // Prints the last ten laps in the m_laps dictionary 
 
@@ -126,67 +159,106 @@ namespace Project424
             {
                 m_text += ("   Lap " + lap.LapNum).PadRight(11, ' ');
 
-                // If its the first lap
-                if (prevIndex == 0 && lap.IsValid == true)
-                {
-                    m_text +=
-                        " | G " + FormatSectorTime(lap.Sector1) +
-                        " | G " + FormatSectorTime(lap.Sector2) +
-                        " | G " + FormatSectorTime(lap.Sector3) +
-                        " | G" + FormatLapTime(lap.TotalLapTime) +
-                        "\n";
-                }
-                else if (prevIndex == 0 && lap.IsValid == false)
-                {
-                    m_text +=
-                        " | G " + FormatSectorTime(lap.Sector1) +
-                        " | G " + FormatSectorTime(lap.Sector2) +
-                        " | G " + FormatSectorTime(lap.Sector3) +
-                        " | G" + FormatLapTime(lap.TotalLapTime) +
-                        "**\n";
-                }
+                // If its the only lap in the list then, unless it is valid, it should be purple
 
-                // Else check current sectors against prev sectors         
-                else
+                if (index == 0)
                 {
-                    // Sector 1: If < then print as green, else print as red
-                    if (lap.Sector1 < lastTenLaps[prevIndex - 1].Sector1)
-                        m_text += " | G " + FormatSectorTime(lap.Sector1);
+                    // If Sector is the best sector, print as purple
+                    // Else, if the sector time is less then print as green
+                    // Else print as normal
+
+                    // Sector 1
+                    if (lap.Sector1 == bestSec1Time && lap.IsValid)
+                        m_text += " | <color=#ff00ffff> " + FormatSectorTime(lap.Sector1) + "</color>";
+                    else if (lap.IsValid == true)
+                        m_text += " | <color=#008000ff> " + FormatSectorTime(lap.Sector1) + "</color>";
                     else
-                        m_text += " | R " + FormatSectorTime(lap.Sector1);
+                        m_text += " |  " + FormatSectorTime(lap.Sector1);
 
                     // Sector 2
-                    if (lap.Sector2 < lastTenLaps[prevIndex - 1].Sector2)
-                        m_text += " | G " + FormatSectorTime(lap.Sector2);
+                    if (lap.Sector2 == bestSec2Time && lap.IsValid)
+                        m_text += " | <color=#ff00ffff> " + FormatSectorTime(lap.Sector2) + "</color>";
+                    else if (lap.IsValid == true)
+                        m_text += " | <color=#008000ff> " + FormatSectorTime(lap.Sector2) + "</color>";
                     else
-                        m_text += " | R " + FormatSectorTime(lap.Sector2);
+                        m_text += " |  " + FormatSectorTime(lap.Sector2);
 
                     // Sector 3
-                    if (lap.Sector3 < lastTenLaps[prevIndex - 1].Sector3)
-                        m_text += " | G " + FormatSectorTime(lap.Sector3);
+                    if (lap.Sector3 == bestSec3Time && lap.IsValid)
+                        m_text += " | <color=#ff00ffff> " + FormatSectorTime(lap.Sector3) + "</color>";
+                    else if (lap.IsValid == true)
+                        m_text += " | <color=#008000ff> " + FormatSectorTime(lap.Sector3) + "</color>";
                     else
-                        m_text += " | R " + FormatSectorTime(lap.Sector3);
+                        m_text += " |  " + FormatSectorTime(lap.Sector3);
 
-                    // LapTime                    
-                    if (lap.TotalLapTime < lastTenLaps[prevIndex - 1].TotalLapTime)
-                        m_text += " | G" + FormatLapTime(lap.TotalLapTime);
+                    // LapTime
+                    if (lap.TotalLapTime == bestTotalTime && lap.IsValid)
+                        m_text += " |<color=#ff00ffff>" + FormatLapTime(lap.TotalLapTime) + "</color>";
+                    else if (lap.IsValid == true)
+                        m_text += " |<color=#008000ff>" + FormatLapTime(lap.TotalLapTime) + "</color>";
                     else
-                        m_text += " | R" + FormatLapTime(lap.TotalLapTime);
+                        m_text += " |" + FormatLapTime(lap.TotalLapTime);
 
-                    // Adds stars if the lap is invalid
+                    // Adds stars to indicate if the lap is invalid
                     if (lap.IsValid == true)
                         m_text += "\n";
                     else if (lap.IsValid == false)
                         m_text += "**\n";
                 }
-                prevIndex += 1;
+
+                // Else check current sectors against prev sectors         
+                else
+                {
+                    // If Sector is the best sector, print as purple
+                    // Else, if the sector time is less then print as green
+                    // Else print as normal
+
+                    // Sector 1
+                    if (lap.Sector1 == bestSec1Time || bestSec1Time == 0 && lap.IsValid)
+                        m_text += " | <color=#ff00ffff> " + FormatSectorTime(lap.Sector1) + "</color>";
+                    else if (lap.Sector1 < lastTenLaps[index - 1].Sector1 && lap.IsValid)
+                        m_text += " | <color=#008000ff> " + FormatSectorTime(lap.Sector1) + "</color>";
+                    else
+                        m_text += " |  " + FormatSectorTime(lap.Sector1);
+
+                    // Sector 2
+                    if (lap.Sector2 == bestSec2Time || bestSec2Time == 0 && lap.IsValid)
+                        m_text += " | <color=#ff00ffff> " + FormatSectorTime(lap.Sector2) + "</color>";
+                    else if (lap.Sector2 < lastTenLaps[index - 1].Sector2 && lap.IsValid)
+                        m_text += " | <color=#008000ff> " + FormatSectorTime(lap.Sector2) + "</color>";
+                    else
+                        m_text += " |  " + FormatSectorTime(lap.Sector2);
+
+                    // Sector 3
+                    if (lap.Sector3 == bestSec3Time || bestSec3Time == 0 && lap.IsValid)
+                        m_text += " | <color=#ff00ffff> " + FormatSectorTime(lap.Sector3) + "</color>";
+                    else if (lap.Sector3 < lastTenLaps[index - 1].Sector3 && lap.IsValid)
+                        m_text += " | <color=#008000ff> " + FormatSectorTime(lap.Sector3) + "</color>";
+                    else
+                        m_text += " |  " + FormatSectorTime(lap.Sector3);
+
+                    // LapTime
+                    if (lap.TotalLapTime == bestTotalTime || bestTotalTime == 0 && lap.IsValid)
+                        m_text += " |<color=#ff00ffff>" + FormatLapTime(lap.TotalLapTime) + "</color>";
+                    else if (lap.TotalLapTime < lastTenLaps[index - 1].TotalLapTime && lap.IsValid)
+                        m_text += " |<color=#008000ff>" + FormatLapTime(lap.TotalLapTime) + "</color>";
+                    else
+                        m_text += " |" + FormatLapTime(lap.TotalLapTime);
+
+                    // Adds stars to indicate if the lap is invalid
+                    if (lap.IsValid == true)
+                        m_text += "\n";
+                    else if (lap.IsValid == false)
+                        m_text += "**\n";
+                }
+                index += 1;
             }
 
             // Prints the best lap as the last table entry
 
-            m_text += "\n  Best Lap  |   " +
-                FormatSectorTime(m_bestLapSector1) + " |   " +
-                FormatSectorTime(m_bestLapSector2) + " |   " +
+            m_text += "\n Best Lap   |  " +
+                FormatSectorTime(m_bestLapSector1) + " |  " +
+                FormatSectorTime(m_bestLapSector2) + " |  " +
                 FormatSectorTime(m_bestLapSector3) + " |" +
                 FormatLapTime(m_bestLap) + "\n";
         }
