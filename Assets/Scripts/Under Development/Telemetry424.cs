@@ -854,7 +854,8 @@ public class AerodynamicsChart : PerformanceChart
 		DataLogger.Channel m_frontRideHeight;
 		DataLogger.Channel m_rearRideHeight;
 
-		Perrinn424Aerodynamics m_aero = new Perrinn424Aerodynamics();
+		Perrinn424Aerodynamics m_aero;
+
 
 		public override string Title()
 		{

@@ -4,7 +4,7 @@ using UnityEngine;
 public class FlapRotation : MonoBehaviour
 {
     VehicleBase target;
-    Perrinn424Aerodynamics m_aero = new Perrinn424Aerodynamics();
+    Perrinn424Aerodynamics m_aero;
 
     void OnEnable()
     {
