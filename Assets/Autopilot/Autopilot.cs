@@ -34,6 +34,11 @@ public class Autopilot : MonoBehaviour
     float m_ffbDamperCoefficient;
     int previousFrame;
 
+    public float offsetValue = -1.6885f;
+    public GameObject cube1;
+    public GameObject cube2;
+    public GameObject cube3, cube4;
+
     void OnEnable()
     {
         rigidBody424 = GetComponent<Rigidbody>();
@@ -97,7 +102,6 @@ public class Autopilot : MonoBehaviour
 
             GetDistance();
         }
-
     }
 
     (int, int) AutopilotOnStart()
@@ -197,10 +201,13 @@ public class Autopilot : MonoBehaviour
             }
         }
 
+        Vector3 offsetVehiclePos = getOffsetPosition(offsetValue, target.recordedData[currentFrame]);
+
         for (int i = frame1 - 5; i <= frame2 + 5; i++)
         {
-            float x = recordedReplay[i].position.x - currentPosX;
-            float z = recordedReplay[i].position.z - currentPosZ;
+            Vector3 offsetReplayFrameInt = getOffsetPosition(offsetValue, recordedReplay[i]);
+            float x = offsetReplayFrameInt.x - offsetVehiclePos.x; //recordedReplay[i].position.x - currentPosX;
+            float z = offsetReplayFrameInt.z - offsetVehiclePos.z; //recordedReplay[i].position.z - currentPosZ;
 
             float distance = (float)Math.Sqrt((x * x) + (z * z));
 
@@ -218,9 +225,21 @@ public class Autopilot : MonoBehaviour
             }
         }
 
+
+        // Reference point offset: Recorded vehicle
+        Vector3 offsetReplayFrame3 = getOffsetPosition(offsetValue, recordedReplay[frame3]);
+        Vector3 offsetReplayFrame4 = getOffsetPosition(offsetValue, recordedReplay[frame4]);
+        
+
+        cube1.transform.position = rigidBody424.transform.position;
+        cube2.transform.position = offsetReplayFrame3;
+        cube3.transform.position = offsetVehiclePos;
+        cube4.transform.position = offsetReplayFrame4; // recordedReplay[frame3].position;
+
+
         // get height
-        float a = recordedReplay[frame3].position.x - recordedReplay[frame4].position.x;
-        float b = recordedReplay[frame3].position.z - recordedReplay[frame4].position.z;
+        float a = offsetReplayFrame3.x - offsetReplayFrame4.x; //recordedReplay[frame3].position.x - recordedReplay[frame4].position.x;
+        float b = offsetReplayFrame3.z - offsetReplayFrame4.z; //recordedReplay[frame3].position.z - recordedReplay[frame4].position.z;
         float minDistance3 = (float)Math.Sqrt((a * a) + (b * b));
         float s = (minDistance1 + minDistance2 + minDistance3) / 2;
         float chkcal = s * (s - minDistance1) * (s - minDistance2) * (s - minDistance3);
@@ -228,8 +247,8 @@ public class Autopilot : MonoBehaviour
         chkcal = chkcal < 0 ? 0 : chkcal;
 
         float area = (float)Math.Sqrt(chkcal);
-        float errX = recordedReplay[frame3].position.x - currentPosX;
-        float errZ = recordedReplay[frame3].position.z - currentPosZ;
+        float errX = offsetReplayFrame3.x - offsetVehiclePos.x; //recordedReplay[frame3].position.x - currentPosX;
+        float errZ = offsetReplayFrame3.z - offsetVehiclePos.z; //recordedReplay[frame3].position.z - currentPosZ;
         float degree = -(float)(Math.PI * recordedReplay[frame3].rotation.eulerAngles.y / 180);
         float cosD = (float)Math.Cos(degree);
         float sinD = (float)Math.Sin(degree);
@@ -237,7 +256,7 @@ public class Autopilot : MonoBehaviour
 
         float checkHeight = area * 2 / minDistance3;
         height = (carPosX > 0) ? -checkHeight : checkHeight;
-
+        
         AutopilotChart.frame3 = frame3;
         AutopilotChart.frame4 = frame4;
         AutopilotChart.errorDistance = height;
@@ -248,8 +267,9 @@ public class Autopilot : MonoBehaviour
 
         previousFrame = frame3;
 
+
         //get error force
-        edyPID.SetParameters(Mathf.Min(kp,maxForceP/checkHeight),ki,kd);
+        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, kd);
         edyPID.input = height;
         edyPID.Compute();
 
@@ -270,7 +290,7 @@ public class Autopilot : MonoBehaviour
 
         if (autopilotON)
         {
-            rigidBody424.AddForceAtPosition(appliedForceV3, transform.position); // transform.position rigidBody424.centerOfMass
+            rigidBody424.AddForceAtPosition(appliedForceV3, offsetVehiclePos); // transform.position rigidBody424.centerOfMass
 
             float nextFrameX = recordedReplay[frame4].position.x - currentPosX;
             float nextFrameZ = recordedReplay[frame4].position.z - currentPosZ;
@@ -313,5 +333,23 @@ public class Autopilot : MonoBehaviour
             frame1 = AutopilotOnStart().Item1;
             frame2 = AutopilotOnStart().Item2;
         }
+    }
+
+    Vector3 getOffsetPosition(float offsetValue, VPReplay.Frame offsetTransform)
+    {
+        Vector3 positionOffset;
+
+        float degreeOFFSET = (float)(Math.PI * offsetTransform.rotation.eulerAngles.y / 180);
+        float errOffsetZ = offsetValue;
+        float cosDOffset = (float)Math.Cos(degreeOFFSET);
+        float sinDOffset = (float)Math.Sin(degreeOFFSET);
+        float carPosXoffset = errOffsetZ * sinDOffset;
+        float carPosZoffset = errOffsetZ * cosDOffset;
+
+        positionOffset.x = carPosXoffset + offsetTransform.position.x;
+        positionOffset.y = offsetTransform.position.y;
+        positionOffset.z = carPosZoffset + offsetTransform.position.z;
+
+        return positionOffset;
     }
 }
