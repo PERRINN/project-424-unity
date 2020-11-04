@@ -23,6 +23,7 @@ public class LapTimer : MonoBehaviour
 	[Space(5)]
 	public KeyCode resetKey = KeyCode.Escape;
 	public bool enableTestKeys = false;
+	public bool debugLog = false;
 
 	[Space(5)]
 	public bool showGUI = true;
@@ -38,7 +39,7 @@ public class LapTimer : MonoBehaviour
 
 	// Event delegate called on each valid lap registered
 
-	public Action<float, float[], bool> onLap;
+	public Action<float, bool, float[], bool[]> onLap;
 
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
@@ -47,6 +48,7 @@ public class LapTimer : MonoBehaviour
 	[NonSerialized] int m_currentSector = 0;
 	[NonSerialized] float m_trackStartTime = 0.0f;
 	[NonSerialized] float m_sectorStartTime = 0.0f;
+	[NonSerialized] bool m_invalidSector = false;
 	[NonSerialized] bool m_invalidLap = false;
 
 	// Latest laps and best lap
@@ -58,6 +60,7 @@ public class LapTimer : MonoBehaviour
 	// Sector times
 
 	[NonSerialized] float[] m_sectors = new float[0];
+	[NonSerialized] bool[] m_validSectors = new bool[0];
 
 	// Text
 
@@ -76,6 +79,7 @@ public class LapTimer : MonoBehaviour
 	void OnEnable ()
 		{
 		m_sectors = new float[sectors];
+		m_validSectors = new bool[sectors];
 		UpdateTextProperties();
 
 		// Time.time is zero on application startup
@@ -89,6 +93,7 @@ public class LapTimer : MonoBehaviour
 		// Clear continuity flag
 
 		m_invalidLap = false;
+		m_invalidSector = false;
 		#if !VPP_LIMITED
 		if (replayComponent != null)
 			replayComponent.continuityFlag = true;
@@ -103,6 +108,8 @@ public class LapTimer : MonoBehaviour
 			if (Input.GetKeyDown(KeyCode.Alpha1)) OnTimerHit(0, Time.time);
 			if (Input.GetKeyDown(KeyCode.Alpha2)) OnTimerHit(1, Time.time);
 			if (Input.GetKeyDown(KeyCode.Alpha3)) OnTimerHit(2, Time.time);
+
+			if (Input.GetKeyDown(KeyCode.Alpha0)) InvalidateLap();
 			}
 
 		if (Input.GetKey(resetKey))
@@ -110,6 +117,7 @@ public class LapTimer : MonoBehaviour
 			m_trackStartTime = startCounting? Time.time : 0.0f;
 			m_currentSector = 0;
 			m_sectorStartTime = 0.0f;
+			m_invalidSector = false;
 			m_invalidLap = false;
 			}
 
@@ -203,20 +211,27 @@ public class LapTimer : MonoBehaviour
 
 		if (sector == 0)
 			{
-			// Start line
+			// Start line hit
+			// -------------------------------------------------------------------------------------
 
 			if (m_currentSector == sectors-1)
 				{
+				// Lap completed (previous hit was last sector)
+
 				float lapTime = hitTime - m_trackStartTime;
 
 				if (lapTime > minLapTime)
 					{
 					m_sectors[sectors-1] = hitTime - m_sectorStartTime;
-					if (onLap != null) onLap(lapTime, m_sectors, !m_invalidLap);
+					m_validSectors[sectors-1] = !m_invalidSector;
+					if (onLap != null) onLap(lapTime, !m_invalidLap, m_sectors, m_validSectors);
 
-					// string dbg = m_invalidLap? $"[{FormatLapTime(lapTime)}] " : $" {FormatLapTime(lapTime)}  ";
-					// for (int i = 0; i < m_sectors.Length; i++) dbg += $"S{i}:{FormatSectorTime(m_sectors[i])} ";
-					// Debug.Log(dbg);
+					if (debugLog)
+						{
+						string dbg = m_invalidLap? $"[{FormatLapTime(lapTime)}] " : $" {FormatLapTime(lapTime)}  ";
+						for (int i = 0; i < m_sectors.Length; i++) dbg += $"S{i+1}:{FormatSectorTime(m_sectors[i], m_validSectors[i])} ";
+						Debug.Log(dbg);
+						}
 
 					if (!m_invalidLap)
 						{
@@ -236,9 +251,9 @@ public class LapTimer : MonoBehaviour
 				}
 			else
 				{
-				// Multiple hits at the same sector are allowed
+				// Hitting sector 0 multiple times
 
-				if (sector != m_currentSector)
+				if (m_currentSector != 0)
 					{
 					// Bad - missed some sector. Restart sector times.
 
@@ -251,6 +266,7 @@ public class LapTimer : MonoBehaviour
 			m_currentSector = 0;
 			m_trackStartTime = hitTime;
 			m_sectorStartTime = m_trackStartTime;
+			m_invalidSector = false;
 			m_invalidLap = false;
 
 			#if !VPP_LIMITED
@@ -262,6 +278,9 @@ public class LapTimer : MonoBehaviour
 			}
 		else
 			{
+			// Sector line hit
+			// -------------------------------------------------------------------------------------
+
 			if (sector == m_currentSector+1)
 				{
 				// Okey - passed thru the correct sector gate
@@ -279,7 +298,9 @@ public class LapTimer : MonoBehaviour
 					}
 
 				m_sectors[sector-1] = hitTime - m_sectorStartTime;
+				m_validSectors[sector-1] = !m_invalidSector;
 				m_sectorStartTime = hitTime;
+				m_invalidSector = false;
 				}
 			else
 				{
@@ -294,12 +315,16 @@ public class LapTimer : MonoBehaviour
 					// Clear missed sector(s)
 
 					for (int i = m_currentSector; i < sector; i ++)
+						{
 						m_sectors[i] = 0.0f;
+						m_validSectors[i] = false;
+						}
 
-					// Record current sector time.
+					// Restart sector timing
 
 					m_currentSector = sector;
 					m_sectorStartTime = hitTime;
+					m_invalidSector = false;
 					}
 				}
 			}
@@ -308,14 +333,20 @@ public class LapTimer : MonoBehaviour
 
 	public void InvalidateLap ()
 		{
+		// Invalidate both lap and current sector
+
 		m_invalidLap = true;
+		m_invalidSector = true;
 		}
 
 
 	void ClearSectors ()
 		{
-		for (int i=0,c=m_sectors.Length; i<c; i++)
+		for (int i = 0, c = m_sectors.Length; i < c; i++)
+			{
 			m_sectors[i] = 0.0f;
+			m_validSectors[i] = false;
+			}
 		}
 
 
@@ -338,7 +369,7 @@ public class LapTimer : MonoBehaviour
 			{
 			for (int i=0, c=m_sectors.Length; i<c; i++)
 				{
-				if (m_sectors[i] > 0.0f) smallText += FormatSectorTime(m_sectors[i]);
+				if (m_sectors[i] > 0.0f) smallText += FormatSectorTime(m_sectors[i], m_validSectors[i]);
 
 				smallText += "\n";
 				}
@@ -373,7 +404,7 @@ public class LapTimer : MonoBehaviour
 		}
 
 
-	string FormatSectorTime (float t)
+	string FormatSectorTime (float t, bool valid)
 		{
 		if (t > 0.0f)
 			{
@@ -383,7 +414,7 @@ public class LapTimer : MonoBehaviour
 			int s =  Mathf.FloorToInt(t);
 			int mm = Mathf.RoundToInt(t * 1000.0f) % 1000;
 
-			return string.Format("    {0,2:00}:{1,3:000}", s, mm);
+			return string.Format(valid? "    {0,2:00}:{1,3:000}" : "  **{0,2:00}:{1,3:000}", s, mm);
 			}
 
 		return "";

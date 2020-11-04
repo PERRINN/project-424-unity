@@ -52,7 +52,7 @@ namespace Project424
             m_textStyle.fontSize = fontSize;
             m_textStyle.normal.textColor = fontColor;
 
-            // Subscribe getLapTime method to onLap 
+            // Subscribe getLapTime method to onLap
 
             m_lapTimer = FindObjectOfType<LapTimer>();
             if (m_lapTimer != null) m_lapTimer.onLap += GetLapTime;
@@ -76,14 +76,14 @@ namespace Project424
 
         void OnDisable()
         {
-            // Unsubscribe getLapTime method from onLap 
+            // Unsubscribe getLapTime method from onLap
 
             if (m_lapTimer != null) m_lapTimer.onLap -= GetLapTime;
         }
 
         // Method to retrieve lapTime value and add it to m_laps list
 
-        public void GetLapTime(float lapTime, float[] sectors, bool validBool)
+        public void GetLapTime(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
 
             m_laps.Add(new Lap(m_lapCount, sectors[0], sectors[1], sectors[2], lapTime, validBool));
@@ -121,7 +121,7 @@ namespace Project424
 
             m_text = " Lap Number |  Sector 1 |  Sector 2 |  Sector 3 | Total Time \n";
 
-            // Prints the last ten laps in the m_laps dictionary 
+            // Prints the last ten laps in the m_laps dictionary
 
             foreach (Lap lap in lastTenLaps)
             {
@@ -138,7 +138,7 @@ namespace Project424
                         "\n";
                 }
 
-                // Else check current sectors against prev sectors         
+                // Else check current sectors against prev sectors
                 else
                 {
                     // Sector 1: If < then print as green, else print as red
@@ -159,7 +159,7 @@ namespace Project424
                     else
                         m_text += " | R " + FormatSectorTime(lap.Sector3);
 
-                    // LapTime                    
+                    // LapTime
                     if (lap.TotalLapTime < lastTenLaps[prevIndex - 1].TotalLapTime)
                         m_text += " | G" + FormatLapTime(lap.TotalLapTime);
                     else
@@ -274,7 +274,7 @@ namespace Project424
     //    switch (choice)
     //    {
     //        case 1: // Lap Number Ascending
-    //            temp_laps = (from entry in m_laps orderby entry.LapNum ascending select entry).ToList();     
+    //            temp_laps = (from entry in m_laps orderby entry.LapNum ascending select entry).ToList();
     //            break;
     //        case 2: // Lap Number Descending
     //            temp_laps = (from entry in m_laps orderby entry.LapNum descending select entry).ToList();
@@ -310,7 +310,7 @@ namespace Project424
 
     //    // Update table with this sorted list
 
-    //    UpdateLapTable(temp_laps);            
+    //    UpdateLapTable(temp_laps);
     //}
 
 }
