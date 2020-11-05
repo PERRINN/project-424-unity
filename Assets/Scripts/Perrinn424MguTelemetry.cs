@@ -2,27 +2,34 @@
 
 using UnityEngine;
 using VehiclePhysics;
+using EdyCommonTools;
 
 
 public class Perrinn424MguTelemetry : VehicleBehaviour
 	{
-	public Vector2 position = new Vector2(8, 8);
-	public Font font;
-	[Range(6,100)]
-	public int fontSize = 17;
-	public Color fontColor = Color.white;
+	public GUITextBox.Settings overlay = new GUITextBox.Settings();
 
-	string m_text = "";
-	GUIStyle m_textStyle = new GUIStyle();
-	float m_boxWidth;
-	float m_boxHeight;
+	// Trick to apply a default font to the telemetry box. Configure it at the script settings.
+	[HideInInspector] public Font defaultFont;
+
+	GUITextBox m_textBox = new GUITextBox();
+
+
+	public override void OnEnableVehicle ()
+		{
+		m_textBox.settings = overlay;
+		m_textBox.header = "424 Telemetry";
+
+		if (overlay.font == null)
+			overlay.font = defaultFont;
+		}
 
 
 	public override void UpdateVehicle ()
 		{
-		m_textStyle.font = font;
-		m_textStyle.fontSize = fontSize;
-		m_textStyle.normal.textColor = fontColor;
+		// m_textStyle.font = font;
+		// m_textStyle.fontSize = fontSize;
+		// m_textStyle.normal.textColor = fontColor;
 
 		// Gather all data
 
@@ -56,20 +63,22 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		float rearShafts = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ShaftsTorque] / 1000.0f;
 		float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
 
-		m_text  = "                    Throttle      Brake    \n";
-		m_text += $"Pedal Position        {throttlePosition*100,3:0.} %        {brakePosition*100,3:0.} %   \n";
-		m_text += $"Input                 {throttleInput*100,3:0.} %      {brakePressure,5:0.0} bar \n\n";
-		m_text += "                    MGU Front    MGU Rear    Balance (%)\n";
-		m_text += $"Rpm                  {frontRpm,6:0.}      {rearRpm,6:0.}        {GetBalanceStr(frontRpm, rearRpm),5}\n";
-		m_text += $"Load (%)             {frontLoad*100,6:0.0}      {rearLoad*100,6:0.0}        {GetBalanceStr(frontLoad, rearLoad),5}\n\n";
-		m_text += $"Electrical (kW)      {frontPower,6:0.0}      {rearPower,6:0.0}        {GetBalanceStr(frontPower, rearPower),5}\n";
-		m_text += $"Electrical (Nm)      {frontElectrical,6:0.}      {rearElectrical,6:0.}        {GetBalanceStr(frontElectrical, rearElectrical),5}\n";
-		m_text += $"Efficiency (%)       {frontEfficiency*100,6:0.0}      {rearEfficiency*100,6:0.0}        {GetBalanceStr(frontEfficiency, rearEfficiency),5}  \n\n";
-		m_text += $"Mechanical (Nm)      {frontMechanical,6:0.}      {rearMechanical,6:0.}        {GetBalanceStr(frontMechanical, rearMechanical),5}\n";
-		m_text += $"Stator (Nm)          {frontStator,6:0.}      {rearStator,6:0.}        {GetBalanceStr(frontStator, rearStator),5}\n";
-		m_text += $"Rotor (Nm)           {frontRotor,6:0.}      {rearRotor,6:0.}        {GetBalanceStr(frontRotor, rearRotor),5}\n";
-		m_text += $"Drive Shafts (Nm) ×2 {frontShafts,6:0.}      {rearShafts,6:0.}        {GetBalanceStr(frontShafts, rearShafts),5}\n";
-		m_text += $"Wheels Total (Nm) ×2 {frontWheels,6:0.}      {rearWheels,6:0.}        {GetBalanceStr(frontWheels, rearWheels),5}\n";
+		string text  = "                    Throttle      Brake    \n";
+		text += $"Pedal Position        {throttlePosition*100,3:0.} %        {brakePosition*100,3:0.} %   \n";
+		text += $"Input                 {throttleInput*100,3:0.} %      {brakePressure,5:0.0} bar \n\n";
+		text += "                    MGU Front    MGU Rear    Balance (%)\n";
+		text += $"Rpm                  {frontRpm,6:0.}      {rearRpm,6:0.}        {GetBalanceStr(frontRpm, rearRpm),5}\n";
+		text += $"Load (%)             {frontLoad*100,6:0.0}      {rearLoad*100,6:0.0}        {GetBalanceStr(frontLoad, rearLoad),5}\n\n";
+		text += $"Electrical (kW)      {frontPower,6:0.0}      {rearPower,6:0.0}        {GetBalanceStr(frontPower, rearPower),5}\n";
+		text += $"Electrical (Nm)      {frontElectrical,6:0.}      {rearElectrical,6:0.}        {GetBalanceStr(frontElectrical, rearElectrical),5}\n";
+		text += $"Efficiency (%)       {frontEfficiency*100,6:0.0}      {rearEfficiency*100,6:0.0}        {GetBalanceStr(frontEfficiency, rearEfficiency),5}  \n\n";
+		text += $"Mechanical (Nm)      {frontMechanical,6:0.}      {rearMechanical,6:0.}        {GetBalanceStr(frontMechanical, rearMechanical),5}\n";
+		text += $"Stator (Nm)          {frontStator,6:0.}      {rearStator,6:0.}        {GetBalanceStr(frontStator, rearStator),5}\n";
+		text += $"Rotor (Nm)           {frontRotor,6:0.}      {rearRotor,6:0.}        {GetBalanceStr(frontRotor, rearRotor),5}\n";
+		text += $"Drive Shafts (Nm) ×2 {frontShafts,6:0.}      {rearShafts,6:0.}        {GetBalanceStr(frontShafts, rearShafts),5}\n";
+		text += $"Wheels Total (Nm) ×2 {frontWheels,6:0.}      {rearWheels,6:0.}        {GetBalanceStr(frontWheels, rearWheels),5}";
+
+		m_textBox.UpdateText(text);
 		}
 
 
@@ -85,6 +94,8 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 
 	void OnGUI ()
 		{
+		m_textBox.OnGUI();
+		/*
 		// Compute box size
 
 		Vector2 contentSize = m_textStyle.CalcSize(new GUIContent(m_text));
@@ -103,6 +114,7 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 
 		GUI.Box(new Rect (xPos, yPos, m_boxWidth, m_boxHeight), "424 MGUs Telemetry");
 		GUI.Label(new Rect (xPos + margin / 2, yPos + margin / 2 + headerHeight, Screen.width, Screen.height), m_text, m_textStyle);
+		*/
 		}
 
 	}
