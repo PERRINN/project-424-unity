@@ -152,6 +152,36 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: MIN
+--- !u!1 &846182048958274657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2592010459691819312}
+  m_Layer: 8
+  m_Name: Battery Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2592010459691819312
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846182048958274657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4116892635276943222}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1562860500472402127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,6 +1623,7 @@ Transform:
   - {fileID: 4116892636824451337}
   - {fileID: 4306006960148080}
   - {fileID: 9143014173695516988}
+  - {fileID: 2592010459691819312}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5526,9 +5557,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &4116892636251469277 stripped
+--- !u!4 &4116892636251469273 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400718, guid: 4a4b6fd82edeaca4292e4305d978d18d,
+  m_CorrespondingSourceObject: {fileID: 400714, guid: 4a4b6fd82edeaca4292e4305d978d18d,
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
@@ -5538,9 +5569,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &4116892636251469273 stripped
+--- !u!4 &4116892636251469277 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400714, guid: 4a4b6fd82edeaca4292e4305d978d18d,
+  m_CorrespondingSourceObject: {fileID: 400718, guid: 4a4b6fd82edeaca4292e4305d978d18d,
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
