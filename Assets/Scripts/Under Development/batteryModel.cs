@@ -27,7 +27,7 @@ public class batteryModel : MonoBehaviour
     float frontPower;
     float rearPower;
 
-    
+
     float powerTotal;
     //float elapsed = 0f;
 
@@ -75,9 +75,9 @@ public class batteryModel : MonoBehaviour
         //print(batteryCapacity);
         //print(powerTotal);
 
-        m_text = "Battery Charge (%): " + System.Math.Round(batterySOC) + "\n";
-        m_text += "Power Used (kWh): " + System.Math.Round(powerTotal) + "\n";
-        m_text += "Battery Capacity (kWh): " + System.Math.Round(batteryCapacity) + "\n";
+        m_text = "Battery SOC (%): " + System.Math.Round(batterySOC) + "\n";
+        m_text += "Power used (kW): " + System.Math.Round(powerTotal) + "\n";
+        m_text += "Energy left (kWh): " + System.Math.Round(batteryCapacity) + "\n";
     }
 
     void batteryCharge()
