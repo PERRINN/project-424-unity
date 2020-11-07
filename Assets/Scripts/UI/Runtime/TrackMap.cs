@@ -51,8 +51,22 @@ namespace Perrinn424.UI
         internal TrackReference[] trackReferences = default;
         void Update()
         {
-            Matrix4x4 worldToCircuit = Matrix4x4.Translate(center);
+            Matrix4x4 worldToCircuit = CalculateWorldToCircuitMatrix();
+            Matrix4x4 localCircuitToCanvas = CalculateCircuitToCanvasMatrix();
 
+            foreach (TrackReference trackReference in trackReferences)
+            {
+                trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
+            }
+        }
+
+        private Matrix4x4 CalculateWorldToCircuitMatrix()
+        {
+            return Matrix4x4.Translate(center);
+        }
+
+        private Matrix4x4 CalculateCircuitToCanvasMatrix()
+        {
             RectTransform rectTransform = (RectTransform)transform;
             float xScale = rectTransform.rect.width / size.x;
             xScale *= invertX ? -1 : 1;
@@ -60,15 +74,10 @@ namespace Perrinn424.UI
             zScale *= invertZ ? -1 : 1;
             Vector3 scale = new Vector3(xScale, 0f, zScale);
 
-            Quaternion q = Quaternion.AngleAxis(90f, Vector3.right);
+            Quaternion q = Quaternion.AngleAxis(90f, Vector3.right); //Converting z axis into y axis in the canvas
             q = q * Quaternion.AngleAxis(rotation, Vector3.up);
             Matrix4x4 localCircuitToCanvas = Matrix4x4.TRS(Vector3.zero, q, scale);
-
-
-            foreach (TrackReference trackReference in trackReferences)
-            {
-                trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
-            }
+            return localCircuitToCanvas;
         }
 
         private void OnDrawGizmosSelected()
