@@ -7,7 +7,6 @@ namespace Perrinn424.UI
     [ExecuteInEditMode]
     public class TrackMap : MonoBehaviour
     {
-
         [Serializable]
         public class TrackReference
         {
@@ -19,6 +18,13 @@ namespace Perrinn424.UI
             [SerializeField]
             private Color color = default;
 
+            public TrackReference(Transform world, Image ui, Color color)
+            {
+                this.world = world;
+                this.ui = ui;
+                this.color = color;
+            }
+
             public void WorldToCanvas(Matrix4x4 worldToLocalCircuit, Matrix4x4 localCircuitToCanvas)
             {
                 Vector3 localCircuitPosition = worldToLocalCircuit.inverse.MultiplyPoint3x4(world.position);
@@ -29,18 +35,20 @@ namespace Perrinn424.UI
         }
 
         [SerializeField]
-        private TrackReference[] trackReferences = default;
-
-        [SerializeField]
         private Vector3 center = Vector3.zero;
         [SerializeField]
         private Vector3 size = Vector3.one;
+
+        [SerializeField]
+        private float rotation = 0;
+
         [SerializeField]
         private bool invertX = false;
         [SerializeField]
         private bool invertZ = false;
 
-        public Vector3 localPosition;
+        [SerializeField]
+        internal TrackReference[] trackReferences = default;
         void Update()
         {
             Matrix4x4 worldToCircuit = Matrix4x4.Translate(center);
@@ -53,6 +61,7 @@ namespace Perrinn424.UI
             Vector3 scale = new Vector3(xScale, 0f, zScale);
 
             Quaternion q = Quaternion.AngleAxis(90f, Vector3.right);
+            q = q * Quaternion.AngleAxis(rotation, Vector3.up);
             Matrix4x4 localCircuitToCanvas = Matrix4x4.TRS(Vector3.zero, q, scale);
 
 
