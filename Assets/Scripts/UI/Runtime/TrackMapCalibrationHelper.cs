@@ -6,14 +6,14 @@ namespace Perrinn424.UI
     public class TrackMapCalibrationHelper : MonoBehaviour
     {
         [SerializeField]
-        private Color color;
+        private Color color = default;
 
         [SerializeField]
-        private TrackMap trackMap;
+        private TrackMap trackMap = default;
         [SerializeField]
-        private Image reference;
+        private Image reference = default;
         [SerializeField]
-        private Transform worldReferenceParent;
+        private Transform worldReferenceParent = default;
 
         [ContextMenu("Create References")]
         private void CreateReferences()
