@@ -1,24 +1,48 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Perrinn424.UI
 {
     [ExecuteInEditMode]
     public class TrackMap : MonoBehaviour
     {
-        [Header("World references")]
-        [SerializeField]
-        private Transform circuit = default;
-        [SerializeField]
-        private Transform vehicle = default;
-        [SerializeField]
-        private Transform startLine = default;
 
-        [Header("UI references")]
-        [SerializeField]
-        private RectTransform vehicleReference = default;
-        [SerializeField]
-        private RectTransform startLineReference = default;
+        [Serializable]
+        public class TrackReference
+        {
+            [SerializeField]
+            private Transform world = default;
+            [SerializeField]
+            private Image ui = default;
 
+            [SerializeField]
+            private Color color = default;
+
+            public void WorldToCanvas(Matrix4x4 worldToLocalCircuit, Matrix4x4 localCircuitToCanvas)
+            {
+                Vector3 localCircuitPosition = worldToLocalCircuit.inverse.MultiplyPoint3x4(world.position);
+                Vector3 canvasLocalPosition = localCircuitToCanvas * localCircuitPosition;
+                ui.rectTransform.localPosition = canvasLocalPosition;
+                ui.color = color;
+            }
+        }
+
+        //[Header("World references")]
+        //[SerializeField]
+        //private Transform vehicle = default;
+        //[SerializeField]
+        //private Transform startLine = default;
+
+        //[Header("UI references")]
+        //[SerializeField]
+        //private RectTransform vehicleReference = default;
+        //[SerializeField]
+        //private RectTransform startLineReference = default;
+
+
+        [SerializeField]
+        private TrackReference[] trackReferences = default;
 
         public Vector3 center = Vector3.zero;
         public Vector3 size = Vector3.one;
@@ -30,8 +54,8 @@ namespace Perrinn424.UI
         public Vector3 localPosition;
         void Update()
         {
-            if(IsNullAnyReference())
-                return;
+            //if(IsNullAnyReference())
+            //    return;
 
 
             //Matrix4x4 worldToCircuit = Matrix4x4.Translate(center);
@@ -63,8 +87,13 @@ namespace Perrinn424.UI
             Quaternion q = Quaternion.AngleAxis(90f, Vector3.right);
             Matrix4x4 localCircuitToCanvas = Matrix4x4.TRS(Vector3.zero, q, scale);
 
-            WorldToCanvas(startLine, startLineReference, worldToCircuit, localCircuitToCanvas);
-            WorldToCanvas(vehicle, vehicleReference, worldToCircuit, localCircuitToCanvas);
+
+            foreach (TrackReference trackReference in trackReferences)
+            {
+                trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
+            }
+            //WorldToCanvas(startLine, startLineReference, worldToCircuit, localCircuitToCanvas);
+            //WorldToCanvas(vehicle, vehicleReference, worldToCircuit, localCircuitToCanvas);
         }
 
         private void WorldToCanvas(Transform worldObject, RectTransform uiObject, Matrix4x4 worldToLocalCircuit, Matrix4x4 localCircuitToCanvas)
@@ -74,10 +103,10 @@ namespace Perrinn424.UI
             uiObject.localPosition = canvasLocalPosition;
         }
 
-        private bool IsNullAnyReference()
-        {
-            return circuit == null || vehicle == null || startLine == null || vehicleReference == null || startLineReference == null;
-        }
+        //private bool IsNullAnyReference()
+        //{
+        //    return vehicle == null || startLine == null || vehicleReference == null || startLineReference == null;
+        //}
 
         private void OnDrawGizmosSelected()
         {
