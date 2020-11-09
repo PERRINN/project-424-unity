@@ -18,17 +18,17 @@ public class batteryModel : MonoBehaviour
     float m_boxWidth;
     float m_boxHeight;
 
-    float batteryCapacity;
+    public static float batteryCapacity;
     float batteryTemprature;
-    float batterySOC;
+    public static float batterySOC;
     float batteryDOD;
     float batteryVoltage;
 
-    float frontPower;
-    float rearPower;
+    public static float frontPower;
+    public static float rearPower;
 
 
-    float powerTotal;
+    public static float powerTotal;
     //float elapsed = 0f;
 
 
