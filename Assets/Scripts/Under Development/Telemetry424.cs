@@ -1018,52 +1018,44 @@ public class AerodynamicsChart : PerformanceChart
 			//Total Power
 			m_powerTotal = dataLogger.NewChannel("Power Total");
 			m_powerTotal.color = GColor.blue;
-			m_powerTotal.SetOriginAndSpan(8.6f, 1.0f, 200f);
-			m_powerTotal.valueFormat = "0.0";
+			m_powerTotal.SetOriginAndSpan(7.0f, 1.0f, 500f);
+			m_powerTotal.valueFormat = "0.0 kW";
 			m_powerTotal.captionPositionY = 1;
 
 			// Front Power
 			m_powerFront = dataLogger.NewChannel("Power Front");
 			m_powerFront.color = GColor.red;
-			m_powerFront.SetOriginAndSpan(6.6f, 1.0f, 40f);
-			m_powerFront.valueFormat = "0.0";
-			m_powerFront.captionPositionY = 1;
+			m_powerFront.SetOriginAndSpan(7.0f, 1.0f, 500f);
+			m_powerFront.valueFormat = "0.0 kW";
+			m_powerFront.captionPositionY = 0;
 
 			// Rear Power
 			m_powerRear = dataLogger.NewChannel("Power Rear");
 			m_powerRear.color = GColor.green;
-			m_powerRear.SetOriginAndSpan(4.5f, 1.0f, 20);
-			m_powerRear.valueFormat = "0.0";
-			m_powerRear.captionPositionY = 1;
+			m_powerRear.SetOriginAndSpan(7.0f, 1.0f, 500f);
+			m_powerRear.valueFormat = "0.0 kW";
+			m_powerRear.captionPositionY = -1;
 
 			m_batCapacity = dataLogger.NewChannel("Battery Capacity");
 			m_batCapacity.color = GColor.yellow;
-			m_batCapacity.SetOriginAndSpan(2.5f, 1.0f, 20);
-			m_batCapacity.valueFormat = "0.0";
+			m_batCapacity.SetOriginAndSpan(1.0f, 1.0f, 25f);
+			m_batCapacity.valueFormat = "0.0 kWh";
 			m_batCapacity.captionPositionY = 1;
 
 			m_stateOfCharge = dataLogger.NewChannel("State of Charge");
 			m_stateOfCharge.color = GColor.orange;
-			m_stateOfCharge.SetOriginAndSpan(0.5f, 1.0f, 20);
+			m_stateOfCharge.SetOriginAndSpan(1.0f, 1.0f, 25f);
 			m_stateOfCharge.valueFormat = "0.0";
-			m_stateOfCharge.captionPositionY = 1;
+			m_stateOfCharge.captionPositionY = 0;
 
 		}
 
 		public override void RecordData()
 		{
-            m_powerTotal.Write(Telemetry424.powerTotal);
-			m_powerTotal.SetOriginAndSpan(8.6f, 1.0f, 200f);
-
+      m_powerTotal.Write(Telemetry424.powerTotal);
 			m_powerFront.Write(Telemetry424.powerFront);
-			m_powerFront.SetOriginAndSpan(6.6f, 1.0f, 40f);
-
 			m_powerRear.Write(Telemetry424.powerRear);
-			m_powerRear.SetOriginAndSpan(4.5f, 1.0f, 20);
-
 			m_batCapacity.Write(Telemetry424.batteryCapacity);
-			m_batCapacity.SetOriginAndSpan(2.5f, 1.0f, 20);
-
 			m_stateOfCharge.Write(Telemetry424.stateOfCharge);
 
 		}
