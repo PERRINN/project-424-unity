@@ -26,17 +26,27 @@ public class Telemetry424 : MonoBehaviour
 
     public Rigidbody Perrinn424;
 
+	// Linking battery model
+	public batteryModel batteryModel;
+
     // Member variables for distance
 
     private Vector3 m_lastPosition;
     public static float m_totalDistance { get; private set; }
     public static float m_lapDistance;
 
-    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart, ChassisChart, Aerodynamics };
+	// Variables for Battery Model
+	public static float powerTotal;
+	public static float powerFront;
+	public static float powerRear;
+	public static float batteryCapacity;
+	public static float stateOfCharge;
+
+    public enum Charts { ForceFeedback, AxleSuspension, SuspensionAnalysis, Autopilot, DistanceChart, ChassisChart, Aerodynamics, BatteryPower };
 	public Charts chart = Charts.ForceFeedback;
 
-	// public int monitoredWheel = 0;
-	// public float maxBrakeTorque = 3200.0f;
+		// public int monitoredWheel = 0;
+		// public float maxBrakeTorque = 3200.0f;
 
 
 	PerformanceChart[] m_charts = new PerformanceChart[]
@@ -50,6 +60,7 @@ public class Telemetry424 : MonoBehaviour
 	        new DistanceChart(),
 		new ChassisChart(),
 		new AerodynamicsChart(),
+		new BatteryChart(),
 
         };
 
@@ -90,6 +101,13 @@ public class Telemetry424 : MonoBehaviour
         // Apply the selected custom chart
 
         m_perfComponent.customChart = m_charts[(int)chart];
+
+		//obtaining values from battery model
+		powerTotal = batteryModel.powerTotal;
+		powerFront = batteryModel.frontPower;
+		powerRear = batteryModel.rearPower;
+		batteryCapacity = batteryModel.batteryCapacity;
+		stateOfCharge = batteryModel.batterySOC;
 
 		}
 	}
@@ -967,6 +985,78 @@ public class AerodynamicsChart : PerformanceChart
 			m_aeroYaw.Write(m_aero.yawAngle);
 			m_frontRideHeight.Write(m_aero.frontRideHeight);
 			m_rearRideHeight.Write(m_aero.rearRideHeight);
+
+		}
+	}
+
+	public class BatteryChart : PerformanceChart
+	{
+		DataLogger.Channel m_powerTotal;
+		DataLogger.Channel m_powerFront;
+		DataLogger.Channel m_powerRear;
+		DataLogger.Channel m_batCapacity;
+		DataLogger.Channel m_stateOfCharge;
+
+		public override string Title()
+		{
+			return "Battery Model";
+		}
+
+		public override void Initialize()
+		{
+			dataLogger.topLimit = 750.0f;
+			dataLogger.bottomLimit = -500f;
+		}
+
+		public override void ResetView()
+		{
+			dataLogger.rect = new Rect(0.0f, -0.5f, 30.0f, 12.5f);
+		}
+
+		public override void SetupChannels()
+		{
+			//Total Power
+			m_powerTotal = dataLogger.NewChannel("Power Total");
+			m_powerTotal.color = GColor.blue;
+			m_powerTotal.SetOriginAndSpan(7.0f, 1.0f, 500f);
+			m_powerTotal.valueFormat = "0.0 kW";
+			m_powerTotal.captionPositionY = 1;
+
+			// Front Power
+			m_powerFront = dataLogger.NewChannel("Power Front");
+			m_powerFront.color = GColor.red;
+			m_powerFront.SetOriginAndSpan(7.0f, 1.0f, 500f);
+			m_powerFront.valueFormat = "0.0 kW";
+			m_powerFront.captionPositionY = 0;
+
+			// Rear Power
+			m_powerRear = dataLogger.NewChannel("Power Rear");
+			m_powerRear.color = GColor.green;
+			m_powerRear.SetOriginAndSpan(7.0f, 1.0f, 500f);
+			m_powerRear.valueFormat = "0.0 kW";
+			m_powerRear.captionPositionY = -1;
+
+			m_batCapacity = dataLogger.NewChannel("Battery Capacity");
+			m_batCapacity.color = GColor.yellow;
+			m_batCapacity.SetOriginAndSpan(1.0f, 1.0f, 25f);
+			m_batCapacity.valueFormat = "0.0 kWh";
+			m_batCapacity.captionPositionY = 1;
+
+			m_stateOfCharge = dataLogger.NewChannel("State of Charge");
+			m_stateOfCharge.color = GColor.orange;
+			m_stateOfCharge.SetOriginAndSpan(1.0f, 1.0f, 25f);
+			m_stateOfCharge.valueFormat = "0.0";
+			m_stateOfCharge.captionPositionY = 0;
+
+		}
+
+		public override void RecordData()
+		{
+      m_powerTotal.Write(Telemetry424.powerTotal);
+			m_powerFront.Write(Telemetry424.powerFront);
+			m_powerRear.Write(Telemetry424.powerRear);
+			m_batCapacity.Write(Telemetry424.batteryCapacity);
+			m_stateOfCharge.Write(Telemetry424.stateOfCharge);
 
 		}
 	}
