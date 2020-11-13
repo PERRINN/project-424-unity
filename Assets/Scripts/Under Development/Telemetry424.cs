@@ -57,7 +57,7 @@ public class Telemetry424 : MonoBehaviour
 		new SuspensionAnalysisChart(),
 		// new KineticEnergyChart(),
 		new AutopilotChart(),
-	        new DistanceChart(),
+	    new DistanceChart(),
 		new ChassisChart(),
 		new AerodynamicsChart(),
 		new BatteryChart(),
