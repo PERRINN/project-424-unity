@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: VPP Example Tire Model
   m_EditorClassIdentifier: 
   tireSettings:
-    longitudinalPeakSlip: 0.14
+    longitudinalPeakSlip: 0.1
     longitudinalPeakFriction: 1
     longitudinalLimitSlip: 0.8
     longitudinalLimitFriction: 0.9
     longitudinalA: 0.7
-    longitudinalB: 1
+    longitudinalB: 0.2
     longitudinalC: 0
-    lateralPeakSlip: 15
+    lateralPeakSlip: 12
     lateralPeakFriction: 1.1
     lateralLimitSlip: 40
     lateralLimitFriction: 1
@@ -28,7 +28,6 @@ MonoBehaviour:
     lateralB: 0
     lateralC: 0
     combinationShapeFactor: 2.2
-    zeroVSlipVelocity: 0.5
     nominalLoad: 2500
     longitudinalLoadSensMax: 1.2
     longitudinalLoadSensMin: 0.8
@@ -37,4 +36,6 @@ MonoBehaviour:
     lateralLoadSensMax: 1.2
     lateralLoadSensMin: 0.8
     lateralZeroLoadPeak: 0.9
+    zeroVSlipVelocity: 0.1
+    maxAdherentVelocity: 0.8
     version: 1

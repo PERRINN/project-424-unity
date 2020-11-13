@@ -69,11 +69,52 @@ Other, mostly internal, renames:
 
 
 ----------------------------------------------------------------------------------------------------
+2020-10-26
+----------------------------------------------------------------------------------------------------
+
+Component VPWeightData renamed to VPWeightMonitor
+
+
+----------------------------------------------------------------------------------------------------
+2020-09-23
+----------------------------------------------------------------------------------------------------
+
+VPReplay:
+
+Replaying the steering wheel device motion is now disabled by default. It must be enabled explicitly
+with VPReplay.replaySteeringWheelDevice.
+
+
+----------------------------------------------------------------------------------------------------
+2020-08-25
+----------------------------------------------------------------------------------------------------
+
+VPVehicleJoint:
+
+Removed Articulation Mode. It didn't have practical utility. Alternatives:
+- Use Match Inertia Mode
+- Increase physics rate (reduce Project Settings > Time > Fixed Timestep)
+- Increase physics solver iterations (Project Settings > Physics > Default Solver Iterations)
+
+
+----------------------------------------------------------------------------------------------------
 2020-08-12
 ----------------------------------------------------------------------------------------------------
 
 VPVehicleJoint:
+
 - Removed AngularJointMotion.Mode.Limited. Use AngularJointMotion.Mode.DampedSpring with maxAngle > 0.
+
+VPVehicleController:
+
+	accurateSuspensionForces renamed to dontAdjustSuspensionForcePoint, with opposite meaning.
+	The	behavior is the same by default, but now the default value is false.
+
+	Actions:
+
+	If accurateSuspensionForces was being modified externally, now modify dontAdjustSuspensionForcePoint
+	and configure the opposite value (false for accurate force point)
+
 
 ----------------------------------------------------------------------------------------------------
 2020-06-30
