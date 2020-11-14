@@ -48,13 +48,13 @@ namespace Project424
             m_textStyle.font = font;
             m_textStyle.fontSize = fontSize;
             m_textStyle.normal.textColor = fontColor;
-            //
+            
             // Subscribe getLapTime method to onLap 
 
             m_lapTimer = FindObjectOfType<LapTimer>();
             if (m_lapTimer != null) m_lapTimer.onLap += GetLapTime;
 
-            ///// TEST DATA /////
+            /// TEST DATA /////
             //m_laps.Add(new Lap(1, 82.111f, false, 27.750f, 30.610f, 29.938f, true, true, true));
             //m_laps.Add(new Lap(2, 83.298f, true, 27.740f, 29.610f, 28.938f, true, true, true));
             //m_laps.Add(new Lap(3, 82.298f, true, 28.450f, 29.610f, 27.938f, true, true, true));
@@ -132,7 +132,7 @@ namespace Project424
                 }
                 else
                 {
-                    // If this time is less than the best AND its valid (or if there is no best and this lap is valid)
+                    // If this time is less than the best time AND its valid (or if there is no best and this lap is valid)
                     if (lap.TotalLapTime < bestTotalTime.TotalLapTime && lap.LapIsValid == true || bestTotalTime == null && lap.LapIsValid == true)
                     {
                         // If pointer is not null
@@ -143,6 +143,7 @@ namespace Project424
                     }
                 }
 
+                // Same logic as above, but for the sector times
                 if (bestSec1Time == null)
                 {
                     if (lap.Sector1IsValid == true)
@@ -157,6 +158,8 @@ namespace Project424
                         bestSec1Time = lap;
                     }
                 }
+
+                // Sector 2
                 if (bestSec2Time == null)
                 {
                     if (lap.Sector2IsValid == true)
@@ -171,6 +174,8 @@ namespace Project424
                         bestSec2Time = lap;
                     }
                 }
+
+                // Sector 3
                 if (bestSec3Time == null)
                 {
                     if (lap.Sector3IsValid == true)
@@ -198,34 +203,24 @@ namespace Project424
                 m_text += ("   Lap " + lap.LapNum).PadRight(11, ' ');
 
                 // Sector 1
-                m_text += getSectorString(lap, lap.Sector1, lap.Sector1IsValid, lap.Sec1IsGreen, bestSec1Time).PadRight(11, ' ');
+                m_text += printSector(lap, lap.Sector1, lap.Sector1IsValid, lap.Sec1IsGreen, bestSec1Time, m_laps).PadRight(11, ' ');
 
                 // Sector 2
-                m_text += getSectorString(lap, lap.Sector2, lap.Sector2IsValid, lap.Sec2IsGreen, bestSec2Time).PadRight(11, ' ');
+                m_text += printSector(lap, lap.Sector2, lap.Sector2IsValid, lap.Sec2IsGreen, bestSec2Time, m_laps).PadRight(11, ' ');
 
                 // Sector 3
-                m_text += getSectorString(lap, lap.Sector3, lap.Sector3IsValid, lap.Sec3IsGreen, bestSec3Time).PadRight(11, ' ');
+                m_text += printSector(lap, lap.Sector3, lap.Sector3IsValid, lap.Sec3IsGreen, bestSec3Time, m_laps).PadRight(11, ' ');
 
                 // LapTime
-                if (lap == bestTotalTime)
-                    m_text += " |<color=#ff00ffff>" + FormatLapTime(lap.TotalLapTime) + "</color>";
-                else if (lap.TotalIsGreen == true)
-                    m_text += " |<color=#008000ff>" + FormatLapTime(lap.TotalLapTime) + "</color>";
-                else
-                    m_text += " |" + FormatLapTime(lap.TotalLapTime);
-
-                // Adds stars to indicate if the lap is invalid
-                if (lap.LapIsValid == false)
-                    m_text += "**";
-                m_text += "\n";
+                m_text += printLap(lap, lap.TotalLapTime, lap.LapIsValid, lap.TotalIsGreen, bestTotalTime, m_laps);
             }
 
             // Prints the best lap as the last table entry
 
-            m_text += "\n Best Lap   |  " +
-                FormatSectorTime(m_bestLapSector1) + " |  " +
-                FormatSectorTime(m_bestLapSector2) + " |  " +
-                FormatSectorTime(m_bestLapSector3) + " |" +
+            m_text += "\n Best Lap   | " +
+                FormatSectorTime(m_bestLapSector1) + "  | " +
+                FormatSectorTime(m_bestLapSector2) + "  | " +
+                FormatSectorTime(m_bestLapSector3) + "  |" +
                 FormatLapTime(m_bestLap) + "\n";
         }
 
@@ -285,10 +280,13 @@ namespace Project424
 
         // Method to handle how the sectors are printed
 
-        string getSectorString(Lap thisSector, float thisSectorTime, bool sectorValid, bool sectorGreen, Lap bestSector)
+        string printSector(Lap thisSector, float thisSectorTime, bool sectorValid, bool sectorGreen, Lap bestSector, List<Lap> lapList)
         {
             string text = " | ";
-            if (thisSector == bestSector) // Purple
+
+            if (lapList.Count == 1) // If there's only one lap, color it white
+                text += FormatSectorTime(thisSectorTime);
+            else if (thisSector == bestSector) // Purple
                 text += "<color=#ff00ffff>" + FormatSectorTime(thisSectorTime) + " </color>";
             else if (sectorGreen == true) // Green
                 text += "<color=#008000ff>" + FormatSectorTime(thisSectorTime) + " </color>";
@@ -296,6 +294,26 @@ namespace Project424
                 text += FormatSectorTime(thisSectorTime);
             if (sectorValid == false)
                 text += "*";
+            return text;
+        }
+
+        // Method to handle how the Total Time is printed
+
+        string printLap(Lap thisSector, float thisSectorTime, bool sectorValid, bool sectorGreen, Lap bestSector, List<Lap> lapList)
+        {
+            string text = " |";
+
+            if (lapList.Count == 1) // If there's only one lap, color it white
+                text += FormatLapTime(thisSectorTime);
+            else if (thisSector == bestSector) // Purple
+                text += "<color=#ff00ffff>" + FormatLapTime(thisSectorTime) + " </color>";
+            else if (sectorGreen == true) // Green
+                text += "<color=#008000ff>" + FormatLapTime(thisSectorTime) + " </color>";
+            else // White
+                text += FormatLapTime(thisSectorTime);
+            if (sectorValid == false)
+                text += "*";
+            text += "\n";
             return text;
         }
 
@@ -342,32 +360,3 @@ namespace Project424
 
     }
 }
-
-//findBestTime(bestTotalTime, bestTotalTime.TotalLapTime, lap, lap.TotalLapTime, lap.LapIsValid);
-
-
-// Inner method to find whether a lap is the best time or not & set it
-
-//void findBestTime(Lap bestLap, float bestTime, Lap thisLap, float thisTime, bool thisLapValid)
-//{
-//    // If there is no best for this time
-//    if (bestLap == null)
-//    {
-//        // If this time is valid
-//        if (thisLap.LapIsValid == true)
-//            // This time is now the best time
-//            bestLap = thisLap;
-//    }
-//    else
-//    {
-//        // If this time is less than the best AND its valid (or if there is no best and this lap is valid)
-//        if (thisTime < bestTime && thisLapValid == true || bestLap == null && thisLapValid == true)
-//        {
-//            // If pointer is not null
-//            if (bestLap != null)
-//                bestLap.TotalIsGreen = true;
-//            // Set the best lap to green and then set this lap as the best lap
-//            bestLap = thisLap;
-//        }
-//    }
-//}
