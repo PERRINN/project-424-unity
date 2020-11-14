@@ -151,6 +151,8 @@ public class LapTimer : MonoBehaviour
 		if (replayComponent != null && !replayComponent.continuityFlag)
 			InvalidateLap();
 		#endif
+
+		SteeringScreen.trackTime = Time.time - m_trackStartTime;
 		}
 
 

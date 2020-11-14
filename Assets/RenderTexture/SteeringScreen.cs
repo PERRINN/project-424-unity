@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using VehiclePhysics;
 
 
 namespace VehiclePhysics.UI
@@ -17,13 +13,17 @@ namespace VehiclePhysics.UI
         public Text speedMps;
         public Text speedKph;
         public Text gear;
-        public Text frontMGURpm;
-        public Text rearMGURpm;
+        //public Text frontMGURpm;
+        //public Text rearMGURpm;
         public Text totalElecPower;
         public Image drsImage;
+        public Image autopilotImage;
         public Text minIndicator;
-        public Text elecTorqueBal;
-        public Text mechTorqueBal;
+        //public Text elecTorqueBal;
+        //public Text mechTorqueBal;
+        public Text timeDifference;
+        public Text batterySOC;
+        public Text batteryCapacity;
 
         float maxSpeed = float.MinValue;
         float minSpeed = float.MaxValue;
@@ -31,6 +31,13 @@ namespace VehiclePhysics.UI
         bool minSpdWindow = false;
         bool setMinSpdTrigger = false;
         float drsPosition;
+        //bool autopilotState = false;
+
+        public static float bestTime { get; set; }
+        public static float trackTime { get; set; }
+        public static float batSOC { get; set; }
+        public static float batCapacity { get; set; }
+        public static bool autopilotState { get; set; }
 
         void OnEnable()
         {
@@ -124,22 +131,32 @@ namespace VehiclePhysics.UI
                 }
             }
 
-
-            // Front MGU rpm
-            if (frontMGURpm != null)
+            // AUTOPILOT signal
+            if (autopilotImage != null)
             {
-                float frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
-
-                frontMGURpm.text = $"{frontRpm,5:0.}";
+                autopilotImage.color = new Color32(255, 255, 255, 0);
+                if (autopilotState)
+                {
+                    autopilotImage.color = new Color32(255, 255, 255, 255);
+                }
             }
 
-            // Rear MGU rpm
-            if (rearMGURpm != null)
-            {
-                float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
 
-                rearMGURpm.text = $"{rearRpm,5:0.}";
-            }
+            //// Front MGU rpm
+            //if (frontMGURpm != null)
+            //{
+            //    float frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
+
+            //    frontMGURpm.text = $"{frontRpm,5:0.}";
+            //}
+
+            //// Rear MGU rpm
+            //if (rearMGURpm != null)
+            //{
+            //    float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
+
+            //    rearMGURpm.text = $"{rearRpm,5:0.}";
+            //}
 
             // Total Electrical Power
             if (totalElecPower != null)
@@ -147,25 +164,46 @@ namespace VehiclePhysics.UI
                 float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
                 float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
 
-                totalElecPower.text = $"{frontPower + rearPower,6:0.}";
+                float total = frontPower + rearPower;
+                totalElecPower.text = total >= 0 ? total.ToString("+" + "0") : total.ToString("0");
             }
 
-            // Electrical Torque Balance
-            if (elecTorqueBal != null)
-            {
-                float frontElectrical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
-                float rearElectrical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
+            //// Electrical Torque Balance
+            //if (elecTorqueBal != null)
+            //{
+            //    float frontElectrical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
+            //    float rearElectrical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
 
-                elecTorqueBal.text = $"{GetBalanceStr(frontElectrical, rearElectrical),5}";
+            //    elecTorqueBal.text = $"{GetBalanceStr(frontElectrical, rearElectrical),5}";
+            //}
+
+            //// Mechanical Torque Balance
+            //if (mechTorqueBal != null)
+            //{
+            //    float frontWheels = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
+            //    float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
+
+            //    mechTorqueBal.text = $"{ GetBalanceStr(frontWheels, rearWheels),5}";
+            //}
+
+            // Time Difference with the Best Lap
+            if (timeDifference != null)
+            {
+                float compare = trackTime - bestTime;
+
+                timeDifference.text = compare >= 0 ? compare.ToString("+" + "0.00") : compare.ToString("0.00");
             }
 
-            // Mechanical Torque Balance
-            if (mechTorqueBal != null)
+            // Battery SOC
+            if (batterySOC != null)
             {
-                float frontWheels = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
-                float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
+                batterySOC.text = batSOC.ToString("0.00");
+            }
 
-                mechTorqueBal.text = $"{ GetBalanceStr(frontWheels, rearWheels),5}";
+            // Battery Capacity
+            if (batteryCapacity != null)
+            {
+                batteryCapacity.text = (55 - batCapacity).ToString("0.00");
             }
         }
 
