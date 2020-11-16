@@ -66,7 +66,7 @@ public class Time_diff_919_IDR : MonoBehaviour
           if (PorscheDistance[i]<getLapDistance & getLapDistance<PorscheDistance[i+1])
             {
             float PorscheTimeExtrapolation=PorscheTime[i]+((PorscheTime[i+1]-PorscheTime[i])/(PorscheDistance[i+1]-PorscheDistance[i]))*(getLapDistance-PorscheDistance[i]);
-            lapTimeDiffPo = LapTimeComparison(PorscheTimeExtrapolation,currentLapTime).ToString("0.000");
+            lapTimeDiffPo = LapTimeComparison(PorscheTimeExtrapolation,currentLapTime).ToString("0.00");
             }
         }
 
@@ -75,7 +75,7 @@ public class Time_diff_919_IDR : MonoBehaviour
           if (VWDistance[i]<getLapDistance & getLapDistance<VWDistance[i+1])
             {
             float VWTimeExtrapolation=VWTime[i]+((VWTime[i+1]-VWTime[i])/(VWDistance[i+1]-VWDistance[i]))*(getLapDistance-VWDistance[i]);
-            lapTimeDiffVW = LapTimeComparison(VWTimeExtrapolation,currentLapTime).ToString("0.000");
+            lapTimeDiffVW = LapTimeComparison(VWTimeExtrapolation,currentLapTime).ToString("0.00");
             }
         }
 
