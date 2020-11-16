@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VehiclePhysics;
+using VehiclePhysics.UI;
 
 public class batteryModel : MonoBehaviour
 {
@@ -78,6 +79,9 @@ public class batteryModel : MonoBehaviour
         m_text = "Battery SOC (%): " + System.Math.Round(batterySOC) + "\n";
         m_text += "Power used (kW): " + System.Math.Round(powerTotal) + "\n";
         m_text += "Energy left (kWh): " + System.Math.Round(batteryCapacity) + "\n";
+
+        SteeringScreen.batSOC = batterySOC;
+        SteeringScreen.batCapacity = batteryCapacity;
     }
 
     void batteryCharge()

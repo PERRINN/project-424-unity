@@ -637,8 +637,6 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 	public class AutopilotChart : PerformanceChart
 	{
-		PidController pidController = new PidController();
-
 		public static int frame3 { get; set; }
 		public static int frame4 { get; set; }
 		public static float errorDistance { get; set; }
