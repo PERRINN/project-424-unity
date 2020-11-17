@@ -1253,6 +1253,8 @@ GameObject:
   - component: {fileID: 4682684200946408111}
   - component: {fileID: 3654773149151551392}
   - component: {fileID: 5932580745775428947}
+  - component: {fileID: 2201592948696730592}
+  - component: {fileID: 5173841932198281398}
   m_Layer: 8
   m_Name: Perrinn 424
   m_TagString: Untagged
@@ -1517,6 +1519,41 @@ MonoBehaviour:
   cube2: {fileID: 0}
   cube3: {fileID: 0}
   cube4: {fileID: 0}
+--- !u!114 &2201592948696730592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4116892635276943217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13268fe18a1b627438f9a08e55b86204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlay:
+    position: {x: 365, y: 390}
+    font: {fileID: 0}
+    fontSize: 12
+    fontColor: {r: 1, g: 1, b: 1, a: 1}
+  defaultFont: {fileID: 0}
+--- !u!114 &5173841932198281398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4116892635276943217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af31100b17d7e99408a0a40bcfad2679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 8, y: 535}
+  font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
+  fontSize: 10
+  fontColor: {r: 1, g: 1, b: 1, a: 1}
+  showGui: 1
 --- !u!1 &4116892635335174826
 GameObject:
   m_ObjectHideFlags: 0
@@ -5443,15 +5480,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a4b6fd82edeaca4292e4305d978d18d, type: 3}
---- !u!4 &4116892636251469277 stripped
+--- !u!4 &4116892636251469251 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400718, guid: 4a4b6fd82edeaca4292e4305d978d18d,
-    type: 3}
-  m_PrefabInstance: {fileID: 4116892636251859091}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &4116892636251469279 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400716, guid: 4a4b6fd82edeaca4292e4305d978d18d,
+  m_CorrespondingSourceObject: {fileID: 400720, guid: 4a4b6fd82edeaca4292e4305d978d18d,
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
@@ -5461,9 +5492,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &4116892636251469251 stripped
+--- !u!4 &4116892636251469279 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400720, guid: 4a4b6fd82edeaca4292e4305d978d18d,
+  m_CorrespondingSourceObject: {fileID: 400716, guid: 4a4b6fd82edeaca4292e4305d978d18d,
+    type: 3}
+  m_PrefabInstance: {fileID: 4116892636251859091}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4116892636251469277 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400718, guid: 4a4b6fd82edeaca4292e4305d978d18d,
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
