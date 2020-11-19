@@ -1,10 +1,8 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VehiclePhysics.Timing;
-using System;
-using System.Linq;
-using JetBrains.Annotations;
 
 // Attach script to Perrinn424 game object
 namespace Project424
@@ -32,7 +30,6 @@ namespace Project424
         private List<Lap> m_laps = new List<Lap>();
 
         // Variables for text, text style and textbox height/width
-
         string m_text = "";
         GUIStyle m_textStyle = new GUIStyle();
         float m_boxWidth;
@@ -51,32 +48,31 @@ namespace Project424
             m_textStyle.font = font;
             m_textStyle.fontSize = fontSize;
             m_textStyle.normal.textColor = fontColor;
-
-            // Subscribe getLapTime method to onLap
+            
+            // Subscribe getLapTime method to onLap 
 
             m_lapTimer = FindObjectOfType<LapTimer>();
             if (m_lapTimer != null) m_lapTimer.onLap += GetLapTime;
 
-            ///// TEST LAPS /////
-            //m_laps.Add(new Lap(1, 11.11f, 9.11f, 66.11f, 93.41231f, true));
-            //m_laps.Add(new Lap(2, 26.11f, 1f, 12f, 84.41231f, true));
-            //m_laps.Add(new Lap(3, 31.11f, 20f, 999f, 95.41231f, true));
-            //m_laps.Add(new Lap(4, 99.11f, 38f, 50f, 86.41231f, true));
-            //m_laps.Add(new Lap(5, 20.11f, 89f, 42f, 97.41231f, true));
-            //m_laps.Add(new Lap(6, 41.11f, 399f, 34f, 88.41231f, false));
-            //m_laps.Add(new Lap(7, 249.11f, 56f, 36f, 99.41231f, false));
-            //m_laps.Add(new Lap(8, 55f, 99f, 78f, 90.41231f, false));
-            //m_laps.Add(new Lap(9, 22f, 15f, 12f, 91.41231f, false));
-            //m_laps.Add(new Lap(101, 40f, 76f, 32f, 92.41231f, false));
-
-            m_lapCount = m_laps.Count();
+            /// TEST DATA /////
+            //m_laps.Add(new Lap(1, 82.111f, false, 27.750f, 30.610f, 29.938f, true, true, true));
+            //m_laps.Add(new Lap(2, 83.298f, true, 27.740f, 29.610f, 28.938f, true, true, true));
+            //m_laps.Add(new Lap(3, 82.298f, true, 28.450f, 29.610f, 27.938f, true, true, true));
+            //m_laps.Add(new Lap(4, 84.298f, true, 28.950f, 27.500f, 26.938f, false, true, true));
+            //m_laps.Add(new Lap(5, 82.598f, true, 27.750f, 27.600f, 27.938f, true, true, false));
+            //m_laps.Add(new Lap(6, 83.998f, true, 28.750f, 27.610f, 28.938f, true, true, true));
+            //m_laps.Add(new Lap(7, 82.998f, true, 27.450f, 29.610f, 29.938f, true, true, true));
+            //m_laps.Add(new Lap(8, 85.498f, false, 27.350f, 28.610f, 26.838f, false, false, true));
+            //m_laps.Add(new Lap(9, 82.198f, true, 28.550f, 27.610f, 26.938f, true, true, true));
+            //m_laps.Add(new Lap(10, 82.398f, true, 29.750f, 27.499f, 26.938f, true, true, true));
+            //m_lapCount += m_laps.Count();
 
             UpdateLapTable(m_laps);
         }
 
         void OnDisable()
         {
-            // Unsubscribe getLapTime method from onLap
+            // Unsubscribe getLapTime method from onLap 
 
             if (m_lapTimer != null) m_lapTimer.onLap -= GetLapTime;
         }
@@ -86,18 +82,21 @@ namespace Project424
         public void GetLapTime(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
 
-            m_laps.Add(new Lap(m_lapCount, sectors[0], sectors[1], sectors[2], lapTime, validBool));
+            m_laps.Add(new Lap(m_lapCount, lapTime, validBool, sectors[0], sectors[1], sectors[2], validSectors[0], validSectors[1], validSectors[2]));
             m_lapCount++;
 
-            if (m_bestLap == 0.0f && validBool == true || lapTime < m_bestLap && validBool == true)
+            // Checks if the laptime is a new best
+            // Filters-out invalid laps or laps where any sector is 0 seconds
+
+            if (m_bestLap == 0.0f && validBool == true && sectors.Contains(0) == false
+                || lapTime < m_bestLap && validBool == true && sectors.Contains(0) == false)
             {
-                // Reassign best lap to new value
+                // Reassign best lap to new values
                 m_bestLapSector1 = sectors[0];
                 m_bestLapSector2 = sectors[1];
                 m_bestLapSector3 = sectors[2];
                 m_bestLap = lapTime;
             }
-
             UpdateLapTable(m_laps);
         }
 
@@ -112,74 +111,116 @@ namespace Project424
                 lastTenLaps.Add(lap);
             }
 
-            // Index to store position of foreach loop when iterating through list
+            // Pointers to the laps which have the best times
 
-            int prevIndex = 0;
+            Lap bestSec1Time = null;
+            Lap bestSec2Time = null;
+            Lap bestSec3Time = null;
+            Lap bestTotalTime = null;
 
+            // Finds the best sector/lap times and assigns them before we print them
+
+            foreach (Lap lap in m_laps)
+            {
+                // If there is no best for this time
+                if (bestTotalTime == null)
+                {
+                    // If this time is valid
+                    if (lap.LapIsValid == true)
+                        // This time is now the best time
+                        bestTotalTime = lap;
+                }
+                else
+                {
+                    // If this time is less than the best time AND its valid (or if there is no best and this lap is valid)
+                    if (lap.TotalLapTime < bestTotalTime.TotalLapTime && lap.LapIsValid == true || bestTotalTime == null && lap.LapIsValid == true)
+                    {
+                        // If pointer is not null
+                        if (bestTotalTime != null)
+                            bestTotalTime.TotalIsGreen = true;
+                        // Set the best lap to green and then set this lap as the best lap
+                        bestTotalTime = lap;
+                    }
+                }
+
+                // Same logic as above, but for the sector times
+                if (bestSec1Time == null)
+                {
+                    if (lap.Sector1IsValid == true)
+                        bestSec1Time = lap;
+                }
+                else
+                {
+                    if (lap.Sector1 < bestSec1Time.Sector1 && lap.Sector1IsValid == true || bestSec1Time == null && lap.Sector1IsValid == true)
+                    {
+                        if (bestSec1Time != null)
+                            bestSec1Time.Sec1IsGreen = true;
+                        bestSec1Time = lap;
+                    }
+                }
+
+                // Sector 2
+                if (bestSec2Time == null)
+                {
+                    if (lap.Sector2IsValid == true)
+                        bestSec2Time = lap;
+                }
+                else
+                {
+                    if (lap.Sector2 < bestSec2Time.Sector2 && lap.Sector2IsValid == true || bestSec2Time == null && lap.Sector2IsValid == true)
+                    {
+                        if (bestSec2Time != null)
+                            bestSec2Time.Sec2IsGreen = true;
+                        bestSec2Time = lap;
+                    }
+                }
+
+                // Sector 3
+                if (bestSec3Time == null)
+                {
+                    if (lap.Sector3IsValid == true)
+                        bestSec3Time = lap;
+                }
+                else
+                {
+                    if (lap.Sector3 < bestSec3Time.Sector3 && lap.Sector3IsValid == true || bestSec3Time == null && lap.Sector3IsValid == true)
+                    {
+                        if (bestSec3Time != null)
+                            bestSec3Time.Sec3IsGreen = true;
+                        bestSec3Time = lap;
+                    }
+                }
+            }
 
             // String to store table's text values
 
-            m_text = " Lap Number |  Sector 1 |  Sector 2 |  Sector 3 | Total Time \n";
+            m_text = " Lap Number | Sector 1 | Sector 2 | Sector 3 | Total Time\n";
 
-            // Prints the last ten laps in the m_laps dictionary
+            // Prints the last ten laps in the m_laps dictionary 
 
             foreach (Lap lap in lastTenLaps)
             {
                 m_text += ("   Lap " + lap.LapNum).PadRight(11, ' ');
 
-                // If its the first lap
-                if (prevIndex == 0)
-                {
-                    m_text +=
-                        " | G " + FormatSectorTime(lap.Sector1) +
-                        " | G " + FormatSectorTime(lap.Sector2) +
-                        " | G " + FormatSectorTime(lap.Sector3) +
-                        " | G" + FormatLapTime(lap.TotalLapTime) +
-                        "\n";
-                }
+                // Sector 1
+                m_text += printSector(lap, lap.Sector1, lap.Sector1IsValid, lap.Sec1IsGreen, bestSec1Time, m_laps).PadRight(11, ' ');
 
-                // Else check current sectors against prev sectors
-                else
-                {
-                    // Sector 1: If < then print as green, else print as red
-                    if (lap.Sector1 < lastTenLaps[prevIndex - 1].Sector1)
-                        m_text += " | G " + FormatSectorTime(lap.Sector1);
-                    else
-                        m_text += " | R " + FormatSectorTime(lap.Sector1);
+                // Sector 2
+                m_text += printSector(lap, lap.Sector2, lap.Sector2IsValid, lap.Sec2IsGreen, bestSec2Time, m_laps).PadRight(11, ' ');
 
-                    // Sector 2
-                    if (lap.Sector2 < lastTenLaps[prevIndex - 1].Sector2)
-                        m_text += " | G " + FormatSectorTime(lap.Sector2);
-                    else
-                        m_text += " | R " + FormatSectorTime(lap.Sector2);
+                // Sector 3
+                m_text += printSector(lap, lap.Sector3, lap.Sector3IsValid, lap.Sec3IsGreen, bestSec3Time, m_laps).PadRight(11, ' ');
 
-                    // Sector 3
-                    if (lap.Sector3 < lastTenLaps[prevIndex - 1].Sector3)
-                        m_text += " | G " + FormatSectorTime(lap.Sector3);
-                    else
-                        m_text += " | R " + FormatSectorTime(lap.Sector3);
-
-                    // LapTime
-                    if (lap.TotalLapTime < lastTenLaps[prevIndex - 1].TotalLapTime)
-                        m_text += " | G" + FormatLapTime(lap.TotalLapTime);
-                    else
-                        m_text += " | R" + FormatLapTime(lap.TotalLapTime);
-
-                    // Adds stars if the lap is invalid
-                    if (lap.IsValid == true)
-                        m_text += "\n";
-                    else if (lap.IsValid == false)
-                        m_text += "**\n";
-                }
-                prevIndex += 1;
+                // LapTime
+                m_text += printLap(lap, lap.TotalLapTime, lap.LapIsValid, lap.TotalIsGreen, bestTotalTime, m_laps);
             }
 
             // Prints the best lap as the last table entry
 
-            m_text += "\n  Best Lap  |   " +
-                FormatSectorTime(m_bestLapSector1) + " |   " +
-                FormatSectorTime(m_bestLapSector2) + " |   " +
-                FormatSectorTime(m_bestLapSector3) + " |" +
+            m_text += "\n Best Lap   | " +
+                FormatSectorTime(m_bestLapSector1) + "  | " +
+                FormatSectorTime(m_bestLapSector2) + "  | " +
+                FormatSectorTime(m_bestLapSector3) + "  |" +
                 FormatLapTime(m_bestLap) + "\n";
         }
 
@@ -236,6 +277,46 @@ namespace Project424
             else
                 return string.Format("{0,3:00}:{1,3:000}", s, mm);
         }
+
+        // Method to handle how the sectors are printed
+
+        string printSector(Lap thisSector, float thisSectorTime, bool sectorValid, bool sectorGreen, Lap bestSector, List<Lap> lapList)
+        {
+            string text = " | ";
+
+            if (lapList.Count == 1) // If there's only one lap, color it white
+                text += FormatSectorTime(thisSectorTime);
+            else if (thisSector == bestSector) // Purple
+                text += "<color=#ff00ffff>" + FormatSectorTime(thisSectorTime) + " </color>";
+            else if (sectorGreen == true) // Green
+                text += "<color=#008000ff>" + FormatSectorTime(thisSectorTime) + " </color>";
+            else // White
+                text += FormatSectorTime(thisSectorTime);
+            if (sectorValid == false)
+                text += "*";
+            return text;
+        }
+
+        // Method to handle how the Total Time is printed
+
+        string printLap(Lap thisSector, float thisSectorTime, bool sectorValid, bool sectorGreen, Lap bestSector, List<Lap> lapList)
+        {
+            string text = " |";
+
+            if (lapList.Count == 1) // If there's only one lap, color it white
+                text += FormatLapTime(thisSectorTime);
+            else if (thisSector == bestSector) // Purple
+                text += "<color=#ff00ffff>" + FormatLapTime(thisSectorTime) + " </color>";
+            else if (sectorGreen == true) // Green
+                text += "<color=#008000ff>" + FormatLapTime(thisSectorTime) + " </color>";
+            else // White
+                text += FormatLapTime(thisSectorTime);
+            if (sectorValid == false)
+                text += "*";
+            text += "\n";
+            return text;
+        }
+
     }
 
     // Lap class stores all laps as objects that can be put into lists
@@ -244,76 +325,38 @@ namespace Project424
     {
         public int LapNum { get; set; }
         public float Sector1 { get; set; }
+        public bool Sector1IsValid { get; set; }
         public float Sector2 { get; set; }
+        public bool Sector2IsValid { get; set; }
         public float Sector3 { get; set; }
+        public bool Sector3IsValid { get; set; }
         public float TotalLapTime { get; set; }
-        public bool IsValid { get; set; }
+        public bool LapIsValid { get; set; }
+        public bool Sec1IsGreen { get; set; }
+        public bool Sec2IsGreen { get; set; }
+        public bool Sec3IsGreen { get; set; }
+        public bool TotalIsGreen { get; set; }
 
-        public Lap(int lapNum, float sector1, float sector2, float sector3, float totalLapTime, bool isValid)
+        public Lap(int lapNum, float totalLapTime, bool lapIsValid, float sector1, float sector2,
+                   float sector3, bool sector1IsValid, bool sector2IsValid, bool sector3IsValid)
         {
             LapNum = lapNum;
             Sector1 = sector1;
             Sector2 = sector2;
             Sector3 = sector3;
             TotalLapTime = totalLapTime;
-            IsValid = isValid;
+            Sector1IsValid = sector1IsValid;
+            Sector2IsValid = sector2IsValid;
+            Sector3IsValid = sector3IsValid;
+            LapIsValid = lapIsValid;
+
+            // These attributes are set to false by default
+            // They should only change to true if they were previously a best (purple) record
+            Sec1IsGreen = false;
+            Sec2IsGreen = false;
+            Sec3IsGreen = false;
+            TotalIsGreen = false;
         }
 
     }
-
-    //// Method to sort the table based on a number
-
-    //void SelectLapList (int choice)
-    //{
-    //    // Temporary list to hold the sorted lists
-
-    //    List<Lap> temp_laps;
-
-    //    // Based on choice's value, sort the table accordingly
-
-    //    switch (choice)
-    //    {
-    //        case 1: // Lap Number Ascending
-    //            temp_laps = (from entry in m_laps orderby entry.LapNum ascending select entry).ToList();
-    //            break;
-    //        case 2: // Lap Number Descending
-    //            temp_laps = (from entry in m_laps orderby entry.LapNum descending select entry).ToList();
-    //            break;
-    //        case 3: // Sector 1 time Ascending
-    //            temp_laps = (from entry in m_laps orderby entry.Sector1 ascending select entry).ToList();
-    //            break;
-    //        case 4: // Sector 1 time Descending
-    //            temp_laps = (from entry in m_laps orderby entry.Sector1 descending select entry).ToList();
-    //            break;
-    //        case 5: // Sector 2 time Ascending
-    //            temp_laps = (from entry in m_laps orderby entry.Sector2 ascending select entry).ToList();
-    //            break;
-    //        case 6: // Sector 2 time Descending
-    //            temp_laps = (from entry in m_laps orderby entry.Sector2 descending select entry).ToList();
-    //            break;
-    //        case 7: // Sector 3 time Ascending
-    //            temp_laps = (from entry in m_laps orderby entry.Sector3 ascending select entry).ToList();
-    //            break;
-    //        case 8: // Sector 3 time Descending
-    //            temp_laps = (from entry in m_laps orderby entry.Sector3 descending select entry).ToList();
-    //            break;
-    //        case 9: // Total time Ascending
-    //            temp_laps = (from entry in m_laps orderby entry.TotalLapTime ascending select entry).ToList();
-    //            break;
-    //        case 10: // Total time Descending
-    //            temp_laps = (from entry in m_laps orderby entry.TotalLapTime descending select entry).ToList();
-    //            break;
-    //        default:
-    //            temp_laps = m_laps;
-    //            break;
-    //    }
-
-    //    // Update table with this sorted list
-
-    //    UpdateLapTable(temp_laps);
-    //}
-
 }
-
-
-

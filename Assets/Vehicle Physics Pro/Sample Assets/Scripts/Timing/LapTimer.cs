@@ -41,6 +41,10 @@ public class LapTimer : MonoBehaviour
 
 	public Action<float, bool, float[], bool[]> onLap;
 
+	// Current lap time
+
+	public float currentLapTime { get { return Time.time - m_trackStartTime; } }
+
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
 	// except for the best time, which is preserved.
@@ -147,6 +151,8 @@ public class LapTimer : MonoBehaviour
 		if (replayComponent != null && !replayComponent.continuityFlag)
 			InvalidateLap();
 		#endif
+
+		SteeringScreen.trackTime = Time.time - m_trackStartTime;
 		}
 
 

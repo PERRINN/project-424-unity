@@ -2,7 +2,7 @@ using EdyCommonTools;
 using Project424;
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using VehiclePhysics.UI;
 using UnityEngine;
 using VehiclePhysics;
 
@@ -16,7 +16,7 @@ public class Autopilot : MonoBehaviour
     readonly PidController edyPID = new PidController();
 
     public float kp, ki, kd, maxForceP;
-    public bool autopilotON;
+    
     public int throttleControl;
     public int brakeControl;
 
@@ -28,6 +28,7 @@ public class Autopilot : MonoBehaviour
     int frame1;
     int frame2;
     bool runOnce = false;
+    bool autopilotON;
 
     VPDeviceInput m_deviceInput;
     float m_ffbForceIntensity;
@@ -71,6 +72,7 @@ public class Autopilot : MonoBehaviour
             if (autopilotON)
             {
                 autopilotON = false;
+                SteeringScreen.autopilotState = false;
                 if (m_deviceInput != null)
                 {
                     m_deviceInput.forceIntensity = m_ffbForceIntensity;
@@ -80,6 +82,7 @@ public class Autopilot : MonoBehaviour
             else
             {
                 autopilotON = true;
+                SteeringScreen.autopilotState = true;
                 if (m_deviceInput != null)
                 {
                     m_deviceInput.forceIntensity = 0.0f;
@@ -106,7 +109,7 @@ public class Autopilot : MonoBehaviour
 
     (int, int) AutopilotOnStart()
     {
-        int currentFrame = target.recordedData.Count - 1;
+        int currentFrame = target.currentFrame;
         float currentPosX = target.recordedData[currentFrame].position.x;
         float currentPosZ = target.recordedData[currentFrame].position.z;
 
@@ -264,6 +267,8 @@ public class Autopilot : MonoBehaviour
         AutopilotChart.integral = edyPID.integral;
         AutopilotChart.derivative = edyPID.derivative;
         AutopilotChart.output = edyPID.output;
+        SteeringScreen.bestTime = target.FramesToTime(frame3);
+        
 
         previousFrame = frame3;
 
