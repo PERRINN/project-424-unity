@@ -22,35 +22,7 @@ public class MapGenerator : MonoBehaviour
     [ContextMenu("Force")]
     private void Create()
     {
-        timeStep = Mathf.Max(timeStep, replay.timeStep);
-        int step = (int)(timeStep / replay.timeStep);
-        int newLength = replay.recordedData.Count / step;
-        points = new Vector3[newLength];
-
-        float minX, minZ, maxX, maxZ;
-        minX = minZ = float.PositiveInfinity;
-        maxX = maxZ = float.NegativeInfinity;
-
-        for (int i = 0; i < newLength; i++)
-        {
-            points[i] = replay.recordedData[i * step].position;
-
-            Vector3 test = points[i];
-
-            if (test.x < minX)
-                minX = test.x;
-
-            if (test.z < minZ)
-                minZ = test.z;
-
-            if (test.x > maxX)
-                maxX = test.x;
-
-            if (test.z > maxZ)
-                maxZ = test.z;
-        }
-
-        rect = new Rect(minX, minZ, maxX-minX, maxZ-minZ);
+        replay.GetPositions(timeStep, out points, out rect);
 
         float origin = Mathf.Min(rect.x, rect.y);
         float size = Mathf.Max(rect.width, rect.height);

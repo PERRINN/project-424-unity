@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using EdyCommonTools;
 using EdyCommonTools.EditorTools;
 using UnityEditor;
@@ -23,9 +24,23 @@ public class MapGeneratorEditor : Editor
     {
         DrawDefaultInspector();
 
+
+
         Rect graphRect = EditorGUILayout.GetControlRect(false, m_graphHeight);
 
         GUIDrawGraph(ref m_graph, graphRect, m_graphWidth, m_graphHeight);
+
+        if (GUILayout.Button("Save"))
+        {
+            //then Save To Disk as PNG
+            byte[] bytes = m_graph.texture.EncodeToPNG();
+            var dirPath = Application.dataPath + "/SaveImages/";
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+            File.WriteAllBytes(dirPath + "Image" + ".png", bytes);
+        }
     }
 
     void GUIDrawGraph(ref TextureCanvas graph, Rect position, int graphWidth, int graphHeight)
