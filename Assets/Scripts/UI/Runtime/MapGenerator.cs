@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Perrinn424.UI;
 using UnityEngine;
 using VehiclePhysics;
 
@@ -12,6 +13,7 @@ public class MapGenerator : MonoBehaviour
     public Vector3 [] points = new Vector3[0];
     public Rect rect;
 
+    public MapGeneratorXXX mapGeneratorXxx;
 
     private void Awake()
     {
@@ -22,15 +24,17 @@ public class MapGenerator : MonoBehaviour
     [ContextMenu("Force")]
     private void Create()
     {
-        replay.GetPositions(timeStep, out points, out rect);
+        mapGeneratorXxx = new MapGeneratorXXX(400, replay, timeStep);
 
-        float origin = Mathf.Min(rect.x, rect.y);
-        float size = Mathf.Max(rect.width, rect.height);
-        float augmentedSize = size * 0.1f;
+        //replay.GetPositions(timeStep, out points, out rect);
 
-        size += augmentedSize;
-        origin -= augmentedSize*0.5f;
-        rect = new Rect(origin, origin, size, size);
+        //float origin = Mathf.Min(rect.x, rect.y);
+        //float size = Mathf.Max(rect.width, rect.height);
+        //float augmentedSize = size * 0.1f;
+
+        //size += augmentedSize;
+        //origin -= augmentedSize*0.5f;
+        //rect = new Rect(origin, origin, size, size);
     }
 
     private void OnDrawGizmos()
