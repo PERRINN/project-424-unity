@@ -16,18 +16,13 @@ public class Autopilot : MonoBehaviour
     readonly PidController edyPID = new PidController();
 
     public float kp, ki, kd, maxForceP;
-    
-    public int throttleControl;
-    public int brakeControl;
+    public int throttleControl, brakeControl;
 
-    int cuts;
+    int sectionSize;
     float height = 0;
     Vector3 appliedForceV3;
 
     int showSteer, showBrake, showThrottle;
-    int frame1;
-    int frame2;
-    bool runOnce = false;
     bool autopilotON;
 
     VPDeviceInput m_deviceInput;
@@ -36,9 +31,7 @@ public class Autopilot : MonoBehaviour
     int previousFrame;
 
     public float offsetValue = -1.6885f;
-    public GameObject cube1;
-    public GameObject cube2;
-    public GameObject cube3, cube4;
+    public GameObject cube1, cube2, cube3, cube4;
 
     void OnEnable()
     {
@@ -54,8 +47,9 @@ public class Autopilot : MonoBehaviour
             return;
         }
 
+        SteeringScreen.autopilotState = false;
         recordedReplay = replayController.predefinedReplay.recordedData;
-        cuts = recordedReplay.Count / 500;
+        sectionSize = (int)Math.Sqrt(recordedReplay.Count);
 
         m_deviceInput = vehicleBase.GetComponentInChildren<VPDeviceInput>();
         if (m_deviceInput != null)
@@ -94,26 +88,15 @@ public class Autopilot : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Time.time > 0)
-        {
-            if (runOnce == false)
-            {
-                frame1 = AutopilotOnStart().Item1;
-                frame2 = AutopilotOnStart().Item2;
-                runOnce = true;
-            }
-
-            GetDistance();
-        }
+        if (Time.time > 0) { AutopilotOnStart(); }
     }
+    
 
-    (int, int) AutopilotOnStart()
+    void AutopilotOnStart()
     {
         int currentFrame = target.currentFrame;
         float currentPosX = target.recordedData[currentFrame].position.x;
         float currentPosZ = target.recordedData[currentFrame].position.z;
-
-        int sectionSize = recordedReplay.Count / cuts;
 
         int frame1 = 0;
         int frame2 = 0;
@@ -123,7 +106,7 @@ public class Autopilot : MonoBehaviour
         float minDistance1 = float.MaxValue;
         float minDistance2 = float.MaxValue;
 
-        for (int i = 0; i < cuts; i++)
+        for (int i = 0; i < sectionSize; i++)
         {
             float x = recordedReplay[sectionSize * i].position.x - currentPosX;
             float z = recordedReplay[sectionSize * i].position.z - currentPosZ;
@@ -144,19 +127,21 @@ public class Autopilot : MonoBehaviour
             }
         }
 
-        if (frame1 > frame2)
+        CompareTwoValues compareOneTwo = CompareValue(frame1, frame2);
+        frame1 = compareOneTwo.min;
+        frame2 = compareOneTwo.max;
+
+        if (frame1 == 0 && frame2 > recordedReplay.Count / 2)
         {
-            int temp;
-            temp = frame1;
             frame1 = frame2;
-            frame2 = temp;
+            frame2 = recordedReplay.Count - 1;
         }
 
         minDistance1 = float.MaxValue;
         minDistance2 = float.MaxValue;
 
         frame1 = (frame1 - 50 <= 0) ? 0 : frame1 -= 50;
-        frame2 = (frame2 + 100 >= recordedReplay.Count - 1) ? recordedReplay.Count - 1 : frame2 += 100;
+        frame2 = (frame2 + 50 >= recordedReplay.Count - 1) ? recordedReplay.Count - 1 : frame2 += 50;
 
         for (int i = frame1; i <= frame2; i++)
         {
@@ -179,66 +164,10 @@ public class Autopilot : MonoBehaviour
             }
         }
 
-        return (frame3, frame4);
-    }
-
-    void GetDistance()
-    {
-        int currentFrame = target.recordedData.Count - 1;
-        float currentPosX = target.recordedData[currentFrame].position.x;
-        float currentPosZ = target.recordedData[currentFrame].position.z;
-
-        float minDistance1 = float.MaxValue;
-        float minDistance2 = float.MaxValue;
-
-        int frame3 = 0;
-        int frame4 = 0;
-
-        if (frame2 + 5 > recordedReplay.Count - 1)
-        {
-            frame2 = recordedReplay.Count - 1;
-            if (frame2 == recordedReplay.Count - 1)
-            {
-                frame1 = AutopilotOnStart().Item1;
-                frame2 = AutopilotOnStart().Item2;
-            }
-        }
-
-        Vector3 offsetVehiclePos = getOffsetPosition(offsetValue, target.recordedData[currentFrame]);
-
-        for (int i = frame1 - 5; i <= frame2 + 5; i++)
-        {
-            Vector3 offsetReplayFrameInt = getOffsetPosition(offsetValue, recordedReplay[i]);
-            float x = offsetReplayFrameInt.x - offsetVehiclePos.x; //recordedReplay[i].position.x - currentPosX;
-            float z = offsetReplayFrameInt.z - offsetVehiclePos.z; //recordedReplay[i].position.z - currentPosZ;
-
-            float distance = (float)Math.Sqrt((x * x) + (z * z));
-
-            if (distance < minDistance1)
-            {
-                frame4 = frame3;
-                frame3 = i;
-                minDistance2 = minDistance1;
-                minDistance1 = distance;
-            }
-            else if (distance < minDistance2)
-            {
-                frame4 = i;
-                minDistance2 = distance;
-            }
-        }
-
-
         // Reference point offset: Recorded vehicle
         Vector3 offsetReplayFrame3 = getOffsetPosition(offsetValue, recordedReplay[frame3]);
         Vector3 offsetReplayFrame4 = getOffsetPosition(offsetValue, recordedReplay[frame4]);
-        
-
-        cube1.transform.position = rigidBody424.transform.position;
-        cube2.transform.position = offsetReplayFrame3;
-        cube3.transform.position = offsetVehiclePos;
-        cube4.transform.position = offsetReplayFrame4; // recordedReplay[frame3].position;
-
+        Vector3 offsetVehiclePos = getOffsetPosition(offsetValue, target.recordedData[currentFrame]);
 
         // get height
         float a = offsetReplayFrame3.x - offsetReplayFrame4.x; //recordedReplay[frame3].position.x - recordedReplay[frame4].position.x;
@@ -259,7 +188,8 @@ public class Autopilot : MonoBehaviour
 
         float checkHeight = area * 2 / minDistance3;
         height = (carPosX > 0) ? -checkHeight : checkHeight;
-        
+
+        // Telemetry
         AutopilotChart.frame3 = frame3;
         AutopilotChart.frame4 = frame4;
         AutopilotChart.errorDistance = height;
@@ -268,10 +198,6 @@ public class Autopilot : MonoBehaviour
         AutopilotChart.derivative = edyPID.derivative;
         AutopilotChart.output = edyPID.output;
         SteeringScreen.bestTime = target.FramesToTime(frame3);
-        
-
-        previousFrame = frame3;
-
 
         //get error force
         edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, kd);
@@ -283,15 +209,10 @@ public class Autopilot : MonoBehaviour
         appliedForceV3.y = 0;
         appliedForceV3.z = edyPID.output * sinD * 1.000f;
 
-
         //get recorded driver input
-        if (frame3 > frame4)
-        {
-            int temp;
-            temp = frame3;
-            frame3 = frame4;
-            frame4 = temp;
-        }
+        CompareTwoValues compareThreeFour = CompareValue(frame3, frame4);
+        frame3 = compareThreeFour.min;
+        frame4 = compareThreeFour.max;
 
         if (autopilotON)
         {
@@ -304,41 +225,26 @@ public class Autopilot : MonoBehaviour
             int progressive = (int)((minDistance3 - abc) / minDistance3 * 100);
 
             // Steer angle
-            int steerERR = recordedReplay[frame4].inputData[InputData.Steer] - recordedReplay[previousFrame].inputData[InputData.Steer];
-            showSteer = (steerERR * progressive / 100) + recordedReplay[previousFrame].inputData[InputData.Steer];
+            int steerERR = recordedReplay[frame4].inputData[InputData.Steer] - recordedReplay[frame3].inputData[InputData.Steer];
+            showSteer = (steerERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Steer];
             vehicleBase.data.Set(Channel.Input, InputData.Steer, showSteer);
 
             // Brake
-            int brakeERR = recordedReplay[frame4].inputData[InputData.Brake] - recordedReplay[previousFrame].inputData[InputData.Brake];
-            showBrake = (brakeERR * progressive / 100) + recordedReplay[previousFrame].inputData[InputData.Brake];
+            int brakeERR = recordedReplay[frame4].inputData[InputData.Brake] - recordedReplay[frame3].inputData[InputData.Brake];
+            showBrake = (brakeERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Brake];
             vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake * brakeControl / 100);
 
             // Throttle
-            int throttleERR = recordedReplay[frame4].inputData[InputData.Throttle] - recordedReplay[previousFrame].inputData[InputData.Throttle];
-            showThrottle = (throttleERR * progressive / 100) + recordedReplay[previousFrame].inputData[InputData.Throttle];
+            int throttleERR = recordedReplay[frame4].inputData[InputData.Throttle] - recordedReplay[frame3].inputData[InputData.Throttle];
+            showThrottle = (throttleERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Throttle];
             vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle * throttleControl / 100);
 
             // AutomaticGear
-            vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[previousFrame].inputData[InputData.AutomaticGear]);
+            vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[frame3].inputData[InputData.AutomaticGear]);
 
-        }
-
-        if (frame4 > frame2 && frame4 - frame2 < 3)
-        {
-            frame1 += 1;
-            frame2 += 1;
-        }
-        else if (frame3 < frame1 && frame1 - frame3 < 3)
-        {
-            frame1 -= 1;
-            frame2 -= 1;
-        }
-        else
-        {
-            frame1 = AutopilotOnStart().Item1;
-            frame2 = AutopilotOnStart().Item2;
         }
     }
+
 
     Vector3 getOffsetPosition(float offsetValue, VPReplay.Frame offsetTransform)
     {
@@ -356,5 +262,19 @@ public class Autopilot : MonoBehaviour
         positionOffset.z = carPosZoffset + offsetTransform.position.z;
 
         return positionOffset;
+    }
+
+    struct CompareTwoValues
+    {
+        public int min;
+        public int max;
+    }
+
+    CompareTwoValues CompareValue(int valueA, int valueB)
+    {
+        CompareTwoValues values = new CompareTwoValues();
+        values.min = valueA < valueB ? valueA : valueB;
+        values.max = valueA > valueB ? valueA : valueB;
+        return values;
     }
 }
