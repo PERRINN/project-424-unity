@@ -9,7 +9,7 @@ namespace Perrinn424.UI.Editor
     public class ReplayImageGenerator : EditorWindow
     {
         private VPReplayAsset replay;
-        public RepalyTexture replayTexture;
+        public ReplayTexture replayTexture;
 
         public float rate = 0.02f;
         public int resolution = 400;
@@ -67,7 +67,7 @@ namespace Perrinn424.UI.Editor
         {
             if (GUILayout.Button("Refresh") || replayTexture == null)
             {
-                replayTexture = new RepalyTexture(resolution, replay, rate);
+                replayTexture = new ReplayTexture(resolution, replay, rate);
             }
         }
 

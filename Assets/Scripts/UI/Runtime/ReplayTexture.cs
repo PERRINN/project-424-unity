@@ -4,7 +4,7 @@ using VehiclePhysics;
 
 namespace Perrinn424.UI
 {
-    public class RepalyTexture
+    public class ReplayTexture
     {
         public int Resolution { get; }
         private Rect localCoordinates;
@@ -12,7 +12,7 @@ namespace Perrinn424.UI
 
         private Vector3[] positions;
         public int SamplingCount => positions.Length;
-        public RepalyTexture(int resolution, VPReplayAsset replay, float timeStep)
+        public ReplayTexture(int resolution, VPReplayAsset replay, float timeStep)
         {
             this.Resolution = resolution;
 
