@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using EdyCommonTools;
 using EdyCommonTools.EditorTools;
 using UnityEditor;
@@ -33,13 +31,21 @@ public class MapGeneratorEditor : Editor
         if (GUILayout.Button("Save"))
         {
             //then Save To Disk as PNG
-            byte[] bytes = m_graph.texture.EncodeToPNG();
-            var dirPath = Application.dataPath + "/SaveImages/";
+            byte[] bytes = map.mapGeneratorXxx.canvas.texture.EncodeToPNG();
+
+            var relativePath = "/SaveImages/";
+            var dirPath = Application.dataPath + relativePath;
+            var fileName = "Image" + ".png";
+            var assetPath = dirPath + fileName;
             if (!Directory.Exists(dirPath))
             {
                 Directory.CreateDirectory(dirPath);
             }
-            File.WriteAllBytes(dirPath + "Image" + ".png", bytes);
+            File.WriteAllBytes(assetPath, bytes);
+            string unityPath = "Assets" + relativePath + fileName;
+            AssetDatabase.ImportAsset(unityPath, ImportAssetOptions.Default);
+            TextureImporter textureImporter = AssetImporter.GetAtPath(unityPath) as TextureImporter;
+            textureImporter.textureType = TextureImporterType.Sprite;
         }
     }
 
@@ -50,7 +56,7 @@ public class MapGeneratorEditor : Editor
             if (graph == null)
             {
                 graph = new TextureCanvas(graphWidth, graphHeight);
-                graph.alpha = 0.75f;
+                graph.alpha = 0.0f;
                 graph.color = GColor.black;
                 graph.Clear();
                 graph.Save();
@@ -68,7 +74,7 @@ public class MapGeneratorEditor : Editor
         Rect r = map.rect;
         graph.rect = r;
 
-
+        graph.alpha = 1f;
         graph.color = Color.white;
         graph.Line(r.x, r.y, r.x+r.width, r.y+r.height);
         Vector3[] points = map.points;
@@ -79,6 +85,7 @@ public class MapGeneratorEditor : Editor
             graph.Line(pointA.x, pointA.z, pointB.x, pointB.z);
         }
 
-        TextureCanvasEditor.InspectorDraw(graph, position);
+        //TextureCanvasEditor.InspectorDraw(graph, position);
+        TextureCanvasEditor.InspectorDraw(map.mapGeneratorXxx.canvas, position);
     }
 }
