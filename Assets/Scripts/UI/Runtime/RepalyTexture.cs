@@ -4,16 +4,17 @@ using VehiclePhysics;
 
 namespace Perrinn424.UI
 {
-    public class MapGeneratorXXX
+    public class RepalyTexture
     {
-        private int resolution;
+        public int Resolution { get; }
         private Rect localCoordinates;
         public TextureCanvas canvas;
 
         private Vector3[] positions;
-        public MapGeneratorXXX(int resolution, VPReplayAsset replay, float timeStep)
+        public int SamplingCount => positions.Length;
+        public RepalyTexture(int resolution, VPReplayAsset replay, float timeStep)
         {
-            this.resolution = resolution;
+            this.Resolution = resolution;
 
             replay.GetPositions(timeStep, out positions, out localCoordinates);
 
@@ -36,7 +37,7 @@ namespace Perrinn424.UI
 
         private void CreateCanvas()
         {
-            canvas = new TextureCanvas(resolution, resolution)
+            canvas = new TextureCanvas(Resolution, Resolution)
             {
                 alpha = 0.0f,
                 color = GColor.black
@@ -50,6 +51,7 @@ namespace Perrinn424.UI
 
             canvas.alpha = 1f;
             canvas.color = Color.white;
+            
             //canvas.Line(r.x, r.y, r.x + r.width, r.y + r.height);
             for (int i = 0; i < positions.Length - 1; i++)
             {

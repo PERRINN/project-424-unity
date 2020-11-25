@@ -1,38 +1,41 @@
 ﻿using UnityEngine;
 using VehiclePhysics;
 
-public static class ReplayAssetUtils
+namespace Perrinn424.UI
 {
-    public static void GetPositions(this VPReplayAsset replay, float timeStep, out Vector3[] positions, out Rect rect)
+    public static class ReplayAssetUtils
     {
-        timeStep = Mathf.Max(timeStep, replay.timeStep);
-        int step = (int)(timeStep / replay.timeStep);
-        int newLength = replay.recordedData.Count / step;
-        positions = new Vector3[newLength];
-
-        float minX, minZ, maxX, maxZ;
-        minX = minZ = float.PositiveInfinity;
-        maxX = maxZ = float.NegativeInfinity;
-
-        for (int i = 0; i < newLength; i++)
+        public static void GetPositions(this VPReplayAsset replay, float timeStep, out Vector3[] positions, out Rect rect)
         {
-            positions[i] = replay.recordedData[i * step].position;
+            timeStep = Mathf.Max(timeStep, replay.timeStep);
+            int step = (int)(timeStep / replay.timeStep);
+            int newLength = replay.recordedData.Count / step;
+            positions = new Vector3[newLength];
 
-            Vector3 test = positions[i];
+            float minX, minZ, maxX, maxZ;
+            minX = minZ = float.PositiveInfinity;
+            maxX = maxZ = float.NegativeInfinity;
 
-            if (test.x < minX)
-                minX = test.x;
+            for (int i = 0; i < newLength; i++)
+            {
+                positions[i] = replay.recordedData[i * step].position;
 
-            if (test.z < minZ)
-                minZ = test.z;
+                Vector3 test = positions[i];
 
-            if (test.x > maxX)
-                maxX = test.x;
+                if (test.x < minX)
+                    minX = test.x;
 
-            if (test.z > maxZ)
-                maxZ = test.z;
+                if (test.z < minZ)
+                    minZ = test.z;
+
+                if (test.x > maxX)
+                    maxX = test.x;
+
+                if (test.z > maxZ)
+                    maxZ = test.z;
+            }
+
+            rect = new Rect(minX, minZ, maxX - minX, maxZ - minZ);
         }
-
-        rect = new Rect(minX, minZ, maxX - minX, maxZ - minZ);
-    }
+    } 
 }
