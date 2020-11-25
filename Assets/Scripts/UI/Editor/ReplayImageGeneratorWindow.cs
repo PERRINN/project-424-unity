@@ -6,7 +6,7 @@ using VehiclePhysics;
 
 namespace Perrinn424.UI.Editor
 {
-    public class ReplayImageGenerator : EditorWindow
+    public class ReplayImageGeneratorWindow : EditorWindow
     {
         private VPReplayAsset replay;
         public ReplayTexture replayTexture;
@@ -19,7 +19,7 @@ namespace Perrinn424.UI.Editor
         static void Init()
         {
             // Get existing open window or if none, make a new one:
-            ReplayImageGenerator window = (ReplayImageGenerator)GetWindow(typeof(ReplayImageGenerator));
+            ReplayImageGeneratorWindow window = (ReplayImageGeneratorWindow)GetWindow(typeof(ReplayImageGeneratorWindow));
             window.Show();
         }
 
