@@ -76,10 +76,8 @@ public class Time_diff_919_IDR : MonoBehaviour
             }
         }
 
-      string text = "Time difference /919 : ";
-      text += $"{lapTimeDiffPo}\n";
-      text += "Time difference /IDR : ";
-      text += $"{lapTimeDiffVW}";
+      string text = $"Time difference /919    {lapTimeDiffPo,6}\n";
+      text += $"Time difference /IDR    {lapTimeDiffVW,6}";
 
       m_textBox.UpdateText(text);
     }
