@@ -22,7 +22,7 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 	public override void OnEnableVehicle ()
 		{
 		m_fixedStep = 0;
-		m_lastFixedStep = 0;
+		m_lastFixedStep = -1;
 
 		if (overlay.font == null)
 			overlay.font = defaultFont;
