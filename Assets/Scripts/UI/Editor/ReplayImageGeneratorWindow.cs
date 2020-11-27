@@ -75,9 +75,12 @@ namespace Perrinn424.UI.Editor
         {
             if (replayTexture != null)
             {
+                EditorGUILayout.BeginVertical("Box");
                 EditorGUILayout.LabelField("Frames", replayTexture.SamplingCount.ToString());
+                EditorGUILayout.RectField("Coordinates", replayTexture.WorldCoordinates);
+                EditorGUILayout.EndVertical();
                 Rect graphRect = EditorGUILayout.GetControlRect(false, replayTexture.Resolution);
-                TextureCanvasEditor.InspectorDraw(replayTexture.canvas, graphRect);
+                TextureCanvasEditor.InspectorDraw(replayTexture.Canvas, graphRect);
             }
         }
 
@@ -85,13 +88,11 @@ namespace Perrinn424.UI.Editor
         {
             if (GUILayout.Button("Save as Image"))
             {
-                string dirPath = "Assets/Replay Images/";
-
-                var imagePath = EditorUtility.SaveFilePanelInProject("Save Replay Image", replay.name + ".png", "png", "", dirPath);
+                var imagePath = EditorUtility.SaveFilePanelInProject("Save Replay Image", replay.name + ".png", "png", "");
 
                 if (imagePath.Length != 0)
                 {
-                    var pngData = replayTexture.canvas.texture.EncodeToPNG();
+                    var pngData = replayTexture.Texture.EncodeToPNG();
                     if (pngData != null)
                     {
                         SaveAndImport(imagePath, pngData);

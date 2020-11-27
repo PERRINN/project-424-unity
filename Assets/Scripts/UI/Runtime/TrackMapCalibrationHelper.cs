@@ -13,18 +13,14 @@ namespace Perrinn424.UI
         private TrackMap trackMap = default;
         [SerializeField]
         private Image reference = default;
-        [SerializeField]
-        private Transform worldReferenceParent = default;
 
         [SerializeField]
-        private VPReplayAsset replay;
+        private VPReplayAsset replay = default;
 
         [ContextMenu("Create References")]
         private void CreateReferences()
         {
-
             RemoveMapChilds();
-
 
             replay.GetPositions(0.1f, out var positions, out _);
             trackMap.trackReferences = new TrackMap.TrackReference[positions.Length];

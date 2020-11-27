@@ -49,6 +49,7 @@ namespace Perrinn424.UI
 
         [SerializeField]
         internal TrackReference[] trackReferences = default;
+
         void Update()
         {
             Matrix4x4 worldToCircuit = CalculateWorldToCircuitMatrix();
