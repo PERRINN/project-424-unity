@@ -1113,6 +1113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookAtPoint: {fileID: 4116892634923485606}
   attachToPoint: {fileID: 4116892635011510442}
+  driverCameraIsInterior: 0
   viewDistance: 5
   viewHeight: 1
   viewDamping: 3
@@ -1329,6 +1330,7 @@ MonoBehaviour:
   wheelSleepVelocity: 0.2
   advancedSuspensionDamper: 0
   suspensionDamperLimitFactor: 2
+  contactAngleAffectsTireForce: 1
   dontAdjustSuspensionForcePoint: 0
   disableSteerAngleFix: 0
   disableWheelReferenceFrameFix: 0
@@ -1533,8 +1535,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overlay:
     position: {x: 365, y: 390}
-    font: {fileID: 0}
-    fontSize: 12
+    font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
+    fontSize: 10
     fontColor: {r: 1, g: 1, b: 1, a: 1}
   defaultFont: {fileID: 0}
 --- !u!114 &5173841932198281398
