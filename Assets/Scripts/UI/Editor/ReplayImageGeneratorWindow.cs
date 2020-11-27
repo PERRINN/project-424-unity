@@ -36,9 +36,11 @@ namespace Perrinn424.UI.Editor
 
             DrawRefresh();
 
-            DrawReplayImage();
+            DrawInfo();
 
             DrawSave();
+
+            DrawReplayImage();
         }
 
         private void DrawReplayData()
@@ -71,14 +73,22 @@ namespace Perrinn424.UI.Editor
             }
         }
 
-        private void DrawReplayImage()
+        private void DrawInfo()
         {
             if (replayTexture != null)
             {
                 EditorGUILayout.BeginVertical("Box");
+                EditorGUILayout.LabelField("Info");
                 EditorGUILayout.LabelField("Frames", replayTexture.SamplingCount.ToString());
                 EditorGUILayout.RectField("Coordinates", replayTexture.WorldCoordinates);
                 EditorGUILayout.EndVertical();
+            }
+        }
+
+        private void DrawReplayImage()
+        {
+            if (replayTexture != null)
+            {
                 Rect graphRect = EditorGUILayout.GetControlRect(false, replayTexture.Resolution);
                 TextureCanvasEditor.InspectorDraw(replayTexture.Canvas, graphRect);
             }
