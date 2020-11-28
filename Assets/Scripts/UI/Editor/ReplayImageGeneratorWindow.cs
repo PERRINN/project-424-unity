@@ -9,11 +9,12 @@ namespace Perrinn424.UI.Editor
     public class ReplayImageGeneratorWindow : EditorWindow
     {
         private VPReplayAsset replay;
-        public ReplayTexture replayTexture;
+        private ReplayTexture replayTexture;
 
-        public float rate = 0.02f;
-        public int resolution = 400;
+        private float rate = 0.02f;
+        private int resolution = 400;
         private UnityEditor.Editor replayEditor;
+        private Vector2 scroll;
 
         [MenuItem("Tools/Vehicle Physics/Replay Image Generator")]
         static void Init()
@@ -89,8 +90,10 @@ namespace Perrinn424.UI.Editor
         {
             if (replayTexture != null)
             {
+                scroll = EditorGUILayout.BeginScrollView(scroll);
                 Rect graphRect = EditorGUILayout.GetControlRect(false, replayTexture.Resolution);
                 TextureCanvasEditor.InspectorDraw(replayTexture.Canvas, graphRect);
+                EditorGUILayout.EndScrollView();
             }
         }
 
