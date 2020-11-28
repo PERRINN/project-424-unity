@@ -34,7 +34,7 @@ namespace VehiclePhysics.EditorTools
 public class DllProjectUtility
 	{
 	static string dllPath = @"Assets\Vehicle Physics Pro\Sdk\VehiclePhysics.dll";
-	static string sdkPath = @"Assets\Vehicle Physics Pro\Sdk\VehiclePhysicsPro sdk-v9-a5.csv";
+	static string sdkPath = @"Assets\Vehicle Physics Pro\Sdk\VehiclePhysicsPro sdk-v9-a6.csv";
 
 
 	struct Class

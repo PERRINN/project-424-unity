@@ -16,19 +16,16 @@ public class Time_diff_919_IDR : MonoBehaviour
 
   static LapTimer lapTime = new LapTimer();
 
-    // Start is called before the first frame update
-    public void Start()
+
+    void OnEnable()
     {
       m_textBox.settings = overlay;
       m_textBox.header = "Lap time comparison";
 
       if (overlay.font == null)
         overlay.font = defaultFont;
-    }
 
-    void OnEnable()
-    {
-        lapTime = (LapTimer)FindObjectOfType(typeof(LapTimer));
+      lapTime = (LapTimer)FindObjectOfType(typeof(LapTimer));
     }
 
 
@@ -79,34 +76,24 @@ public class Time_diff_919_IDR : MonoBehaviour
             }
         }
 
-      string text = "Time difference /919 : ";
-      text += $"{lapTimeDiffPo}\n";
-      text += "Time difference /IDR : ";
-      text += $"{lapTimeDiffVW}";
+      string text = $"Time difference /919    {lapTimeDiffPo,6}\n";
+      text += $"Time difference /IDR    {lapTimeDiffVW,6}";
 
-        m_textBox.UpdateText(text);
-      }
+      m_textBox.UpdateText(text);
+    }
 
-        public float LapTimeComparison(float reference, float proto)
-          {
-            float result = proto-reference;
-            return result;
-          }
+
+    public float LapTimeComparison(float reference, float proto)
+    {
+      float result = proto-reference;
+      return result;
+    }
+
 
     void OnGUI ()
     {
-    m_textBox.OnGUI();
+      m_textBox.OnGUI();
     }
 
-    /*void UpdateTextProperties ()
-      {
-      m_style.font = font;
-      m_style.fontSize = 16;
-      m_style.normal.textColor = Color.white;
-
-      m_bigStyle.font = font;
-      m_bigStyle.fontSize = 20;
-      m_bigStyle.normal.textColor = Color.white;
-      }*/
-}
+  }
 }
