@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Perrinn424.UI
+namespace Perrinn424.TrackMapSystem
 {
     [ExecuteInEditMode]
     public class TrackMap : MonoBehaviour

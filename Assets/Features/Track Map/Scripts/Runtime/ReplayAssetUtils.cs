@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using VehiclePhysics;
 
-namespace Perrinn424.UI
+namespace Perrinn424.TrackMapSystem
 {
     public static class ReplayAssetUtils
     {

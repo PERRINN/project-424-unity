@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using VehiclePhysics;
 
-namespace Perrinn424.UI.Editor
+namespace Perrinn424.TrackMapSystem.Editor
 {
     public class ReplayImageGeneratorWindow : EditorWindow
     {
