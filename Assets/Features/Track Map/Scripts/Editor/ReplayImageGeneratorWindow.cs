@@ -16,6 +16,9 @@ namespace Perrinn424.TrackMapSystem.Editor
         private UnityEditor.Editor replayEditor;
         private Vector2 scroll;
 
+        private bool invertX;
+        private bool invertZ;
+
         [MenuItem("Tools/Vehicle Physics/Replay Image Generator")]
         static void Init()
         {
@@ -58,6 +61,8 @@ namespace Perrinn424.TrackMapSystem.Editor
             rate = EditorGUILayout.FloatField("Rate", rate);
             EditorGUILayout.LabelField($"{rate:F2} s", $"{1f / rate:F2} Hz");
             EditorGUILayout.EndHorizontal();
+            invertX = EditorGUILayout.Toggle("Invert X axis", invertX);
+            invertZ = EditorGUILayout.Toggle("Invert Z axis", invertZ);
 
             if (rate < replay.timeStep)
             {
@@ -70,7 +75,10 @@ namespace Perrinn424.TrackMapSystem.Editor
         {
             if (GUILayout.Button("Refresh") || replayTexture == null)
             {
-                replayTexture = new ReplayTexture(resolution, replay, rate);
+                Vector3 scale = Vector3.one;
+                scale.x = invertX ? -1f : 1f;
+                scale.z = invertZ ? -1f : 1f;
+                replayTexture = new ReplayTexture(resolution, replay, rate, scale);
             }
         }
 

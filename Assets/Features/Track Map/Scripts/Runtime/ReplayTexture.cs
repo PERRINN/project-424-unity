@@ -15,15 +15,28 @@ namespace Perrinn424.TrackMapSystem
         public TextureCanvas Canvas { get; private set; }
         public Texture2D Texture => Canvas.texture;
 
-        public ReplayTexture(int resolution, VPReplayAsset replay, float timeStep)
+        public ReplayTexture(int resolution, VPReplayAsset replay, float timeStep, Vector3 scale)
         {
             this.Resolution = resolution;
 
             replay.GetPositions(timeStep, out positions, out Rect r);
+
+            RescalePositions(scale);
+
             WorldCoordinates = r;
 
             ResizeLocalCoordinates();
             CreateCanvas();
+        }
+
+        private void RescalePositions(Vector3 scale)
+        {
+            Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, scale);
+
+            for (int i = 0; i < positions.Length; i++)
+            {
+                positions[i] = m.MultiplyPoint3x4(positions[i]);
+            }
         }
 
         private void ResizeLocalCoordinates()
