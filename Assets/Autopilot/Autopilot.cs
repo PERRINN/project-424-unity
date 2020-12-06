@@ -28,7 +28,6 @@ public class Autopilot : MonoBehaviour
     VPDeviceInput m_deviceInput;
     float m_ffbForceIntensity;
     float m_ffbDamperCoefficient;
-    int previousFrame;
 
     public float offsetValue = -1.6885f;
     public GameObject cube1, cube2, cube3, cube4;
@@ -49,7 +48,7 @@ public class Autopilot : MonoBehaviour
 
         SteeringScreen.autopilotState = false;
         recordedReplay = replayController.predefinedReplay.recordedData;
-        sectionSize = (int)Math.Sqrt(recordedReplay.Count);
+        sectionSize = (int)Math.Sqrt(recordedReplay.Count); // Breakdown recorded replay into even sections
 
         m_deviceInput = vehicleBase.GetComponentInChildren<VPDeviceInput>();
         if (m_deviceInput != null)
@@ -90,114 +89,126 @@ public class Autopilot : MonoBehaviour
     {
         if (Time.time > 0) { AutopilotOnStart(); }
     }
-    
 
     void AutopilotOnStart()
     {
+        // Current Vehicle Position
         int currentFrame = target.currentFrame;
         float currentPosX = target.recordedData[currentFrame].position.x;
         float currentPosZ = target.recordedData[currentFrame].position.z;
 
-        int frame1 = 0;
-        int frame2 = 0;
-        int frame3 = 0;
-        int frame4 = 0;
+        int sectionClosestFrame1 = 0;
+        int sectionClosestFrame2 = 0;
+        int closestFrame1 = 0;
+        int closestFrame2 = 0;
 
-        float minDistance1 = float.MaxValue;
-        float minDistance2 = float.MaxValue;
+        float closestDisFrame1 = float.MaxValue;
+        float closestDisFrame2 = float.MaxValue;
 
-        for (int i = 0; i < sectionSize; i++)
+        // Search two closest section frames
+        for (int i = 0; i <= sectionSize; i++)
         {
-            float x = recordedReplay[sectionSize * i].position.x - currentPosX;
-            float z = recordedReplay[sectionSize * i].position.z - currentPosZ;
+            int recordedFrameNum = (i == sectionSize) ? recordedReplay.Count - sectionSize : sectionSize * i;
 
-            float distance = (float)Math.Sqrt((x * x) + (z * z));
+            float x = recordedReplay[recordedFrameNum].position.x - currentPosX;
+            float z = recordedReplay[recordedFrameNum].position.z - currentPosZ;
 
-            if (distance < minDistance1)
+            float distanceCalculation = (float)Math.Sqrt((x * x) + (z * z));
+
+            if (distanceCalculation < closestDisFrame1)
             {
-                frame2 = frame1;
-                frame1 = sectionSize * i;
-                minDistance2 = minDistance1;
-                minDistance1 = distance;
+                sectionClosestFrame2 = sectionClosestFrame1;
+                sectionClosestFrame1 = recordedFrameNum;
+                closestDisFrame2 = closestDisFrame1;
+                closestDisFrame1 = distanceCalculation;
             }
-            else if (distance < minDistance2)
+            else if (distanceCalculation < closestDisFrame2)
             {
-                frame2 = sectionSize * i;
-                minDistance2 = distance;
+                sectionClosestFrame1 = recordedFrameNum;
+                closestDisFrame2 = distanceCalculation;
             }
         }
+        
+        CompareTwoValues compareOneTwo = CompareValue(sectionClosestFrame1, sectionClosestFrame2);
+        sectionClosestFrame1 = compareOneTwo.min;
+        sectionClosestFrame2 = compareOneTwo.max;
 
-        CompareTwoValues compareOneTwo = CompareValue(frame1, frame2);
-        frame1 = compareOneTwo.min;
-        frame2 = compareOneTwo.max;
-
-        if (frame1 == 0 && frame2 > recordedReplay.Count / 2)
+        // Boundary search conditions
+        if (sectionClosestFrame1 == 0 && sectionClosestFrame2 > recordedReplay.Count / 2)
         {
-            frame1 = frame2;
-            frame2 = recordedReplay.Count - 1;
+            sectionClosestFrame1 = sectionClosestFrame2;
+            sectionClosestFrame2 = recordedReplay.Count - 1;
+        }
+        else
+        if (sectionClosestFrame1 == sectionSize && sectionClosestFrame2 == recordedReplay.Count - sectionSize)
+        {
+            sectionClosestFrame1 = sectionSize * sectionSize;
         }
 
-        minDistance1 = float.MaxValue;
-        minDistance2 = float.MaxValue;
+        // Reset Distance value
+        closestDisFrame1 = float.MaxValue;
+        closestDisFrame2 = float.MaxValue;
 
-        frame1 = (frame1 - 50 <= 0) ? 0 : frame1 -= 50;
-        frame2 = (frame2 + 50 >= recordedReplay.Count - 1) ? recordedReplay.Count - 1 : frame2 += 50;
+        // Boundary search conditions
+        sectionClosestFrame1 = (sectionClosestFrame1 - sectionSize / 2 <= 0) ? 0 : sectionClosestFrame1 -= sectionSize / 2;
+        sectionClosestFrame2 = (sectionClosestFrame2 + sectionSize / 2 >= recordedReplay.Count) ? recordedReplay.Count - 1 : sectionClosestFrame2 += sectionSize / 2;
 
-        for (int i = frame1; i <= frame2; i++)
+        // Search two closest frames
+        for (int i = sectionClosestFrame1; i <= sectionClosestFrame2; i++)
         {
             float x = recordedReplay[i].position.x - currentPosX;
             float z = recordedReplay[i].position.z - currentPosZ;
 
-            float distance = (float)Math.Sqrt((x * x) + (z * z));
+            float distanceCalculation = (float)Math.Sqrt((x * x) + (z * z));
 
-            if (distance < minDistance1)
+            if (distanceCalculation < closestDisFrame1)
             {
-                frame4 = frame3;
-                frame3 = i;
-                minDistance2 = minDistance1;
-                minDistance1 = distance;
+                closestFrame2 = closestFrame1;
+                closestFrame1 = i;
+                closestDisFrame2 = closestDisFrame1;
+                closestDisFrame1 = distanceCalculation;
             }
-            else if (distance < minDistance2)
+            else if (distanceCalculation < closestDisFrame2)
             {
-                frame4 = i;
-                minDistance2 = distance;
+                closestFrame2 = i;
+                closestDisFrame2 = distanceCalculation;
             }
         }
 
         // Reference point offset: Recorded vehicle
-        Vector3 offsetReplayFrame3 = getOffsetPosition(offsetValue, recordedReplay[frame3]);
-        Vector3 offsetReplayFrame4 = getOffsetPosition(offsetValue, recordedReplay[frame4]);
-        Vector3 offsetVehiclePos = getOffsetPosition(offsetValue, target.recordedData[currentFrame]);
+        Vector3 offsetFromClosestFrame1 = getOffsetPosition(offsetValue, recordedReplay[closestFrame1]);
+        Vector3 offsetFromClosestFrame2 = getOffsetPosition(offsetValue, recordedReplay[closestFrame2]);
+        Vector3 offsetFromCurrentVehiclePos = getOffsetPosition(offsetValue, target.recordedData[currentFrame]);
 
         // get height
-        float a = offsetReplayFrame3.x - offsetReplayFrame4.x; //recordedReplay[frame3].position.x - recordedReplay[frame4].position.x;
-        float b = offsetReplayFrame3.z - offsetReplayFrame4.z; //recordedReplay[frame3].position.z - recordedReplay[frame4].position.z;
-        float minDistance3 = (float)Math.Sqrt((a * a) + (b * b));
-        float s = (minDistance1 + minDistance2 + minDistance3) / 2;
-        float chkcal = s * (s - minDistance1) * (s - minDistance2) * (s - minDistance3);
+        float valueDiffPosX = offsetFromClosestFrame1.x - offsetFromClosestFrame2.x; //recordedReplay[frame3].position.x - recordedReplay[frame4].position.x;
+        float valueDiffPosZ = offsetFromClosestFrame1.z - offsetFromClosestFrame2.z; //recordedReplay[frame3].position.z - recordedReplay[frame4].position.z;
+        float distanceBetweenTwoFrames = (float)Math.Sqrt((valueDiffPosX * valueDiffPosX) + (valueDiffPosZ * valueDiffPosZ));
+        float semiPerimeter = (closestDisFrame1 + closestDisFrame2 + distanceBetweenTwoFrames) / 2;
+        float tryCatchArea = semiPerimeter * (semiPerimeter - closestDisFrame1) * (semiPerimeter - closestDisFrame2) * (semiPerimeter - distanceBetweenTwoFrames);
 
-        chkcal = chkcal < 0 ? 0 : chkcal;
+        tryCatchArea = tryCatchArea < 0 ? 0 : tryCatchArea;
 
-        float area = (float)Math.Sqrt(chkcal);
-        float errX = offsetReplayFrame3.x - offsetVehiclePos.x; //recordedReplay[frame3].position.x - currentPosX;
-        float errZ = offsetReplayFrame3.z - offsetVehiclePos.z; //recordedReplay[frame3].position.z - currentPosZ;
-        float degree = -(float)(Math.PI * recordedReplay[frame3].rotation.eulerAngles.y / 180);
+        float area = (float)Math.Sqrt(tryCatchArea);
+        float errX = offsetFromClosestFrame1.x - offsetFromCurrentVehiclePos.x; //recordedReplay[frame3].position.x - currentPosX;
+        float errZ = offsetFromClosestFrame1.z - offsetFromCurrentVehiclePos.z; //recordedReplay[frame3].position.z - currentPosZ;
+        float degree = -(float)(Math.PI * recordedReplay[closestFrame1].rotation.eulerAngles.y / 180);
         float cosD = (float)Math.Cos(degree);
         float sinD = (float)Math.Sin(degree);
         float carPosX = (errX * cosD) + (errZ * sinD);
 
-        float checkHeight = area * 2 / minDistance3;
+        float checkHeight = area * 2 / distanceBetweenTwoFrames;
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
         // Telemetry
-        AutopilotChart.frame3 = frame3;
-        AutopilotChart.frame4 = frame4;
+        AutopilotChart.closestFrame1 = closestFrame1;
+        AutopilotChart.closestFrame2 = closestFrame2;
         AutopilotChart.errorDistance = height;
         AutopilotChart.proportional = edyPID.proportional;
         AutopilotChart.integral = edyPID.integral;
         AutopilotChart.derivative = edyPID.derivative;
         AutopilotChart.output = edyPID.output;
-        SteeringScreen.bestTime = target.FramesToTime(frame3);
+        SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
 
         //get error force
         edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, kd);
@@ -210,37 +221,37 @@ public class Autopilot : MonoBehaviour
         appliedForceV3.z = edyPID.output * sinD * 1.000f;
 
         //get recorded driver input
-        CompareTwoValues compareThreeFour = CompareValue(frame3, frame4);
-        frame3 = compareThreeFour.min;
-        frame4 = compareThreeFour.max;
+        CompareTwoValues compareThreeFour = CompareValue(closestFrame1, closestFrame2);
+        closestFrame1 = compareThreeFour.min;
+        closestFrame2 = compareThreeFour.max;
 
         if (autopilotON)
         {
-            rigidBody424.AddForceAtPosition(appliedForceV3, offsetVehiclePos); // transform.position rigidBody424.centerOfMass
+            rigidBody424.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
 
-            float nextFrameX = recordedReplay[frame4].position.x - currentPosX;
-            float nextFrameZ = recordedReplay[frame4].position.z - currentPosZ;
+            float nextFrameX = recordedReplay[closestFrame2].position.x - currentPosX;
+            float nextFrameZ = recordedReplay[closestFrame2].position.z - currentPosZ;
             float nextFrameDistance = (float)Math.Sqrt((nextFrameX * nextFrameX) + (nextFrameZ * nextFrameZ));
-            float abc = (float)Math.Sqrt((nextFrameDistance * nextFrameDistance) - (checkHeight * checkHeight));
-            int progressive = (int)((minDistance3 - abc) / minDistance3 * 100);
+            float abdc = (float)Math.Sqrt((nextFrameDistance * nextFrameDistance) - (checkHeight * checkHeight));
+            int progressive = (int)((distanceBetweenTwoFrames - abdc) / distanceBetweenTwoFrames * 100);
 
             // Steer angle
-            int steerERR = recordedReplay[frame4].inputData[InputData.Steer] - recordedReplay[frame3].inputData[InputData.Steer];
-            showSteer = (steerERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Steer];
+            int steerERR = recordedReplay[closestFrame2].inputData[InputData.Steer] - recordedReplay[closestFrame1].inputData[InputData.Steer];
+            showSteer = (steerERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Steer];
             vehicleBase.data.Set(Channel.Input, InputData.Steer, showSteer);
 
             // Brake
-            int brakeERR = recordedReplay[frame4].inputData[InputData.Brake] - recordedReplay[frame3].inputData[InputData.Brake];
-            showBrake = (brakeERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Brake];
+            int brakeERR = recordedReplay[closestFrame2].inputData[InputData.Brake] - recordedReplay[closestFrame1].inputData[InputData.Brake];
+            showBrake = (brakeERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Brake];
             vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake * brakeControl / 100);
 
             // Throttle
-            int throttleERR = recordedReplay[frame4].inputData[InputData.Throttle] - recordedReplay[frame3].inputData[InputData.Throttle];
-            showThrottle = (throttleERR * progressive / 100) + recordedReplay[frame3].inputData[InputData.Throttle];
+            int throttleERR = recordedReplay[closestFrame2].inputData[InputData.Throttle] - recordedReplay[closestFrame1].inputData[InputData.Throttle];
+            showThrottle = (throttleERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Throttle];
             vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle * throttleControl / 100);
 
             // AutomaticGear
-            vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[frame3].inputData[InputData.AutomaticGear]);
+            vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[closestFrame1].inputData[InputData.AutomaticGear]);
 
         }
     }

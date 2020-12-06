@@ -637,8 +637,8 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 	public class AutopilotChart : PerformanceChart
 	{
-		public static int frame3 { get; set; }
-		public static int frame4 { get; set; }
+		public static int closestFrame1 { get; set; }
+		public static int closestFrame2 { get; set; }
 		public static float errorDistance { get; set; }
 		public static float proportional { get; set; }
 		public static float integral { get; set; }
@@ -671,13 +671,13 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 		public override void SetupChannels()
 		{
-			m_frame3 = dataLogger.NewChannel("Frame3");
+			m_frame3 = dataLogger.NewChannel("ClosestFrameOne");
 			m_frame3.color = GColor.yellow;
 			m_frame3.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
 			m_frame3.valueFormat = "0.00";
 			m_frame3.captionPositionY = 1;
 
-			m_frame4 = dataLogger.NewChannel("Frame4");
+			m_frame4 = dataLogger.NewChannel("ClosestFrameTwo");
 			m_frame4.color = GColor.yellow;
 			m_frame4.SetOriginAndSpan(11.5f, 1.0f, 50000.0f);
 			m_frame4.valueFormat = "0.00";
@@ -716,8 +716,8 @@ public class SuspensionAnalysisChart : PerformanceChart
 
 		public override void RecordData()
 		{
-			m_frame3.Write(frame3);
-			m_frame4.Write(frame4);
+			m_frame3.Write(closestFrame1);
+			m_frame4.Write(closestFrame2);
 			m_error.Write(errorDistance);
 			m_proportional.Write(proportional);
 			m_integral.Write(integral);
