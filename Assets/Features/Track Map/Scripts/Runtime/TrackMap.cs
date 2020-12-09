@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Perrinn424.UI
+namespace Perrinn424.TrackMapSystem
 {
     [ExecuteInEditMode]
     public class TrackMap : MonoBehaviour
@@ -49,6 +49,7 @@ namespace Perrinn424.UI
 
         [SerializeField]
         internal TrackReference[] trackReferences = default;
+
         void Update()
         {
             Matrix4x4 worldToCircuit = CalculateWorldToCircuitMatrix();
