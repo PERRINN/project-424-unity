@@ -30,7 +30,6 @@ public class Autopilot : MonoBehaviour
     float m_ffbDamperCoefficient;
 
     public float offsetValue = -1.6885f;
-    public GameObject cube1, cube2, cube3, cube4;
 
     void OnEnable()
     {
@@ -128,7 +127,7 @@ public class Autopilot : MonoBehaviour
                 closestDisFrame2 = distanceCalculation;
             }
         }
-        
+
         CompareTwoValues compareOneTwo = CompareValue(sectionClosestFrame1, sectionClosestFrame2);
         sectionClosestFrame1 = compareOneTwo.min;
         sectionClosestFrame2 = compareOneTwo.max;
