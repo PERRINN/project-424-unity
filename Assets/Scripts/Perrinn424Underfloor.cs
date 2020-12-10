@@ -110,4 +110,12 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 		vehicle.cachedRigidbody.AddForceAtPosition(verticalForce + dragForce, hitInfo.point);
 		}
+
+
+	// The OnDrawGizmos method makes the component appear at the Scene view's Gizmos dropdown menu,
+	// Also causes the gizmo to be hidden if the component inspector is collapsed even in GizmoType.NonSelected mode.
+
+	void OnDrawGizmos ()
+		{
+		}
 	}
