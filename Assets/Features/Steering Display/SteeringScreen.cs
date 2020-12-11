@@ -33,11 +33,11 @@ namespace VehiclePhysics.UI
         float drsPosition;
         //bool autopilotState = false;
 
-        public static float bestTime { get; set; }
-        public static float trackTime { get; set; }
-        public static float batSOC { get; set; }
-        public static float batCapacity { get; set; }
-        public static bool autopilotState { get; set; }
+        public static float bestTime { get; set; } //Autopilot.cs
+        public static float trackTime { get; set; } //LapTimer.cs
+        public static float batSOC { get; set; } //batteryModel.cs
+        public static float batCapacity { get; set; } //batteryModel.cs
+        public static bool autopilotState { get; set; } //Autopilot.cs
 
         void OnEnable()
         {
@@ -191,7 +191,7 @@ namespace VehiclePhysics.UI
             {
                 float compare = trackTime - bestTime;
 
-                timeDifference.text = compare >= 0 ? compare.ToString("+" + "0.00") : compare.ToString("0.00");
+                timeDifference.text = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-" + "0.00") : compare.ToString("+" + "0.00");
             }
 
             // Battery SOC
