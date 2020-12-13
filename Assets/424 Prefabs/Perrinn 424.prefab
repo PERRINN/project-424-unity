@@ -1517,10 +1517,6 @@ MonoBehaviour:
   throttleControl: 100
   brakeControl: 100
   offsetValue: 0
-  cube1: {fileID: 0}
-  cube2: {fileID: 0}
-  cube3: {fileID: 0}
-  cube4: {fileID: 0}
 --- !u!114 &2201592948696730592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1534,7 +1530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlay:
-    position: {x: 365, y: 390}
+    position: {x: 400, y: 10}
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 10
     fontColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1551,7 +1547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af31100b17d7e99408a0a40bcfad2679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 8, y: 535}
+  position: {x: 8, y: 10}
   font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
   fontSize: 10
   fontColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1694,7 +1690,7 @@ MonoBehaviour:
   frontReference: {fileID: 4116892635620062688}
   rearReference: {fileID: 4116892635474530970}
   debugMarks: 0
-  showTelemetry: 1
+  showTelemetry: 0
   telemetrySettings:
     position: {x: 365, y: 290}
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}

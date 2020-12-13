@@ -10,8 +10,6 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 	{
 	public GUITextBox.Settings overlay = new GUITextBox.Settings();
 
-	// Trick to configure a default font to the telemetry box. Configure it at the script settings.
-	[HideInInspector] public Font defaultFont;
 
 	GUITextBox m_textBox = new GUITextBox();
 	StringBuilder m_text = new StringBuilder(1024);
@@ -19,13 +17,21 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 	int m_lastFixedStep;
 
 
+	// Trick to assign a default font to the GUI box. Configure it at the script settings.
+
+	[HideInInspector] public Font defaultFont;
+
+	void OnValidate ()
+		{
+		if (overlay.font == null)
+			overlay.font = defaultFont;
+		}
+
+
 	public override void OnEnableVehicle ()
 		{
 		m_fixedStep = 0;
 		m_lastFixedStep = -1;
-
-		if (overlay.font == null)
-			overlay.font = defaultFont;
 
 		m_textBox.settings = overlay;
 		m_textBox.header = "424 Telemetry";
