@@ -14,7 +14,7 @@ public class Time_diff_919_IDR : MonoBehaviour
 
 	GUITextBox m_textBox = new GUITextBox();
 
-  static LapTimer lapTime = new LapTimer();
+  static LapTimer lapTime;
 
 
     void OnEnable()
@@ -26,6 +26,11 @@ public class Time_diff_919_IDR : MonoBehaviour
         overlay.font = defaultFont;
 
       lapTime = (LapTimer)FindObjectOfType(typeof(LapTimer));
+      if (lapTime == null)
+        {
+        enabled = false;
+        return;
+        }
     }
 
 
