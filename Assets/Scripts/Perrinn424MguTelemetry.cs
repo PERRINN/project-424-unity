@@ -1,6 +1,7 @@
 
 
 using UnityEngine;
+using System.Text;
 using VehiclePhysics;
 using EdyCommonTools;
 
@@ -9,28 +10,52 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 	{
 	public GUITextBox.Settings overlay = new GUITextBox.Settings();
 
-	// Trick to apply a default font to the telemetry box. Configure it at the script settings.
-	[HideInInspector] public Font defaultFont;
 
 	GUITextBox m_textBox = new GUITextBox();
+	StringBuilder m_text = new StringBuilder(1024);
+	int m_fixedStep;
+	int m_lastFixedStep;
 
 
-	public override void OnEnableVehicle ()
+	// Trick to assign a default font to the GUI box. Configure it at the script settings.
+
+	[HideInInspector] public Font defaultFont;
+
+	void OnValidate ()
 		{
-		m_textBox.settings = overlay;
-		m_textBox.header = "424 Telemetry";
-
 		if (overlay.font == null)
 			overlay.font = defaultFont;
 		}
 
 
+	public override void OnEnableVehicle ()
+		{
+		m_fixedStep = 0;
+		m_lastFixedStep = -1;
+
+		m_textBox.settings = overlay;
+		m_textBox.header = "424 Telemetry";
+		}
+
+
+	public override void FixedUpdateVehicle()
+		{
+		m_fixedStep++;
+		}
+
+
 	public override void UpdateVehicle ()
 		{
-		// m_textStyle.font = font;
-		// m_textStyle.fontSize = fontSize;
-		// m_textStyle.normal.textColor = fontColor;
+		if (m_fixedStep > m_lastFixedStep)
+			{
+			UpdateTelemetryText();
+			m_lastFixedStep = m_fixedStep;
+			}
+		}
 
+
+	void UpdateTelemetryText ()
+		{
 		// Gather all data
 
 		int[] input = vehicle.data.Get(Channel.Input);
@@ -63,22 +88,25 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		float rearShafts = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ShaftsTorque] / 1000.0f;
 		float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
 
-		string text  = "                    Throttle      Brake    \n";
-		text += $"Pedal Position        {throttlePosition*100,3:0.} %        {brakePosition*100,3:0.} %   \n";
-		text += $"Input                 {throttleInput*100,3:0.} %      {brakePressure,5:0.0} bar \n\n";
-		text += "                    MGU Front    MGU Rear    Balance (%)\n";
-		text += $"Rpm                  {frontRpm,6:0.}      {rearRpm,6:0.}        {GetBalanceStr(frontRpm, rearRpm),5}\n";
-		text += $"Load (%)             {frontLoad*100,6:0.0}      {rearLoad*100,6:0.0}        {GetBalanceStr(frontLoad, rearLoad),5}\n\n";
-		text += $"Electrical (kW)      {frontPower,6:0.0}      {rearPower,6:0.0}        {GetBalanceStr(frontPower, rearPower),5}\n";
-		text += $"Electrical (Nm)      {frontElectrical,6:0.}      {rearElectrical,6:0.}        {GetBalanceStr(frontElectrical, rearElectrical),5}\n";
-		text += $"Efficiency (%)       {frontEfficiency*100,6:0.0}      {rearEfficiency*100,6:0.0}        {GetBalanceStr(frontEfficiency, rearEfficiency),5}  \n\n";
-		text += $"Mechanical (Nm)      {frontMechanical,6:0.}      {rearMechanical,6:0.}        {GetBalanceStr(frontMechanical, rearMechanical),5}\n";
-		text += $"Stator (Nm)          {frontStator,6:0.}      {rearStator,6:0.}        {GetBalanceStr(frontStator, rearStator),5}\n";
-		text += $"Rotor (Nm)           {frontRotor,6:0.}      {rearRotor,6:0.}        {GetBalanceStr(frontRotor, rearRotor),5}\n";
-		text += $"Drive Shafts (Nm) ×2 {frontShafts,6:0.}      {rearShafts,6:0.}        {GetBalanceStr(frontShafts, rearShafts),5}\n";
-		text += $"Wheels Total (Nm) ×2 {frontWheels,6:0.}      {rearWheels,6:0.}        {GetBalanceStr(frontWheels, rearWheels),5}";
+		// Compose text
 
-		m_textBox.UpdateText(text);
+		m_text.Clear();
+		m_text.Append("                    Throttle      Brake    \n");
+		m_text.Append($"Pedal Position        {throttlePosition*100,3:0.} %        {brakePosition*100,3:0.} %   \n");
+		m_text.Append($"Input                 {throttleInput*100,3:0.} %      {brakePressure,5:0.0} bar \n\n");
+		m_text.Append("                    MGU Front    MGU Rear    Balance (%)\n");
+		m_text.Append($"Rpm                  {frontRpm,6:0.}      {rearRpm,6:0.}        {GetBalanceStr(frontRpm, rearRpm),5}\n");
+		m_text.Append($"Load (%)             {frontLoad*100,6:0.0}      {rearLoad*100,6:0.0}        {GetBalanceStr(frontLoad, rearLoad),5}\n\n");
+		m_text.Append($"Electrical (kW)      {frontPower,6:0.0}      {rearPower,6:0.0}        {GetBalanceStr(frontPower, rearPower),5}\n");
+		m_text.Append($"Electrical (Nm)      {frontElectrical,6:0.}      {rearElectrical,6:0.}        {GetBalanceStr(frontElectrical, rearElectrical),5}\n");
+		m_text.Append($"Efficiency (%)       {frontEfficiency*100,6:0.0}      {rearEfficiency*100,6:0.0}        {GetBalanceStr(frontEfficiency, rearEfficiency),5}  \n\n");
+		m_text.Append($"Mechanical (Nm)      {frontMechanical,6:0.}      {rearMechanical,6:0.}        {GetBalanceStr(frontMechanical, rearMechanical),5}\n");
+		m_text.Append($"Stator (Nm)          {frontStator,6:0.}      {rearStator,6:0.}        {GetBalanceStr(frontStator, rearStator),5}\n");
+		m_text.Append($"Rotor (Nm)           {frontRotor,6:0.}      {rearRotor,6:0.}        {GetBalanceStr(frontRotor, rearRotor),5}\n");
+		m_text.Append($"Drive Shafts (Nm) ×2 {frontShafts,6:0.}      {rearShafts,6:0.}        {GetBalanceStr(frontShafts, rearShafts),5}\n");
+		m_text.Append($"Wheels Total (Nm) ×2 {frontWheels,6:0.}      {rearWheels,6:0.}        {GetBalanceStr(frontWheels, rearWheels),5}");
+
+		m_textBox.UpdateText(m_text.ToString());
 		}
 
 
@@ -95,26 +123,6 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 	void OnGUI ()
 		{
 		m_textBox.OnGUI();
-		/*
-		// Compute box size
-
-		Vector2 contentSize = m_textStyle.CalcSize(new GUIContent(m_text));
-		float margin = m_textStyle.lineHeight * 1.2f;
-		float headerHeight = GUI.skin.box.lineHeight;
-
-		m_boxWidth = contentSize.x + margin;
-		m_boxHeight = contentSize.y + headerHeight + margin / 2;
-
-		// Compute box position
-
-		float xPos = position.x < 0? Screen.width + position.x - m_boxWidth : position.x;
-		float yPos = position.y < 0? Screen.height + position.y - m_boxHeight : position.y;
-
-		// Draw telemetry box
-
-		GUI.Box(new Rect (xPos, yPos, m_boxWidth, m_boxHeight), "424 MGUs Telemetry");
-		GUI.Label(new Rect (xPos + margin / 2, yPos + margin / 2 + headerHeight, Screen.width, Screen.height), m_text, m_textStyle);
-		*/
 		}
 
 	}

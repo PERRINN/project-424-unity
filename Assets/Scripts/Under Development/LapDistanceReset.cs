@@ -10,7 +10,6 @@ namespace Project424 {
         {
             Telemetry424.m_lapDistance = 0;
             getLapDist = Telemetry424.m_lapDistance;
-            print(getLapDist);
         }        
     }
 }
