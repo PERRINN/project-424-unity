@@ -2,7 +2,9 @@
 
 using UnityEngine;
 using VehiclePhysics;
+using EdyCommonTools;
 using System;
+using System.Text;
 
 
 public class Perrinn424Underfloor : VehicleBehaviour
@@ -21,6 +23,14 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		public float maxLength = 0.05f;
 		[Tooltip("Length above the Point Base for detecting the contact (m). Contact is not detected above this lenght (i.e. on top of the car)")]
 		public float detectionLength = 0.2f;
+
+		// Runtime data
+
+		[NonSerialized] public bool contact;
+		[NonSerialized] public int contactCount;
+		[NonSerialized] public float contactLength;
+		[NonSerialized] public Vector3 verticalForce;
+		[NonSerialized] public Vector3 dragForce;
 		}
 
 	[Tooltip("Points of contact with the ground")]
@@ -28,6 +38,19 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 	[Tooltip("Layers to be verified for collision")]
 	public LayerMask groundLayers = ~(1 << 8);
+
+	[Header("On-screen widget")]
+	public bool showWidget = false;
+	public GUITextBox.Settings widget = new GUITextBox.Settings();
+
+
+	// Widget components
+
+	GUITextBox m_textBox = new GUITextBox();
+	StringBuilder m_text = new StringBuilder(1024);
+
+	// Trick to assign a default font to the GUI box. Configure it at the script settings in the Editor.
+	[HideInInspector] public Font defaultFont;
 
 
 	// Initialize the values of new members of the array when its size changes
@@ -56,6 +79,23 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 			m_contactsLength = contactPoints.Length;
 			}
+
+		// Initialize default widget font
+
+		if (widget.font == null)
+			widget.font = defaultFont;
+		}
+
+
+	// Initialize widget
+
+
+	public override void OnEnableVehicle ()
+		{
+		m_textBox.settings = widget;
+		m_textBox.header = "424 Underfloor";
+
+		// ClearContacts();
 		}
 
 
@@ -83,6 +123,11 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		if (!Physics.Raycast(origin, -up, out hitInfo, cp.detectionLength, groundLayers, QueryTriggerInteraction.Ignore))
 			return;
 
+		// This is cleared when the widget has acknowledged the contact
+
+		cp.contact = true;
+		cp.contactCount++;
+
 		// Determine if this contact makes sense (i.e. ignore contacts against vertical surfaces)
 
 		float upNormal = Vector3.Dot(up, hitInfo.normal);
@@ -92,23 +137,70 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		// Determine contact length ("penetration" of the ground above the point of contact)
 
 		float contactLength = cp.detectionLength - hitInfo.distance;
-		if (contactLength < cp.maxLength)
+		if (contactLength > cp.maxLength)
 			contactLength = cp.maxLength;
+
+		cp.contactLength = contactLength;
 
 		// Calculate vertical force
 
 		float verticalLoad = contactLength * cp.stiffness * upNormal;
-		Vector3 verticalForce = verticalLoad * up;
+		cp.verticalForce = verticalLoad * up;
 
 		// Calculate longitudinal force
 
 		Vector3 velocity = vehicle.cachedRigidbody.GetPointVelocity(hitInfo.point);
 		Vector3 slipDirection = Vector3.ProjectOnPlane(velocity, hitInfo.normal).normalized;
-		Vector3 dragForce = -verticalLoad * cp.friction * slipDirection;
+		cp.dragForce = -verticalLoad * cp.friction * slipDirection;
 
 		// Apply resulting forces
 
-		vehicle.cachedRigidbody.AddForceAtPosition(verticalForce + dragForce, hitInfo.point);
+		vehicle.cachedRigidbody.AddForceAtPosition(cp.verticalForce + cp.dragForce, hitInfo.point);
+		}
+
+
+	void ClearContacts ()
+		{
+		foreach (ContactPoint cp in contactPoints)
+			{
+			cp.contact = false;
+			cp.contactCount = 0;
+			}
+		}
+
+
+	// Telemetry widget
+
+
+	public override void UpdateAfterFixedUpdate ()
+		{
+		if (showWidget)
+			{
+			m_text.Clear();
+			m_text.Append($"                   N/mm      μ       n       mm      N      N\n");
+			for (int i = 0, c = contactPoints.Length; i < c; i++)
+				AppendContactPointText(m_text, contactPoints[i]);
+			m_textBox.UpdateText(m_text.ToString());
+			}
+		}
+
+
+	void AppendContactPointText (StringBuilder text, ContactPoint cp)
+		{
+		string name = cp.pointBase != null? cp.pointBase.name : "(unused)";
+		// string contact = cp.contact? "×" : " ";
+		string contact = cp.contact? "■" : " ";
+		text.Append($"{name,-16} {cp.stiffness/1000.0f,6:0.} {cp.friction,6:0.00} ");
+		text.Append($"{cp.contactCount,7}{contact} {cp.contactLength*1000.0f,7:0.00} {cp.verticalForce.magnitude,6:0.} {cp.dragForce.magnitude,6:0.}\n");
+
+		cp.contact = false;
+		}
+
+
+	void OnGUI ()
+		{
+		if (showWidget)
+			m_textBox.OnGUI();
 		}
 
 
