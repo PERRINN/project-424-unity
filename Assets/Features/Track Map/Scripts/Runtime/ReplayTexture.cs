@@ -15,7 +15,7 @@ namespace Perrinn424.TrackMapSystem
         public TextureCanvas Canvas { get; private set; }
         public Texture2D Texture => Canvas.texture;
 
-        public ReplayTexture(int resolution, VPReplayAsset replay, float timeStep, Vector3 scale)
+        public ReplayTexture(int resolution, VPReplayAsset replay, float timeStep, Vector3 scale, bool doublePixel)
         {
             this.Resolution = resolution;
 
@@ -26,7 +26,7 @@ namespace Perrinn424.TrackMapSystem
             WorldCoordinates = r;
 
             ResizeLocalCoordinates();
-            CreateCanvas();
+            CreateCanvas(doublePixel);
         }
 
         private void RescalePositions(Vector3 scale)
@@ -52,12 +52,13 @@ namespace Perrinn424.TrackMapSystem
             WorldCoordinates = new Rect(origin, origin, size, size);
         }
 
-        private void CreateCanvas()
+        private void CreateCanvas(bool doublePixel)
         {
             Canvas = new TextureCanvas(Resolution, Resolution)
             {
                 alpha = 0.0f,
-                color = GColor.black
+                color = GColor.black,
+                doublePixel = doublePixel
             };
 
             Canvas.Clear();
