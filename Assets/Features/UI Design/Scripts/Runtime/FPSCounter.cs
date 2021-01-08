@@ -11,13 +11,13 @@ namespace Perrinn424.UI
         [SerializeField]
         private float refreshRate = 1.0f;
 
-        private global::FPSCounter counter;
+        private Perrinn424.FPSCounter counter;
 
         private float timer;
 
         private void Awake()
         {
-            counter = new global::FPSCounter();
+            counter = new Perrinn424.FPSCounter();
         }
 
         private void Start()
