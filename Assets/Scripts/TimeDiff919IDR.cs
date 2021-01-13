@@ -24,25 +24,20 @@ namespace VehiclePhysics.Timing
                 }
             }
 
-            public float LapDiff(float t, float d)
+            public float LapDiff(float currentTime, float currentDistance)
             {
-                //Calculation of lap time difference between 919/IDR and P424
-                for (int i = 0; i < 320; i++)
+                for (int i = 0; i < count; i++)
                 {
-                    if (distance[i] < d & d < distance[i + 1])
+                    if (distance[i] < currentDistance && currentDistance < distance[i + 1])
                     {
-                        float PorscheTimeExtrapolation = time[i] + ((time[i + 1] - time[i]) / (distance[i + 1] - distance[i])) * (d - distance[i]);
-                        return LapTimeComparison(PorscheTimeExtrapolation, t);
+                        float ration = (currentDistance -distance[i]) / (distance[i + 1] - distance[i]);
+                        float referenceTime = Mathf.Lerp(time[i], time[i + 1], ration);
+                        float diff = currentTime - referenceTime;
+                        return diff;
                     }
                 }
 
                 return float.NaN;
-            }
-
-            private float LapTimeComparison(float reference, float proto)
-            {
-                float result = proto - reference;
-                return result;
             }
         }
 
