@@ -1,63 +1,10 @@
-﻿using UnityEngine;
-using EdyCommonTools;
-
-namespace VehiclePhysics.Timing
+﻿namespace Perrinn424
 {
-    public class TimeDiff919IDR : MonoBehaviour
+    public static class TimeReferenceHelper
     {
-        private class TimeReference
+        public static TimeReference CreatePorsche()
         {
-            public float[] time;
-            public float[] distance;
-
-            private int count;
-            public TimeReference(int[] reference)
-            {
-                count = reference.Length;
-                time = new float[count];
-                distance = new float[count];
-
-                for (int i = 0; i < reference.Length; i++)
-                {
-                    time[i] = i;
-                    distance[i] = reference[i];
-                }
-            }
-
-            public float LapDiff(float currentTime, float currentDistance)
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    if (distance[i] < currentDistance && currentDistance < distance[i + 1])
-                    {
-                        float ration = (currentDistance -distance[i]) / (distance[i + 1] - distance[i]);
-                        float referenceTime = Mathf.Lerp(time[i], time[i + 1], ration);
-                        float diff = currentTime - referenceTime;
-                        return diff;
-                    }
-                }
-
-                return float.NaN;
-            }
-        }
-
-        public GUITextBox.Settings overlay = new GUITextBox.Settings();
-
-        // Trick to apply a default font to the telemetry box. Configure it at the script settings.
-
-        [HideInInspector]
-        public Font defaultFont;
-
-        GUITextBox textBox = new GUITextBox();
-
-        private static LapTimer lapTime;
-
-        private TimeReference volkswagen;
-        private TimeReference porsche;
-
-        private void Awake()
-        {
-            porsche = new TimeReference(new []
+            var porsche = new TimeReference(new[]
             {
                 0, 41, 94, 148, 187, 218, 245, 280, 327, 385, 451, 521, 590, 658, 729, 803, 880, 943, 995, 1039, 1085,
                 1140, 1200, 1251, 1297, 1338, 1385, 1439, 1483, 1523, 1563, 1614, 1674, 1745, 1822, 1903, 1987, 2072,
@@ -81,7 +28,12 @@ namespace VehiclePhysics.Timing
                 20199, 20288, 20374, 20457, 20522, 50573, 20611, 20642, 20677, 20715, 20756, 20784, 20814, 20831
             });
 
-            volkswagen = new TimeReference(new[]
+            return porsche;
+        }
+
+        public static TimeReference CreateVolkswagen()
+        {
+            var volkswagen = new TimeReference(new[]
             {
                 0, 39, 87, 140, 186, 220, 249, 279, 317, 364, 418, 477, 541, 605, 668, 733, 802, 875, 937, 988, 1032,
                 1071, 1113, 1162, 1216, 1264, 1306, 1343, 1379, 1423, 1474, 1518, 1555, 1589, 1632, 1681, 1736, 1798,
@@ -108,53 +60,7 @@ namespace VehiclePhysics.Timing
                 20337, 20403, 20468, 20527, 20575, 20610, 20639, 20671, 20709, 20751, 20784, 20813, 20822
             });
 
+            return volkswagen;
         }
-
-        void OnEnable()
-        {
-            InitTextBox();
-            GetLapTime();
-        }
-
-        private void InitTextBox()
-        {
-            textBox.settings = overlay;
-            textBox.header = "Lap time comparison";
-
-            if (overlay.font == null)
-                overlay.font = defaultFont;
-        }
-
-        private void GetLapTime()
-        {
-            lapTime = (LapTimer) FindObjectOfType(typeof(LapTimer));
-            if (lapTime == null)
-            {
-                enabled = false;
-                return;
-            }
-        }
-
-
-        // Update is called once per frame
-        void Update()
-        {
-            float currentLapTime = lapTime.currentLapTime;
-            float currentLapDistance = Project424.Telemetry424.m_lapDistance;
-
-            float porscheDiff = porsche.LapDiff(currentLapTime, currentLapDistance);
-            float vwDiff = volkswagen.LapDiff(currentLapTime, currentLapDistance);
-
-            string text = $"Time difference /919    {porscheDiff,6:0.00}\n";
-            text += $"Time difference /IDR    {vwDiff,6:0.00}";
-
-            textBox.UpdateText(text);
-        }
-
-        void OnGUI()
-        {
-            textBox.OnGUI();
-        }
-
     }
 }
