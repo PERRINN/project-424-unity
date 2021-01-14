@@ -4,8 +4,8 @@ namespace Perrinn424
 {
     public class TimeReference
     {
-        public float[] time;
-        public float[] distance;
+        private float[] time;
+        private  float[] distance;
 
         private readonly int count;
 
