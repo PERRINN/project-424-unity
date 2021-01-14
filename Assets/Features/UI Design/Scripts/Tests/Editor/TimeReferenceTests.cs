@@ -13,6 +13,5 @@ namespace Perrinn424.Editor.Tests
             float difference = porsche.LapDiff(time, distance);
             Assert.That(expectedDifference, Is.EqualTo(difference).Within(10e-3));
         }
-
     } 
 }
