@@ -5,9 +5,10 @@ namespace Perrinn424
 {
     public class TimeReference
     {
-        private readonly float[] time;
-        private readonly float[] distance;
+        internal readonly float[] time;
+        internal readonly float[] distance;
         private readonly int count;
+        private int previousIndex = -1;
 
         public TimeReference(int[] reference)
         {
@@ -29,6 +30,7 @@ namespace Perrinn424
             if(index == -1)
                 return float.NaN;
 
+            previousIndex = index;
             float ration = (currentDistance - distance[index]) / (distance[index + 1] - distance[index]);
             float referenceTime = Mathf.Lerp(time[index], time[index + 1], ration);
             float diff = currentTime - referenceTime;
@@ -37,6 +39,18 @@ namespace Perrinn424
 
         private int FindIndex(float currentDistance)
         {
+            // The most probably is that the last index is still the correct index
+            if (IsCorrectIndex(previousIndex, currentDistance))
+            {
+                return previousIndex;
+            }
+
+            // If not, probably is the next one
+            if(IsCorrectIndex(previousIndex + 1, currentDistance))
+            {
+                return previousIndex + 1;
+            }
+
             // We can use binary search because distance is sorted and it is much faster
             int binaryIndex = Array.BinarySearch(distance, currentDistance);
             if (binaryIndex < 0)
@@ -50,6 +64,15 @@ namespace Perrinn424
             }
 
             return binaryIndex;
+        }
+
+
+        private bool IsCorrectIndex(int index, float d)
+        {
+            if (index < 0 || index >= count)
+                return false;
+
+            return distance[index] < d && distance[index + 1] > d;
         }
     } 
 }
