@@ -23,8 +23,8 @@ namespace Perrinn424.UI
 
             diff.Update(currentLapTime, currentLapDistance);
 
-            electricRecord.text = $"electric record {diff.VolkswagenDiff:+0.000;-0.000;0.000}";
-            overallRecord.text = $"overall record {diff.PorscheDiff::+0.000;-0.000;0.000}";
+            electricRecord.text = $"{diff.VolkswagenDiff:+0.000;-0.000;0.000}";
+            overallRecord.text = $"{diff.PorscheDiff:+0.000;-0.000;0.000}";
         }
     } 
 }
