@@ -33,7 +33,6 @@ namespace Perrinn424
             float referenceTime = Mathf.Lerp(time[index], time[index + 1], ration);
             float diff = currentTime - referenceTime;
             return diff;
-
         }
 
         private int FindIndex(float currentDistance)

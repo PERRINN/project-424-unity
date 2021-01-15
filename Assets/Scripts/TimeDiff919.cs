@@ -2,8 +2,11 @@
 {
     public class TimeDiff919
     {
-        private TimeReference volkswagen;
         private TimeReference porsche;
+        private TimeReference volkswagen;
+
+        public float PorscheDiff { get; private set; }
+        public float VolkswagenDiff { get; private set; }
 
         public TimeDiff919()
         {
@@ -13,8 +16,8 @@
 
         public void Update(float currentTime, float currentDistance)
         {
-            porsche.LapDiff(currentTime, currentDistance);
-            volkswagen.LapDiff(currentTime, currentDistance);
+            PorscheDiff = porsche.LapDiff(currentTime, currentDistance);
+            VolkswagenDiff = volkswagen.LapDiff(currentTime, currentDistance);
         }
     }
 }
