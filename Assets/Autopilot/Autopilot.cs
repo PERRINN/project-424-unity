@@ -196,14 +196,23 @@ public class Autopilot : MonoBehaviour
         tryCatchArea = tryCatchArea < 0 ? 0 : tryCatchArea;
 
         float area = (float)Math.Sqrt(tryCatchArea);
-        float errX = offsetFromClosestFrame1.x - offsetFromCurrentVehiclePos.x; //recordedReplay[frame3].position.x - currentPosX;
-        float errZ = offsetFromClosestFrame1.z - offsetFromCurrentVehiclePos.z; //recordedReplay[frame3].position.z - currentPosZ;
-        float degree = -(float)(Math.PI * recordedReplay[closestFrame1].rotation.eulerAngles.y / 180);
-        float cosD = (float)Math.Cos(degree);
-        float sinD = (float)Math.Sin(degree);
-        float carPosX = (errX * cosD) + (errZ * sinD);
-
         float checkHeight = area * 2 / distanceBetweenTwoFrames;
+
+        float nextFrameX = recordedReplay[closestFrame2].position.x - currentPosX;
+        float nextFrameZ = recordedReplay[closestFrame2].position.z - currentPosZ;
+        float nextFrameDistance = (float)Math.Sqrt((nextFrameX * nextFrameX) + (nextFrameZ * nextFrameZ));
+        float prograssiveCalculation = (float)Math.Sqrt((nextFrameDistance * nextFrameDistance) - (checkHeight * checkHeight));
+        int progressive = (int)((distanceBetweenTwoFrames - prograssiveCalculation) / distanceBetweenTwoFrames * 100);
+
+        float errX = offsetFromClosestFrame1.x - offsetFromCurrentVehiclePos.x; //recordedReplay[frame3].position.x - currentPosX;
+        float errXBAL = (offsetFromClosestFrame2.x - offsetFromCurrentVehiclePos.x) - errX;
+        float errZ = offsetFromClosestFrame1.z - offsetFromCurrentVehiclePos.z; //recordedReplay[frame3].position.z - currentPosZ;
+        float errZBAL = (offsetFromClosestFrame2.z - offsetFromCurrentVehiclePos.z) - errZ;
+        float degree = -(float)(Math.PI * recordedReplay[closestFrame1].rotation.eulerAngles.y / 180);
+        float degreeERR = -(float)(Math.PI * recordedReplay[closestFrame2].rotation.eulerAngles.y / 180) - degree;
+        float cosD = (float)Math.Cos(degree + degreeERR * progressive / 100);
+        float sinD = (float)Math.Sin(degree + degreeERR * progressive / 100);
+        float carPosX = ((errX + errXBAL * progressive / 100) * cosD) + ((errZ + errZBAL * progressive / 100) * sinD);
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
         // Telemetry
@@ -235,12 +244,6 @@ public class Autopilot : MonoBehaviour
         if (autopilotON)
         {
             rigidBody424.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
-
-            float nextFrameX = recordedReplay[closestFrame2].position.x - currentPosX;
-            float nextFrameZ = recordedReplay[closestFrame2].position.z - currentPosZ;
-            float nextFrameDistance = (float)Math.Sqrt((nextFrameX * nextFrameX) + (nextFrameZ * nextFrameZ));
-            float prograssiveCalculation = (float)Math.Sqrt((nextFrameDistance * nextFrameDistance) - (checkHeight * checkHeight));
-            int progressive = (int)((distanceBetweenTwoFrames - prograssiveCalculation) / distanceBetweenTwoFrames * 100);
 
             // Steer angle
             int steerERR = recordedReplay[closestFrame2].inputData[InputData.Steer] - recordedReplay[closestFrame1].inputData[InputData.Steer];
