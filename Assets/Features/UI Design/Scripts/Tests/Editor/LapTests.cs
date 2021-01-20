@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
+using UnityEngine;
 
 namespace Perrinn424.Editor.Tests
 {
@@ -10,10 +12,10 @@ namespace Perrinn424.Editor.Tests
             float[] sectors = {0f, 1f, 2f};
             LapTime lapTime = new LapTime(sectors);
 
-            CollectionAssert.AreEquivalent(sectors, lapTime);
+            CollectionAssert.AreEquivalent(sectors, lapTime.ToArray());
 
             sectors[0] = 5f;
-            CollectionAssert.AreNotEquivalent(sectors, lapTime);
+            CollectionAssert.AreNotEquivalent(sectors, lapTime.ToArray());
         }
 
         [Test]
@@ -22,7 +24,7 @@ namespace Perrinn424.Editor.Tests
             float[] sectors = { 0f, 1f, 2f ,3f, 4f};
             LapTime lapTime = new LapTime(sectors);
 
-            Assert.AreEqual(10f, lapTime.Total);
+            Assert.AreEqual(10f, lapTime.Sum);
         }
 
         [Test]
