@@ -11,10 +11,11 @@ namespace Perrinn424.Editor.Tests
             float[] sectors = {0f, 1f, 2f};
             LapTime lapTime = new LapTime(sectors);
 
-            CollectionAssert.AreEquivalent(sectors, lapTime.ToArray());
+            float []expected = { 0f, 1f, 2f , 0f+1f+2f};
+            CollectionAssert.AreEquivalent(expected, lapTime.ToArray());
 
-            sectors[0] = 5f;
-            CollectionAssert.AreNotEquivalent(sectors, lapTime.ToArray());
+            expected[0] = 5f;
+            CollectionAssert.AreNotEquivalent(expected, lapTime.ToArray());
         }
 
         [Test]

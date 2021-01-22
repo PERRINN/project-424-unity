@@ -9,14 +9,16 @@ namespace Perrinn424
     {
         private List<LapTime> laps;
         private readonly int sectorCount;
+        private readonly int timeColumsCount;
         private int[] bestSectors;
         private List<int> improvementSectors;
         public LapTimeTable(int sectorCount)
         {
             this.sectorCount = sectorCount;
+            this.timeColumsCount = sectorCount + 1;
             laps = new List<LapTime>();
 
-            bestSectors = new int[sectorCount];
+            bestSectors = new int[timeColumsCount];
             improvementSectors = new List<int>();
         }
 
@@ -57,14 +59,14 @@ namespace Perrinn424
             improvementSectors.Clear();
 
             //Assume that the best sector is in lap 0
-            for (int sectorIndex = 0; sectorIndex < sectorCount; sectorIndex++)
+            for (int sectorIndex = 0; sectorIndex < timeColumsCount; sectorIndex++)
             {
                 bestSectors[sectorIndex] = 0;
             }
 
             for (int lapIndex = 1; lapIndex < laps.Count; lapIndex++)
             {
-                for (int sectorIndex = 0; sectorIndex < sectorCount; sectorIndex++)
+                for (int sectorIndex = 0; sectorIndex < timeColumsCount; sectorIndex++)
                 {
                     int minLapIndex = bestSectors[sectorIndex];
                     float minTime = laps[minLapIndex][sectorIndex];
@@ -92,12 +94,12 @@ namespace Perrinn424
 
         internal void IntToLapSector(int index, out int lap, out int sector)
         {
-            lap = index / sectorCount;
-            sector = index % sectorCount;
+            lap = index / timeColumsCount;
+            sector = index % timeColumsCount;
         }
         internal void LapSectorToIndex(int lap, int sector, out int index)
         {
-            index = lap * sectorCount + sector;
+            index = lap * timeColumsCount + sector;
         }
     } 
 }
