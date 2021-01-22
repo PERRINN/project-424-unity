@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace Perrinn424.Editor.Tests
 {

@@ -8,7 +8,7 @@ namespace Perrinn424
         private int SumIndex => sectorCount;
         private readonly float[] sectors;
         public float Sum => sectors[SumIndex];
-        private readonly int sectorCount;
+        public readonly int sectorCount;
 
         public LapTime(float[] s)
         {
