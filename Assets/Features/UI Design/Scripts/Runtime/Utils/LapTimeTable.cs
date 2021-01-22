@@ -10,26 +10,26 @@ namespace Perrinn424
         private List<LapTime> laps;
         private readonly int sectorCount;
         private readonly int timeColumsCount;
-        private int[] bestSectors;
-        private List<int> improvementSectors;
+        private int[] bestTimes;
+        private List<int> improvedTimes;
+
+        private bool isDirty;
+
         public LapTimeTable(int sectorCount)
         {
             this.sectorCount = sectorCount;
             this.timeColumsCount = sectorCount + 1;
             laps = new List<LapTime>();
 
-            bestSectors = new int[timeColumsCount];
-            improvementSectors = new List<int>();
+            bestTimes = new int[timeColumsCount];
+            improvedTimes = new List<int>();
         }
 
         public void AddLap(IEnumerable<float> sectors)
         {
             float[] sectorsTime = sectors.ToArray();
 
-            if(sectorsTime.Length != sectorCount)
-                throw new ArgumentException($"Lap must have exactly {sectorCount} sectors");
-
-            laps.Add(new LapTime(sectorsTime));
+            AddLap(new LapTime(sectorsTime));
         }
 
         public void AddLap(LapTime newLap)
@@ -38,48 +38,61 @@ namespace Perrinn424
                 throw new ArgumentException($"Lap must have exactly {sectorCount} sectors");
 
             laps.Add(newLap);
+
+            isDirty = true;
         }
 
         
 
-        public int [] GetBest()
+        public int [] GetBestTimes()
         {
             CalculateBest();
-            return bestSectors;
+            return bestTimes;
         }
 
-        public int[] GetImprovements()
+        public int[] GetImprovedTimes()
         {
             CalculateBest();
-            return improvementSectors.ToArray();
+            return improvedTimes.ToArray();
+        }
+
+        public int GetBestLap()
+        {
+            CalculateBest();
+            return bestTimes[timeColumsCount-1];
         }
 
         private void CalculateBest()
         {
-            improvementSectors.Clear();
+            if(!isDirty)
+                return;
+
+            improvedTimes.Clear();
 
             //Assume that the best sector is in lap 0
             for (int sectorIndex = 0; sectorIndex < timeColumsCount; sectorIndex++)
             {
-                bestSectors[sectorIndex] = 0;
+                bestTimes[sectorIndex] = 0;
             }
 
             for (int lapIndex = 1; lapIndex < laps.Count; lapIndex++)
             {
                 for (int sectorIndex = 0; sectorIndex < timeColumsCount; sectorIndex++)
                 {
-                    int minLapIndex = bestSectors[sectorIndex];
+                    int minLapIndex = bestTimes[sectorIndex];
                     float minTime = laps[minLapIndex][sectorIndex];
 
                     float currentTime = laps[lapIndex][sectorIndex];
                     if (currentTime < minTime)
                     {
-                        bestSectors[sectorIndex] = lapIndex;
+                        bestTimes[sectorIndex] = lapIndex;
                         LapSectorToIndex(lapIndex, sectorIndex, out int globalIndex);
-                        improvementSectors.Add(globalIndex);
+                        improvedTimes.Add(globalIndex);
                     }
                 }
             }
+
+            isDirty = false;
         }
 
         public IEnumerator<LapTime> GetEnumerator()

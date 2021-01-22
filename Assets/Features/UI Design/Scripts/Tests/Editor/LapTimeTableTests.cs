@@ -27,7 +27,7 @@ namespace Perrinn424.Editor.Tests
         public void BestSectorsTest()
         {
             int[] expectedBest = {1, 9, 3, 3};
-            int[] bestIndex = table.GetBest();
+            int[] bestIndex = table.GetBestTimes();
             Assert.That(bestIndex, Is.EquivalentTo(expectedBest));
         }
 
@@ -53,10 +53,17 @@ namespace Perrinn424.Editor.Tests
         public void ImprovementTest()
         {
             int[] expectedImprovement = {4,7,10,13,14,15,25,37 };
-            int[] improvementIndices = table.GetImprovements();
+            int[] improvementIndices = table.GetImprovedTimes();
 
             Assert.That(improvementIndices, Is.EquivalentTo(expectedImprovement));
+        }
 
+        [Test]
+        public void BestLapTest()
+        {
+            int bestLap = table.GetBestLap();
+            int expected = 3;
+            Assert.AreEqual(expected, bestLap);
         }
     } 
 }
