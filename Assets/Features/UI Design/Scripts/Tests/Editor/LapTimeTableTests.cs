@@ -26,9 +26,37 @@ namespace Perrinn424.Editor.Tests
         [Test]
         public void BestSectorsTest()
         {
-            int[] expectedBest = new[] {1, 9, 3};
+            int[] expectedBest = {1, 9, 3};
             int[] bestIndex = table.GetBest();
             Assert.That(bestIndex, Is.EquivalentTo(expectedBest));
+        }
+
+        [TestCase(6,2,0)]
+        [TestCase(11,3,2)]
+        public void IndexToLapSectorTest(int index, int expectedLap, int expectedSector)
+        {
+            table.IntToLapSector(index, out int lap, out int sector);
+            Assert.AreEqual(expectedLap, lap);
+            Assert.AreEqual(expectedSector, sector);
+        }
+
+        [TestCase(2, 0, 6)]
+        [TestCase(3,2,11)]
+        public void LapSectorToIndexTest(int lap, int sector, int expectedIndex)
+        {
+            table.LapSectorToIndex(lap, sector, out int index);
+            Assert.AreEqual(expectedIndex, index);
+        }
+
+
+        [Test]
+        public void ImprovementTest()
+        {
+            int[] expectedImprovement = { 3,8,10,11,19,28 };
+            int[] improvementIndices = table.GetImprovements();
+
+            Assert.That(improvementIndices, Is.EquivalentTo(expectedImprovement));
+
         }
     } 
 }
