@@ -9,6 +9,7 @@ namespace Perrinn424
         private readonly float[] times;
         public float Sum => times[SumIndex];
         public readonly int sectorCount;
+        public int TimesCount { get; }
 
         public LapTime(float[] s)
         {
@@ -23,6 +24,7 @@ namespace Perrinn424
                 times[i] = s[i];
             }
             times[SumIndex] = sum;
+            TimesCount = times.Length;
         }
 
 
