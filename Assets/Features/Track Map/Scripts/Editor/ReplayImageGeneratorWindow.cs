@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using EdyCommonTools.EditorTools;
 using UnityEngine;
 using UnityEditor;
@@ -18,6 +19,7 @@ namespace Perrinn424.TrackMapSystem.Editor
 
         private bool invertX;
         private bool invertZ;
+        private bool doublePixel;
 
         [MenuItem("Tools/Vehicle Physics/Replay Image Generator")]
         static void Init()
@@ -63,6 +65,7 @@ namespace Perrinn424.TrackMapSystem.Editor
             EditorGUILayout.EndHorizontal();
             invertX = EditorGUILayout.Toggle("Invert X axis", invertX);
             invertZ = EditorGUILayout.Toggle("Invert Z axis", invertZ);
+            doublePixel = EditorGUILayout.Toggle("Double Pixel", doublePixel);
 
             if (rate < replay.timeStep)
             {
@@ -78,7 +81,7 @@ namespace Perrinn424.TrackMapSystem.Editor
                 Vector3 scale = Vector3.one;
                 scale.x = invertX ? -1f : 1f;
                 scale.z = invertZ ? -1f : 1f;
-                replayTexture = new ReplayTexture(resolution, replay, rate, scale);
+                replayTexture = new ReplayTexture(resolution, replay, rate, scale, doublePixel);
             }
         }
 

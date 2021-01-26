@@ -9,6 +9,8 @@ namespace VehiclePhysics.UI
         VehicleBase target;
         public float windowSeconds = 4.0f;
         public float setMinSpeed = 10.0f;
+        public float screenFPS = 5f;
+
         [Header("Display Channel")]
         public Text speedMps;
         public Text speedKph;
@@ -39,6 +41,8 @@ namespace VehiclePhysics.UI
         public static float batCapacity { get; set; } //batteryModel.cs
         public static bool autopilotState { get; set; } //Autopilot.cs
 
+        float elapsed;
+
         void OnEnable()
         {
             target = GetComponentInParent<VehicleBase>();
@@ -46,164 +50,170 @@ namespace VehiclePhysics.UI
 
         void Update()
         {
-            if (target == null) return;
-
-            int[] vehicleData = target.data.Get(Channel.Vehicle);
-            int[] custom = target.data.Get(Channel.Custom);
-            float speed = vehicleData[VehicleData.Speed] / 1000.0f;
-
-            if (speed > setMinSpeed) { setMinSpdTrigger = true; }
-            else
+            elapsed += Time.deltaTime;
+            if (elapsed > 1 / screenFPS)
             {
-                setMinSpdTrigger = false;
-                minSpdWindow = false;
-                maxSpeed = float.MinValue;
-                minSpeed = float.MaxValue;
-            }
+                elapsed = 0;
 
-            // Speed in m/s & minimum speed window
-            if (speedMps != null)
-            {
-                if (minSpeed > speed && setMinSpdTrigger)
+                if (target == null) return;
+
+                int[] vehicleData = target.data.Get(Channel.Vehicle);
+                int[] custom = target.data.Get(Channel.Custom);
+                float speed = vehicleData[VehicleData.Speed] / 1000.0f;
+
+                if (speed > setMinSpeed) { setMinSpdTrigger = true; }
+                else
                 {
-                    minSpeed = speed;
-                    StartTimer();
-                    minSpdWindow = true;
-                    minIndicator.gameObject.SetActive(false);
+                    setMinSpdTrigger = false;
+                    minSpdWindow = false;
+                    maxSpeed = float.MinValue;
+                    minSpeed = float.MaxValue;
                 }
 
-                if (maxSpeed < speed) { maxSpeed = speed; }
-
-                if (minSpdWindow)
+                // Speed in m/s & minimum speed window
+                if (speedMps != null)
                 {
-                    float systemTime = Time.time;
-                    if (systemTime - minSpdTime > windowSeconds)
+                    if (minSpeed > speed && setMinSpdTrigger)
                     {
-                        minSpdWindow = false;
-                        maxSpeed = float.MinValue;
+                        minSpeed = speed;
+                        StartTimer();
+                        minSpdWindow = true;
+                        minIndicator.gameObject.SetActive(false);
                     }
-                    else { speedMps.text = minSpeed.ToString("0"); }
 
-                    if (systemTime - minSpdTime > 0.02f) { minIndicator.gameObject.SetActive(true); }
-                }
-                else
-                {
-                    minSpeed = maxSpeed - 1;
-                    speedMps.text = speed.ToString("0");
-                    minIndicator.gameObject.SetActive(false);
-                }
-            }
+                    if (maxSpeed < speed) { maxSpeed = speed; }
 
-            // Speed in kph
-            if (speedKph != null) // km/hour
-                speedKph.text = (speed * 3.6f).ToString("0");
+                    if (minSpdWindow)
+                    {
+                        float systemTime = Time.time;
+                        if (systemTime - minSpdTime > windowSeconds)
+                        {
+                            minSpdWindow = false;
+                            maxSpeed = float.MinValue;
+                        }
+                        else { speedMps.text = minSpeed.ToString("0"); }
 
-            // Gear
-            if (gear != null)
-            {
-                int gearId = vehicleData[VehicleData.GearboxGear];
-                bool switchingGear = vehicleData[VehicleData.GearboxShifting] != 0;
-
-                if (gearId == 0)
-                    gear.text = switchingGear ? " " : "N";
-                else
-                if (gearId > 0)
-                    gear.text = "D"; //gearId.ToString();
-                else
-                {
-                    if (gearId == -1)
-                        gear.text = "R";
+                        if (systemTime - minSpdTime > 0.02f) { minIndicator.gameObject.SetActive(true); }
+                    }
                     else
-                        gear.text = "R" + (-gearId).ToString();
+                    {
+                        minSpeed = maxSpeed - 1;
+                        speedMps.text = speed.ToString("0");
+                        minIndicator.gameObject.SetActive(false);
+                    }
                 }
-            }
 
-            // DRS signal
-            drsPosition = target.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
+                // Speed in kph
+                if (speedKph != null) // km/hour
+                    speedKph.text = (speed * 3.6f).ToString("0");
 
-            if (drsImage != null)
-            {
-                drsImage.color = new Color32(255, 255, 255, 0);
-                // drsImage.color = new Color32(255, 255, 255, (byte) (drsPosition * 255));
-                if (drsPosition > 0f)
+                // Gear
+                if (gear != null)
                 {
-                    drsImage.color = new Color32(255, 255, 255, 255);
-                }
-            }
+                    int gearId = vehicleData[VehicleData.GearboxGear];
+                    bool switchingGear = vehicleData[VehicleData.GearboxShifting] != 0;
 
-            // AUTOPILOT signal
-            if (autopilotImage != null)
-            {
-                autopilotImage.color = new Color32(255, 255, 255, 0);
-                if (autopilotState)
+                    if (gearId == 0)
+                        gear.text = switchingGear ? " " : "N";
+                    else
+                    if (gearId > 0)
+                        gear.text = "D"; //gearId.ToString();
+                    else
+                    {
+                        if (gearId == -1)
+                            gear.text = "R";
+                        else
+                            gear.text = "R" + (-gearId).ToString();
+                    }
+                }
+
+                // DRS signal
+                drsPosition = target.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
+
+                if (drsImage != null)
                 {
-                    autopilotImage.color = new Color32(255, 255, 255, 255);
+                    drsImage.color = new Color32(255, 255, 255, 0);
+                    // drsImage.color = new Color32(255, 255, 255, (byte) (drsPosition * 255));
+                    if (drsPosition > 0f)
+                    {
+                        drsImage.color = new Color32(255, 255, 255, 255);
+                    }
                 }
-            }
+
+                // AUTOPILOT signal
+                if (autopilotImage != null)
+                {
+                    autopilotImage.color = new Color32(255, 255, 255, 0);
+                    if (autopilotState)
+                    {
+                        autopilotImage.color = new Color32(255, 255, 255, 255);
+                    }
+                }
 
 
-            //// Front MGU rpm
-            //if (frontMGURpm != null)
-            //{
-            //    float frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
+                //// Front MGU rpm
+                //if (frontMGURpm != null)
+                //{
+                //    float frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
 
-            //    frontMGURpm.text = $"{frontRpm,5:0.}";
-            //}
+                //    frontMGURpm.text = $"{frontRpm,5:0.}";
+                //}
 
-            //// Rear MGU rpm
-            //if (rearMGURpm != null)
-            //{
-            //    float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
+                //// Rear MGU rpm
+                //if (rearMGURpm != null)
+                //{
+                //    float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
 
-            //    rearMGURpm.text = $"{rearRpm,5:0.}";
-            //}
+                //    rearMGURpm.text = $"{rearRpm,5:0.}";
+                //}
 
-            // Total Electrical Power
-            if (totalElecPower != null)
-            {
-                float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
-                float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
+                // Total Electrical Power
+                if (totalElecPower != null)
+                {
+                    float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
+                    float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
 
-                float total = frontPower + rearPower;
-                totalElecPower.text = total >= 0 ? total.ToString("+" + "0") : total.ToString("0");
-            }
+                    float total = frontPower + rearPower;
+                    totalElecPower.text = total >= 0 ? total.ToString("+" + "0") : total.ToString("0");
+                }
 
-            //// Electrical Torque Balance
-            //if (elecTorqueBal != null)
-            //{
-            //    float frontElectrical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
-            //    float rearElectrical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
+                //// Electrical Torque Balance
+                //if (elecTorqueBal != null)
+                //{
+                //    float frontElectrical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
+                //    float rearElectrical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
 
-            //    elecTorqueBal.text = $"{GetBalanceStr(frontElectrical, rearElectrical),5}";
-            //}
+                //    elecTorqueBal.text = $"{GetBalanceStr(frontElectrical, rearElectrical),5}";
+                //}
 
-            //// Mechanical Torque Balance
-            //if (mechTorqueBal != null)
-            //{
-            //    float frontWheels = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
-            //    float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
+                //// Mechanical Torque Balance
+                //if (mechTorqueBal != null)
+                //{
+                //    float frontWheels = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
+                //    float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
 
-            //    mechTorqueBal.text = $"{ GetBalanceStr(frontWheels, rearWheels),5}";
-            //}
+                //    mechTorqueBal.text = $"{ GetBalanceStr(frontWheels, rearWheels),5}";
+                //}
 
-            // Time Difference with the Best Lap
-            if (timeDifference != null)
-            {
-                float compare = trackTime - bestTime;
+                // Time Difference with the Best Lap
+                if (timeDifference != null)
+                {
+                    float compare = trackTime - bestTime;
 
-                timeDifference.text = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-" + "0.00") : compare.ToString("+" + "0.00");
-            }
+                    timeDifference.text = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-" + "0.00") : compare.ToString("+" + "0.00");
+                }
 
-            // Battery SOC
-            if (batterySOC != null)
-            {
-                batterySOC.text = batSOC.ToString("0.00");
-            }
+                // Battery SOC
+                if (batterySOC != null)
+                {
+                    batterySOC.text = batSOC.ToString("0.00");
+                }
 
-            // Battery Capacity
-            if (batteryCapacity != null)
-            {
-                batteryCapacity.text = (55 - batCapacity).ToString("0.00");
+                // Battery Capacity
+                if (batteryCapacity != null)
+                {
+                    batteryCapacity.text = (55 - batCapacity).ToString("0.00");
+                }
             }
         }
 
