@@ -1,6 +1,7 @@
 
 
 using UnityEngine;
+using UnityEngine.Audio;
 using VehiclePhysics;
 using EdyCommonTools;
 using System;
@@ -31,6 +32,23 @@ public class Perrinn424Underfloor : VehicleBehaviour
 	[Tooltip("Layers to be verified for collision")]
 	public LayerMask groundLayers = ~(1 << 8);
 
+	[Header("Audio Effect")]
+	[Tooltip("Loopable audio clip with the underfloor drag effect")]
+	public AudioClip contactLoopClip;
+	[Tooltip("Unity audio mixer to send the audio effects to (optional)")]
+	public AudioMixerGroup output;
+	[Space(5)]
+	[Tooltip("Maximum volume for each contact")]
+	public float maxVolume = 0.5f;
+	[Tooltip("Maximum volume under this distance")]
+	public float minDistance = 2.0f;
+	[Tooltip("Volume clipped beyond this distance")]
+	public float maxDistance = 400.0f;
+	[Tooltip("Volume attenuated progressively until this distance")]
+	public float attenuationDistance = 100.0f;
+	[Tooltip("This volume constant from Attenuation Distance to Max Distance")]
+	public float attenuatedVolume = 0.025f;
+
 	[Header("On-screen widget")]
 	public bool showWidget = false;
 	public GUITextBox.Settings widget = new GUITextBox.Settings();
@@ -50,12 +68,15 @@ public class Perrinn424Underfloor : VehicleBehaviour
 	class ContactPointData
 		{
 		public ContactPoint contactPoint;
+		public RuntimeAudio contactAudio;
 
 		public bool contact;
 		public int contactCount;
 		public float contactLength;
 		public Vector3 verticalForce;
 		public Vector3 dragForce;
+
+		public int lastPlayedContact;
 		}
 
 
@@ -108,6 +129,12 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		}
 
 
+	public override void OnDisableVehicle ()
+		{
+		ReleaseRuntimeData();
+		}
+
+
 	// Process contact points
 
 
@@ -120,6 +147,20 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 		for (int i = 0, c = contactPoints.Length; i < c; i++)
 			ProcessContactPoint(m_contactPointData[i]);
+		}
+
+
+	public override void UpdateVehicle ()
+		{
+		for (int i = 0, c = contactPoints.Length; i < c; i++)
+			UpdateContactAudio(m_contactPointData[i]);
+		}
+
+
+	public override void OnEnterPause ()
+		{
+		for (int i = 0, c = contactPoints.Length; i < c; i++)
+			m_contactPointData[i].contactAudio.source.Stop();
 		}
 
 
@@ -174,16 +215,70 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		}
 
 
+	void UpdateContactAudio (ContactPointData cpData)
+		{
+	 	RuntimeAudio audio = cpData.contactAudio;
+		if (audio == null)
+			return;
+
+		AudioSource source = audio.source;
+
+		if (cpData.contactCount > cpData.lastPlayedContact)
+			{
+			if (!source.isPlaying) source.Play();
+			source.volume = maxVolume;
+			cpData.lastPlayedContact = cpData.contactCount;
+			}
+		else
+			{
+			source.volume = 0.0f;
+			}
+		}
+
+
 	void InitializeRuntimeData ()
 		{
+		// Release previously initialized runtime audio sources
+
+		ReleaseRuntimeData();
+
+		// Create new runtime data buffer and initialize new audio sources
+
 		m_contactPointData = new ContactPointData[contactPoints.Length];
 
 		for (int i=0, c = m_contactPointData.Length; i < c; i++)
 			{
 			ContactPointData cp = new ContactPointData();
 			cp.contactPoint = contactPoints[i];
+			if (cp.contactPoint.pointBase != null)
+				{
+				cp.contactAudio = new RuntimeAudio(cp.contactPoint.pointBase);
+				ConfigureAudioSource(cp.contactAudio);
+				}
 			m_contactPointData[i] = cp;
 			}
+		}
+
+
+	void ReleaseRuntimeData ()
+		{
+		for (int i=0, c = m_contactPointData.Length; i < c; i++)
+			{
+			if (m_contactPointData[i].contactAudio != null)
+				m_contactPointData[i].contactAudio.Release();
+			}
+		}
+
+
+	void ConfigureAudioSource (RuntimeAudio audio)
+		{
+		AudioSource source = audio.source;
+		source.clip = contactLoopClip;
+		source.outputAudioMixerGroup = output;
+		source.spatialBlend = 1.0f;
+		source.loop = true;
+		source.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
+		audio.SetVolumeRolloff(minDistance, 1.0f, attenuationDistance, attenuatedVolume, maxDistance);
 		}
 
 
