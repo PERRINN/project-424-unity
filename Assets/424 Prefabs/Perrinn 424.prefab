@@ -2597,28 +2597,29 @@ MonoBehaviour:
   - pointBase: {fileID: 6531574783838322524}
     stiffness: 600000
     friction: 0.2
-    maxLength: 0.05
+    limitContactDepth: 0.02
     detectionLength: 0.2
   - pointBase: {fileID: 1371160119990035966}
     stiffness: 600000
     friction: 0.2
-    maxLength: 0.05
+    limitContactDepth: 0.02
     detectionLength: 0.2
   - pointBase: {fileID: 3519049080577912911}
     stiffness: 500000
     friction: 0.2
-    maxLength: 0.05
+    limitContactDepth: 0.02
     detectionLength: 0.2
   - pointBase: {fileID: 6236730043089900280}
     stiffness: 1000000
     friction: 0.2
-    maxLength: 0.05
+    limitContactDepth: 0.02
     detectionLength: 0.2
   groundLayers:
     serializedVersion: 2
     m_Bits: 4294967039
   contactLoopClip: {fileID: 8300000, guid: ae99b72385dd3c743a614e8f3bc6ea7e, type: 3}
   output: {fileID: 0}
+  minVolume: 0.2
   maxVolume: 0.2
   minDistance: 2
   maxDistance: 400

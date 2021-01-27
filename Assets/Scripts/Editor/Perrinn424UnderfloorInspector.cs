@@ -25,7 +25,7 @@ public class Perrinn424UnderfloorInspector
 		Vector3 up = cp.pointBase.up;
 		Vector3 pointBase = cp.pointBase.position;
 		Vector3 origin = pointBase + up * cp.detectionLength;
-		Vector3 spring = pointBase + up * cp.maxLength;
+		Vector3 spring = pointBase + up * cp.limitContactDepth;
 
 		Gizmos.color = GColor.green;
 		Gizmos.DrawLine(pointBase, spring);

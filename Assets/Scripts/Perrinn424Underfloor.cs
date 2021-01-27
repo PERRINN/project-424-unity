@@ -20,9 +20,9 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		[Tooltip("Coefficient of friction (μ) producing horizontal load (drag)")]
 		public float friction = 0.2f;
 		[Space(5)]
-		[Tooltip("Maximum contact length above the Point Base producing increasing vertical load (m). Beyond this length the vertical load is not increased and will be kept to the maximum (maxLength * stiffness)")]
-		public float maxLength = 0.05f;
-		[Tooltip("Length above the Point Base for detecting the contact (m). Contact is not detected above this lenght (i.e. on top of the car)")]
+		[Tooltip("Maximum contact depth above the Point Base producing increasing vertical load (m). Beyond this depth the vertical load is limited the maximum (limitContactDepth * stiffness). Also, the audio effect is played at maximum volume at this contact depth.")]
+		public float limitContactDepth = 0.05f;
+		[Tooltip("Length above the Point Base for detecting the contact (m). Contact is not detected above this lenght (i.e. on top of the car). This length should fall inside the car's colliders")]
 		public float detectionLength = 0.2f;
 		}
 
@@ -37,9 +37,14 @@ public class Perrinn424Underfloor : VehicleBehaviour
 	public AudioClip contactLoopClip;
 	[Tooltip("Unity audio mixer to send the audio effects to (optional)")]
 	public AudioMixerGroup output;
+
 	[Space(5)]
-	[Tooltip("Maximum volume for each contact")]
-	public float maxVolume = 0.5f;
+	[Tooltip("The slightest contact is played at this volume")]
+	public float minVolume = 0.2f;
+	[Tooltip("Volume at the limit contact depth")]
+	public float maxVolume = 1.0f;
+
+	[Header("3D Audio Source")]
 	[Tooltip("Maximum volume under this distance")]
 	public float minDistance = 2.0f;
 	[Tooltip("Volume clipped beyond this distance")]
@@ -72,11 +77,14 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 		public bool contact;
 		public int contactCount;
-		public float contactLength;
+		public float contactDepth;
 		public Vector3 verticalForce;
 		public Vector3 dragForce;
 
+		// Used by the audio effect
+
 		public int lastPlayedContact;
+		public float maxContactDepth;
 		}
 
 
@@ -167,7 +175,7 @@ public class Perrinn424Underfloor : VehicleBehaviour
 	void ProcessContactPoint (ContactPointData cpData)
 		{
 		ContactPoint cp = cpData.contactPoint;
-		if (cp.pointBase == null)
+		if (cp.pointBase == null || cp.limitContactDepth <= 0.0001f)
 			return;
 
 		// Throw raycast to detect contact
@@ -179,7 +187,7 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		if (!Physics.Raycast(origin, -up, out hitInfo, cp.detectionLength, groundLayers, QueryTriggerInteraction.Ignore))
 			return;
 
-		// This is cleared when the widget has displayed the contact
+		// This flag is cleared when the widget has displayed the contact
 
 		cpData.contact = true;
 		cpData.contactCount++;
@@ -192,15 +200,20 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 		// Determine contact length ("penetration" of the ground above the point of contact)
 
-		float contactLength = cp.detectionLength - hitInfo.distance;
-		if (contactLength > cp.maxLength)
-			contactLength = cp.maxLength;
+		float contactDepth = cp.detectionLength - hitInfo.distance;
+		if (contactDepth > cp.limitContactDepth)
+			contactDepth = cp.limitContactDepth;
 
-		cpData.contactLength = contactLength;
+		cpData.contactDepth = contactDepth;
+
+		// Store maximum registered contact depth (for the audio effect)
+
+		if (contactDepth > cpData.maxContactDepth)
+			cpData.maxContactDepth = contactDepth;
 
 		// Calculate vertical force
 
-		float verticalLoad = contactLength * cp.stiffness * upNormal;
+		float verticalLoad = contactDepth * cp.stiffness * upNormal;
 		cpData.verticalForce = verticalLoad * up;
 
 		// Calculate longitudinal force
@@ -226,8 +239,12 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		if (cpData.contactCount > cpData.lastPlayedContact)
 			{
 			if (!source.isPlaying) source.Play();
-			source.volume = maxVolume;
+
+			float intensity = Mathf.Clamp01(cpData.maxContactDepth / cpData.contactPoint.limitContactDepth);
+			source.volume = Mathf.Lerp(minVolume, maxVolume, intensity);
+
 			cpData.lastPlayedContact = cpData.contactCount;
+			cpData.maxContactDepth = 0.0f;
 			}
 		else
 			{
@@ -315,7 +332,7 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		string name = cp.pointBase != null? cp.pointBase.name : "(unused)";
 		string contact = cpData.contact? "■" : " ";
 		text.Append($"\n{name,-16} {cp.stiffness/1000.0f,6:0.}    {cp.friction,6:0.00} ");
-		text.Append($"{cpData.contactCount,7}{contact} {cpData.contactLength*1000.0f,7:0.00} {cpData.verticalForce.magnitude,7:0.} {cpData.dragForce.magnitude,7:0.}");
+		text.Append($"{cpData.contactCount,7}{contact} {cpData.contactDepth*1000.0f,7:0.00} {cpData.verticalForce.magnitude,7:0.} {cpData.dragForce.magnitude,7:0.}");
 		cpData.contact = false;
 		}
 
