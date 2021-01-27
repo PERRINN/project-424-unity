@@ -6,7 +6,7 @@ namespace Perrinn424.UI
     public class FPSCounter : MonoBehaviour
     {
         [SerializeField]
-        private Text text;
+        private Text text = default;
 
         [SerializeField]
         private float refreshRate = 1.0f;

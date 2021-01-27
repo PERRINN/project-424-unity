@@ -6,6 +6,7 @@ namespace Perrinn424.UI
     public class LapDebug : MonoBehaviour
     {
         public LapTimeTable tapTimeTable;
+        public float waitTime = 2f;
 
         private IEnumerator Start()
         {
@@ -13,9 +14,9 @@ namespace Perrinn424.UI
 
             while (getSectors.MoveNext())
             {
-                yield return new WaitForSeconds(5f);
                 float [] sectors = (float[])getSectors.Current;
                 tapTimeTable.AddLap(sectors);
+                yield return new WaitForSeconds(waitTime);
             }
         }
 

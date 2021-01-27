@@ -7,12 +7,12 @@ namespace Perrinn424.UI
     public class TimeLapDifference : MonoBehaviour
     {
         [SerializeField]
-        private LapTimer lapTime;
+        private LapTimer lapTime = default;
 
         [SerializeField]
-        private Text electricRecord;
+        private Text electricRecord = default;
         [SerializeField]
-        private Text overallRecord;
+        private Text overallRecord = default;
 
         private TimeDiff919 diff = new TimeDiff919();
 

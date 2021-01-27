@@ -11,6 +11,8 @@ namespace Perrinn424
         private readonly int sectorCount;
         private readonly int timeColumsCount;
 
+        public int LapCount => laps.Count;
+
         /// <summary>
         /// Contains the best lap of each sector
         /// For example bestTimes[2] => 1 means that in sector 2, the best lap is 1
