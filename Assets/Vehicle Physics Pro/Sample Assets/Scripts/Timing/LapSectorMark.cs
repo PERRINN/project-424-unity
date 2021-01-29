@@ -30,7 +30,7 @@ public class LapSectorMark : MonoBehaviour
 		m_lapTimer = GetComponentInParent<LapTimer>();
 		if (m_lapTimer == null)
 			{
-			Debug.LogError("TrackTimerSector must be child of a TrackTimer object. Component disabled");
+			Debug.LogError("LapSectorMark must be child of a LapTimer object. Component disabled");
 			enabled = false;
 			return;
 			}
