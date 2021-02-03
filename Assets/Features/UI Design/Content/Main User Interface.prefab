@@ -1517,6 +1517,7 @@ GameObject:
   - component: {fileID: 4251215811177965313}
   - component: {fileID: 4251215811177965319}
   - component: {fileID: 4251215811177965312}
+  - component: {fileID: 7101782786475987221}
   m_Layer: 5
   m_Name: Lap Info
   m_TagString: Untagged
@@ -1581,6 +1582,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7101782786475987221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251215811177965314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2a3ebc8e92e4794686d6ffaafa16e52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lapTimeTable: {fileID: 3340447758727781384}
+  timeCell: {fileID: 9117565912952862766}
 --- !u!1 &4251215811194169976
 GameObject:
   m_ObjectHideFlags: 0
@@ -3861,6 +3876,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03c1d693fc6b10248a750551230db282, type: 3}
+--- !u!114 &3340447758727781384 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4494186032104731797, guid: 03c1d693fc6b10248a750551230db282,
+    type: 3}
+  m_PrefabInstance: {fileID: 1154374970120857757}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 891ca2d6d2ff3ff4caf3740654b93e91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &9047155659452645512 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7892802198616205333, guid: 03c1d693fc6b10248a750551230db282,
