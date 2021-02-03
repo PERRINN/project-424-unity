@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Perrinn424.UI
+namespace Perrinn424.UI.Debug
 {
     public class LapDebug : MonoBehaviour
     {
