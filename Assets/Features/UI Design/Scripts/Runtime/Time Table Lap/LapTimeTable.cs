@@ -76,8 +76,8 @@ namespace Perrinn424.UI
             for (int i = 0; i < table.LapCount; i++)
             {
                 LapTime lap = table[i];
-                LapRow row = rowList[i];
-                row.Refresh($"Lap {i + 1}", lap, normalFormat);
+                LapRow rowUI = rowList[i];
+                rowUI.Refresh($"Lap {i + 1}", lap, normalFormat);
             }
         }
 

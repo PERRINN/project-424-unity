@@ -6,7 +6,6 @@ namespace Perrinn424.UI
 {
     public class TimeCell : MonoBehaviour
     {
-
         [SerializeField]
         private Text text = default;
         [SerializeField]

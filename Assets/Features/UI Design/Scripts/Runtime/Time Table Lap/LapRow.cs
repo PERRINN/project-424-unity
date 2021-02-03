@@ -25,6 +25,7 @@ namespace Perrinn424.UI
 
         public void ApplyFormat(int cellIndex, FormatCell format)
         {
+            //+1 because the first one is for the title and has not format
             timeCells[cellIndex+1].ApplyFormat(format);
         }
     } 
