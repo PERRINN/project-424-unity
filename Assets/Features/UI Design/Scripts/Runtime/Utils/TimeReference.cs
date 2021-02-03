@@ -31,8 +31,8 @@ namespace Perrinn424
                 return float.NaN;
 
             previousIndex = index;
-            float ration = (currentDistance - distance[index]) / (distance[index + 1] - distance[index]);
-            float referenceTime = Mathf.Lerp(time[index], time[index + 1], ration);
+            float ratio = (currentDistance - distance[index]) / (distance[index + 1] - distance[index]);
+            float referenceTime = Mathf.Lerp(time[index], time[index + 1], ratio);
             float diff = currentTime - referenceTime;
             return diff;
         }

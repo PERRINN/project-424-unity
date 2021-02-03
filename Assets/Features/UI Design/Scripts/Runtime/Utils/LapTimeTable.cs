@@ -37,7 +37,7 @@ namespace Perrinn424
         public LapTimeTable(int sectorCount)
         {
             this.sectorCount = sectorCount;
-            this.timeColumsCount = sectorCount + 1;
+            this.timeColumsCount = sectorCount + 1; //colum count = sector count (n) + total time (1)
             laps = new List<LapTime>();
 
             bestTimes = new int[timeColumsCount];
@@ -96,11 +96,11 @@ namespace Perrinn424
             {
                 for (int sectorIndex = 0; sectorIndex < timeColumsCount; sectorIndex++)
                 {
-                    int minLapIndex = bestTimes[sectorIndex];
-                    float minTime = laps[minLapIndex][sectorIndex];
+                    int indexOfLapWithMinimumTimeInThisSector = bestTimes[sectorIndex];
+                    float minimumTimeInThisSector = laps[indexOfLapWithMinimumTimeInThisSector][sectorIndex];
 
-                    float currentTime = laps[lapIndex][sectorIndex];
-                    if (currentTime < minTime)
+                    float timeInThisLapInThisSector = laps[lapIndex][sectorIndex];
+                    if (timeInThisLapInThisSector < minimumTimeInThisSector)
                     {
                         bestTimes[sectorIndex] = lapIndex;
                         LapSectorToIndex(lapIndex, sectorIndex, out int globalIndex);
