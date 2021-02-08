@@ -262,7 +262,7 @@ public class Autopilot : MonoBehaviour
             float SecondsPerFrame = Time.time - m_lastTime;
             m_lastPosition = rigidBody424.position;
             m_totalDistance += replayTravelingDistance;
-            print(m_totalDistance);
+            
             // Brake Control
             if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 >= replayTravelingDistance / SecondsPerFrame * autopilotBrakeControl / 100)
             {
