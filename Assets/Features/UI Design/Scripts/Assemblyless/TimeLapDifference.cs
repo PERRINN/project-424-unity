@@ -1,0 +1,30 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using VehiclePhysics.Timing;
+
+namespace Perrinn424.UI
+{
+    public class TimeLapDifference : MonoBehaviour
+    {
+        [SerializeField]
+        private LapTimer lapTime = default;
+
+        [SerializeField]
+        private Text electricRecord = default;
+        [SerializeField]
+        private Text overallRecord = default;
+
+        private TimeDiff919 diff = new TimeDiff919();
+
+        private void Update()
+        {
+            float currentLapTime = lapTime.currentLapTime;
+            float currentLapDistance = Project424.Telemetry424.m_lapDistance;
+
+            diff.Update(currentLapTime, currentLapDistance);
+
+            electricRecord.text = $"{diff.VolkswagenDiff:+0.000;-0.000;0.000}";
+            overallRecord.text = $"{diff.PorscheDiff:+0.000;-0.000;0.000}";
+        }
+    } 
+}
