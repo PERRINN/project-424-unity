@@ -62,6 +62,13 @@ public class Autopilot : MonoBehaviour
             m_ffbForceIntensity = m_deviceInput.forceIntensity;
             m_ffbDamperCoefficient = m_deviceInput.damperCoefficient;
         }
+
+        if (referenceLapDuplicated())
+        {
+            enabled = false;
+            return;
+        }
+        else { print("No duplicates."); }
     }
 
     void Update()
@@ -255,7 +262,7 @@ public class Autopilot : MonoBehaviour
             float SecondsPerFrame = Time.time - m_lastTime;
             m_lastPosition = rigidBody424.position;
             m_totalDistance += replayTravelingDistance;
-
+            print(m_totalDistance);
             // Brake Control
             if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 >= replayTravelingDistance / SecondsPerFrame * autopilotBrakeControl / 100)
             {
@@ -309,5 +316,23 @@ public class Autopilot : MonoBehaviour
             max = valueA > valueB ? valueA : valueB
         };
         return values;
+    }
+
+    bool referenceLapDuplicated()
+    {
+        bool duplicated = false;
+
+        for (int i = 0; i < recordedReplay.Count; i++)
+        {
+            float posX = recordedReplay[i].position.x;
+            float posZ = recordedReplay[i].position.z;
+
+            if (posX <= -661.53 && posX >= -661.73 && posZ <= 15 && posZ >= -22)
+            {
+                print(i);
+                duplicated = true;
+            }
+        }
+        return duplicated;
     }
 }
