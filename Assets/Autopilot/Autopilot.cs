@@ -262,7 +262,7 @@ public class Autopilot : MonoBehaviour
             float SecondsPerFrame = Time.time - m_lastTime;
             m_lastPosition = rigidBody424.position;
             m_totalDistance += replayTravelingDistance;
-            
+
             // Brake Control
             if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 >= replayTravelingDistance / SecondsPerFrame * autopilotBrakeControl / 100)
             {
@@ -321,6 +321,7 @@ public class Autopilot : MonoBehaviour
     bool referenceLapDuplicated()
     {
         bool duplicated = false;
+        int count = 0;
 
         for (int i = 0; i < recordedReplay.Count; i++)
         {
@@ -330,7 +331,8 @@ public class Autopilot : MonoBehaviour
             if (posX <= -661.53 && posX >= -661.73 && posZ <= 15 && posZ >= -22)
             {
                 print(i);
-                duplicated = true;
+                count++;
+                if (count > 1) { duplicated = true; }
             }
         }
         return duplicated;
