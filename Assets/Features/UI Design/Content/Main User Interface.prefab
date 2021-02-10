@@ -2162,7 +2162,6 @@ GameObject:
   - component: {fileID: 4251215812570826028}
   - component: {fileID: 4251215812570826029}
   - component: {fileID: 4251215812570826030}
-  - component: {fileID: 6872704052873409988}
   m_Layer: 5
   m_Name: Main User Interface
   m_TagString: Untagged
@@ -2252,19 +2251,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6872704052873409988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4251215812570826031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 255636f5d1d7ea349a411d44605e8e04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 4251215812570826028}
 --- !u!1 &7127076080908140179
 GameObject:
   m_ObjectHideFlags: 0
@@ -3776,6 +3762,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03c1d693fc6b10248a750551230db282, type: 3}
+--- !u!224 &9047155659452645512 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7892802198616205333, guid: 03c1d693fc6b10248a750551230db282,
+    type: 3}
+  m_PrefabInstance: {fileID: 1154374970120857757}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3340447758727781384 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4494186032104731797, guid: 03c1d693fc6b10248a750551230db282,
@@ -3788,12 +3780,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891ca2d6d2ff3ff4caf3740654b93e91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &9047155659452645512 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7892802198616205333, guid: 03c1d693fc6b10248a750551230db282,
-    type: 3}
-  m_PrefabInstance: {fileID: 1154374970120857757}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1590837630207968378
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5751,6 +5737,11 @@ PrefabInstance:
       propertyPath: m_FontData.m_MinSize
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1862744975944216236, guid: db55f80ad4849d84fb9b6dea78d742ca,
+        type: 3}
+      propertyPath: m_FontData.m_FontStyle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Pivot.x
@@ -5854,6 +5845,11 @@ PrefabInstance:
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_FontData.m_MinSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
+        type: 3}
+      propertyPath: m_FontData.m_FontStyle
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6562364661668434859, guid: db55f80ad4849d84fb9b6dea78d742ca,
