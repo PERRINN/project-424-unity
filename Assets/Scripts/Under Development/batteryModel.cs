@@ -76,9 +76,7 @@ public class batteryModel : MonoBehaviour
         //print(batteryCapacity);
         //print(powerTotal);
 
-        m_text = "Battery SOC (%): " + System.Math.Round(batterySOC) + "\n";
-        m_text += "Power used (kW): " + System.Math.Round(powerTotal) + "\n";
-        m_text += "Energy left (kWh): " + System.Math.Round(batteryCapacity) + "\n";
+
 
         SteeringScreen.batSOC = batterySOC;
         SteeringScreen.batCapacity = batteryCapacity;
@@ -100,27 +98,31 @@ public class batteryModel : MonoBehaviour
             batteryCapacity = 0;
         }
     }
-    //
-    // void OnGUI()
-    // {
-    //     // Compute box size
-    //
-    //     Vector2 contentSize = m_textStyle.CalcSize(new GUIContent(m_text));
-    //     float margin = m_textStyle.lineHeight * 1.2f;
-    //     float headerHeight = GUI.skin.box.lineHeight;
-    //
-    //     m_boxWidth = contentSize.x + margin;
-    //     m_boxHeight = contentSize.y + headerHeight + margin / 2;
-    //
-    //     // Compute box position
-    //
-    //     float xPos = position.x < 0 ? Screen.width + position.x - m_boxWidth : position.x;
-    //     float yPos = position.y < 0 ? Screen.height + position.y - m_boxHeight : position.y;
-    //
-    //     // Draw telemetry box
-    //
-    //     GUI.Box(new Rect(xPos, yPos, m_boxWidth, m_boxHeight), "424 Battery Model");
-    //     GUI.Label(new Rect(xPos + margin / 2, yPos + margin / 2 + headerHeight, Screen.width, Screen.height), m_text, m_textStyle);
-    // }
+
+    void OnGUI()
+    {
+        // Compute box size
+
+        //m_text = "Battery SOC (%): " + System.Math.Round(batterySOC) + "\n";
+        //m_text += "Power used (kW): " + System.Math.Round(powerTotal) + "\n";
+        //m_text += "Energy left (kWh): " + System.Math.Round(batteryCapacity) + "\n";
+
+        //Vector2 contentSize = m_textStyle.CalcSize(new GUIContent(m_text));
+        //float margin = m_textStyle.lineHeight * 1.2f;
+        //float headerHeight = GUI.skin.box.lineHeight;
+
+        //m_boxWidth = contentSize.x + margin;
+        //m_boxHeight = contentSize.y + headerHeight + margin / 2;
+
+        //// Compute box position
+
+        //float xPos = position.x < 0 ? Screen.width + position.x - m_boxWidth : position.x;
+        //float yPos = position.y < 0 ? Screen.height + position.y - m_boxHeight : position.y;
+
+        //// Draw telemetry box
+
+        //GUI.Box(new Rect(xPos, yPos, m_boxWidth, m_boxHeight), "424 Battery Model");
+        //GUI.Label(new Rect(xPos + margin / 2, yPos + margin / 2 + headerHeight, Screen.width, Screen.height), m_text, m_textStyle);
+    }
 
 }
