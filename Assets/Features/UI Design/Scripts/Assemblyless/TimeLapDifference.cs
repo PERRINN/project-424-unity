@@ -16,7 +16,7 @@ namespace Perrinn424.UI
 
         private TimeDiff919 diff = new TimeDiff919();
 
-        private string format = "+0.000 s;-0.000 s;0.000 s";
+        private string format = "+0.0 s;-0.0 s;0.0 s";
 
         private void Update()
         {
