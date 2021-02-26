@@ -33,6 +33,7 @@ public class Autopilot : MonoBehaviour
     float m_ffbDamperCoefficient;
 
     public float offsetValue = -1.6885f;
+    public BoxCollider startLine;
 
     void OnEnable()
     {
@@ -325,16 +326,15 @@ public class Autopilot : MonoBehaviour
 
         for (int i = 0; i < recordedReplay.Count; i++)
         {
-            float posX = recordedReplay[i].position.x;
-            float posZ = recordedReplay[i].position.z;
-
-            if (posX <= -661.53 && posX >= -661.73 && posZ <= 15 && posZ >= -22)
+            startLine.size = new Vector3(1, 1, 0.09f);
+            if (startLine.bounds.Contains(recordedReplay[i].position))
             {
                 print(i);
                 count++;
                 if (count > 1) { duplicated = true; }
             }
         }
+        startLine.size = new Vector3(1, 1, 1);
         return duplicated;
     }
 }
