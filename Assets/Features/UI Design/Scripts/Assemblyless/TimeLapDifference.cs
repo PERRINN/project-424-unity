@@ -16,6 +16,8 @@ namespace Perrinn424.UI
 
         private TimeDiff919 diff = new TimeDiff919();
 
+        private string format = "+0.0 s;-0.0 s;0.0 s";
+
         private void Update()
         {
             float currentLapTime = lapTime.currentLapTime;
@@ -23,8 +25,8 @@ namespace Perrinn424.UI
 
             diff.Update(currentLapTime, currentLapDistance);
 
-            electricRecord.text = $"{diff.VolkswagenDiff:+0.000;-0.000;0.000}";
-            overallRecord.text = $"{diff.PorscheDiff:+0.000;-0.000;0.000}";
+            electricRecord.text = diff.VolkswagenDiff.ToString(format);
+            overallRecord.text = diff.PorscheDiff.ToString(format);
         }
     } 
 }
