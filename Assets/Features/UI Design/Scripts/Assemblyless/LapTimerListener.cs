@@ -10,7 +10,7 @@ namespace Perrinn424.UI
         private LapTimeTable lapTimeTable = default;
 
         [SerializeField]
-        private TimeCell timeCell; 
+        private TimeCell timeCell;
 
         private void Awake()
         {
@@ -36,7 +36,8 @@ namespace Perrinn424.UI
 
         private void Update()
         {
-            timeCell.SetTime(lapTimer.currentLapTime, @"mm\:ss\:fff");
+            if (lapTimer != null)
+                timeCell.SetTime(lapTimer.currentLapTime, @"mm\:ss\:fff");
         }
     }
 }
