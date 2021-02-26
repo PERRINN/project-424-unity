@@ -1476,7 +1476,7 @@ MonoBehaviour:
   steeringAids:
     priority: 1
     helpMode: 0
-    helpRatio: 1
+    helpRatio: 0.505
     limitMode: 0
     limitRatio: 1
     limitProportionality: 1
@@ -1492,7 +1492,7 @@ MonoBehaviour:
     throttleSlope: 1
   tractionControl:
     enabled: 0
-    mode: 0
+    mode: 2
     ratio: 1
     customSlip: 2
 --- !u!114 &4116892635276943223
@@ -1689,7 +1689,7 @@ MonoBehaviour:
     maxTorque: 800
     maxPower: 600
     numGears: 1
-    maxSuspensionDistance: 0.06
+    maxSuspensionDistance: 0.08
     maxSpringRate: 100000
     maxWheelTorque: 4000
     maxAccelerationG: 4
