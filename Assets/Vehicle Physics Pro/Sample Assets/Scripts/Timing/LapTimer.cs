@@ -238,7 +238,7 @@ public class LapTimer : MonoBehaviour
 					{
 					m_sectors[sectors-1] = hitTime - m_sectorStartTime;
 					m_validSectors[sectors-1] = !m_invalidSector;
-					// if (onLap != null) onLap(lapTime, !m_invalidLap, m_sectors, m_validSectors);
+					if (onLap != null) onLap(lapTime, !m_invalidLap, m_sectors, m_validSectors);
 
 					if (debugLog)
 						{
