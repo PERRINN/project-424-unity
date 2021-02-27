@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Perrinn424
 {
@@ -10,23 +12,43 @@ namespace Perrinn424
         public float Sum => times[SumIndex];
         public readonly int sectorCount;
         public int TimesCount { get; }
+        public bool IsCompleted { get; }
 
-        public LapTime(float[] s)
+        public LapTime(int sectorCount, float[] sectorTimes)
         {
-            sectorCount = s.Length;
+            if (sectorTimes.Length > sectorCount)
+            {
+                string msg = $"The provider array lenght is bigger than sector count. {sectorTimes.Length} > {sectorCount}";
+                throw new ArgumentException(msg);
+            }
+
+            this.sectorCount = sectorCount;
             this.times = new float[sectorCount + 1];
 
             int i;
             float sum = 0f;
-            for (i = 0; i < sectorCount; i++)
+
+            for (i = 0; i < sectorTimes.Length; i++)
             {
-                sum += s[i];
-                times[i] = s[i];
+                sum += sectorTimes[i];
+                times[i] = sectorTimes[i];
             }
+
+            for (i = sectorTimes.Length; i < sectorCount; i++)
+            {
+                times[i] = Mathf.Infinity;
+                sum = Mathf.Infinity;
+            }
+
+
             times[SumIndex] = sum;
             TimesCount = times.Length;
+
+            IsCompleted = sectorCount == sectorTimes.Length;
         }
 
+        public LapTime(float[] s) : this(s.Length, s){}
+        public LapTime(int sectorCount) : this(sectorCount, new float[0]){}
 
         public float this[int i] => times[i];
 
