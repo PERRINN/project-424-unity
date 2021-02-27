@@ -12,8 +12,9 @@ namespace Perrinn424
         public float Sum => times[SumIndex];
         public readonly int sectorCount;
         public int TimesCount { get; }
-        public bool IsCompleted { get; }
+        public bool IsCompleted => pointer == sectorCount;
 
+        private int pointer;
         public LapTime(int sectorCount, float[] sectorTimes)
         {
             if (sectorTimes.Length > sectorCount)
@@ -33,7 +34,7 @@ namespace Perrinn424
                 sum += sectorTimes[i];
                 times[i] = sectorTimes[i];
             }
-
+            pointer = i;
             for (i = sectorTimes.Length; i < sectorCount; i++)
             {
                 times[i] = Mathf.Infinity;
@@ -43,8 +44,6 @@ namespace Perrinn424
 
             times[SumIndex] = sum;
             TimesCount = times.Length;
-
-            IsCompleted = sectorCount == sectorTimes.Length;
         }
 
         public LapTime(float[] s) : this(s.Length, s){}
