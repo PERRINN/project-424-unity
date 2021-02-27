@@ -51,6 +51,24 @@ namespace Perrinn424
 
         public float this[int i] => times[i];
 
+        public void AddSector(float newTime)
+        {
+            if(IsCompleted)
+                throw new ArgumentException("The lap is completed");
+
+            times[pointer++] = newTime;
+
+            if (IsCompleted)
+            {
+                float sum = 0;
+                for (int i = 0; i < sectorCount; i++)
+                {
+                    sum += times[i];
+                }
+
+                times[SumIndex] = sum;
+            }
+        }
 
         public IEnumerator<float> GetEnumerator()
         {
