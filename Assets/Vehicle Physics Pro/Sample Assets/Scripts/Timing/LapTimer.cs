@@ -40,6 +40,7 @@ public class LapTimer : MonoBehaviour
 	// Event delegate called on each valid lap registered
 
 	public Action<float, bool, float[], bool[]> onLap;
+        public Action<int, float> onSector;
 
 	// Current lap time
 
@@ -230,7 +231,9 @@ public class LapTimer : MonoBehaviour
 					{
 					m_sectors[sectors-1] = hitTime - m_sectorStartTime;
 					m_validSectors[sectors-1] = !m_invalidSector;
-					if (onLap != null) onLap(lapTime, !m_invalidLap, m_sectors, m_validSectors);
+					    onSector?.Invoke(sectors, m_sectors[sectors - 1]);
+
+                        if (onLap != null) onLap(lapTime, !m_invalidLap, m_sectors, m_validSectors);
 
 					if (debugLog)
 						{
@@ -307,6 +310,7 @@ public class LapTimer : MonoBehaviour
 				m_validSectors[sector-1] = !m_invalidSector;
 				m_sectorStartTime = hitTime;
 				m_invalidSector = false;
+                    onSector?.Invoke(sector, m_sectors[sector-1]);
 				}
 			else
 				{

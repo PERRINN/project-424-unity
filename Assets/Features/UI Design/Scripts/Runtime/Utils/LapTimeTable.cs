@@ -15,9 +15,9 @@ namespace Perrinn424
 
         /// <summary>
         /// Contains the best lap of each sector
-        /// For example bestTimes[2] => 1 means that in sector 2, the best lap is 1
+        /// For example bestLapForEachSector[2] => 1 means that in sector 2, the best lap is 1
         /// </summary>
-        private readonly int[] bestTimes;
+        private readonly int[] bestLapForEachSector;
 
         /// <summary>
         /// Improved times contains a list of index. These indices are in colunm-row format. This mean that, with one int, we could get column and row
@@ -30,6 +30,7 @@ namespace Perrinn424
         /// 4 5 6 7
         /// 8 9 10 [11] 
         /// </example>
+        /// <see cref="IndexToLapSector"/>
         private readonly List<int> improvedTimes;
 
         private bool isDirty;
@@ -40,7 +41,7 @@ namespace Perrinn424
             this.timeColumsCount = sectorCount + 1; //colum count = sector count (n) + total time (1)
             laps = new List<LapTime>();
 
-            bestTimes = new int[timeColumsCount];
+            bestLapForEachSector = new int[timeColumsCount];
             improvedTimes = new List<int>();
         }
 
@@ -61,10 +62,28 @@ namespace Perrinn424
             isDirty = true;
         }
 
-        public int [] GetBestTimes()
+        public bool AddSector(float sector)
+        {
+            LapTime lastLap = laps.LastOrDefault();
+            bool newLapNeeded = lastLap == null || lastLap.IsCompleted; //laps empty or last lap is completed
+            if (newLapNeeded)
+            {
+                LapTime newLap = new LapTime(sectorCount, new []{sector});
+                AddLap(newLap);
+            }
+            else
+            {
+                lastLap.AddSector(sector);
+            }
+
+            isDirty = true;
+            return newLapNeeded;
+        }
+
+        public int [] GetBestLapForEachSector()
         {
             CalculateBest();
-            return bestTimes;
+            return bestLapForEachSector;
         }
 
         public int[] GetImprovedTimes()
@@ -76,7 +95,7 @@ namespace Perrinn424
         public int GetBestLap()
         {
             CalculateBest();
-            return bestTimes[timeColumsCount-1];
+            return bestLapForEachSector[timeColumsCount-1];
         }
 
         private void CalculateBest()
@@ -89,20 +108,20 @@ namespace Perrinn424
             //Assume that the best sector is in lap 0
             for (int sectorIndex = 0; sectorIndex < timeColumsCount; sectorIndex++)
             {
-                bestTimes[sectorIndex] = 0;
+                bestLapForEachSector[sectorIndex] = 0;
             }
 
             for (int lapIndex = 1; lapIndex < laps.Count; lapIndex++)
             {
                 for (int sectorIndex = 0; sectorIndex < timeColumsCount; sectorIndex++)
                 {
-                    int indexOfLapWithMinimumTimeInThisSector = bestTimes[sectorIndex];
+                    int indexOfLapWithMinimumTimeInThisSector = bestLapForEachSector[sectorIndex];
                     float minimumTimeInThisSector = laps[indexOfLapWithMinimumTimeInThisSector][sectorIndex];
 
                     float timeInThisLapInThisSector = laps[lapIndex][sectorIndex];
                     if (timeInThisLapInThisSector < minimumTimeInThisSector)
                     {
-                        bestTimes[sectorIndex] = lapIndex;
+                        bestLapForEachSector[sectorIndex] = lapIndex;
                         LapSectorToIndex(lapIndex, sectorIndex, out int globalIndex);
                         improvedTimes.Add(globalIndex);
                     }
@@ -125,7 +144,7 @@ namespace Perrinn424
             return GetEnumerator();
         }
 
-        public void IntToLapSector(int index, out int lap, out int sector)
+        public void IndexToLapSector(int index, out int lap, out int sector)
         {
             lap = index / timeColumsCount;
             sector = index % timeColumsCount;

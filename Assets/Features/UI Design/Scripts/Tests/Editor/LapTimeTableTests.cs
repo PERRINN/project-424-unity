@@ -20,14 +20,15 @@ namespace Perrinn424.Editor.Tests
             table.AddLap(new []{26.732f, 27.604f, 26.940f});//lap 7
             table.AddLap(new []{26.738f, 27.608f, 26.940f});//lap 8
             table.AddLap(new []{26.726f, 27.608f, 26.934f});//lap 9
-            table.AddLap(new []{26.736f, 27.602f, 26.934f});//lap 10
+            table.AddLap(new[] { 26.736f, 27.602f, 26.934f });//lap 10
+            table.AddSector(30f);
         }
 
         [Test]
         public void BestSectorsTest()
         {
             int[] expectedBest = {1, 9, 3, 3};
-            int[] bestIndex = table.GetBestTimes();
+            int[] bestIndex = table.GetBestLapForEachSector();
             Assert.That(bestIndex, Is.EquivalentTo(expectedBest));
         }
 
@@ -35,7 +36,7 @@ namespace Perrinn424.Editor.Tests
         [TestCase(11,2,3)]
         public void IndexToLapSectorTest(int index, int expectedLap, int expectedSector)
         {
-            table.IntToLapSector(index, out int lap, out int sector);
+            table.IndexToLapSector(index, out int lap, out int sector);
             Assert.AreEqual(expectedLap, lap);
             Assert.AreEqual(expectedSector, sector);
         }
@@ -65,5 +66,28 @@ namespace Perrinn424.Editor.Tests
             int expected = 3;
             Assert.AreEqual(expected, bestLap);
         }
-    } 
-}
+
+        [Test]
+        public void IncompleteLapTest()
+        {
+            table = new LapTimeTable(3);
+            table.AddLap(new[] { 26.736f, 27.610f, 26.938f });//lap 1
+            table.AddLap(new[] { 26.726f, 27.610f, 26.938f });//lap 2
+            table.AddLap(new[] { 26.730f, 27.610f, 26.936f });//lap 3
+            //table.AddLap(new[] { 26.728f, 27.606f, 26.934f });//lap 4
+            table.AddSector(20f);
+
+            int bestLap = table.GetBestLap();
+            int expected = 1;
+            Assert.AreEqual(expected, bestLap);
+
+            int[] expectedBest = { 3, 0, 2, 1 };
+            int[] bestIndex = table.GetBestLapForEachSector();
+            Assert.That(bestIndex, Is.EquivalentTo(expectedBest));
+
+            int[] improvementIndices = table.GetImprovedTimes();
+            table.LapSectorToIndex(3, 0, out int testIndex);
+            CollectionAssert.Contains(improvementIndices, testIndex);
+        }
+    }
+} 
