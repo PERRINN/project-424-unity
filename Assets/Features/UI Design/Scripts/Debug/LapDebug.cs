@@ -10,26 +10,32 @@ namespace Perrinn424.UI.Debug
 
         private IEnumerator Start()
         {
-            IEnumerator getLaps = GetLaps();
+            //IEnumerator getLaps = GetLaps().GetEnumerator();
 
-            while (getLaps.MoveNext())
+            //while (getLaps.MoveNext())
+            //{
+            //    float[] lap = (float[])getLaps.Current;
+            //    tapTimeTable.AddLap(lap);
+            //    yield return new WaitForSeconds(waitTime);
+            //}
+
+            //IEnumerator getSectors = GetSectors().GetEnumerator();
+
+            //while (getSectors.MoveNext())
+            //{
+            //    float sector = (float)getSectors.Current;
+            //    tapTimeTable.AddSector(sector);
+            //    yield return new WaitForSeconds(waitTime);
+            //}
+
+            foreach (float sector in GetSectorsFromLaps())
             {
-                float[] lap = (float[])getLaps.Current;
-                tapTimeTable.AddLap(lap);
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            IEnumerator getSectors = GetSectors();
-
-            while (getSectors.MoveNext())
-            {
-                float sector = (float)getSectors.Current;
                 tapTimeTable.AddSector(sector);
                 yield return new WaitForSeconds(waitTime);
             }
         }
 
-        IEnumerator GetLaps()
+        IEnumerable GetLaps()
         {
             yield return new[] { 26.736f, 27.610f, 26.938f}; //lap 1
             yield return new[] { 26.726f, 27.610f, 26.938f };//lap 2
@@ -43,7 +49,7 @@ namespace Perrinn424.UI.Debug
             yield return new[] { 26.736f, 27.602f, 26.934f };//lap 10
         }
 
-        IEnumerator GetSectors()
+        IEnumerable GetSectors()
         {
             yield return 20f; //lap 11, sector 1
             yield return 22f; //lap 11, sector 2
@@ -52,6 +58,17 @@ namespace Perrinn424.UI.Debug
             yield return 10f; //lap 12, sector 1
             yield return 32f; //lap 12, sector 2
             yield return 50f; //lap 12, sector 3
+        }
+
+        IEnumerable GetSectorsFromLaps()
+        {
+            foreach (float [] lap in GetLaps())
+            {
+                foreach (float sector in lap)
+                {
+                    yield return sector;
+                }
+            }
         }
     } 
 }

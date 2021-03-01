@@ -35,7 +35,6 @@ namespace Perrinn424.UI
             if (lapTimer != null)
             {
                 lapTimer.onSector -= OnSector;
-
             }
         }
 
