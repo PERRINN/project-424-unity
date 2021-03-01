@@ -64,13 +64,12 @@ namespace Perrinn424
 
         public bool AddSector(float sector)
         {
-            LapTime lastLap = laps[LapCount - 1];
-            bool newLapAdded = false;
-            if (lastLap.IsCompleted)
+            LapTime lastLap = laps.LastOrDefault();
+            bool newLapNeeded = lastLap == null || lastLap.IsCompleted; //laps empty or last lap is completed
+            if (newLapNeeded)
             {
                 LapTime newLap = new LapTime(sectorCount, new []{sector});
                 AddLap(newLap);
-                newLapAdded = true;
             }
             else
             {
@@ -78,7 +77,7 @@ namespace Perrinn424
             }
 
             isDirty = true;
-            return newLapAdded;
+            return newLapNeeded;
         }
 
         public int [] GetBestLapForEachSector()

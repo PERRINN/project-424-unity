@@ -13,15 +13,18 @@ namespace Perrinn424.UI
 
         public void SetTime(float seconds)
         {
-            TimeSpan time = TimeSpan.FromSeconds(seconds);
-
-            string format = time.Minutes > 0 ? @"m\:ss\:fff" : @"ss\:fff";
-            string str = time.ToString(format);
-            SetText(str);
+            string format = seconds > 60f ? @"m\:ss\:fff" : @"ss\:fff";
+            SetTime(seconds, format);
         }
 
         public void SetTime(float seconds, string format)
         {
+            if (float.IsPositiveInfinity(seconds))
+            {
+                SetText(string.Empty);
+                return;
+            }
+
             TimeSpan time = TimeSpan.FromSeconds(seconds);
             string str = time.ToString(format);
             SetText(str);

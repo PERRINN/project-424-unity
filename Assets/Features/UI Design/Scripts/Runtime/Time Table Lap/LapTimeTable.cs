@@ -22,27 +22,40 @@ namespace Perrinn424.UI
         [SerializeField]
         private ScrollRect scrollRect = default;
 
+        [SerializeField]
+        private int sectorCount = 3;
+
         private List<LapRow> rowList;
         private Perrinn424.LapTimeTable table;
 
         private void Awake()
         {
+            table = new Perrinn424.LapTimeTable(sectorCount);
             rowList = new List<LapRow>();
             lapUIPrefab.gameObject.SetActive(false);
         }
 
         public void AddLap(float[] sectors)
         {
-            if (table == null)
-                table = new Perrinn424.LapTimeTable(sectors.Length);
-
             LapTime newLap = new LapTime(sectors);
             table.AddLap(newLap);
 
             AddRow();
 
             Refresh();
+            StartCoroutine(RefreshScroll());
+        }
 
+        public void AddSector(float sector)
+        {
+            bool newLapAdded = table.AddSector(sector);
+
+            if (newLapAdded)
+            {
+                AddRow();
+            }
+
+            Refresh();
             StartCoroutine(RefreshScroll());
         }
 
@@ -87,14 +100,14 @@ namespace Perrinn424.UI
 
             foreach (int improvedTimeIndex in improvedTimes)
             {
-                table.IntToLapSector(improvedTimeIndex, out int lapIndex, out int sectorIndex);
+                table.IndexToLapSector(improvedTimeIndex, out int lapIndex, out int sectorIndex);
                 rowList[lapIndex].ApplyFormat(sectorIndex, improvementFormat);
             }
         }
 
         private void RefreshBestSectors()
         {
-            int[] bestSectors = table.GetBestTimes();
+            int[] bestSectors = table.GetBestLapForEachSector();
 
             for (int i = 0; i < bestSectors.Length; i++)
             {

@@ -19,19 +19,24 @@ namespace Perrinn424.UI
 
         private void OnEnable()
         {
-            if(lapTimer != null)
-                lapTimer.onLap += OnLap;
+            if (lapTimer != null)
+            {
+                lapTimer.onSector += OnSector;
+            }
+        }
+
+        private void OnSector(int sector, float sectorTime)
+        {
+            lapTimeTable.AddSector(sectorTime);
         }
 
         private void OnDisable()
         {
             if (lapTimer != null)
-                lapTimer.onLap -= OnLap;
-        }
+            {
+                lapTimer.onSector -= OnSector;
 
-        private void OnLap(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
-        {
-            lapTimeTable.AddLap(sectors);
+            }
         }
 
         private void Update()
