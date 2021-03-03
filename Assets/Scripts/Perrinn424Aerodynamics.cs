@@ -32,7 +32,7 @@ class Atmosphere
 	//
 	//   [IN]	alt		[m]
 	//   [IN]   dISA	[degC]
-	//		
+	//
 	//	 [OUT]	rho		[kg/m3]
 	public void calcAtmosphereParams(float alt, float dISA)
 	{
@@ -107,6 +107,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float SCx      = 0;
 	[HideInInspector] public float downforceFront  = 1.0f;
 	[HideInInspector] public float downforceRear   = 1.0f;
+	[HideInInspector] public float aeroBal   = 1.0f;
 	[HideInInspector] public float dragForce       = 1.0f;
 	[HideInInspector] public float yawAngle        = 1.0f;
 	[HideInInspector] public float steerAngle      = 1.0f;
@@ -119,9 +120,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	bool DRSStatus = false;
 
 
-	// Function Name: CalcAeroCoeff 
+	// Function Name: CalcAeroCoeff
 	// This function calculates a given aerodynamic coefficient based on:
-	// 
+	//
 	//	 [IN]	aeroSetting [AeroSettings]
 	//	 [IN]	fRH_mm [mm]
 	//	 [IN]	rRH_mm [mm]
@@ -161,9 +162,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	}
 
 
-	//  Function Name: CalcDRSPosition 
+	//  Function Name: CalcDRSPosition
 	//  This function calculates the DRS position
-	// 
+	//
 	//	 [IN]	throttlePos: 0 to 1 [-]
 	//	 [IN]	brakePos:    0 to 1 [-]
 	//	 [IN]	DRSpos:      0 to 1 [-]
@@ -193,7 +194,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		return DRSpos;
 	}
 
-	
+
 	public override void FixedUpdateVehicle()
 	{
 		Rigidbody rb = vehicle.cachedRigidbody;
@@ -250,10 +251,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		downforceFront = SCzFront * dynamicPressure;
 		downforceRear  = SCzRear  * dynamicPressure;
 		dragForce      = SCx      * dynamicPressure;
+		aeroBal	= downforceFront / (downforceFront + downforceRear) * 100;
 	}
 
 }
-
-
-
-
