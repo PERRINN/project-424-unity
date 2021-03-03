@@ -514,7 +514,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2449013302761500724}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.025, z: -0.29}
+  m_LocalPosition: {x: 0, y: -0.015, z: -0.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4790027706480996368}
@@ -1231,7 +1231,7 @@ MonoBehaviour:
   center: {x: 0.14, y: 0, z: 0}
   suspensionDistance: 0.07
   suspensionAnchor: 0
-  springRate: 150000
+  springRate: 170000
   damperRate: 3000
   suspensionTransform: {fileID: 0}
   caliperTransform: {fileID: 0}
@@ -1289,7 +1289,7 @@ MonoBehaviour:
   center: {x: 0.14, y: 0, z: 0}
   suspensionDistance: 0.06
   suspensionAnchor: 0
-  springRate: 150000
+  springRate: 170000
   damperRate: 3000
   suspensionTransform: {fileID: 0}
   caliperTransform: {fileID: 0}
@@ -2030,7 +2030,7 @@ MonoBehaviour:
   center: {x: -0.14, y: 0, z: 0}
   suspensionDistance: 0.07
   suspensionAnchor: 0
-  springRate: 150000
+  springRate: 170000
   damperRate: 3000
   suspensionTransform: {fileID: 0}
   caliperTransform: {fileID: 0}
@@ -2122,7 +2122,7 @@ MonoBehaviour:
   center: {x: -0.14, y: 0, z: 0}
   suspensionDistance: 0.06
   suspensionAnchor: 0
-  springRate: 150000
+  springRate: 170000
   damperRate: 3000
   suspensionTransform: {fileID: 0}
   caliperTransform: {fileID: 0}
@@ -2520,10 +2520,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2b8382abce58a4fa29d765c21913be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  airDensity: 1.225
-  flapAngle: 0
-  dRSActivationDelay: 1
+  heightAboveSeaLevel: 450
+  deltaISA: 0
+  dRSActivationDelay: 2
   dRSActivationTime: 0.25
+  frontFlapStaticAngle: 3
+  frontFlapFlexDeltaAngle: -8
+  frontFlapFlexMaxDownforce: 10000
   front:
     applicationPoint: {fileID: 4116892635620062688}
     constant: 3.77
@@ -2560,6 +2563,7 @@ MonoBehaviour:
     absoluteRollCoefficient: -0.0104
     dRS_Coefficient: -0.2
     frontFlapCoefficient: 0.002
+  flapAngle: 0
   DRSclosing: 0
   DRS: 0
   SCzFront: 0
@@ -2567,6 +2571,7 @@ MonoBehaviour:
   SCx: 0
   downforceFront: 1
   downforceRear: 1
+  aeroBal: 1
   dragForce: 1
   yawAngle: 1
   steerAngle: 1
@@ -2717,7 +2722,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4548208928696644523}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.025, z: -3.035}
+  m_LocalPosition: {x: 0, y: -0.015, z: -3.035}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4790027706480996368}
