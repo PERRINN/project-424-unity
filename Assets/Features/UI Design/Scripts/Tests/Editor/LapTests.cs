@@ -61,11 +61,12 @@ namespace Perrinn424.Editor.Tests
         }
 
         [Test]
-        public void AddLapTest()
+        public void AddSectorTest()
         {
             LapTime lap = new LapTime(4, new []{1f,2f});
             Assert.IsFalse(lap.IsCompleted);
             Assert.That(lap.Sum, Is.EqualTo(Mathf.Infinity));
+            Assert.That(lap.SectorsCompetedIndex, Is.EqualTo(2));
 
             lap.AddSector(3f);
             Assert.IsFalse(lap.IsCompleted);

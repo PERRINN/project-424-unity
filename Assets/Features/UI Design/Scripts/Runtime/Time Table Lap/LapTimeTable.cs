@@ -43,7 +43,6 @@ namespace Perrinn424.UI
             AddRow();
 
             Refresh();
-            StartCoroutine(RefreshScroll());
         }
 
         public void AddSector(float sector)
@@ -56,13 +55,6 @@ namespace Perrinn424.UI
             }
 
             Refresh();
-            StartCoroutine(RefreshScroll());
-        }
-
-        private IEnumerator RefreshScroll()
-        {
-            yield return null;
-            scrollRect.verticalNormalizedPosition = 0f;
         }
 
         private void AddRow()
@@ -82,6 +74,8 @@ namespace Perrinn424.UI
             RefreshImprovements();
 
             RefreshBestSectors();
+
+            StartCoroutine(RefreshScroll());
         }
 
         private void RefreshTimes()
@@ -109,11 +103,36 @@ namespace Perrinn424.UI
         {
             int[] bestSectors = table.GetBestLapForEachSector();
 
-            for (int i = 0; i < bestSectors.Length; i++)
+            //Special case. 
+            // Best sectors should appears only when there are others sectors to be compared
+            //In lap 1, there are never two sectors to compare
+            //From 3 on, there are always two sectors to compare
+            //Lap 2 is a special case, so we need to track the current sector and draw until there
+            int GetColumnMax()
+            {
+                int lapCount = table.LapCount;
+                LapTime lastLap = table[lapCount - 1];
+                if (lapCount == 2 && !lastLap.IsCompleted)
+                {
+                    return lastLap.SectorsCompetedIndex;
+                }
+
+                return bestSectors.Length;
+            }
+
+            int columnMax = GetColumnMax();
+
+            for (int i = 0; i < columnMax; i++)
             {
                 int lapIndex = bestSectors[i];
                 rowList[lapIndex].ApplyFormat(i, bestFormat);
             }
+        }
+
+        private IEnumerator RefreshScroll()
+        {
+            yield return null;
+            scrollRect.verticalNormalizedPosition = 0f;
         }
     } 
 }
