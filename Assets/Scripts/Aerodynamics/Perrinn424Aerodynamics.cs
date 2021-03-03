@@ -1,7 +1,7 @@
 using UnityEngine;
 using VehiclePhysics;
 using System;
-using Perrinn424;
+using Perrinn424.AerodynamicsSystem;
 
 
 public class Perrinn424Aerodynamics : VehicleBehaviour

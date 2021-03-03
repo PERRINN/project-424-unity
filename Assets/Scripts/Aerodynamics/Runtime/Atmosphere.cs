@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Perrinn424
+namespace Perrinn424.AerodynamicsSystem
 {
-    class Atmosphere
+    public class Atmosphere
     {
         // Constants for the atmosphere model
         private const double tHeight = 11000;            // Tropopause Height [m]
@@ -30,6 +30,7 @@ namespace Perrinn424
         /// Density, in kg/m³
         /// </summary>
         public double Density { get; private set; }
+
 
         /// <summary>
         /// Calculates the air density at a specific geometric altitude and delta ISA temperature
