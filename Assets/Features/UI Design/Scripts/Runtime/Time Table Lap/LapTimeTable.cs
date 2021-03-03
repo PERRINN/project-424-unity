@@ -114,7 +114,7 @@ namespace Perrinn424.UI
                 LapTime lastLap = table[lapCount - 1];
                 if (lapCount == 2 && !lastLap.IsCompleted)
                 {
-                    return lastLap.SectorsCompetedIndex;
+                    return lastLap.SectorsCompletedIndex;
                 }
 
                 return bestSectors.Length;
