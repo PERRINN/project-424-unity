@@ -8,6 +8,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 {
 	private Atmosphere atmosphere = new Atmosphere();
 
+	[Serializable]
 	public class AeroSettings
 	{
 		public Transform applicationPoint;
