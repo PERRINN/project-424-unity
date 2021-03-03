@@ -223,6 +223,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Calculating front flap deflection due to aeroelasticity
 		flapAngle = frontFlapStaticAngle + downforceFront * frontFlapFlexDeltaAngle / frontFlapFlexMaxDownforce;
+		flapAngle = Math.Min(Math.Max(flapAngle, -5), 5);
 
 		// Calculating aero forces
 		if (front.applicationPoint != null)

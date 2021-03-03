@@ -8,19 +8,12 @@ public class DRSActivation : MonoBehaviour
 
 
     VehicleBase target;
-    Perrinn424Aerodynamics m_aero;
 
     float drsPosition;
-    bool rotating = false;
-    bool DRSclosing;
-    float degreesPerSecond;
-
 
     void OnEnable()
     {
         target = GetComponentInParent<VehicleBase>();
-        m_aero = target.GetComponentInChildren<Perrinn424Aerodynamics>();
-        degreesPerSecond = 90 / m_aero.dRSActivationTime;
 
     }
     // Update is called once per frame
