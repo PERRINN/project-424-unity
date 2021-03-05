@@ -69,7 +69,6 @@ public class Autopilot : MonoBehaviour
             enabled = false;
             return;
         }
-        else { print("No duplicates."); }
     }
 
     void Update()
@@ -329,7 +328,6 @@ public class Autopilot : MonoBehaviour
             startLine.size = new Vector3(1, 1, 0.09f);
             if (startLine.bounds.Contains(recordedReplay[i].position))
             {
-                print(i);
                 count++;
                 if (count > 1) { duplicated = true; }
             }

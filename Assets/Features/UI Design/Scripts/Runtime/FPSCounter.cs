@@ -15,13 +15,9 @@ namespace Perrinn424.UI
 
         private float timer;
 
-        private void Awake()
+        private void OnEnable()
         {
             counter = new Perrinn424.FPSCounter();
-        }
-
-        private void Start()
-        {
             Refresh();
         }
 
@@ -40,5 +36,5 @@ namespace Perrinn424.UI
             counter.Update();
             text.text = $"{counter.Current:F0} FPS";
         }
-    } 
+    }
 }

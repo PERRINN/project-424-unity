@@ -10,7 +10,7 @@ namespace Perrinn424.UI
         private LapTimeTable lapTimeTable = default;
 
         [SerializeField]
-        private TimeCell timeCell; 
+        private TimeCell timeCell;
 
         private void Awake()
         {
@@ -19,24 +19,29 @@ namespace Perrinn424.UI
 
         private void OnEnable()
         {
-            if(lapTimer != null)
-                lapTimer.onLap += OnLap;
+            if (lapTimer != null)
+            {
+                lapTimer.onSector += OnSector;
+            }
+        }
+
+        private void OnSector(int sector, float sectorTime)
+        {
+            lapTimeTable.AddSector(sectorTime);
         }
 
         private void OnDisable()
         {
             if (lapTimer != null)
-                lapTimer.onLap -= OnLap;
-        }
-
-        private void OnLap(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
-        {
-            lapTimeTable.AddLap(sectors);
+            {
+                lapTimer.onSector -= OnSector;
+            }
         }
 
         private void Update()
         {
-            timeCell.SetTime(lapTimer.currentLapTime, @"mm\:ss\:fff");
+            if (lapTimer != null)
+                timeCell.SetTime(lapTimer.currentLapTime, @"mm\:ss\:fff");
         }
     }
 }
