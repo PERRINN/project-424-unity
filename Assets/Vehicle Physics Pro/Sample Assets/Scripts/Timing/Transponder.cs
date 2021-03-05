@@ -62,6 +62,9 @@ public class Transponder : VehicleBehaviour
 
 	bool IsValidMaterial (PhysicMaterial material)
 		{
+		// No valid materials specified = all materials valid
+		if (trackMaterials.Length == 0) return true;
+
 		for (int i=0, c=trackMaterials.Length; i<c; i++)
 			{
 			if (trackMaterials[i] == material)

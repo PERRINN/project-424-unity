@@ -113,6 +113,12 @@ public class LapTimer : MonoBehaviour
 			if (Input.GetKeyDown(KeyCode.Alpha1)) OnTimerHit(0, Time.time);
 			if (Input.GetKeyDown(KeyCode.Alpha2)) OnTimerHit(1, Time.time);
 			if (Input.GetKeyDown(KeyCode.Alpha3)) OnTimerHit(2, Time.time);
+			if (Input.GetKeyDown(KeyCode.Alpha4)) OnTimerHit(3, Time.time);
+			if (Input.GetKeyDown(KeyCode.Alpha5)) OnTimerHit(4, Time.time);
+			if (Input.GetKeyDown(KeyCode.Alpha6)) OnTimerHit(5, Time.time);
+			if (Input.GetKeyDown(KeyCode.Alpha7)) OnTimerHit(6, Time.time);
+			if (Input.GetKeyDown(KeyCode.Alpha8)) OnTimerHit(7, Time.time);
+			if (Input.GetKeyDown(KeyCode.Alpha9)) OnTimerHit(8, Time.time);
 
 			if (Input.GetKeyDown(KeyCode.Alpha0)) InvalidateLap();
 			}
@@ -213,8 +219,10 @@ public class LapTimer : MonoBehaviour
 	public void OnTimerHit (int sector, float hitTime)
 		{
 		if (!isActiveAndEnabled) return;
+		if (sector >= sectors) return;
 
-		// Debug.Log("Sector hit: " + sector);
+		if (debugLog)
+			Debug.Log("Sector hit: " + sector);
 
 		if (sector == 0)
 			{
@@ -379,7 +387,7 @@ public class LapTimer : MonoBehaviour
 			{
 			for (int i=0, c=m_sectors.Length; i<c; i++)
 				{
-				if (m_sectors[i] > 0.0f) smallText += FormatSectorTime(m_sectors[i], m_validSectors[i]);
+				if (m_sectors[i] > 0.0f) smallText += $"S{i+1}: {FormatSectorTime(m_sectors[i], m_validSectors[i])}";
 
 				smallText += "\n";
 				}
@@ -388,17 +396,21 @@ public class LapTimer : MonoBehaviour
 		smallText += "\n";
 		smallText += "\n\nBest " + (m_bestTime > 0.0f ? FormatLapTime(m_bestTime) : "-") + "\n\n";
 
-		float xPos = positionX < 0? Screen.width + positionX - 180 : positionX;
-		float yPos = positionY < 0? Screen.height + positionY - 180 : positionY;
+		float heightDelta = (sectors - 3) * m_style.lineHeight;
+		float boxWidth = 180;
+		float boxHeight = 180 + heightDelta;
 
-		Rect pos = new Rect(xPos, yPos, 180, 180);
+		float xPos = positionX < 0? Screen.width + positionX - boxWidth : positionX;
+		float yPos = positionY < 0? Screen.height + positionY - boxHeight : positionY;
+
+		Rect pos = new Rect(xPos, yPos, boxWidth, boxHeight);
 
 		GUI.Box(pos, "");
 		GUI.Label(new Rect (pos.x+16, pos.y+8, pos.width, 40), currentTimeText, m_bigStyle);
 		GUI.Label(new Rect (pos.x+16, pos.y+40, pos.height, pos.height), smallText, m_style);
 
 		string lastLap = m_lastTime > 0.0f? FormatLapTime(m_lastTime) : "-";
-		GUI.Label(new Rect (pos.x+16, pos.y+116, pos.width, 40), lastLap, m_bigStyle);
+		GUI.Label(new Rect (pos.x+16, pos.y+116+heightDelta, pos.width, 40), lastLap, m_bigStyle);
 		}
 
 
