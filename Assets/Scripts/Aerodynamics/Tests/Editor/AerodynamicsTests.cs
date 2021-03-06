@@ -16,5 +16,13 @@ namespace Perrinn424.AerodynamicsSystem.Editor.Tests
             float density = (float)atmosphere.UpdateAtmosphere(altitude, 0f);
             Assert.That(expectedDensity, Is.EqualTo(density).Within(10e-2));
         }
+
+        [Test]
+        public void AltitudeConverterTest()
+        {
+            var altitudeConverter = new AltitudeConverter(620f,80.32f);
+            Assert.That(620f, Is.EqualTo(altitudeConverter.ToAltitude(80.32f)));
+            Assert.That(80.32f, Is.EqualTo(altitudeConverter.ToUnity(620f)));
+        }
     }
 }

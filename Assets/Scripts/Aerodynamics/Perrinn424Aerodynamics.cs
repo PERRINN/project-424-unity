@@ -8,6 +8,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 {
 	private Atmosphere atmosphere = new Atmosphere();
 
+    [SerializeField]
+    private AltitudeConverter altitudeConverter;
+
 	[Serializable]
 	public class AeroSettings
 	{
@@ -26,7 +29,6 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		public float frontFlapCoefficient        = 1.0f;
 	}
 
-	public float heightAboveSeaLevel       = 1.0f;
 	public float deltaISA                  = 1.0f;
 	public float dRSActivationDelay        = 1.0f;
 	public float dRSActivationTime         = 1.0f;
@@ -143,10 +145,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		float throttlePosition = input[InputData.Throttle] / 10000.0f;
 		float brakePosition    = input[InputData.Brake] / 10000.0f;
 
-		// Calculating dynamic pressure
-		float vSquared = rb.velocity.sqrMagnitude;
-		atmosphere.UpdateAtmosphere(heightAboveSeaLevel, deltaISA);
-		float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
+        float dynamicPressure = CalculateDynamicPressure();
 
 		// Setting vehicle parameters for the aero model
 		yawAngle        = vehicle.speedAngle;
@@ -193,4 +192,14 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		aeroBal	= downforceFront / (downforceFront + downforceRear) * 100;
 	}
 
+    private float CalculateDynamicPressure()
+    {
+        Rigidbody rb = vehicle.cachedRigidbody;
+        float vSquared = rb.velocity.sqrMagnitude;
+        float y = rb.worldCenterOfMass.y;
+        float altitude = altitudeConverter.ToAltitude(y);
+        atmosphere.UpdateAtmosphere(altitude, deltaISA);
+        float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
+        return dynamicPressure;
+    }
 }
