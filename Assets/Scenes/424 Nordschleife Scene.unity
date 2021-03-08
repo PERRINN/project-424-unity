@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.059739947, g: 0.076523535, b: 0.09404072, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.05970783, g: 0.076506756, b: 0.09413897, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -580,12 +580,12 @@ PrefabInstance:
     - target: {fileID: 4116892635335174830, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: chart
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4116892635335174830, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4116892635335174830, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -625,8 +625,14 @@ PrefabInstance:
     - target: {fileID: 4116892636763895034, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4116892636824451342, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: predefinedReplay
+      value: 
+      objectReference: {fileID: 11400000, guid: 64c9a3323a0f09646b340f30a13390bc,
+        type: 2}
     - target: {fileID: 4682684200946408111, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Enabled
@@ -720,7 +726,187 @@ PrefabInstance:
     - target: {fileID: 5932580745775428947, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.constant
+      value: 0.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.constant
+      value: 2.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: trackAltitude
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.constant
+      value: 3.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.dRS_Coefficient
+      value: -0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.dRS_Coefficient
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.applicationPoint
+      value: 
+      objectReference: {fileID: 207221091}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.dRS_Coefficient
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.applicationPoint
+      value: 
+      objectReference: {fileID: 207221091}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.applicationPoint
+      value: 
+      objectReference: {fileID: 207221092}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.frontFlapCoefficient
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.frontFlapCoefficient
+      value: -0.022
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.frontFlapCoefficient
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.absoluteYawCoefficient
+      value: 0.0017
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.absoluteYawCoefficient
+      value: -0.0087
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.absoluteRollCoefficient
+      value: -0.0104
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.absoluteYawCoefficient
+      value: -0.0063
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.absoluteRollCoefficient
+      value: -0.1074
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.absoluteSteerCoefficient
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.absoluteRollCoefficient
+      value: -0.1367
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.absoluteSteerCoefficient
+      value: -0.0034
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.rearRideHeightCoefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.absoluteSteerCoefficient
+      value: -0.0117
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.rearRideHeightCoefficient
+      value: 0.0148
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.frontRideHeightCoefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.rearRideHeight2Coefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.rearRideHeightCoefficient
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.frontRideHeightCoefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.rearRideHeight2Coefficient
+      value: -0.000249
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: altitudeConverter.unityReference
+      value: 146.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: drag.frontRideHeight2Coefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.frontRideHeightCoefficient
+      value: -0.076
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.rearRideHeight2Coefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: rear.frontRideHeight2Coefficient
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: front.frontRideHeight2Coefficient
+      value: 0.000557
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960402440448746477, guid: 89f86da0002dfa549bb80908bb13bad3,
+        type: 3}
+      propertyPath: altitudeConverter.altitudeReference
+      value: 613.1741
       objectReference: {fileID: 0}
     - target: {fileID: 6131166578853825015, guid: 89f86da0002dfa549bb80908bb13bad3,
         type: 3}
@@ -822,6 +1008,18 @@ MonoBehaviour:
   baseVolumeOfRearMGU: 0.2
   frontMGUAudio: {fileID: 207221088}
   rearMGUAudio: {fileID: 1466329193}
+--- !u!4 &207221091 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4116892635474530970, guid: 89f86da0002dfa549bb80908bb13bad3,
+    type: 3}
+  m_PrefabInstance: {fileID: 207221086}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &207221092 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4116892635620062688, guid: 89f86da0002dfa549bb80908bb13bad3,
+    type: 3}
+  m_PrefabInstance: {fileID: 207221086}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &361677192
 PrefabInstance:
   m_ObjectHideFlags: 0
