@@ -1571,14 +1571,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77378aab0a444c64a87c593007304373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kp: 300000
+  kp: 600000
   ki: 0
-  kd: 10000
+  kd: 20000
   maxForceP: 10000
-  throttleControl: 100
-  brakeControl: 100
-  autopilotBrakeControl: 98
+  startUpThrottleSpeedRatio: 60
+  startUpThrottle: 70
+  startUpBrakeSpeedRatio: 98
   offsetValue: 0
+  startLine: {fileID: 0}
 --- !u!114 &2201592948696730592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2520,7 +2521,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2b8382abce58a4fa29d765c21913be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heightAboveSeaLevel: 450
+  altitudeConverter:
+    altitudeReference: 0
+    unityReference: 0
   deltaISA: 0
   dRSActivationDelay: 2
   dRSActivationTime: 0.25
@@ -2697,7 +2700,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c127e0f0272add14d8db4639136905da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicle: {fileID: 2809703011807798502}
 --- !u!1 &4548208928696644523
 GameObject:
   m_ObjectHideFlags: 0
@@ -5867,15 +5869,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &4116892636251468889 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400586, guid: 4a4b6fd82edeaca4292e4305d978d18d,
-    type: 3}
-  m_PrefabInstance: {fileID: 4116892636251859091}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4116892636251469273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400714, guid: 4a4b6fd82edeaca4292e4305d978d18d,
+    type: 3}
+  m_PrefabInstance: {fileID: 4116892636251859091}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4116892636251468889 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400586, guid: 4a4b6fd82edeaca4292e4305d978d18d,
     type: 3}
   m_PrefabInstance: {fileID: 4116892636251859091}
   m_PrefabAsset: {fileID: 0}

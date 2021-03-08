@@ -16,7 +16,7 @@ public class Autopilot : MonoBehaviour
     readonly PidController edyPID = new PidController();
 
     public float kp, ki, kd, maxForceP;
-    public int throttleControl, brakeControl, autopilotBrakeControl;
+    public int startUpThrottleSpeedRatio, startUpThrottle, startUpBrakeSpeedRatio;
 
     int sectionSize;
     float height = 0;
@@ -264,18 +264,28 @@ public class Autopilot : MonoBehaviour
             m_totalDistance += replayTravelingDistance;
 
             // Brake Control
-            if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 >= replayTravelingDistance / SecondsPerFrame * autopilotBrakeControl / 100)
+            int brakeERR = recordedReplay[closestFrame2].inputData[InputData.Brake] - recordedReplay[closestFrame1].inputData[InputData.Brake];
+            showBrake = (brakeERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Brake];
+
+            if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
             {
-                int brakeERR = recordedReplay[closestFrame2].inputData[InputData.Brake] - recordedReplay[closestFrame1].inputData[InputData.Brake];
-                showBrake = (brakeERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Brake];
-                vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake * brakeControl / 100);
+                showBrake=0;
             }
+            vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake);
             m_lastTime += SecondsPerFrame;
 
             // Throttle
             int throttleERR = recordedReplay[closestFrame2].inputData[InputData.Throttle] - recordedReplay[closestFrame1].inputData[InputData.Throttle];
             showThrottle = (throttleERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Throttle];
-            vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle * throttleControl / 100);
+
+            if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
+            {
+              vehicleBase.data.Set(Channel.Input, InputData.Throttle, startUpThrottle*100);
+            }
+            else
+            {
+              vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle);
+            }
 
             // AutomaticGear
             vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[closestFrame1].inputData[InputData.AutomaticGear]);
