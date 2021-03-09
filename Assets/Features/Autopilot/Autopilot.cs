@@ -233,7 +233,7 @@ public class Autopilot : MonoBehaviour
         SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
 
         //get error force
-        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * 0.002f / Mathf.Abs(height-previousHeight)));
+        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height-previousHeight)));
         edyPID.input = height;
         edyPID.Compute();
 
