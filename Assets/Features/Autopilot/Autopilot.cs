@@ -15,11 +15,11 @@ public class Autopilot : MonoBehaviour
     List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
     readonly PidController edyPID = new PidController();
 
-    public float kp, ki, kd, maxForceP;
+    public float kp, ki, kd, maxForceP, maxForceD;
     public int startUpThrottleSpeedRatio, startUpThrottle, startUpBrakeSpeedRatio;
 
     int sectionSize;
-    float height = 0;
+    float height = 0, previousHeight = 0;
     Vector3 appliedForceV3;
 
     Vector3 m_lastPosition;
@@ -32,7 +32,7 @@ public class Autopilot : MonoBehaviour
     float m_ffbForceIntensity;
     float m_ffbDamperCoefficient;
 
-    public float offsetValue = -1.6885f;
+    public float offsetValue = 0f;
     public BoxCollider startLine;
 
     void OnEnable()
@@ -233,9 +233,11 @@ public class Autopilot : MonoBehaviour
         SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
 
         //get error force
-        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, kd);
+        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * 0.002f / Mathf.Abs(height-previousHeight)));
         edyPID.input = height;
         edyPID.Compute();
+
+        previousHeight = height;
 
         //errorLimit [m/s]
         appliedForceV3.x = edyPID.output * cosD * 1.000f;
