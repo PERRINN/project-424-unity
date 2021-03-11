@@ -29,34 +29,35 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		public float frontFlapCoefficient        = 1.0f;
 	}
 
-	public float deltaISA                  = 1.0f;
-	public float dRSActivationDelay        = 1.0f;
-	public float dRSActivationTime         = 1.0f;
-	public float frontFlapStaticAngle      = 1.0f;
-	public float frontFlapFlexDeltaAngle   = 1.0f;
-	public float frontFlapFlexMaxDownforce = 1.0f;
+	public float deltaISA                  = 0.0f;
+	public float dRSActivationDelay        = 0.0f;
+	public float dRSActivationTime         = 0.0f;
+	public float frontFlapStaticAngle      = 0.0f;
+	public float frontFlapFlexDeltaAngle   = 0.0f;
+	public float frontFlapFlexMaxDownforce = 0.0f;
 
 	public AeroSettings front = new AeroSettings();
 	public AeroSettings rear  = new AeroSettings();
 	public AeroSettings drag  = new AeroSettings();
 
-	[HideInInspector] public float flapAngle = 1.0f;
+	[HideInInspector] public float flapAngle   = 1.0f;
 	[HideInInspector] public bool  DRSclosing  = false;
-	[HideInInspector] public float DRS = 0;
+	[HideInInspector] public float DRS      = 0;
 	[HideInInspector] public float SCzFront = 0;
 	[HideInInspector] public float SCzRear  = 0;
 	[HideInInspector] public float SCx      = 0;
-	[HideInInspector] public float downforceFront  = 1.0f;
-	[HideInInspector] public float downforceRear   = 1.0f;
-	[HideInInspector] public float aeroBal   = 1.0f;
-	[HideInInspector] public float dragForce       = 1.0f;
-	[HideInInspector] public float yawAngle        = 1.0f;
-	[HideInInspector] public float steerAngle      = 1.0f;
-	[HideInInspector] public float rollAngle       = 1.0f;
-	[HideInInspector] public float fronRollAngle   = 1.0f;
-	[HideInInspector] public float rearRollAngle   = 1.0f;
-	[HideInInspector] public float frontRideHeight = 1.0f;
-	[HideInInspector] public float rearRideHeight  = 1.0f;
+	[HideInInspector] public float downforceFront  = 0.0f;
+	[HideInInspector] public float downforceRear   = 0.0f;
+	[HideInInspector] public float aeroBal         = 0.0f;
+	[HideInInspector] public float dragForce       = 0.0f;
+	[HideInInspector] public float yawAngle        = 0.0f;
+	[HideInInspector] public float steerAngle      = 0.0f;
+	[HideInInspector] public float rollAngle       = 0.0f;
+	[HideInInspector] public float fronRollAngle   = 0.0f;
+	[HideInInspector] public float rearRollAngle   = 0.0f;
+	[HideInInspector] public float frontRideHeight = 0.0f;
+	[HideInInspector] public float rearRideHeight  = 0.0f;
+	[HideInInspector] public float rho = 0.0f;
 	float DRStime = 0;
 	bool DRSStatus = false;
 
@@ -146,6 +147,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		float brakePosition    = input[InputData.Brake] / 10000.0f;
 
         float dynamicPressure = CalculateDynamicPressure();
+		rho = (float)atmosphere.Density;
 
 		// Setting vehicle parameters for the aero model
 		yawAngle        = vehicle.speedAngle;

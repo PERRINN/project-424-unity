@@ -871,6 +871,7 @@ public class AerodynamicsChart : PerformanceChart
 		DataLogger.Channel m_rearRideHeight;
 		DataLogger.Channel m_aeroBal;
 		DataLogger.Channel m_frontFlapAngle;
+		DataLogger.Channel m_rho;
 
 		Perrinn424Aerodynamics m_aero;
 
@@ -979,6 +980,11 @@ public class AerodynamicsChart : PerformanceChart
 			m_frontFlapAngle.valueFormat = "0.0";
 			m_frontFlapAngle.captionPositionY = -1;
 
+			m_rho = dataLogger.NewChannel("Air Density [kg/m3]");
+			m_rho.color = GColor.green;
+			m_rho.SetOriginAndSpan(-1.8f, 0.2f, 0.1f);
+			m_rho.valueFormat = "0.0000";
+			m_rho.captionPositionY = 9;
 		}
 
 		public override void RecordData()
@@ -999,6 +1005,7 @@ public class AerodynamicsChart : PerformanceChart
 			m_rearRideHeight.Write(m_aero.rearRideHeight);
 			m_aeroBal.Write(m_aero.aeroBal);
 			m_frontFlapAngle.Write(m_aero.flapAngle);
+			m_rho.Write(m_aero.rho);
 
 		}
 	}
