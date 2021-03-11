@@ -972,19 +972,19 @@ public class AerodynamicsChart : PerformanceChart
 			m_aeroBal.color = GColor.blue;
 			m_aeroBal.SetOriginAndSpan(2.0f, 1.0f, 50.0f);
 			m_aeroBal.valueFormat = "0.0";
-			m_aeroBal.captionPositionY = 0;
+			m_aeroBal.captionPositionY = 1;
 
 			m_frontFlapAngle = dataLogger.NewChannel("Front Flap Angle [deg]");
 			m_frontFlapAngle.color = GColor.yellow;
 			m_frontFlapAngle.SetOriginAndSpan(2.0f, 1.0f, 10.0f);
 			m_frontFlapAngle.valueFormat = "0.0";
-			m_frontFlapAngle.captionPositionY = -1;
+			m_frontFlapAngle.captionPositionY = 0;
 
 			m_rho = dataLogger.NewChannel("Air Density [kg/m3]");
 			m_rho.color = GColor.green;
-			m_rho.SetOriginAndSpan(-1.8f, 0.2f, 0.1f);
+			m_rho.SetOriginAndSpan(2.0f, 0.0f, 1.0f);
 			m_rho.valueFormat = "0.0000";
-			m_rho.captionPositionY = 9;
+			m_rho.captionPositionY = -1;
 		}
 
 		public override void RecordData()
