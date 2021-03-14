@@ -22,7 +22,7 @@ namespace Perrinn424.CameraSystem
             {
                 fixedCamerasController.NextCamera();
             }
-            else if (Input.GetKeyDown(nextCameraKey))
+            else if (Input.GetKeyDown(previousCameraKey))
             {
                 fixedCamerasController.PreviousCamera();
             }
