@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using VehiclePhysics;
 
@@ -17,12 +18,15 @@ namespace Perrinn424.TrackMapSystem
         [SerializeField]
         private VPReplayAsset replay = default;
 
+        [SerializeField]
+        private float timeStepGetPositions = 0.1f;
+
         [ContextMenu("Create References")]
         private void CreateReferences()
         {
-            RemoveMapChilds();
+            Clean();
 
-            replay.GetPositions(0.1f, out var positions, out _);
+            replay.GetPositions(timeStepGetPositions, out var positions, out _);
             trackMap.trackReferences = new TrackMap.TrackReference[positions.Length];
 
             for (int i = 0; i < positions.Length; i++)
@@ -40,14 +44,34 @@ namespace Perrinn424.TrackMapSystem
             //int referencesCount = worldReferenceParent.childCount;
         }
 
+
+        private void Clean()
+        {
+            RemoveMapChilds();
+            RemoveTransformChilds();
+        }
+
         private void RemoveMapChilds()
         {
             foreach (Transform child in trackMap.transform)
             {
                 if (child == reference.transform)
                     continue;
+                try
+                {
+                    GameObject.DestroyImmediate(child.gameObject);
+                }
+                catch (Exception) { }
+            }
 
-                GameObject.DestroyImmediate(child.gameObject);
+            trackMap.trackReferences = new TrackMap.TrackReference[0];
+        }
+
+        private void RemoveTransformChilds()
+        {
+            foreach (Transform child in transform)
+            {
+                GameObject.Destroy(child.gameObject);
             }
         }
     } 
