@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.059739947, g: 0.076523535, b: 0.09404072, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.05970783, g: 0.076506756, b: 0.09413897, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -1105,39 +1105,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 207221086}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &207221094 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2798028144936511795, guid: 89f86da0002dfa549bb80908bb13bad3,
-    type: 3}
-  m_PrefabInstance: {fileID: 207221086}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &207221095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 207221094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22c23cd8b11015548a548a8f95bb1a02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fixedCamerasController: {fileID: 207221096}
-  nextCameraKey: 112
-  previousCameraKey: 111
---- !u!114 &207221096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 207221094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90a866a221022f043b0bea842a6b9fe3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &361677192
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1462,15 +1429,15 @@ PrefabInstance:
       objectReference: {fileID: 114863622256485037}
     - target: {fileID: 1260073380, guid: 8368094040e50bc48a2a58a0a8db460a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.000005132209
+      value: 0.0000050033314
       objectReference: {fileID: 0}
     - target: {fileID: 1260073380, guid: 8368094040e50bc48a2a58a0a8db460a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -28.973175
+      value: -28.245613
       objectReference: {fileID: 0}
     - target: {fileID: 1260073380, guid: 8368094040e50bc48a2a58a0a8db460a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -86.10417
+      value: -83.94196
       objectReference: {fileID: 0}
     - target: {fileID: 1280204576, guid: 8368094040e50bc48a2a58a0a8db460a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -7663,15 +7630,15 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 1841922307, guid: 8368094040e50bc48a2a58a0a8db460a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0000049582573
+      value: 0.000004833748
       objectReference: {fileID: 0}
     - target: {fileID: 1841922307, guid: 8368094040e50bc48a2a58a0a8db460a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -21.95878
+      value: -21.40736
       objectReference: {fileID: 0}
     - target: {fileID: 1841922307, guid: 8368094040e50bc48a2a58a0a8db460a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -83.185745
+      value: -81.096825
       objectReference: {fileID: 0}
     - target: {fileID: 34493186471789636, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
@@ -8558,6 +8525,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7560325887109886859, guid: 8368094040e50bc48a2a58a0a8db460a,
+        type: 3}
+      propertyPath: timeFormatter.mode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7877235855280944520, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -8750,10 +8722,10 @@ RectTransform:
   m_Father: {fileID: 470636971}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 362.3476, y: -8.363701}
+  m_SizeDelta: {x: 55.745785, y: 16.727402}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &498155251
 MonoBehaviour:
@@ -8769,6 +8741,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 1109524572}
   background: {fileID: 498155252}
+  timeFormatter:
+    mode: 1
+    formatWithMinutes: m\:ss\.fff
+    formatWithoutMinutes: ss\.fff
 --- !u!114 &498155252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9616,10 +9592,10 @@ RectTransform:
   m_Father: {fileID: 470636971}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 306.6018, y: -8.363701}
+  m_SizeDelta: {x: 55.745785, y: 16.727402}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1544696159
 MonoBehaviour:
@@ -9635,6 +9611,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 769664170}
   background: {fileID: 1544696160}
+  timeFormatter:
+    mode: 0
+    formatWithMinutes: m\:ss\.fff
+    formatWithoutMinutes: ss\.fff
 --- !u!114 &1544696160
 MonoBehaviour:
   m_ObjectHideFlags: 0
