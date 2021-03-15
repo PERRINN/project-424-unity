@@ -62,6 +62,15 @@ namespace Perrinn424.Editor.Tests
 
         }
 
+        [Test]
+        public void OutOfIndexTest()
+        {
+            TimeReference porsche = TimeReferenceHelper.CreatePorsche();
+            Assert.DoesNotThrow(() => porsche.IsCorrectIndex(320, 0f));
+
+            Assert.DoesNotThrow(() => porsche.LapDiff(305.016f, 20737.32f));
+        }
+
         private class TimeReferenceLegacy
         {
             public float[] time;

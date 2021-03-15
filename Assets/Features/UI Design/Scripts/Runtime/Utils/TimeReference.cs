@@ -30,6 +30,10 @@ namespace Perrinn424
             if(index == -1)
                 return float.NaN;
 
+            if (index + 1 > count - 1) //index is last value, so there is not index + 11
+            {
+                return 0f;
+            }
             previousIndex = index;
             float ratio = (currentDistance - distance[index]) / (distance[index + 1] - distance[index]);
             float referenceTime = Mathf.Lerp(time[index], time[index + 1], ratio);
@@ -67,9 +71,9 @@ namespace Perrinn424
         }
 
 
-        private bool IsCorrectIndex(int index, float d)
+        internal bool IsCorrectIndex(int index, float d)
         {
-            if (index < 0 || index >= count)
+            if (index < 0 || index + 1 >= count)
                 return false;
 
             return distance[index] < d && distance[index + 1] > d;
