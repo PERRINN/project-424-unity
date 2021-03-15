@@ -17,34 +17,7 @@ namespace Perrinn424.UI
         public void SetTime(float seconds)
         {
             SetText(timeFormatter.ToString(seconds));
-            //if (float.IsPositiveInfinity(seconds))
-            //{
-            //    SetText(string.Empty);
-            //    return;
-            //}
-
-            //if (minuteFormat)
-            //{
-            //    string format = seconds > 60f ? @"m\:ss\:fff" : @"ss\:fff";
-            //    SetTime(seconds, format);
-            //}
-            //else
-            //{
-            //    SetText(seconds.ToString("N3"));
-            //}
         }
-
-        //public void SetTime(float seconds, string format)
-        //{
-        //    //if (float.IsPositiveInfinity(seconds))
-        //    //{
-        //    //    SetText(string.Empty);
-        //    //    return;
-        //    //}
-        //    //TimeSpan time = TimeSpan.FromSeconds(seconds);
-        //    //string str = time.ToString(format);
-        //    //SetText(str);
-        //}
 
         public void SetText(string newText)
         {
