@@ -332,6 +332,8 @@ public class Autopilot : MonoBehaviour
 
     bool referenceLapDuplicated()
     {
+        if (startLine == null) return false;
+
         bool duplicated = false;
         int count = 0;
 
