@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Perrinn424.CameraSystem
 {
-    [RequireComponent(typeof(FixedCamerasController))]
-    public class FixedCamerasControllerInput : MonoBehaviour
+    [RequireComponent(typeof(OnboardCamerasController))]
+    internal class OnboardCamerasControllerInput : MonoBehaviour
     {
         [SerializeField]
-        private FixedCamerasController fixedCamerasController;
+        private OnboardCamerasController onboardCamerasController;
         
         [SerializeField]
         private KeyCode nextCameraKey = KeyCode.P;
@@ -20,17 +18,17 @@ namespace Perrinn424.CameraSystem
         {
             if (Input.GetKeyDown(nextCameraKey))
             {
-                fixedCamerasController.NextCamera();
+                onboardCamerasController.NextCamera();
             }
             else if (Input.GetKeyDown(previousCameraKey))
             {
-                fixedCamerasController.PreviousCamera();
+                onboardCamerasController.PreviousCamera();
             }
         }
 
         private void Reset()
         {
-            fixedCamerasController = this.GetComponent<FixedCamerasController>();
+            onboardCamerasController = this.GetComponent<OnboardCamerasController>();
         }
     } 
 }

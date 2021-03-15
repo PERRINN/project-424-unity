@@ -1,11 +1,9 @@
 ﻿using Perrinn424.Utils;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perrinn424.CameraSystem
 {
-    internal class FixedCamerasController : MonoBehaviour
+    internal class OnboardCamerasController : MonoBehaviour
     {
         private CircularBuffer<Camera> circularBuffer;
 
