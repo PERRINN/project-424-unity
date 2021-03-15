@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Perrinn424.Utils
 {
     public class CircularBuffer<T>
     {
-        private T[] array;
+        private readonly T[] array;
         private int index;
-        private int length;
+        private readonly int length;
         public T Current 
         {
             get => array[index];
