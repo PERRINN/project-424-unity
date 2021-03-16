@@ -27,13 +27,9 @@ namespace Perrinn424
         {
             int index = FindIndex(currentDistance);
 
-            if(index == -1)
+            if (index < 0 || index + 1 >= count)
                 return float.NaN;
 
-            if (index + 1 > count - 1) //index is last value, so there is not index + 11
-            {
-                return 0f;
-            }
             previousIndex = index;
             float ratio = (currentDistance - distance[index]) / (distance[index + 1] - distance[index]);
             float referenceTime = Mathf.Lerp(time[index], time[index + 1], ratio);
