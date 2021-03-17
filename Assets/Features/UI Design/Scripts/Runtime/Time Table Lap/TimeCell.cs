@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Perrinn424.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,23 +11,12 @@ namespace Perrinn424.UI
         [SerializeField]
         private Image background = default;
 
+        [SerializeField]
+        internal TimeFormatter timeFormatter;
+
         public void SetTime(float seconds)
         {
-            string format = seconds > 60f ? @"m\:ss\:fff" : @"ss\:fff";
-            SetTime(seconds, format);
-        }
-
-        public void SetTime(float seconds, string format)
-        {
-            if (float.IsPositiveInfinity(seconds))
-            {
-                SetText(string.Empty);
-                return;
-            }
-
-            TimeSpan time = TimeSpan.FromSeconds(seconds);
-            string str = time.ToString(format);
-            SetText(str);
+            SetText(timeFormatter.ToString(seconds));
         }
 
         public void SetText(string newText)
@@ -40,5 +29,10 @@ namespace Perrinn424.UI
             text.color = format.textColor;
             background.color = format.backgroundColor;
         }
-    } 
+
+        private void Reset()
+        {
+            timeFormatter = new TimeFormatter(TimeFormatter.Mode.TotalSeconds, @"m\:ss\.fff", @"ss\.fff");
+        }
+    }
 }

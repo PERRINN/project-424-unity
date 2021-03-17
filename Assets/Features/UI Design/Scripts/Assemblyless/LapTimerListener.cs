@@ -41,7 +41,7 @@ namespace Perrinn424.UI
         private void Update()
         {
             if (lapTimer != null)
-                timeCell.SetTime(lapTimer.currentLapTime, @"mm\:ss\:fff");
+                timeCell.SetTime(lapTimer.currentLapTime);
         }
     }
 }
