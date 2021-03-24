@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Perrinn424.Utils
+namespace Perrinn424.Utilities
 {
     [Serializable]
     public class TimeFormatter

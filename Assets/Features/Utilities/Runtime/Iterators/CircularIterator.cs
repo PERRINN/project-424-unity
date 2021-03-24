@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Perrinn424.Utils
+namespace Perrinn424.Utilities
 {
-    public class CircularBuffer<T>
+    public class CircularIterator<T> : IIterator<T>
     {
         private readonly T[] array;
         private int index;
@@ -12,7 +12,7 @@ namespace Perrinn424.Utils
         {
             get => array[index];
         }
-        public CircularBuffer(IEnumerable<T> elements)
+        public CircularIterator(IEnumerable<T> elements)
         {
             index = 0;
             this.array = elements.ToArray();

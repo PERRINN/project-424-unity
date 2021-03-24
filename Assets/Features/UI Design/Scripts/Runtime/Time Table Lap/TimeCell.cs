@@ -1,4 +1,4 @@
-﻿using Perrinn424.Utils;
+﻿using Perrinn424.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 

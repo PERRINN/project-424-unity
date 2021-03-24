@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Perrinn424.CameraSystem
+namespace Perrinn424.Utilities
 {
     [RequireComponent(typeof(OnboardCamerasController))]
     internal class OnboardCamerasControllerInput : MonoBehaviour
