@@ -34,7 +34,18 @@ namespace Perrinn424.UI
 
         private void UpdateLabel()
         {
-            text.text = timeScaleController.Label;
+            string label = TimeScaleToLabel(timeScaleController.TimeScale);
+            text.text = label;
+        }
+
+        private string TimeScaleToLabel(float timeScale)
+        {
+            if (timeScale == 1.0f)
+                return "Real time";
+            if (timeScale < 1.0f)
+                return $"x{timeScale:F1}";
+
+            return $"x{timeScale:F0}";
         }
     } 
 }

@@ -8,7 +8,7 @@ namespace Perrinn424.Utilities
         private float[] timeScales;
         private ClampedIterator<float> timeScalesIterator;
 
-        public string Label { get; private set; }
+        public float TimeScale => timeScalesIterator.Current;
 
         public event Action<float> onTimeScaleChanged;
 
@@ -49,7 +49,6 @@ namespace Perrinn424.Utilities
         private void UpdateTimeScale()
         {
             Time.timeScale = timeScalesIterator.Current;
-            Label = GetLabel();
             onTimeScaleChanged?.Invoke(timeScalesIterator.Current);
         }
 
@@ -63,16 +62,6 @@ namespace Perrinn424.Utilities
                 }
             }
             return true;
-        }
-
-        private string GetLabel()
-        {
-            if (timeScalesIterator.Current == 1.0f)
-                return "Real time";
-            if (timeScalesIterator.Current < 1.0f)
-                return $"x{timeScalesIterator.Current:F1}";
-
-            return $"x{timeScalesIterator.Current:F0}";
         }
     } 
 }
