@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Perrinn424.CameraSystem
+namespace Perrinn424.Utilities
 {
     [RequireComponent(typeof(OnboardCamerasController))]
     internal class OnboardCamerasControllerInput : MonoBehaviour
@@ -9,20 +9,20 @@ namespace Perrinn424.CameraSystem
         private OnboardCamerasController onboardCamerasController;
         
         [SerializeField]
-        private KeyCode nextCameraKey = KeyCode.P;
+        private KeyCode nextCameraKey = KeyCode.V;
         
-        [SerializeField]
-        private KeyCode previousCameraKey = KeyCode.O;
-
         private void Update()
         {
             if (Input.GetKeyDown(nextCameraKey))
             {
-                onboardCamerasController.NextCamera();
-            }
-            else if (Input.GetKeyDown(previousCameraKey))
-            {
-                onboardCamerasController.PreviousCamera();
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    onboardCamerasController.PreviousCamera();
+                }
+                else
+                {
+                    onboardCamerasController.NextCamera();
+                }
             }
         }
 
