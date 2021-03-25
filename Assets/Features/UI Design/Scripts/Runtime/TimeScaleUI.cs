@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Perrinn424.UI
 {
-    public class TimeScaleUI : MonoBehaviour
+    internal class TimeScaleUI : MonoBehaviour
     {
         [SerializeField]
         private Text text = default;
