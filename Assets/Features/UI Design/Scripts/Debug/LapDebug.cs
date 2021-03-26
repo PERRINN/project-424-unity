@@ -37,7 +37,7 @@ namespace Perrinn424.UI.Debug
 
         IEnumerable GetLaps()
         {
-            yield return new[] { 26.736f, 27.610f, 26.938f}; //lap 1
+            yield return new[] { 116.736f, 27.610f, 26.938f}; //lap 1
             yield return new[] { 26.726f, 27.610f, 26.938f };//lap 2
             yield return new[] { 26.730f, 27.610f, 26.936f };//lap 3
             yield return new[] { 26.728f, 27.606f, 26.934f };//lap 4
