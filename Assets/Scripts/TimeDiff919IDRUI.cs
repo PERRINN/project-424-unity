@@ -82,7 +82,7 @@ namespace VehiclePhysics.Timing
             string text = $"Time difference /919    {lapTimeDiffPo,6}\n";
             text += $"Time difference /IDR    {lapTimeDiffVW,6}";
 
-            m_textBox.UpdateText(text);
+            m_textBox.text = text;
         }
 
 
