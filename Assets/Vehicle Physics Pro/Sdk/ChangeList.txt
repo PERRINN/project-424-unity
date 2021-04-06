@@ -11,6 +11,48 @@ For general news and updates please read the changelog and the Twitter feed:
 https://vehiclephysics.com/about/changelog/
 https://twitter.com/VehiclePhysics
 
+----------------------------------------------------------------------------------------------------
+2021-03-24
+----------------------------------------------------------------------------------------------------
+
+DIWrapper: Renamed some API methods
+
+	- DIWrapper.GetNumFFBAxis() -> DIWrapper.GetNumFFAxis()
+	- DIWrapper.SelectFFBAxis() -> DIWrapper.SelectFFAxis()
+
+
+----------------------------------------------------------------------------------------------------
+2021-03-17
+----------------------------------------------------------------------------------------------------
+
+VPRollingFriction:
+
+	- model renamed to dynamicModel
+	- coefficient renamed to dynamicCoefficient (old value preserved)
+	- new properties staticCoefficient and staticSpeedThreshold
+
+The component can now take the vehicle to a full stop. Use the new properties staticCoefficient and
+staticSpeedThreshold to fine tune the behavior at very low speed / nearly stop.
+
+By default staticCoefficient takes the same value from the old coefficient. Set staticCoefficient
+to zero to preserve the previous behaviour.
+
+Recommended actions if your vehicles use this component:
+
+	- Review the behavior at low speed, how they come to a stop. Fine tune staticCoefficient.
+	- If you use a Torque Converter you may need to increase Lock Ratio Bias to preserve the
+		behavior in first gear + no throttle (as the vehicle has now more friction when stopped).
+
+
+----------------------------------------------------------------------------------------------------
+2020-12-02
+----------------------------------------------------------------------------------------------------
+
+DataBus:
+
+Identifiers VehicleData.FuelConsumption and VehicleData.AidedSteer exchanged their values.
+Review your code if you're using the DataBus using numeric indexes instead of the identifiers.
+
 
 ----------------------------------------------------------------------------------------------------
 2020-06

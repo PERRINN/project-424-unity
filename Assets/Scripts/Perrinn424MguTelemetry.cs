@@ -90,7 +90,7 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		m_text.Append($"Drive Shafts (Nm) ×2 {frontShafts,6:0.}      {rearShafts,6:0.}        {GetBalanceStr(frontShafts, rearShafts),5}\n");
 		m_text.Append($"Wheels Total (Nm) ×2 {frontWheels,6:0.}      {rearWheels,6:0.}        {GetBalanceStr(frontWheels, rearWheels),5}");
 
-		m_textBox.UpdateText(m_text.ToString());
+		m_textBox.text = m_text.ToString();
 		}
 
 

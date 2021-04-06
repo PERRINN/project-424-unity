@@ -311,7 +311,7 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		source.spatialBlend = 1.0f;
 		source.loop = true;
 		source.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
-		audio.SetVolumeRolloff(minDistance, 1.0f, attenuationDistance, attenuatedVolume, maxDistance);
+		RuntimeAudio.SetVolumeRolloff(source, minDistance, 1.0f, attenuationDistance, attenuatedVolume, maxDistance);
 		}
 
 
@@ -350,7 +350,7 @@ public class Perrinn424Underfloor : VehicleBehaviour
 			m_text.Append($"                   N/mm         μ               mm       N       N");
 			for (int i = 0, c = contactPoints.Length; i < c; i++)
 				AppendContactPointText(m_text, m_contactPointData[i]);
-			m_textBox.UpdateText(m_text.ToString());
+			m_textBox.text = m_text.ToString();
 			}
 		}
 

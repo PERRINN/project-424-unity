@@ -1751,6 +1751,7 @@ MonoBehaviour:
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 10
     fontColor: {r: 1, g: 1, b: 1, a: 1}
+    scrollLines: 0
   defaultFont: {fileID: 0}
 --- !u!114 &3654773149151551392
 MonoBehaviour:
@@ -1808,6 +1809,7 @@ MonoBehaviour:
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 10
     fontColor: {r: 1, g: 1, b: 1, a: 1}
+    scrollLines: 0
   defaultFont: {fileID: 0}
 --- !u!114 &5173841932198281398
 MonoBehaviour:
@@ -1970,6 +1972,7 @@ MonoBehaviour:
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 10
     fontColor: {r: 1, g: 1, b: 1, a: 1}
+    scrollLines: 0
   defaultFont: {fileID: 0}
 --- !u!1 &4116892635377281960
 GameObject:
@@ -2523,6 +2526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resetVehicleKey: 13
   heightIncrement: 1.6
+  resetState: 0
 --- !u!1 &4116892636824451336
 GameObject:
   m_ObjectHideFlags: 0
@@ -2668,10 +2672,14 @@ MonoBehaviour:
   m_Script: {fileID: -1799796719, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: 0
-  coefficient: 0.01
+  dynamicModel: 0
+  dynamicCoefficient: 0.01
+  staticCoefficient: 0.01
+  staticSpeedThreshold: 2
+  axleFrictionFactors: []
   showDebugLabel: 0
-  frictionFactors: []
+  coefficient: -1
+  version: 1
 --- !u!114 &8729803296193292279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2856,6 +2864,7 @@ MonoBehaviour:
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 12
     fontColor: {r: 1, g: 1, b: 1, a: 1}
+    scrollLines: 0
   defaultFont: {fileID: 0}
 --- !u!1 &4388009582106890067
 GameObject:
