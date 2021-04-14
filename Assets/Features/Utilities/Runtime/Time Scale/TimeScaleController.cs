@@ -7,8 +7,10 @@ namespace Perrinn424.Utilities
         [SerializeField]
         private float[] timeScales;
         private ClampedIterator<float> timeScalesIterator;
+        private int realTimeIndex;
 
         public float TimeScale => timeScalesIterator.Current;
+        public bool IsRealTime => timeScalesIterator.CurrentIndex == realTimeIndex;
 
         public event Action<float> onTimeScaleChanged;
 
@@ -24,7 +26,7 @@ namespace Perrinn424.Utilities
                 throw new ArgumentException($"{nameof(timeScales)} must be sorted");
             }
 
-            int realTimeIndex = Array.FindIndex(timeScales, e => e == 1.0f);
+            realTimeIndex = Array.FindIndex(timeScales, e => e == 1.0f);
             if (realTimeIndex == -1)
             {
                 throw new ArgumentException($"{nameof(timeScales)} must contains at least one value = 1.0f (real time)");
