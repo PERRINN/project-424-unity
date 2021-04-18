@@ -7,9 +7,9 @@ namespace Perrinn424.Utilities
     public class ClampedIterator<T> : IIterator<T>
     {
         private readonly T[] array;
-        private int index;
+        public int CurrentIndex { get; private set; }
         private readonly int length;
-        public T Current => array[index];
+        public T Current => array[CurrentIndex];
         private readonly int startIndex;
 
 
@@ -37,12 +37,12 @@ namespace Perrinn424.Utilities
 
         private void IncreaseIndex(int delta)
         {
-            index = Mathf.Clamp(index + delta, 0, length - 1);
+            CurrentIndex = Mathf.Clamp(CurrentIndex + delta, 0, length - 1);
         }
 
         public void Reset()
         {
-            index = startIndex;
+            CurrentIndex = startIndex;
         }
     }
 }

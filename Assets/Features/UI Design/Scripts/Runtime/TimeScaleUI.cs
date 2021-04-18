@@ -40,7 +40,7 @@ namespace Perrinn424.UI
 
         private string TimeScaleToLabel(float timeScale)
         {
-            if (timeScale == 1.0f)
+            if (timeScaleController.IsRealTime)
                 return "Real time";
             if (timeScale < 1.0f)
                 return $"x{timeScale:F1}";
