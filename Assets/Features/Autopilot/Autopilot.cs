@@ -261,7 +261,7 @@ public class Autopilot : MonoBehaviour
 
             // Speed check
             float replayTravelingDistance = (recordedReplay[closestFrame2].position - recordedReplay[closestFrame1].position).magnitude;
-            float SecondsPerFrame = Time.time - m_lastTime;
+            float SecondsPerFrame = 0.02f; //Time.time - m_lastTime;
             m_lastPosition = rigidBody424.position;
             m_totalDistance += replayTravelingDistance;
 
