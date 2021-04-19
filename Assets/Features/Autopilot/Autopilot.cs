@@ -15,7 +15,7 @@ public class Autopilot : MonoBehaviour
     List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
     readonly PidController edyPID = new PidController();
 
-    public float kp, ki, kd, maxForceP, maxForceD;
+    public float Hz, kp, ki, kd, maxForceP, maxForceD;
     public int startUpThrottleSpeedRatio, startUpThrottle, startUpBrakeSpeedRatio;
 
     int sectionSize;
@@ -23,7 +23,7 @@ public class Autopilot : MonoBehaviour
     Vector3 appliedForceV3;
 
     Vector3 m_lastPosition;
-    float m_totalDistance, m_lastTime;
+    float m_totalDistance, m_lastTime, elapsed;
 
     int showSteer, showBrake, showThrottle;
     bool autopilotON;
@@ -34,6 +34,7 @@ public class Autopilot : MonoBehaviour
 
     public float offsetValue = 0f;
     public BoxCollider startLine;
+    public GameObject frameOne, frameTwo, carPosition;
 
     void OnEnable()
     {
@@ -100,7 +101,12 @@ public class Autopilot : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Time.time > 0) { AutopilotOnStart(); }
+        elapsed += Time.deltaTime;
+        if (Time.time > 0 && elapsed > 1 / Hz)
+        {
+            elapsed = 0;
+            AutopilotOnStart();
+        }
     }
 
     void AutopilotOnStart()
@@ -188,6 +194,11 @@ public class Autopilot : MonoBehaviour
             }
         }
 
+        //Frame Position Troubleshooting
+        frameOne.transform.position = recordedReplay[closestFrame1].position;
+        frameTwo.transform.position = recordedReplay[closestFrame2].position;
+        carPosition.transform.position = rigidBody424.transform.position;
+
         // Reference point offset: Recorded vehicle
         Vector3 offsetFromClosestFrame1 = GetOffsetPosition(offsetValue, recordedReplay[closestFrame1]);
         Vector3 offsetFromClosestFrame2 = GetOffsetPosition(offsetValue, recordedReplay[closestFrame2]);
@@ -233,7 +244,7 @@ public class Autopilot : MonoBehaviour
         SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
 
         //get error force
-        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height-previousHeight)));
+        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height - previousHeight)));
         edyPID.input = height;
         edyPID.Compute();
 
@@ -271,7 +282,7 @@ public class Autopilot : MonoBehaviour
 
             if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
             {
-                showBrake=0;
+                showBrake = 0;
             }
             vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake);
             m_lastTime += SecondsPerFrame;
@@ -282,11 +293,11 @@ public class Autopilot : MonoBehaviour
 
             if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
             {
-              vehicleBase.data.Set(Channel.Input, InputData.Throttle, startUpThrottle*100);
+                vehicleBase.data.Set(Channel.Input, InputData.Throttle, startUpThrottle * 100);
             }
             else
             {
-              vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle);
+                vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle);
             }
 
             // AutomaticGear
