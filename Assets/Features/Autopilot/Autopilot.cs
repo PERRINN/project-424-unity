@@ -27,6 +27,7 @@ public class Autopilot : MonoBehaviour
 
     int showSteer, showBrake, showThrottle;
     bool autopilotON;
+    bool lostControl = false;
 
     VPDeviceInput m_deviceInput;
     float m_ffbForceIntensity;
@@ -233,7 +234,7 @@ public class Autopilot : MonoBehaviour
         SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
 
         //get error force
-        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height-previousHeight)));
+        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height - previousHeight)));
         edyPID.input = height;
         edyPID.Compute();
 
@@ -249,49 +250,62 @@ public class Autopilot : MonoBehaviour
         closestFrame1 = compareThreeFour.min;
         closestFrame2 = compareThreeFour.max;
 
+        //Car Control System
+        float carAngle = (float)(Math.PI * rigidBody424.rotation.eulerAngles.y / 180);
+        float carAngleErr = (degree * degree) - (carAngle * carAngle);
+        carAngleErr = (float)Math.Sqrt(carAngleErr * carAngleErr);
+        if (carAngleErr > 2 && carAngleErr < 9) { lostControl = true; }
+        else if (carAngleErr >= 9)
+        {
+            autopilotON = false;
+            SteeringScreen.autopilotState = false;
+        }
+        else { lostControl = false; }
 
         if (autopilotON)
         {
             rigidBody424.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
 
-            // Steer angle
-            int steerERR = recordedReplay[closestFrame2].inputData[InputData.Steer] - recordedReplay[closestFrame1].inputData[InputData.Steer];
-            showSteer = (steerERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Steer];
-            vehicleBase.data.Set(Channel.Input, InputData.Steer, showSteer);
-
-            // Speed check
-            float replayTravelingDistance = (recordedReplay[closestFrame2].position - recordedReplay[closestFrame1].position).magnitude;
-            float SecondsPerFrame = Time.time - m_lastTime;
-            m_lastPosition = rigidBody424.position;
-            m_totalDistance += replayTravelingDistance;
-
-            // Brake Control
-            int brakeERR = recordedReplay[closestFrame2].inputData[InputData.Brake] - recordedReplay[closestFrame1].inputData[InputData.Brake];
-            showBrake = (brakeERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Brake];
-
-            if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
+            if (!lostControl)
             {
-                showBrake=0;
+                // Steer angle
+                int steerERR = recordedReplay[closestFrame2].inputData[InputData.Steer] - recordedReplay[closestFrame1].inputData[InputData.Steer];
+                showSteer = (steerERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Steer];
+                vehicleBase.data.Set(Channel.Input, InputData.Steer, showSteer);
+
+                // Speed check
+                float replayTravelingDistance = (recordedReplay[closestFrame2].position - recordedReplay[closestFrame1].position).magnitude;
+                float SecondsPerFrame = Time.time - m_lastTime;
+                m_lastPosition = rigidBody424.position;
+                m_totalDistance += replayTravelingDistance;
+
+                // Brake Control
+                int brakeERR = recordedReplay[closestFrame2].inputData[InputData.Brake] - recordedReplay[closestFrame1].inputData[InputData.Brake];
+                showBrake = (brakeERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Brake];
+
+                if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
+                {
+                    showBrake = 0;
+                }
+                vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake);
+                m_lastTime += SecondsPerFrame;
+
+                // Throttle
+                int throttleERR = recordedReplay[closestFrame2].inputData[InputData.Throttle] - recordedReplay[closestFrame1].inputData[InputData.Throttle];
+                showThrottle = (throttleERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Throttle];
+
+                if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
+                {
+                    vehicleBase.data.Set(Channel.Input, InputData.Throttle, startUpThrottle * 100);
+                }
+                else
+                {
+                    vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle);
+                }
+
+                // AutomaticGear
+                vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[closestFrame1].inputData[InputData.AutomaticGear]);
             }
-            vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake);
-            m_lastTime += SecondsPerFrame;
-
-            // Throttle
-            int throttleERR = recordedReplay[closestFrame2].inputData[InputData.Throttle] - recordedReplay[closestFrame1].inputData[InputData.Throttle];
-            showThrottle = (throttleERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Throttle];
-
-            if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
-            {
-              vehicleBase.data.Set(Channel.Input, InputData.Throttle, startUpThrottle*100);
-            }
-            else
-            {
-              vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle);
-            }
-
-            // AutomaticGear
-            vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[closestFrame1].inputData[InputData.AutomaticGear]);
-
         }
     }
 
