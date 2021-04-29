@@ -27,7 +27,7 @@ namespace Perrinn424
         {
             int index = FindIndex(currentDistance);
 
-            if(index == -1)
+            if (index < 0 || index + 1 >= count)
                 return float.NaN;
 
             previousIndex = index;
@@ -67,9 +67,9 @@ namespace Perrinn424
         }
 
 
-        private bool IsCorrectIndex(int index, float d)
+        internal bool IsCorrectIndex(int index, float d)
         {
-            if (index < 0 || index >= count)
+            if (index < 0 || index + 1 >= count)
                 return false;
 
             return distance[index] < d && distance[index + 1] > d;

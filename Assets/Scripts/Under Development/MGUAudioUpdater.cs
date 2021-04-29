@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using VehiclePhysics;
 
 
@@ -91,5 +88,10 @@ public class MGUAudioUpdater : MonoBehaviour
     {
         rearMGUAudio.pitch = basePitchOfRearMGU + Mathf.Abs(rearRpm) * rpmGainRearMGU;
         rearMGUAudio.volume = baseVolumeOfRearMGU + Mathf.Abs(rearMechanical) * trqGainRearMGU;
+    }
+
+    void OnDisable()
+    {
+        playOnce = false;
     }
 }
