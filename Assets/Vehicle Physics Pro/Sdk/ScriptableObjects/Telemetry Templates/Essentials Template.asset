@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: Essentials Template
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Essentials
+    verticalRange: 12
+    channels:
+    - name: Throttle
+      displayName: 
+      labelOffset: 2
+      displayOrigin: 0
+      displayRange: 1
+      displayColor: {r: 0.7307761, g: 0.9622642, b: 0.7401292, a: 0.6509804}
+    - name: Brake
+      displayName: 
+      labelOffset: 1
+      displayOrigin: 0
+      displayRange: 1
+      displayColor: {r: 0.95686275, g: 0.2627451, b: 0.21176471, a: 0.6}
+    - name: Clutch
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 1
+      displayColor: {r: 0.12941177, g: 0.5882353, b: 0.9529412, a: 0.6}
+    - name: AidedSteer
+      displayName: Steering
+      labelOffset: 0
+      displayOrigin: 2
+      displayRange: -1.8
+      displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.8}
+    - name: EngineRpm
+      displayName: RPM
+      labelOffset: 0
+      displayOrigin: 8
+      displayRange: 3
+      displayColor: {r: 0.86117643, g: 0.2364706, b: 0.19058824, a: 1}
+    - name: Gear
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 7
+      displayRange: 0.9
+      displayColor: {r: 0.24705884, g: 0.31764707, b: 0.70980394, a: 1}
+    - name: Speed
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 3
+      displayRange: 4
+      displayColor: {r: 0, g: 0.7372549, b: 0.8313726, a: 1}
