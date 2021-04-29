@@ -1104,17 +1104,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fcc9fd186826244cbcf99c71e42ab33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicle: {fileID: 429478693}
-  trqGainFrontMGU: 0.003
-  rpmGainFrontMGU: 0.001
-  trqGainRearMGU: 0.003
-  rpmGainRearMGU: 0.001
-  basePitchOfFrontMGU: 0
-  baseVolumeOfFrontMGU: 0.2
-  basePitchOfRearMGU: 0
-  baseVolumeOfRearMGU: 0.2
-  frontMGUAudio: {fileID: 207221088}
-  rearMGUAudio: {fileID: 1466329193}
+  frontMGU:
+    audioSource: {fileID: 207221088}
+    basePitch: 0
+    baseVolume: 0.2
+    trqGain: 0.003
+    rpmGain: 0.001
+  rearMGU:
+    audioSource: {fileID: 1466329193}
+    basePitch: 0
+    baseVolume: 0.2
+    trqGain: 0.003
+    rpmGain: 0.001
 --- !u!4 &207221091 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4116892635474530970, guid: 89f86da0002dfa549bb80908bb13bad3,
