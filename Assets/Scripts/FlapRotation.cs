@@ -1,19 +1,22 @@
 ﻿using VehiclePhysics;
 using UnityEngine;
 
-public class FlapRotation : MonoBehaviour
+public class FlapRotation : VehicleBehaviour
 {
-    VehicleBase target;
     Perrinn424Aerodynamics m_aero;
 
-    void OnEnable()
+    public override void OnEnableVehicle()
     {
-        target = GetComponentInParent<VehicleBase>();
-        m_aero = target.GetComponentInChildren<Perrinn424Aerodynamics>();
+        m_aero = vehicle.GetComponentInChildren<Perrinn424Aerodynamics>();
+        if (m_aero == null)
+        {
+            enabled = false;
+            return;
+        }
         transform.Rotate(new Vector3(m_aero.frontFlapStaticAngle, 0, 0));
     }
 
-    void Update()
+    public override void UpdateVehicle()
     {
         float flapStatic   = m_aero.frontFlapStaticAngle;
         float flapPosition = m_aero.flapAngle;  // already clipped at aerodynamics
