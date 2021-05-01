@@ -13,27 +13,20 @@ namespace Perrinn424.UI
 
         private Perrinn424.FPSCounter counter;
 
-        private float timer;
-
         private void OnEnable()
         {
             counter = new Perrinn424.FPSCounter();
-            Refresh();
         }
 
         private void Update()
         {
-
-            if (Time.unscaledTime > timer)
-            {
-                Refresh();
-                timer = Time.unscaledTime + refreshRate;
-            }
+            counter.refreshRate = refreshRate;
+            counter.Update();
+            Refresh();
         }
 
         private void Refresh()
         {
-            counter.Update();
             text.text = $"{counter.Current:F0} FPS";
         }
     }

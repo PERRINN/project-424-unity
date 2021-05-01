@@ -1,97 +1,93 @@
 ﻿using UnityEngine;
 using VehiclePhysics;
+using EdyCommonTools;
+using System;
 
 
-public class MGUAudioUpdater : MonoBehaviour
+namespace Perrinn424
 {
-    public VehicleBase vehicle;
-    public float trqGainFrontMGU;
-    public float rpmGainFrontMGU;
-    public float trqGainRearMGU;
-    public float rpmGainRearMGU;
-    public float basePitchOfFrontMGU;
-    public float baseVolumeOfFrontMGU;
-    public float basePitchOfRearMGU;
-    public float baseVolumeOfRearMGU;
-    public AudioSource frontMGUAudio;
-    public AudioSource rearMGUAudio;
-
-    float frontRpm;
-    float frontMechanical;
-    float rearRpm;
-    float rearMechanical;
-    bool playOnce = false;
-
-    void Start()
+    public class MGUAudioUpdater : VehicleBehaviour
     {
-        frontMGUAudio.pitch = basePitchOfFrontMGU;
-        frontMGUAudio.volume = baseVolumeOfFrontMGU;
-        rearMGUAudio.pitch = basePitchOfRearMGU;
-        rearMGUAudio.volume = baseVolumeOfRearMGU;
-    }
-
-    void FixedUpdate()
-    {
-        if(playOnce == false)
+        [Serializable]
+        public class MGUSettings
         {
-            if (frontRpm > 0 && rearRpm > 0)
+            public AudioSource audioSource;
+            public float basePitch = 0.0f;
+            public float baseVolume = 1.0f;
+            public float trqGain = 0.003f;
+            public float rpmGain = 0.001f;
+
+            // Runtime
+
+            [NonSerialized] public float rpm;
+            [NonSerialized] public float mechanical;
+        }
+
+        public MGUSettings frontMGU = new MGUSettings();
+        public MGUSettings rearMGU = new MGUSettings();
+
+
+        public override void UpdateAfterFixedUpdate ()
+        {
+            if (vehicle.paused) return;
+
+            // Gather updated data from the vehicle
+
+            int[] custom = vehicle.data.Get(Channel.Custom);
+            frontMGU.rpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
+            frontMGU.mechanical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
+            rearMGU.rpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
+            rearMGU.mechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
+
+            // Update the MGU audios
+
+            UpdateMguAudio(frontMGU);
+            UpdateMguAudio(rearMGU);
+        }
+
+
+        public override void OnDisableVehicle ()
+        {
+            StopMguAudio(frontMGU);
+            StopMguAudio(rearMGU);
+        }
+
+
+        public override void OnEnterPause ()
+        {
+            StopMguAudio(frontMGU);
+            StopMguAudio(rearMGU);
+        }
+
+
+        void UpdateMguAudio (MGUSettings mgu)
+        {
+            if (mgu.audioSource == null) return;
+
+            mgu.audioSource.pitch = mgu.basePitch + Mathf.Abs(mgu.rpm) * mgu.rpmGain;
+            mgu.audioSource.volume = mgu.baseVolume + Mathf.Abs(mgu.mechanical) * mgu.trqGain;
+
+            // Moving the AudioListener around a source with zero or nearly-zero pitch causes artifacts.
+            // The audio source is muted in such chase to prevent that
+
+            float absPitch = MathUtility.FastAbs(mgu.audioSource.pitch);
+            if (absPitch < 0.05f)
             {
-                frontMGUAudio.Play();
-                rearMGUAudio.Play();
-                playOnce = true;
+                mgu.audioSource.volume *= absPitch / 0.05f;
             }
-            else
-            {
-                frontMGUAudio.Stop();
-                rearMGUAudio.Stop();
-            }
+
+            // Ensure it's playing
+
+    		if (!mgu.audioSource.isPlaying)
+                mgu.audioSource.Play();
         }
-        
-    }
 
-    void Update()
-    {
-        int[] custom = vehicle.data.Get(Channel.Custom);
-        frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
-        frontMechanical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
-        rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
-        rearMechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
 
-        UpdateFrontMGU();
-        UpdateRearMGU();
-
-        if (frontMGUAudio.pitch < basePitchOfFrontMGU)
+        void StopMguAudio (MGUSettings mgu)
         {
-            frontMGUAudio.pitch = basePitchOfFrontMGU;
-        }
-        if(frontMGUAudio.volume < baseVolumeOfFrontMGU)
-        {
-            frontMGUAudio.volume = baseVolumeOfFrontMGU;
-        }
-        if (rearMGUAudio.pitch < basePitchOfRearMGU)
-        {
-            rearMGUAudio.pitch = basePitchOfRearMGU;
-        }
-        if (rearMGUAudio.volume < baseVolumeOfRearMGU)
-        {
-            rearMGUAudio.volume = baseVolumeOfRearMGU;
+            if (mgu.audioSource != null)
+                mgu.audioSource.Stop();
         }
     }
 
-    public void UpdateFrontMGU()
-    {
-        frontMGUAudio.pitch = basePitchOfFrontMGU + Mathf.Abs(frontRpm) * rpmGainFrontMGU;
-        frontMGUAudio.volume = baseVolumeOfFrontMGU + Mathf.Abs(frontMechanical) * trqGainFrontMGU;
-    }
-
-    public void UpdateRearMGU()
-    {
-        rearMGUAudio.pitch = basePitchOfRearMGU + Mathf.Abs(rearRpm) * rpmGainRearMGU;
-        rearMGUAudio.volume = baseVolumeOfRearMGU + Mathf.Abs(rearMechanical) * trqGainRearMGU;
-    }
-
-    void OnDisable()
-    {
-        playOnce = false;
-    }
 }

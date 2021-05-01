@@ -5,7 +5,7 @@ Simulation of the 424 in Unity using Vehicle Physics Pro
 
 ## Requirements
 
-- Unity 2019.4 LTS (using 2019.4.3 at the time of writing this)
+- Unity 2019.4 LTS (using 2019.4.18f1 at the time of writing this)
 - Steering wheel device: Logitech G27/G29, Thrustmaster, Fanatec Podium.
 
 ## How to drive the 424

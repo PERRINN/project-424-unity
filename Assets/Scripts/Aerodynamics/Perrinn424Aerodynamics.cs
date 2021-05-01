@@ -59,8 +59,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float rearRideHeight  = 0.0f;
 	[HideInInspector] public float rho = 0.0f;
 	float DRStime = 0;
-	bool DRSStatus = false;
-
+	
 
 	// Function Name: CalcAeroCoeff
 	// This function calculates a given aerodynamic coefficient based on:
@@ -116,7 +115,6 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	{
 		if (throttlePos == 1 && brakePos == 0 && !DRSclosing)
 		{
-			DRSStatus = true;
 			DRStime -= Time.deltaTime;
 			if (DRStime <= 0.0f)
 				DRSpos += Time.deltaTime * (1 / dRSActivationTime);
@@ -128,7 +126,6 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			{
 				DRSclosing = false;
 			}
-			DRSStatus = false;
 			DRSpos -= Time.deltaTime * (1 / dRSActivationTime);
 			DRStime = dRSActivationDelay;
 		}
@@ -200,6 +197,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
         float vSquared = rb.velocity.sqrMagnitude;
         float y = rb.worldCenterOfMass.y;
         float altitude = altitudeConverter.ToAltitude(y);
+        altitude = 1.0f; // backwards compatibility with saved replay
         atmosphere.UpdateAtmosphere(altitude, deltaISA);
         float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
         return dynamicPressure;
