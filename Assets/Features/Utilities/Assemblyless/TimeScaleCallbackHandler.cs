@@ -16,8 +16,14 @@ namespace Perrinn424.Utilities
         [SerializeField]
         private GameObject[] gameObjectsActiveOnlyInRealTime;
 
+        [SerializeField]
+        private UnderFloor underfloor;
+
         private void OnEnable()
         {
+            if (underfloor == null)
+                underfloor = FindObjectOfType<UnderFloor>();
+
             timeScaleController.onTimeScaleChanged += OnTimeScaleChangedEventHandler;
         }
 
@@ -29,6 +35,7 @@ namespace Perrinn424.Utilities
         private void OnTimeScaleChangedEventHandler(float obj)
         {
             bool isRealTime = timeScaleController.IsRealTime;
+            
             foreach (var behaviour in behaviourEnabledOnlyInRealTime)
             {
                 behaviour.enabled = isRealTime;
@@ -38,6 +45,8 @@ namespace Perrinn424.Utilities
             {
                 go.SetActive(isRealTime);
             }
+
+            underfloor.isAudioEnabled = isRealTime;
         }
 
     } 

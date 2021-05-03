@@ -35,6 +35,9 @@ namespace Perrinn424
         public LayerMask groundLayers = ~(1 << 8);
 
         [Header("Audio Effect")]
+        [Tooltip("Enable/Disable audio effects")]
+        public bool isAudioEnabled = true;
+
         [Tooltip("Loopable audio clip with the underfloor drag effect")]
         public AudioClip contactLoopClip;
         [Tooltip("Unity audio mixer to send the audio effects to (optional)")]
@@ -65,9 +68,6 @@ namespace Perrinn424
         public float attenuationDistance = 100.0f;
         [Tooltip("This volume constant from Attenuation Distance to Max Distance")]
         public float attenuatedVolume = 0.025f;
-
-        //[SerializeField]
-        //private UnderFloorAudio underFloorAudio;
 
         [Header("On-screen widget")]
         public bool showWidget = false;
@@ -342,6 +342,9 @@ namespace Perrinn424
 
         void UpdateContactAudio(ContactPointData cpData)
         {
+            if (!isAudioEnabled)
+                return;
+
             RuntimeAudio audio = cpData.contactAudio;
             if (audio == null)
                 return;
