@@ -342,16 +342,18 @@ namespace Perrinn424
 
         void UpdateContactAudio(ContactPointData cpData)
         {
-            if (!isAudioEnabled)
-                return;
-
             RuntimeAudio audio = cpData.contactAudio;
             if (audio == null)
                 return;
 
             AudioSource source = audio.source;
-            float absSpeed = MathUtility.FastAbs(vehicle.speed);
+            if (!isAudioEnabled)
+            {
+                if (source.isPlaying) source.Stop();
+                return;
+            }
 
+            float absSpeed = MathUtility.FastAbs(vehicle.speed);
             if (cpData.contactCount > cpData.lastPlayedContact && absSpeed > 0.005f)
             {
                 if (!source.isPlaying) source.Play();
