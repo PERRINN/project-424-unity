@@ -173,10 +173,26 @@ namespace Perrinn424
         }
 
 
-        public override void UpdateVehicle()
+        public override void UpdateAfterFixedUpdate()
         {
+            if (vehicle.paused) return;
+
+            // Update audio
+
             for (int i = 0, c = contactPoints.Length; i < c; i++)
                 UpdateContactAudio(m_contactPointData[i]);
+
+            // Update widget
+
+            if (showWidget)
+            {
+                m_text.Clear();
+                m_text.Append($"               Stiffnes  Friction  Events    Depth      Fz    Drag\n");
+                m_text.Append($"                   N/mm         μ               mm       N       N");
+                for (int i = 0, c = contactPoints.Length; i < c; i++)
+                    AppendContactPointText(m_text, m_contactPointData[i]);
+                m_textBox.text = m_text.ToString();
+            }
         }
 
 
@@ -277,12 +293,6 @@ namespace Perrinn424
         }
 
 
-        //void ConfigureAudioSource(RuntimeAudio audio)
-        //{
-        //    underFloorAudio.ConfigureAudioSource(audio);
-        //}
-
-
         void ClearContacts()
         {
             foreach (ContactPointData cpData in m_contactPointData)
@@ -294,20 +304,6 @@ namespace Perrinn424
 
 
         // Telemetry widget
-
-
-        public override void UpdateAfterFixedUpdate()
-        {
-            if (showWidget)
-            {
-                m_text.Clear();
-                m_text.Append($"               Stiffnes  Friction  Events    Depth      Fz    Drag\n");
-                m_text.Append($"                   N/mm         μ               mm       N       N");
-                for (int i = 0, c = contactPoints.Length; i < c; i++)
-                    AppendContactPointText(m_text, m_contactPointData[i]);
-                m_textBox.text = m_text.ToString();
-            }
-        }
 
 
         void AppendContactPointText(StringBuilder text, ContactPointData cpData)
@@ -329,6 +325,8 @@ namespace Perrinn424
 
 
         // Audio
+
+
         private void ConfigureAudioSource(RuntimeAudio audio)
         {
             AudioSource source = audio.source;
