@@ -1964,9 +1964,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frontReference: {fileID: 4116892635620062688}
   rearReference: {fileID: 4116892635474530970}
-  debugMarks: 0
-  showTelemetry: 0
-  telemetrySettings:
+  emitTelemetry: 1
+  showDebugGizmos: 0
+  showDebugWidget: 0
+  debugWidget:
     position: {x: 365, y: 290}
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 10
@@ -2635,7 +2636,6 @@ GameObject:
   - component: {fileID: 5960402440448746477}
   - component: {fileID: 4553833411366593598}
   - component: {fileID: 401592713533690346}
-  - component: {fileID: 1593278814220533825}
   m_Layer: 8
   m_Name: Dynamics
   m_TagString: Untagged
@@ -2698,6 +2698,7 @@ MonoBehaviour:
   springRate: 500000
   antiRollRate: 20000
   rigidity: 0
+  emitTelemetry: 0
 --- !u!114 &6033877586167335231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2716,6 +2717,7 @@ MonoBehaviour:
   springRate: 0
   antiRollRate: 20000
   rigidity: 0
+  emitTelemetry: 0
 --- !u!114 &5960402440448746477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2846,7 +2848,19 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 4294967039
-  underFloorAudio: {fileID: 1593278814220533825}
+  isAudioEnabled: 1
+  contactLoopClip: {fileID: 8300000, guid: ae99b72385dd3c743a614e8f3bc6ea7e, type: 3}
+  output: {fileID: 0}
+  minVolume: 0.2
+  maxVolume: 1
+  minSpeed: 13
+  maxSpeed: 100
+  minPitch: 0.9
+  maxPitch: 1.1
+  minDistance: 2
+  maxDistance: 400
+  attenuationDistance: 100
+  attenuatedVolume: 0.025
   showWidget: 0
   widget:
     position: {x: 8, y: 8}
@@ -2855,30 +2869,6 @@ MonoBehaviour:
     fontColor: {r: 1, g: 1, b: 1, a: 1}
     scrollLines: 0
   defaultFont: {fileID: 0}
---- !u!114 &1593278814220533825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4116892636867271651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cbf27a13e541ac4ebdd9e4f8190398c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  contactLoopClip: {fileID: 8300000, guid: ae99b72385dd3c743a614e8f3bc6ea7e, type: 3}
-  output: {fileID: 0}
-  minVolume: 0.2
-  maxVolume: 1
-  minSpeed: 13
-  maxSpeed: 100
-  minPitch: 0.9
-  maxPitch: 1.05
-  minDistance: 2
-  maxDistance: 400
-  attenuationDistance: 100
-  attenuatedVolume: 0.025
 --- !u!1 &4388009582106890067
 GameObject:
   m_ObjectHideFlags: 0

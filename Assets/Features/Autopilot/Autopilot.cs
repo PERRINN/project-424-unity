@@ -251,11 +251,16 @@ public class Autopilot : MonoBehaviour
         closestFrame2 = compareThreeFour.max;
 
         //Car Control System
-        float carAngle = (float)(Math.PI * rigidBody424.rotation.eulerAngles.y / 180);
-        float carAngleErr = (degree * degree) - (carAngle * carAngle);
-        carAngleErr = (float)Math.Sqrt(carAngleErr * carAngleErr);
-        if (carAngleErr > 2 && carAngleErr < 9) { lostControl = true; }
-        else if (carAngleErr >= 9)
+        float frameAngle = recordedReplay[closestFrame1].rotation.eulerAngles.y;
+        float carAngle = rigidBody424.rotation.eulerAngles.y;
+
+        if ((frameAngle - carAngle) < -350) { frameAngle += 360; }
+        else if ((frameAngle - carAngle) > 350) { frameAngle -= 360; }
+        float carAngleErr = frameAngle - carAngle;
+        carAngleErr = carAngleErr == 0 ? 0 : (float)Math.Sqrt(carAngleErr * carAngleErr);
+
+        if (carAngleErr > 30 && carAngleErr < 90) { lostControl = true; }
+        else if (carAngleErr >= 90)
         {
             autopilotON = false;
             SteeringScreen.autopilotState = false;
