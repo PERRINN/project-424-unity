@@ -16,6 +16,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxSpeed = 100.0f;
 		vehicle.telemetry.specs.maxGearPosition = 1;
 		vehicle.telemetry.specs.minGearPosition = -1;
+		vehicle.telemetry.specs.maxAcceleration = 5 * Gravity.reference;
 		vehicle.telemetry.ApplySpecifications();
 		}
 
