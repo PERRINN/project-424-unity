@@ -3025,6 +3025,7 @@ GameObject:
   - component: {fileID: 1453519637}
   - component: {fileID: 1453519640}
   - component: {fileID: 1453519641}
+  - component: {fileID: 1453519642}
   m_Layer: 8
   m_Name: Telemetry
   m_TagString: Untagged
@@ -3242,6 +3243,39 @@ MonoBehaviour:
   wheels: 0
   tires: 0
   tiresExtended: 0
+--- !u!114 &1453519642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453519632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -639118896, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTemplate: 0
+  templates:
+  - {fileID: 11400000, guid: 2163c5faee1cd694eb855bac7233e4e8, type: 2}
+  reference: 0
+  drawMode: 0
+  valueMode: 0
+  plotDensity: 4
+  dataRangeFirst: 0
+  dataRangeSpan: 30
+  autoUpdate: 1
+  displayX: -16
+  displayY: -16
+  displayWidth: 512
+  displayHeight: 480
+  autoDisplayHeight: 0
+  thickLines: 0
+  displayColor: {r: 0, g: 0, b: 0, a: 1}
+  displayOpacity: 0.7
+  font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
+  fontSize: 14
+  fontColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1480321974
 GameObject:
   m_ObjectHideFlags: 0
