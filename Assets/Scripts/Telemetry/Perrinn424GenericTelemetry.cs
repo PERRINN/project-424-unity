@@ -47,20 +47,29 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
 			{
-			// Fill-in the channel information
-
-			// channelInfo[0].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteerAngle);
-			// channelInfo[0].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.BrakePressure);
-			channelInfo[0].SetNameAndSemantic("Gear", Telemetry.Semantic.Gear);
-			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.Default);
-			channelInfo[2].SetNameAndSemantic("Throttle", Telemetry.Semantic.Ratio);
-			channelInfo[3].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.Default);
-
 			// Access to information in the vehicle
 
 			VehicleBase vehicle = instance as VehicleBase;
 			m_steering = vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
 			m_controller = vehicle.GetComponent<Perrinn424CarController>();
+
+			// Using custom semantics not yet available in the built-in collection.
+			// TODO: use built-in semantics when available.
+
+			float steeringRange = m_steering.steeringWheelRange * 0.5f;
+			var steerAngleSemantic = new Telemetry.SemanticInfo();
+			var brakePressureSemantic = new Telemetry.SemanticInfo();
+			steerAngleSemantic.SetRangeAndFormat(-steeringRange, steeringRange, "0.0", "°", quantization:50, alternateFormat:"0");
+			brakePressureSemantic.SetRangeAndFormat(0, 100, "0.0", " bar", quantization:10, alternateFormat:"0");
+
+			// Fill-in the channel information.
+
+			// channelInfo[0].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteerAngle);
+			// channelInfo[0].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.BrakePressure);
+			channelInfo[0].SetNameAndSemantic("Gear", Telemetry.Semantic.Gear);
+			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.Custom, steerAngleSemantic);
+			channelInfo[2].SetNameAndSemantic("Throttle", Telemetry.Semantic.Ratio);
+			channelInfo[3].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.Custom, brakePressureSemantic);
 			}
 
 
