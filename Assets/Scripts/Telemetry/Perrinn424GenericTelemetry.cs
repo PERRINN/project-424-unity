@@ -8,6 +8,19 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 	public bool emitTelemetry = true;
 
 
+
+	public override void OnEnableVehicle ()
+		{
+		// Adjust the vehicle specifications according to what we know about Project 424
+
+		vehicle.telemetry.specs.maxSpeed = 100.0f;
+		vehicle.telemetry.specs.maxGearPosition = 1;
+		vehicle.telemetry.specs.minGearPosition = -1;
+		vehicle.telemetry.ApplySpecifications();
+		}
+
+
+
 	public override bool EmitTelemetry ()
 		{
 		return emitTelemetry;
