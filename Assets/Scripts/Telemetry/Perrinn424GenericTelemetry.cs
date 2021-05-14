@@ -17,6 +17,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxGearPosition = 1;
 		vehicle.telemetry.specs.minGearPosition = -1;
 		vehicle.telemetry.specs.maxAcceleration = 5 * Gravity.reference;
+		vehicle.telemetry.specs.maxWheelTorque = 3000;
 		vehicle.telemetry.ApplySpecifications();
 		}
 
