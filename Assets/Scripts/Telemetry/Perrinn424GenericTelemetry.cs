@@ -8,7 +8,6 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 	public bool emitTelemetry = true;
 
 
-
 	public override void OnEnableVehicle ()
 		{
 		// Adjust the vehicle specifications according to what we know about Project 424
@@ -32,14 +31,15 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 	public override void RegisterTelemetry ()
 		{
 		vehicle.telemetry.Register<Perrinn424Inputs>(vehicle);
+		vehicle.telemetry.Register<Perrinn424Differential>(vehicle);
 		}
 
 
 	public override void UnregisterTelemetry ()
 		{
 		vehicle.telemetry.Unregister<Perrinn424Inputs>(vehicle);
+		vehicle.telemetry.Unregister<Perrinn424Differential>(vehicle);
 		}
-
 
 
 	public class Perrinn424Inputs : Telemetry.ChannelGroup
@@ -77,7 +77,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			steerAngleSemantic.SetRangeAndFormat(-steeringRange, steeringRange, "0.0", "°", quantization:50, alternateFormat:"0");
 			brakePressureSemantic.SetRangeAndFormat(0, 100, "0.0", " bar", quantization:10, alternateFormat:"0");
 
-			// Fill-in the channel information.
+			// Fill-in channel information
 
 			// channelInfo[0].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteerAngle);
 			// channelInfo[0].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.BrakePressure);
@@ -104,6 +104,57 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 			values[index+2] = m_controller.throttleInput;
 			values[index+3] = m_controller.brakePressure;
+			}
+		}
+
+
+	public class Perrinn424Differential : Telemetry.ChannelGroup
+		{
+		VehicleBase.WheelState m_wheelFL;
+		VehicleBase.WheelState m_wheelFR;
+		VehicleBase.WheelState m_wheelRL;
+		VehicleBase.WheelState m_wheelRR;
+
+
+		public override int GetChannelCount ()
+			{
+			return 4;
+			}
+
+
+		public override float GetPollFrequency ()
+			{
+			return 50.0f;
+			}
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
+			{
+			VehicleBase vehicle = instance as VehicleBase;
+
+			// Retrieve states for the four monitored wheels
+
+			m_wheelFL = vehicle.wheelState[vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Left)];
+			m_wheelFR = vehicle.wheelState[vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Right)];
+			int rearAxle = vehicle.GetAxleCount() - 1;
+			m_wheelRL = vehicle.wheelState[vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Left)];
+			m_wheelRR = vehicle.wheelState[vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Right)];
+
+			// Fill-in channel information
+
+			channelInfo[0].SetNameAndSemantic("TorqueDiffFront", Telemetry.Semantic.WheelTorque);
+			channelInfo[1].SetNameAndSemantic("TorqueDiffRear", Telemetry.Semantic.WheelTorque);
+			channelInfo[2].SetNameAndSemantic("SpeedDiffFront", Telemetry.Semantic.Speed);
+			channelInfo[3].SetNameAndSemantic("SpeedDiffRear", Telemetry.Semantic.Speed);
+			}
+
+
+		public override void PollValues (float[] values, int index, Object instance)
+			{
+			values[index+0] = m_wheelFL.driveTorque - m_wheelFR.driveTorque;
+			values[index+1] = m_wheelRL.driveTorque - m_wheelRR.driveTorque;
+			values[index+2] = m_wheelFL.angularVelocity * m_wheelFL.wheelCol.radius - m_wheelFR.angularVelocity * m_wheelFR.wheelCol.radius;
+			values[index+3] = m_wheelRL.angularVelocity * m_wheelRL.wheelCol.radius - m_wheelRR.angularVelocity * m_wheelRR.wheelCol.radius;
 			}
 		}
 	}
