@@ -17,7 +17,14 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.minGearPosition = -1;
 		vehicle.telemetry.specs.maxAcceleration = 5 * Gravity.reference;
 		vehicle.telemetry.specs.maxWheelTorque = 3000;
+
 		vehicle.telemetry.ApplySpecifications();
+
+		// Adjust specific semantics to our vehicle's capabilities
+
+		Telemetry.SemanticInfo angularVelocitySemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.AngularVelocity];
+		angularVelocitySemantic.rangeMin = -90.0f * Mathf.Deg2Rad;
+		angularVelocitySemantic.rangeMax = 90.0f * Mathf.Deg2Rad;
 		}
 
 
@@ -32,6 +39,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		{
 		vehicle.telemetry.Register<Perrinn424Inputs>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Differential>(vehicle);
+		vehicle.telemetry.Register<Perrinn424Chassis>(vehicle);
 		}
 
 
@@ -39,6 +47,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		{
 		vehicle.telemetry.Unregister<Perrinn424Inputs>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Differential>(vehicle);
+		vehicle.telemetry.Unregister<Perrinn424Chassis>(vehicle);
 		}
 
 
@@ -157,4 +166,36 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+3] = m_wheelRL.angularVelocity * m_wheelRL.wheelCol.radius - m_wheelRR.angularVelocity * m_wheelRR.wheelCol.radius;
 			}
 		}
+
+
+	public class Perrinn424Chassis : Telemetry.ChannelGroup
+		{
+		public override int GetChannelCount ()
+			{
+			return 2;
+			}
+
+
+		public override float GetPollFrequency ()
+			{
+			return 50.0f;
+			}
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
+			{
+			channelInfo[0].SetNameAndSemantic("PitchRate", Telemetry.Semantic.AngularVelocity);
+			channelInfo[1].SetNameAndSemantic("RollRate", Telemetry.Semantic.AngularVelocity);
+			}
+
+
+		public override void PollValues (float[] values, int index, Object instance)
+			{
+			VehicleBase vehicle = instance as VehicleBase;
+			Vector3 angularVelocity = vehicle.cachedRigidbody.angularVelocity;
+			values[index+0] = angularVelocity.x;
+			values[index+1] = angularVelocity.z;
+			}
+		}
+
 	}
