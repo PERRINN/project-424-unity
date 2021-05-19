@@ -19,6 +19,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxWheelTorque = 3000;
 		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;
 		vehicle.telemetry.specs.maxSuspensionLoad = 2000.0f * Gravity.magnitude;
+		vehicle.telemetry.specs.maxTireForce = 30000.0f;
 
 		vehicle.telemetry.ApplySpecifications();
 
@@ -35,6 +36,11 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		Telemetry.SemanticInfo weightSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.Weight];
 		weightSemantic.displayMultiplier = 1.0f;
 		weightSemantic.displayUnitsSuffix = " N";
+
+		// Max tire forces. TODO: Remove when it's properly applied from specifications above.
+		Telemetry.SemanticInfo tireForceSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.TireForce];
+		tireForceSemantic.rangeMin = -vehicle.telemetry.specs.maxTireForce;
+		tireForceSemantic.rangeMax = vehicle.telemetry.specs.maxTireForce;
 		}
 
 
