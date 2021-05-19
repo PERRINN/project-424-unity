@@ -56,6 +56,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Register<Perrinn424Inputs>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Differential>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Chassis>(vehicle);
+		vehicle.telemetry.Register<Perrinn424Tires>(vehicle);
 		}
 
 
@@ -64,6 +65,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Unregister<Perrinn424Inputs>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Differential>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Chassis>(vehicle);
+		vehicle.telemetry.Unregister<Perrinn424Tires>(vehicle);
 		}
 
 
@@ -211,6 +213,71 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			Vector3 angularVelocity = vehicle.cachedRigidbody.angularVelocity;
 			values[index+0] = angularVelocity.x;
 			values[index+1] = angularVelocity.z;
+			}
+		}
+
+
+	public class Perrinn424Tires : Telemetry.ChannelGroup
+		{
+		VehicleBase.WheelState m_wheelFL;
+		VehicleBase.WheelState m_wheelFR;
+		VehicleBase.WheelState m_wheelRL;
+		VehicleBase.WheelState m_wheelRR;
+
+
+		public override int GetChannelCount ()
+			{
+			return 8;
+			}
+
+
+		public override float GetPollFrequency ()
+			{
+			return 50.0f;
+			}
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
+			{
+			VehicleBase vehicle = instance as VehicleBase;
+
+			// Retrieve states for the four monitored wheels
+
+			m_wheelFL = vehicle.wheelState[vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Left)];
+			m_wheelFR = vehicle.wheelState[vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Right)];
+			int rearAxle = vehicle.GetAxleCount() - 1;
+			m_wheelRL = vehicle.wheelState[vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Left)];
+			m_wheelRR = vehicle.wheelState[vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Right)];
+
+			// Using custom SlipRatio semantic not yet available in the built-in collection.
+			// TODO: use built-in semantic when available.
+
+			var slipRatioSemantic = new Telemetry.SemanticInfo();
+			slipRatioSemantic.SetRangeAndFormat(-1.0f, 1.0f, "0.0", " \\%", multiplier:100);
+
+			// Fill-in channel information
+
+			channelInfo[0].SetNameAndSemantic("SlipRatioFL", Telemetry.Semantic.Custom, slipRatioSemantic);
+			channelInfo[1].SetNameAndSemantic("SlipRatioFR", Telemetry.Semantic.Custom, slipRatioSemantic);
+			channelInfo[2].SetNameAndSemantic("SlipRatioRL", Telemetry.Semantic.Custom, slipRatioSemantic);
+			channelInfo[3].SetNameAndSemantic("SlipRatioRR", Telemetry.Semantic.Custom, slipRatioSemantic);
+			channelInfo[4].SetNameAndSemantic("SlipAngleFL", Telemetry.Semantic.SlipAngle);
+			channelInfo[5].SetNameAndSemantic("SlipAngleFR", Telemetry.Semantic.SlipAngle);
+			channelInfo[6].SetNameAndSemantic("SlipAngleRL", Telemetry.Semantic.SlipAngle);
+			channelInfo[7].SetNameAndSemantic("SlipAngleRR", Telemetry.Semantic.SlipAngle);
+			}
+
+
+		public override void PollValues (float[] values, int index, Object instance)
+			{
+			values[index+0] = m_wheelFL.slipRatio;
+			values[index+1] = m_wheelFR.slipRatio;
+			values[index+2] = m_wheelRL.slipRatio;
+			values[index+3] = m_wheelRR.slipRatio;
+			values[index+4] = m_wheelFL.slipAngle;
+			values[index+5] = m_wheelFR.slipAngle;
+			values[index+6] = m_wheelRL.slipAngle;
+			values[index+7] = m_wheelRR.slipAngle;
 			}
 		}
 
