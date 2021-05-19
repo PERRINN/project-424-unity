@@ -18,14 +18,23 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxAcceleration = 5 * Gravity.reference;
 		vehicle.telemetry.specs.maxWheelTorque = 3000;
 		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;
+		vehicle.telemetry.specs.maxSuspensionLoad = 2000.0f * Gravity.magnitude;
 
 		vehicle.telemetry.ApplySpecifications();
 
 		// Adjust specific semantics to our vehicle's capabilities
 
+		// Angular velocity in the range [-90, +90]
+
 		Telemetry.SemanticInfo angularVelocitySemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.AngularVelocity];
 		angularVelocitySemantic.rangeMin = -90.0f * Mathf.Deg2Rad;
 		angularVelocitySemantic.rangeMax = 90.0f * Mathf.Deg2Rad;
+
+		// Weight in newtons (original) instead of kilograms (default)
+
+		Telemetry.SemanticInfo weightSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.Weight];
+		weightSemantic.displayMultiplier = 1.0f;
+		weightSemantic.displayUnitsSuffix = " N";
 		}
 
 
