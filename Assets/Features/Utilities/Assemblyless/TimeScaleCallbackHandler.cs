@@ -17,12 +17,12 @@ namespace Perrinn424.Utilities
         private GameObject[] gameObjectsActiveOnlyInRealTime;
 
         [SerializeField]
-        private UnderFloor underfloor;
+        private Underfloor underfloor;
 
         private void OnEnable()
         {
             if (underfloor == null)
-                underfloor = FindObjectOfType<UnderFloor>();
+                underfloor = FindObjectOfType<Underfloor>();
 
             timeScaleController.onTimeScaleChanged += OnTimeScaleChangedEventHandler;
         }

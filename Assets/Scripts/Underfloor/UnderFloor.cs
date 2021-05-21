@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Perrinn424
 {
-    public class UnderFloor : VehicleBehaviour
+    public class Underfloor : VehicleBehaviour
     {
         [Serializable]
         public class ContactPoint
