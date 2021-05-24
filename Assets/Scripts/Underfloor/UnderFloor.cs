@@ -93,9 +93,9 @@ public class Underfloor : VehicleBehaviour
 
 	public class ContactPointData
 		{
-		public ContactPoint contactPoint;
-		public RuntimeAudio contactAudio;
+		// Physics
 
+		public ContactPoint contactPoint;
 		public bool contact;
 		public int contactCount;
 		public float contactDepth;
@@ -103,10 +103,15 @@ public class Underfloor : VehicleBehaviour
 		public Vector3 verticalForce;
 		public Vector3 dragForce;
 
-		// Used by the audio effect
+		// Audio effect
 
+		public RuntimeAudio contactAudio;
 		public int lastPlayedContact;
 		public float maxContactDepth;
+
+		// Widget
+
+		public bool contactDetected;
 		}
 
 
@@ -156,8 +161,6 @@ public class Underfloor : VehicleBehaviour
 		{
 		m_textBox.settings = widget;
 		m_textBox.header = "424 Underfloor";
-
-		// ClearContacts();
 		}
 
 
@@ -214,6 +217,8 @@ public class Underfloor : VehicleBehaviour
 
 	void ProcessContactPoint (ContactPointData cpData)
 		{
+		cpData.contact = false;
+
 		ContactPoint cp = cpData.contactPoint;
 		if (cp.pointBase == null || cp.limitContactDepth <= 0.0001f)
 			return;
@@ -227,16 +232,16 @@ public class Underfloor : VehicleBehaviour
 		if (!Physics.Raycast(origin, -up, out hitInfo, cp.detectionLength, groundLayers, QueryTriggerInteraction.Ignore))
 			return;
 
-		// This flag is cleared when the widget has displayed the contact
-
-		cpData.contact = true;
-		cpData.contactCount++;
-
-		// Determine if this contact makes sense (i.e. ignore contacts against vertical surfaces)
+		// Determine if this contact makes sense (i.e. ignore contacts against nearly vertical surfaces)
 
 		float upNormal = Vector3.Dot(up, hitInfo.normal);
 		if (upNormal < 0.00001f)
 			return;
+
+		// Contact!
+
+		cpData.contact = true;
+		cpData.contactCount++;
 
 		// Determine contact length ("penetration" of the ground above the point of contact)
 
@@ -245,11 +250,6 @@ public class Underfloor : VehicleBehaviour
 			contactDepth = cp.limitContactDepth;
 
 		cpData.contactDepth = contactDepth;
-
-		// Store maximum registered contact depth (for the audio effect)
-
-		if (contactDepth > cpData.maxContactDepth)
-			cpData.maxContactDepth = contactDepth;
 
 		// Calculate vertical force
 
@@ -265,6 +265,17 @@ public class Underfloor : VehicleBehaviour
 		// Apply resulting forces
 
 		vehicle.cachedRigidbody.AddForceAtPosition(cpData.verticalForce + cpData.dragForce, hitInfo.point);
+
+		// Audio effect:
+		// Store maximum registered contact depth.
+
+		if (contactDepth > cpData.maxContactDepth)
+			cpData.maxContactDepth = contactDepth;
+
+		// Notify the widget.
+		// This flag will be cleared when the widget has displayed the updated data.
+
+		cpData.contactDetected = true;
 		}
 
 
@@ -302,16 +313,6 @@ public class Underfloor : VehicleBehaviour
 		}
 
 
-	void ClearContacts ()
-		{
-		foreach (ContactPointData cpData in m_contactPointData)
-			{
-			cpData.contact = false;
-			cpData.contactCount = 0;
-			}
-		}
-
-
 	// Telemetry widget
 
 
@@ -319,10 +320,10 @@ public class Underfloor : VehicleBehaviour
 		{
 		ContactPoint cp = cpData.contactPoint;
 		string name = cp.pointBase != null ? cp.pointBase.name : "(unused)";
-		string contact = cpData.contact ? "■" : " ";
+		string contact = cpData.contactDetected ? "■" : " ";
 		text.Append($"\n{name,-16} {cp.stiffness / 1000.0f,6:0.}    {cp.friction,6:0.00} ");
 		text.Append($"{cpData.contactCount,7}{contact} {cpData.contactDepth * 1000.0f,7:0.00} {cpData.verticalLoad,7:0.} {cpData.dragForce.magnitude,7:0.}");
-		cpData.contact = false;
+		cpData.contactDetected = false;
 		}
 
 
