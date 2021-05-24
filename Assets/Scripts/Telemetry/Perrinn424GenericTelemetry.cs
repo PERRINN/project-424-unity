@@ -63,6 +63,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Register<Perrinn424Chassis>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Tires>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Distance>(vehicle);
+		vehicle.telemetry.Register<Perrinn424ForceFeedback>(vehicle);
 		}
 
 
@@ -73,6 +74,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Unregister<Perrinn424Chassis>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Tires>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Distance>(vehicle);
+		vehicle.telemetry.Unregister<Perrinn424ForceFeedback>(vehicle);
 		}
 
 
@@ -327,6 +329,51 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 			values[index+0] = (float)latest.distance;
 			values[index+1] = (float)latest.totalDistance;
+			}
+		}
+
+
+	public class Perrinn424ForceFeedback : Telemetry.ChannelGroup
+		{
+		VPDeviceInput m_deviceInput;
+
+
+		public override int GetChannelCount ()
+			{
+			return 2;
+			}
+
+
+		public override float GetPollFrequency ()
+			{
+			return 50.0f;
+			}
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
+			{
+			VehicleBase vehicle = instance as VehicleBase;
+			m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
+
+			// Fill-in channel information
+
+			channelInfo[0].SetNameAndSemantic("ForceFeedbackForceRatio", Telemetry.Semantic.SignedRatio);
+			channelInfo[1].SetNameAndSemantic("ForceFeedbackDamperRatio", Telemetry.Semantic.Ratio);
+			}
+
+
+		public override void PollValues (float[] values, int index, Object instance)
+			{
+			if (m_deviceInput != null && m_deviceInput.isActiveAndEnabled)
+				{
+				values[index+0] = m_deviceInput.currentForceFactor;
+				values[index+1] = m_deviceInput.currentDamperFactor;
+				}
+			else
+				{
+				values[index+0] = float.NaN;
+				values[index+1] = float.NaN;
+				}
 			}
 		}
 	}
