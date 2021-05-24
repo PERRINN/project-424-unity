@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: Distance
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Distance
+    verticalRange: 10
+    channels:
+    - name: Speed
+      displayName: 
+      labelOffset: 2
+      displayOrigin: 0
+      displayRange: 10
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: TotalDistance
+      displayName: Total Distance
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 2.5
+      displayColor: {r: 1, g: 0, b: 0.5697689, a: 0.7019608}
+    - name: LapDistance
+      displayName: Lap Distance
+      labelOffset: 1
+      displayOrigin: 0
+      displayRange: 10
+      displayColor: {r: 1, g: 0.6064061, b: 0, a: 0.7019608}

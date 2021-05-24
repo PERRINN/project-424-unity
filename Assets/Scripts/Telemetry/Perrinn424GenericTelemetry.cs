@@ -62,6 +62,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Register<Perrinn424Differential>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Chassis>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Tires>(vehicle);
+		vehicle.telemetry.Register<Perrinn424Distance>(vehicle);
 		}
 
 
@@ -71,6 +72,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Unregister<Perrinn424Differential>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Chassis>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Tires>(vehicle);
+		vehicle.telemetry.Unregister<Perrinn424Distance>(vehicle);
 		}
 
 
@@ -286,4 +288,45 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			}
 		}
 
+
+	public class Perrinn424Distance : Telemetry.ChannelGroup
+		{
+		public override int GetChannelCount ()
+			{
+			return 2;
+			}
+
+
+		public override float GetPollFrequency ()
+			{
+			return 50.0f;
+			}
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
+			{
+			VehicleBase vehicle = instance as VehicleBase;
+
+			// Custom distance semantic
+
+			var distanceSemantic = new Telemetry.SemanticInfo();
+			distanceSemantic.SetRangeAndFormat(0, 21000, "0.000", " km", multiplier:0.001f);
+
+			// Fill-in channel information
+
+			channelInfo[0].SetNameAndSemantic("LapDistance", Telemetry.Semantic.Custom, distanceSemantic);
+			channelInfo[1].SetNameAndSemantic("TotalDistance", Telemetry.Semantic.Custom, distanceSemantic);
+			}
+
+
+		public override void PollValues (float[] values, int index, Object instance)
+			{
+			VehicleBase vehicle = instance as VehicleBase;
+
+			Telemetry.DataRow latest = vehicle.telemetry.latest;
+
+			values[index+0] = (float)latest.distance;
+			values[index+1] = (float)latest.totalDistance;
+			}
+		}
 	}
