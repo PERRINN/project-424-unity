@@ -89,6 +89,13 @@ public class Perrinn424CarController : VehicleBase
 	public float brakePressureThreshold = 3.0f;
 
 
+	// Internal values exposed
+
+	public float throttleInput { get => m_throttleInput; }
+	public float brakePressure { get => m_brakePressure; }
+	public int gear { get => m_gear; }
+
+
 	// Private members
 
 	Powertrain m_frontPowertrain;
@@ -101,6 +108,7 @@ public class Perrinn424CarController : VehicleBase
 	float m_brakePressure;
 	int m_gearMode;
 	int m_prevGearMode;
+	int m_gear;
 
 	AxleFrameSensor m_frontAxleSensor = new AxleFrameSensor();
 	AxleFrameSensor m_rearAxleSensor = new AxleFrameSensor();
@@ -412,17 +420,17 @@ public class Perrinn424CarController : VehicleBase
 		// Being in a separate class allows all intermediate steps to be traced separately
 		// (pedal > input > electrical torque > mechanical torque > wheel torque)
 
-		int gear = m_gearMode - (int)Gearbox.AutomaticGear.N;
+		m_gear = m_gearMode - (int)Gearbox.AutomaticGear.N;
 		m_throttleInput = input.GetThrottleInput(throttlePosition);
 		m_brakePressure = input.GetBrakePressure(brakePosition);
 		if (m_brakePressure > brakePressureThreshold) m_throttleInput = 0.0f;
 
-		m_frontPowertrain.SetInputs(gear, m_throttleInput, m_brakePressure);
-		m_rearPowertrain.SetInputs(gear, m_throttleInput, m_brakePressure);
+		m_frontPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure);
+		m_rearPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure);
 
 		// Traction control
 
-		if (gear != 0)
+		if (m_gear != 0)
 			{
 			// Independent traction control per axle
 			/*
@@ -481,7 +489,7 @@ public class Perrinn424CarController : VehicleBase
 		vehicleData[VehicleData.EngineWorking] = ignitionKey < 0? 0 : 1;
 
 		vehicleData[VehicleData.GearboxMode] = m_gearMode;
-		vehicleData[VehicleData.GearboxGear] = m_gearMode - (int)Gearbox.AutomaticGear.N;
+		vehicleData[VehicleData.GearboxGear] = m_gear;
 		vehicleData[VehicleData.ClutchLock] = m_gearMode == (int)Gearbox.AutomaticGear.N? 0 : 1000;
 
 		// Engine rpm: maximum of both motors

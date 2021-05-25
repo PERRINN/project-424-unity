@@ -8,10 +8,99 @@ using EdyCommonTools;
 
 public class Perrinn424MguTelemetry : VehicleBehaviour
 	{
-	public GUITextBox.Settings overlay = new GUITextBox.Settings();
+	public bool emitTelemetry = true;
+
+	public bool showWidget = false;
+	public GUITextBox.Settings widget = new GUITextBox.Settings();
 
 	GUITextBox m_textBox = new GUITextBox();
 	StringBuilder m_text = new StringBuilder(1024);
+
+
+	// Telemetry channels
+
+
+	public override bool EmitTelemetry ()
+		{
+		return emitTelemetry;
+		}
+
+
+	public override void RegisterTelemetry ()
+		{
+		vehicle.telemetry.Register<Perrinn424Powertrain>(vehicle);
+		}
+
+
+	public override void UnregisterTelemetry ()
+		{
+		vehicle.telemetry.Unregister<Perrinn424Powertrain>(vehicle);
+		}
+
+
+	public class Perrinn424Powertrain : Telemetry.ChannelGroup
+		{
+		public override int GetChannelCount ()
+			{
+			return 11;
+			}
+
+
+		public override float GetPollFrequency ()
+			{
+			return 50.0f;
+			}
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
+			{
+			channelInfo[0].SetNameAndSemantic("MotorRpmFront", Telemetry.Semantic.EngineRpm);
+			channelInfo[1].SetNameAndSemantic("MotorRpmRear", Telemetry.Semantic.EngineRpm);
+			channelInfo[2].SetNameAndSemantic("PowerElectricalFront", Telemetry.Semantic.EnginePower);
+			channelInfo[3].SetNameAndSemantic("PowerElectricalRear", Telemetry.Semantic.EnginePower);
+			channelInfo[4].SetNameAndSemantic("PowerBalance", Telemetry.Semantic.Ratio);
+			channelInfo[5].SetNameAndSemantic("EfficiencyFront", Telemetry.Semantic.Ratio);
+			channelInfo[6].SetNameAndSemantic("EfficiencyRear", Telemetry.Semantic.Ratio);
+			channelInfo[7].SetNameAndSemantic("TorqueMechanicalFront", Telemetry.Semantic.EngineTorque);
+			channelInfo[8].SetNameAndSemantic("TorqueMechanicalRear", Telemetry.Semantic.EngineTorque);
+			channelInfo[9].SetNameAndSemantic("TorqueRotorFront", Telemetry.Semantic.EngineTorque);
+			channelInfo[10].SetNameAndSemantic("TorqueRotorRear", Telemetry.Semantic.EngineTorque);
+			}
+
+
+		public override void PollValues (float[] values, int index, Object instance)
+			{
+			VehicleBase vehicle = instance as VehicleBase;
+			int[] custom = vehicle.data.Get(Channel.Custom);
+
+			float frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
+			float frontEfficiency = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Efficiency] / 1000.0f;
+			float frontElectricalPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
+			float frontMechanical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
+			float frontRotor = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.RotorTorque] / 1000.0f;
+
+			float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
+			float rearEfficiency = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Efficiency] / 1000.0f;
+			float rearElectricalPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
+			float rearMechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
+			float rearRotor = custom[Perrinn424Data.RearMguBase + Perrinn424Data.RotorTorque] / 1000.0f;
+
+			values[index+0] = frontRpm;
+			values[index+1] = rearRpm;
+			values[index+2] = frontElectricalPower;
+			values[index+3] = rearElectricalPower;
+			values[index+4] = frontElectricalPower / (frontElectricalPower + rearElectricalPower);
+			values[index+5] = frontEfficiency;
+			values[index+6] = rearEfficiency;
+			values[index+7] = frontMechanical;
+			values[index+8] = rearMechanical;
+			values[index+9] = frontRotor;
+			values[index+10] = rearRotor;
+			}
+		}
+
+
+	// On-screen widget
 
 
 	// Trick to assign a default font to the GUI box. Configure it at the script settings.
@@ -20,21 +109,22 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 
 	void OnValidate ()
 		{
-		if (overlay.font == null)
-			overlay.font = defaultFont;
+		if (widget.font == null)
+			widget.font = defaultFont;
 		}
 
 
 	public override void OnEnableVehicle ()
 		{
-		m_textBox.settings = overlay;
+		m_textBox.settings = widget;
 		m_textBox.header = "424 Telemetry";
 		}
 
 
 	public override void UpdateAfterFixedUpdate ()
 		{
-		UpdateTelemetryText();
+		if (showWidget)
+			UpdateTelemetryText();
 		}
 
 
@@ -106,7 +196,8 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 
 	void OnGUI ()
 		{
-		m_textBox.OnGUI();
+		if (showWidget)
+			m_textBox.OnGUI();
 		}
 
 	}

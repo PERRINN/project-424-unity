@@ -13,14 +13,14 @@ namespace Perrinn424.Editor
 
 
         [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active)]
-        static void DrawSceneGizmos(UnderFloor src, GizmoType gizmoType)
+        static void DrawSceneGizmos(Underfloor src, GizmoType gizmoType)
         {
             foreach (var cp in src.contactPoints)
                 DrawContactPoint(cp);
         }
 
 
-        static void DrawContactPoint(UnderFloor.ContactPoint cp)
+        static void DrawContactPoint(Underfloor.ContactPoint cp)
         {
             if (cp.pointBase == null) return;
 
