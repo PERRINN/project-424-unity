@@ -33,14 +33,12 @@ public class LapTimer : MonoBehaviour
 
 	[Space(5)]
 	public TimerDisplay externalDisplay;
-	#if !VPP_LIMITED
 	public VPReplay replayComponent;
-	#endif
 
 	// Event delegate called on each valid lap registered
 
 	public Action<float, bool, float[], bool[]> onLap;
-        public Action<int, float> onSector;
+	public Action<int, float> onSector;
 
 	// Current lap time
 
@@ -99,26 +97,24 @@ public class LapTimer : MonoBehaviour
 
 		m_invalidLap = false;
 		m_invalidSector = false;
-		#if !VPP_LIMITED
 		if (replayComponent != null)
 			replayComponent.continuityFlag = true;
-		#endif
-        }
+		}
 
 
 	void Update ()
 		{
 		if (enableTestKeys)
 			{
-			if (Input.GetKeyDown(KeyCode.Alpha1)) OnTimerHit(0, Time.time);
-			if (Input.GetKeyDown(KeyCode.Alpha2)) OnTimerHit(1, Time.time);
-			if (Input.GetKeyDown(KeyCode.Alpha3)) OnTimerHit(2, Time.time);
-			if (Input.GetKeyDown(KeyCode.Alpha4)) OnTimerHit(3, Time.time);
-			if (Input.GetKeyDown(KeyCode.Alpha5)) OnTimerHit(4, Time.time);
-			if (Input.GetKeyDown(KeyCode.Alpha6)) OnTimerHit(5, Time.time);
-			if (Input.GetKeyDown(KeyCode.Alpha7)) OnTimerHit(6, Time.time);
-			if (Input.GetKeyDown(KeyCode.Alpha8)) OnTimerHit(7, Time.time);
-			if (Input.GetKeyDown(KeyCode.Alpha9)) OnTimerHit(8, Time.time);
+			if (Input.GetKeyDown(KeyCode.Alpha1)) DebugOnTimerHit(0, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha2)) DebugOnTimerHit(1, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha3)) DebugOnTimerHit(2, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha4)) DebugOnTimerHit(3, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha5)) DebugOnTimerHit(4, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha6)) DebugOnTimerHit(5, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha7)) DebugOnTimerHit(6, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha8)) DebugOnTimerHit(7, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha9)) DebugOnTimerHit(8, Time.time, 0.0f);
 
 			if (Input.GetKeyDown(KeyCode.Alpha0)) InvalidateLap();
 			}
@@ -152,12 +148,10 @@ public class LapTimer : MonoBehaviour
 				}
 			}
 
-		#if !VPP_LIMITED
 		// If the replay compromises the replay continuity, invalidate the lap.
 
 		if (replayComponent != null && !replayComponent.continuityFlag)
 			InvalidateLap();
-		#endif
 
 		SteeringScreen.trackTime = Time.time - m_trackStartTime;
 		}
@@ -216,7 +210,7 @@ public class LapTimer : MonoBehaviour
 		}
 
 
-	public void OnTimerHit (int sector, float hitTime)
+	public void OnTimerHit (VehicleBase vehicle, int sector, float hitTime, float hitDistance)
 		{
 		if (!isActiveAndEnabled) return;
 		if (sector >= sectors) return;
@@ -239,9 +233,9 @@ public class LapTimer : MonoBehaviour
 					{
 					m_sectors[sectors-1] = hitTime - m_sectorStartTime;
 					m_validSectors[sectors-1] = !m_invalidSector;
-					    onSector?.Invoke(sectors, m_sectors[sectors - 1]);
 
-                        if (onLap != null) onLap(lapTime, !m_invalidLap, m_sectors, m_validSectors);
+					onSector?.Invoke(sectors, m_sectors[sectors - 1]);
+					onLap?.Invoke(lapTime, !m_invalidLap, m_sectors, m_validSectors);
 
 					if (debugLog)
 						{
@@ -278,7 +272,7 @@ public class LapTimer : MonoBehaviour
 					}
 				}
 
-			// Anyways: restart timming
+			// Restart timming
 
 			m_currentSector = 0;
 			m_trackStartTime = hitTime;
@@ -286,12 +280,15 @@ public class LapTimer : MonoBehaviour
 			m_invalidSector = false;
 			m_invalidLap = false;
 
-			#if !VPP_LIMITED
+			// Restart vehicle counters
+
+			vehicle.telemetry.ResetTime(Time.time - hitTime);
+			vehicle.telemetry.ResetDistance(hitDistance);
+
 			// Also clear continuity flag
 
 			if (replayComponent != null)
 				replayComponent.continuityFlag = true;
-			#endif
 			}
 		else
 			{
@@ -309,7 +306,7 @@ public class LapTimer : MonoBehaviour
 
 				// Sector times: clean up times on first sector gate
 
-                if (sector == 1)
+				if (sector == 1)
 					{
 					ClearSectors();
 					}
@@ -318,7 +315,7 @@ public class LapTimer : MonoBehaviour
 				m_validSectors[sector-1] = !m_invalidSector;
 				m_sectorStartTime = hitTime;
 				m_invalidSector = false;
-                    onSector?.Invoke(sector, m_sectors[sector-1]);
+				onSector?.Invoke(sector, m_sectors[sector-1]);
 				}
 			else
 				{
@@ -454,6 +451,15 @@ public class LapTimer : MonoBehaviour
 		m_bigStyle.normal.textColor = Color.white;
 		}
 
+
+	void DebugOnTimerHit (int sector, float hitTime, float hitDistance)
+		{
+		// Find some vehicle in the scene to use as debug.
+
+		VehicleBase vehicle = FindObjectOfType<VehicleBase>();
+		if (vehicle != null)
+			OnTimerHit(vehicle, sector, hitTime, hitDistance);
+		}
 	}
 
 }

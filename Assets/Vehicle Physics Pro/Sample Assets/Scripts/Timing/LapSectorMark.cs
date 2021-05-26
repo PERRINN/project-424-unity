@@ -35,7 +35,7 @@ public class LapSectorMark : MonoBehaviour
 			return;
 			}
 
-        BoxCollider collider = GetComponent<BoxCollider>();
+		BoxCollider collider = GetComponent<BoxCollider>();
 		Vector3 planePoint = transform.TransformPoint(collider.center + Vector3.forward * collider.size.z * -0.5f);
 		Vector3 planeNormal = transform.TransformDirection(Vector3.forward);
 
@@ -45,44 +45,48 @@ public class LapSectorMark : MonoBehaviour
 
 	void OnTriggerEnter (Collider other)
 		{
-		if (isActiveAndEnabled)
+		if (!isActiveAndEnabled) return;
+
+		VehicleBase vehicle = other.GetComponentInParent<VehicleBase>();
+		if (vehicle == null) return;
+
+		// We have a vehicle crossing the mark
+
+		Transponder transponder = other.GetComponentInParent<Transponder>();
+		if (transponder != null && transponder.isActiveAndEnabled)
 			{
-			Transponder transponder = other.GetComponentInParent<Transponder>();
-			if (transponder != null && transponder.isActiveAndEnabled)
-				{
-				Vector3 detectionPoint;
-				Vector3 velocity;
-				transponder.GetPointAndVelocity(out detectionPoint, out velocity);
+			Vector3 detectionPoint;
+			Vector3 velocity;
+			transponder.GetPointAndVelocity(out detectionPoint, out velocity);
 
-				Ray ray = new Ray(detectionPoint, velocity.normalized);
-				float hitDistance;
-				m_detectionPlane.Raycast(ray, out hitDistance);
+			Ray ray = new Ray(detectionPoint, velocity.normalized);
+			float hitDistance;
+			m_detectionPlane.Raycast(ray, out hitDistance);
 
-				// hitDistance is negative if the ray doesn't point to the plane,
-				// so all situations are properly matched.
+			// hitDistance is negative if the ray doesn't point to the plane,
+			// so all situations are properly matched.
 
-				// Vector3 hitPoint = detectionPoint + velocity.normalized * hitDistance;
-				// Debug.DrawLine(detectionPoint, hitPoint);
+			// Vector3 hitPoint = detectionPoint + velocity.normalized * hitDistance;
+			// Debug.DrawLine(detectionPoint, hitPoint);
 
-				// Allow up to two fixed time steps for the collision to be detected
+			// Allow up to two fixed time steps for the collision to be detected
 
-				float maxDeltaTime = Time.fixedDeltaTime * 2.0f;
-				float contactTime = Mathf.Clamp(hitDistance / velocity.magnitude, -maxDeltaTime, maxDeltaTime);
-				m_lapTimer.OnTimerHit(sector, Time.fixedTime + contactTime);
+			float maxDeltaTime = Time.fixedDeltaTime * 2.0f;
+			float contactTime = Mathf.Clamp(hitDistance / velocity.magnitude, -maxDeltaTime, maxDeltaTime);
+			m_lapTimer.OnTimerHit(vehicle, sector, Time.fixedTime + contactTime, hitDistance);
 
-				// Debug.Log("Hit! Dist: " + hitDistance.ToString("0.000") + " Time: " + contactTime.ToString("0.000"));
-				}
-			else
-				{
-				m_lapTimer.OnTimerHit(sector, Time.fixedTime);
-				}
+			// Debug.Log("Hit! Dist: " + hitDistance.ToString("0.000") + " Time: " + contactTime.ToString("0.000"));
+			}
+		else
+			{
+			m_lapTimer.OnTimerHit(vehicle, sector, Time.fixedTime, 0.0f);
 			}
 		}
 
 
-    public void OnDrawGizmosSelected ()
+	public void OnDrawGizmosSelected ()
 		{
-        BoxCollider collider = GetComponent<BoxCollider>();
+		BoxCollider collider = GetComponent<BoxCollider>();
 
 		Vector3 planePoint = transform.TransformPoint(collider.center + Vector3.forward * collider.size.z * -0.5f);
 		Vector3 planeSize = Vector3.Scale(collider.size, transform.lossyScale);
@@ -90,7 +94,7 @@ public class LapSectorMark : MonoBehaviour
 		Gizmos.color = GColor.Alpha(GColor.accentGreen, 0.5f);
 		Gizmos.matrix = Matrix4x4.TRS(planePoint, transform.rotation, Vector3.one);
 
-        Gizmos.DrawCube(Vector3.zero, new Vector3(planeSize.x, planeSize.y, 0));
+		Gizmos.DrawCube(Vector3.zero, new Vector3(planeSize.x, planeSize.y, 0));
 		}
 	}
 
