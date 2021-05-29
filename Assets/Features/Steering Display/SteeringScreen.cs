@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using VehiclePhysics.Timing;
 
 
 namespace VehiclePhysics.UI
 {
-    public class SteeringScreen : MonoBehaviour
+    public class SteeringScreen : VehicleBehaviour
     {
-        VehicleBase target;
         public float windowSeconds = 4.0f;
         public float setMinSpeed = 10.0f;
         public float screenFPS = 5f;
@@ -35,30 +35,29 @@ namespace VehiclePhysics.UI
         float drsPosition;
         //bool autopilotState = false;
 
+        // TODO: Replace these static properties with proper component querying (example: LapTimer)
         public static float bestTime { get; set; } //Autopilot.cs
-        public static float trackTime { get; set; } //LapTimer.cs
+        public static bool autopilotState { get; set; } //Autopilot.cs
         public static float batSOC { get; set; } //batteryModel.cs
         public static float batCapacity { get; set; } //batteryModel.cs
-        public static bool autopilotState { get; set; } //Autopilot.cs
 
         float elapsed;
+        LapTimer m_lapTimer = null;
 
-        void OnEnable()
+        public override void OnEnableVehicle ()
         {
-            target = GetComponentInParent<VehicleBase>();
+            m_lapTimer = FindObjectOfType<LapTimer>();
         }
 
-        void Update()
+        public override void UpdateVehicle ()
         {
             elapsed += Time.deltaTime;
             if (elapsed > 1 / screenFPS)
             {
                 elapsed = 0;
 
-                if (target == null) return;
-
-                int[] vehicleData = target.data.Get(Channel.Vehicle);
-                int[] custom = target.data.Get(Channel.Custom);
+                int[] vehicleData = vehicle.data.Get(Channel.Vehicle);
+                int[] custom = vehicle.data.Get(Channel.Custom);
                 float speed = vehicleData[VehicleData.Speed] / 1000.0f;
 
                 if (speed > setMinSpeed) { setMinSpdTrigger = true; }
@@ -128,7 +127,7 @@ namespace VehiclePhysics.UI
                 }
 
                 // DRS signal
-                drsPosition = target.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
+                drsPosition = vehicle.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
 
                 if (drsImage != null)
                 {
@@ -196,11 +195,11 @@ namespace VehiclePhysics.UI
                 //}
 
                 // Time Difference with the Best Lap
-                if (timeDifference != null)
+                if (timeDifference != null && m_lapTimer != null)
                 {
-                    float compare = trackTime - bestTime;
+                    float compare = m_lapTimer.currentLapTime - bestTime;
 
-                    timeDifference.text = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-" + "0.00") : compare.ToString("+" + "0.00");
+                    timeDifference.text = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-0.00") : compare.ToString("+0.00");
                 }
 
                 // Battery SOC
