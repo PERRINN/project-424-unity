@@ -52,13 +52,13 @@ namespace Perrinn424
             public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
             {
 				autopilot = (Autopilot)instance;
-				
+
 				Telemetry.SemanticInfo errorSemantic = new Telemetry.SemanticInfo();
-				errorSemantic.SetRangeAndFormat(-5, 5, "0.#E+00", " m");
+				errorSemantic.SetRangeAndFormat(-5, 5, "0.000", " m");
 
 				float range = Mathf.Max(autopilot.maxForceP, autopilot.maxForceD);
-				Telemetry.SemanticInfo pidSemantic = new Telemetry.SemanticInfo(); 
-				pidSemantic.SetRangeAndFormat(-range, range, "0.00", " N");
+				Telemetry.SemanticInfo pidSemantic = new Telemetry.SemanticInfo();
+				pidSemantic.SetRangeAndFormat(-range, range, "0", " N");
 
 				channelInfo[0].SetNameAndSemantic("AutopilotDistanceError", Telemetry.Semantic.Custom, errorSemantic);
 				channelInfo[1].SetNameAndSemantic("AutopilotPID_P", Telemetry.Semantic.Custom, pidSemantic);
