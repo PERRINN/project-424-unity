@@ -61,11 +61,11 @@ namespace Perrinn424
 				Telemetry.SemanticInfo pidSemantic = new Telemetry.SemanticInfo(); 
 				pidSemantic.SetRangeAndFormat(-range, range, "0.00", " N");
 
-				channelInfo[0].SetNameAndSemantic("Error", Telemetry.Semantic.Custom, errorSemantic);
-				channelInfo[1].SetNameAndSemantic("P", Telemetry.Semantic.Custom, pidSemantic);
-				channelInfo[2].SetNameAndSemantic("I", Telemetry.Semantic.Custom, pidSemantic);
-				channelInfo[3].SetNameAndSemantic("D", Telemetry.Semantic.Custom, pidSemantic);
-				channelInfo[4].SetNameAndSemantic("PID", Telemetry.Semantic.Custom, pidSemantic);
+				channelInfo[0].SetNameAndSemantic("AutopilotDistanceError", Telemetry.Semantic.Custom, errorSemantic);
+				channelInfo[1].SetNameAndSemantic("AutopilotPID_P", Telemetry.Semantic.Custom, pidSemantic);
+				channelInfo[2].SetNameAndSemantic("AutopilotPID_I", Telemetry.Semantic.Custom, pidSemantic);
+				channelInfo[3].SetNameAndSemantic("AutopilotPID_D", Telemetry.Semantic.Custom, pidSemantic);
+				channelInfo[4].SetNameAndSemantic("AutopilotPID_PID", Telemetry.Semantic.Custom, pidSemantic);
 			}
 
 			public override float GetPollFrequency()
