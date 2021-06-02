@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: Autopilot
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Autopilot
+    verticalRange: 12
+    channels:
+    - name: Speed
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 1
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: Error
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 10
+      displayRange: 1.5
+      displayColor: {r: 1, g: 1, b: 1, a: 1}
+    - name: P
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 8
+      displayRange: 1.5
+      displayColor: {r: 0.8679245, g: 0.2874043, b: 0.08597365, a: 1}
+    - name: I
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 6
+      displayRange: 1
+      displayColor: {r: 0.066497564, g: 1, b: 0, a: 1}
+    - name: D
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 4
+      displayRange: 1.5
+      displayColor: {r: 0.09416164, g: 0.22457938, b: 0.8679245, a: 1}
+    - name: PID
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 2
+      displayRange: 1
+      displayColor: {r: 1, g: 1, b: 1, a: 1}
+    - name: Test
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 2
+      displayRange: 2
+      displayColor: {r: 0.94275093, g: 0, b: 1, a: 1}
