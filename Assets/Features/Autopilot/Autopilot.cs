@@ -224,14 +224,7 @@ public class Autopilot : MonoBehaviour
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
         // Telemetry
-        AutopilotChart.closestFrame1 = closestFrame1;
-        AutopilotChart.closestFrame2 = closestFrame2;
-        AutopilotChart.errorDistance = height;
-        AutopilotChart.proportional = edyPID.proportional;
-        AutopilotChart.integral = edyPID.integral;
-        AutopilotChart.derivative = edyPID.derivative;
-        AutopilotChart.output = edyPID.output;
-        SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
+        Telemetry(closestFrame1, closestFrame2);
 
         //get error force
         edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height - previousHeight)));
@@ -314,6 +307,22 @@ public class Autopilot : MonoBehaviour
         }
     }
 
+    public float Error => height; //[m]
+    public float P => edyPID.proportional; //[N]
+    public float I => edyPID.integral; //[N]
+    public float D => edyPID.derivative; //[N]
+    public float PID => edyPID.output; //[N]
+    private void Telemetry(int closestFrame1, int closestFrame2)
+    {
+        AutopilotChart.closestFrame1 = closestFrame1;
+        AutopilotChart.closestFrame2 = closestFrame2;
+        AutopilotChart.errorDistance = height;
+        AutopilotChart.proportional = edyPID.proportional;
+        AutopilotChart.integral = edyPID.integral;
+        AutopilotChart.derivative = edyPID.derivative;
+        AutopilotChart.output = edyPID.output;
+        SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
+    }
 
     Vector3 GetOffsetPosition(float offsetValue, VPReplay.Frame offsetTransform)
     {
