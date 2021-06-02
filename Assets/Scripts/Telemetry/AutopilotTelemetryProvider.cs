@@ -3,7 +3,7 @@ using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public class Perrin424AutopilotTelemetryProvider : VehicleBehaviour
+    public class AutopilotTelemetryProvider : VehicleBehaviour
     {
         public bool emitTelemetry = true;
 
@@ -42,7 +42,6 @@ namespace Perrinn424
 
 		public class AutopilotTelemetry : Telemetry.ChannelGroup
 		{
-
 			private Autopilot autopilot;
 
 			public override int GetChannelCount()
