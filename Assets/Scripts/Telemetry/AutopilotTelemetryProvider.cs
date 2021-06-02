@@ -81,6 +81,5 @@ namespace Perrinn424
 				values[index + 4] = autopilot.PID;
             }
         }
-
 	}
 }
