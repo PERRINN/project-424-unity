@@ -36,6 +36,12 @@ public class Autopilot : MonoBehaviour
     public float offsetValue = 0f;
     public BoxCollider startLine;
 
+    public float Error => height; //[m]
+    public float P => edyPID.proportional; //[N]
+    public float I => edyPID.integral; //[N]
+    public float D => edyPID.derivative; //[N]
+    public float PID => edyPID.output; //[N]
+
     void OnEnable()
     {
         rigidBody424 = GetComponent<Rigidbody>();
@@ -307,22 +313,8 @@ public class Autopilot : MonoBehaviour
         }
     }
 
-    public float Error => height; //[m]
-    public float P => edyPID.proportional; //[N]
-    public float I => edyPID.integral; //[N]
-    public float D => edyPID.derivative; //[N]
-    public float PID => edyPID.output; //[N]
-    private void Telemetry(int closestFrame1, int closestFrame2)
-    {
-        AutopilotChart.closestFrame1 = closestFrame1;
-        AutopilotChart.closestFrame2 = closestFrame2;
-        AutopilotChart.errorDistance = height;
-        AutopilotChart.proportional = edyPID.proportional;
-        AutopilotChart.integral = edyPID.integral;
-        AutopilotChart.derivative = edyPID.derivative;
-        AutopilotChart.output = edyPID.output;
-        SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
-    }
+
+
 
     Vector3 GetOffsetPosition(float offsetValue, VPReplay.Frame offsetTransform)
     {
@@ -340,6 +332,18 @@ public class Autopilot : MonoBehaviour
         positionOffset.z = carPosZoffset + offsetTransform.position.z;
 
         return positionOffset;
+    }
+
+    private void Telemetry(int closestFrame1, int closestFrame2)
+    {
+        AutopilotChart.closestFrame1 = closestFrame1;
+        AutopilotChart.closestFrame2 = closestFrame2;
+        AutopilotChart.errorDistance = height;
+        AutopilotChart.proportional = edyPID.proportional;
+        AutopilotChart.integral = edyPID.integral;
+        AutopilotChart.derivative = edyPID.derivative;
+        AutopilotChart.output = edyPID.output;
+        SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
     }
 
     struct CompareTwoValues
