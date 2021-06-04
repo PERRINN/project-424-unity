@@ -65,8 +65,8 @@ namespace Perrinn424
 
             GUILayout.Label($"Elapsed time: {t:0.00} [s]");
             GUILayout.Label($"Speed: {vehicle.speed:0.00} [m/s]");
-            GUILayout.Label($"Throttle: {throttle:P2} [%]");
-            GUILayout.Label($"Brake: {brake:P2} [%]");
+            GUILayout.Label($"Throttle: {throttle:P2}");
+            GUILayout.Label($"Brake: {brake:P2}");
         }
     } 
 }
