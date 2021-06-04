@@ -6,33 +6,39 @@ namespace Perrinn424
 {
     public class AccelerationTest : VehicleBehaviour
     {
-        public float distance = 1100.0f;
+        public float maxSpeed = 100f;
 
-        private WaitForDistance waitForDistance;
         private float startingTime;
         public bool TestFinished { get; private set; }
         public float ElapsedTime { get; private set; }
-        public float TraveledDistance => waitForDistance.TraveledDistance;
+        public float TraveledDistance => traveledDistance;
 
-        public override void OnEnableVehicle()
-        {
-            waitForDistance = new WaitForDistance(vehicle, distance);
-        }
+        private float traveledDistance;
+
+
 
         private IEnumerator Start()
         {
             startingTime = Time.time;
             SetInput(InputData.AutomaticGear, 4);
             SetInput(InputData.Throttle, 10000);
-            yield return waitForDistance;
+            yield return new WaitForSpeed(vehicle, maxSpeed);
+            TestFinished = true;
             SetInput(InputData.Throttle, 0);
             SetInput(InputData.Brake, 10000);
             yield return new WaitUntil(() => vehicle.speed < 0.001f);
-            ElapsedTime = Time.time - startingTime;
 
-            Debug.Log($"Elapsed Time: {ElapsedTime}");
+            Debug.Log($"Elapsed Time: {ElapsedTime} s to reach {maxSpeed} m/s. Traveled distance: {traveledDistance} m");
 
-            TestFinished = true;
+        }
+
+        public override void FixedUpdateVehicle()
+        {
+            if (!TestFinished)
+            {
+                traveledDistance += vehicle.speed * Time.deltaTime;
+                ElapsedTime = Time.time - startingTime;
+            }
         }
 
         protected void SetInput(int idValue, int value)
@@ -42,7 +48,7 @@ namespace Perrinn424
 
         private void OnGUI()
         {
-            GUILayout.Label($"Traveled Distance: {TraveledDistance: 0.00}");
+            GUILayout.Label($"Traveled Distance: {TraveledDistance: 0.00} [m]");
 
             float t;
             if (TestFinished)
@@ -54,8 +60,13 @@ namespace Perrinn424
                 t = Time.time - startingTime;
             }
 
-            GUILayout.Label($"Elapsed time: {t:0.00}");
+            float throttle = vehicle.data.Get(Channel.Input, InputData.Throttle)/10000.0f;
+            float brake = vehicle.data.Get(Channel.Input, InputData.Brake) /10000.0f;
 
+            GUILayout.Label($"Elapsed time: {t:0.00} [s]");
+            GUILayout.Label($"Speed: {vehicle.speed:0.00} [m/s]");
+            GUILayout.Label($"Throttle: {throttle:P2} [%]");
+            GUILayout.Label($"Brake: {brake:P2} [%]");
         }
     } 
 }
