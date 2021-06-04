@@ -23,12 +23,12 @@ namespace Perrinn424
             SetInput(InputData.AutomaticGear, 4);
             SetInput(InputData.Throttle, 10000);
             yield return new WaitForSpeed(vehicle, maxSpeed);
-            TestFinished = true;
             SetInput(InputData.Throttle, 0);
             SetInput(InputData.Brake, 10000);
             yield return new WaitUntil(() => vehicle.speed < 0.001f);
+            TestFinished = true;
 
-            Debug.Log($"Elapsed Time: {ElapsedTime} s to reach {maxSpeed} m/s. Traveled distance: {traveledDistance} m");
+            Debug.Log($"Elapsed Time: {ElapsedTime} s. Traveled distance: {traveledDistance} m");
 
         }
 
