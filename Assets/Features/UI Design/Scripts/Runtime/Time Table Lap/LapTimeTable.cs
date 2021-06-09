@@ -28,7 +28,7 @@ namespace Perrinn424.UI
         private List<LapRow> rowList;
         private Perrinn424.LapTimeTable table;
 
-        private void Awake()
+        private void OnEnable()
         {
             table = new Perrinn424.LapTimeTable(sectorCount);
             rowList = new List<LapRow>();
@@ -103,7 +103,7 @@ namespace Perrinn424.UI
         {
             int[] bestSectors = table.GetBestLapForEachSector();
 
-            //Special case. 
+            //Special case.
             // Best sectors should appears only when there are others sectors to be compared
             //In lap 1, there are never two sectors to compare
             //From 3 on, there are always two sectors to compare
@@ -134,5 +134,5 @@ namespace Perrinn424.UI
             yield return null;
             scrollRect.verticalNormalizedPosition = 0f;
         }
-    } 
+    }
 }
