@@ -12,13 +12,9 @@ namespace Perrinn424.UI
         [SerializeField]
         private TimeCell timeCell;
 
-        private void Awake()
-        {
-            lapTimer = FindObjectOfType<LapTimer>();
-        }
-
         private void OnEnable()
         {
+            lapTimer = FindObjectOfType<LapTimer>();
             if (lapTimer != null)
             {
                 lapTimer.onSector += OnSector;
