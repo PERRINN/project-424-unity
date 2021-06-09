@@ -44,7 +44,9 @@ public class CustomHandlingSetup : VehicleBehaviour
 
 
 	VPVehicleController m_vehicle;
+	#if !VPP_ESSENTIAL
 	VPDeviceInput m_deviceInput;
+	#endif
 
 
 	public override void OnEnableVehicle ()
@@ -57,7 +59,9 @@ public class CustomHandlingSetup : VehicleBehaviour
 			return;
 			}
 
+		#if !VPP_ESSENTIAL
 		m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
+		#endif
 		}
 
 
@@ -66,8 +70,10 @@ public class CustomHandlingSetup : VehicleBehaviour
 		if (useTractionSlip)
 			m_vehicle.tractionControl.customSlip = Mathf.Lerp(smoothTractionSlip, aggressiveTractionSlip, aggressiveness);
 
+		#if !VPP_ESSENTIAL
 		if (useSteeringBias && m_deviceInput != null)
 			m_deviceInput.steeringNonLinearBias = Mathf.Lerp(smoothSteeringBias, aggressiveSteeringBias, aggressiveness);
+		#endif
 
 		if (useMaxEngineTorque)
 			m_vehicle.engine.torqueCapLimit = Mathf.Lerp(smoothMaxEngineTorque, aggressiveMaxEngineTorque, aggressiveness);

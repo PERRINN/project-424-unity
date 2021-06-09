@@ -90,9 +90,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 
@@ -158,9 +158,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 
@@ -203,9 +203,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 
@@ -240,9 +240,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 
@@ -279,14 +279,25 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		public override void PollValues (float[] values, int index, Object instance)
 			{
-			values[index+0] = m_wheelFL.slipRatio;
-			values[index+1] = m_wheelFR.slipRatio;
-			values[index+2] = m_wheelRL.slipRatio;
-			values[index+3] = m_wheelRR.slipRatio;
-			values[index+4] = m_wheelFL.slipAngle;
-			values[index+5] = m_wheelFR.slipAngle;
-			values[index+6] = m_wheelRL.slipAngle;
-			values[index+7] = m_wheelRR.slipAngle;
+			FillData(m_wheelFL, values, index+0);
+			FillData(m_wheelFR, values, index+1);
+			FillData(m_wheelRL, values, index+2);
+			FillData(m_wheelRR, values, index+3);
+			}
+
+
+		void FillData (VehicleBase.WheelState ws, float[] values, int index)
+			{
+			if (ws.grounded)
+				{
+				values[index+0] = ws.slipRatio;
+				values[index+4] = ws.slipAngle;
+				}
+			else
+				{
+				values[index+0] = float.NaN;
+				values[index+4] = float.NaN;
+				}
 			}
 		}
 
@@ -299,9 +310,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 
@@ -344,9 +355,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 

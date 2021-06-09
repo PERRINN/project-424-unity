@@ -33,7 +33,9 @@ public class LapTimer : MonoBehaviour
 
 	[Space(5)]
 	public TimerDisplay externalDisplay;
+	#if !VPP_LIMITED
 	public VPReplay replayComponent;
+	#endif
 
 	// Event delegate called on each valid lap registered
 
@@ -97,8 +99,10 @@ public class LapTimer : MonoBehaviour
 
 		m_invalidLap = false;
 		m_invalidSector = false;
+		#if !VPP_LIMITED
 		if (replayComponent != null)
 			replayComponent.continuityFlag = true;
+		#endif
 		}
 
 
@@ -150,15 +154,16 @@ public class LapTimer : MonoBehaviour
 
 		// If the replay compromises the replay continuity, invalidate the lap.
 
+		#if !VPP_LIMITED
 		if (replayComponent != null && !replayComponent.continuityFlag)
 			InvalidateLap();
+		#endif
 		}
 
 
 	void NewLap (float t)
 		{
 		m_laps.Add(t);
-
 		m_lastTime = t;
 
 		foreach (float lapTime in m_laps)
@@ -282,11 +287,14 @@ public class LapTimer : MonoBehaviour
 
 			vehicle.telemetry.ResetTime(Time.time - hitTime);
 			vehicle.telemetry.ResetDistance(hitDistance);
+			vehicle.telemetry.segmentNumber = m_laps.Count + 1;
 
 			// Also clear continuity flag
 
+			#if !VPP_LIMITED
 			if (replayComponent != null)
 				replayComponent.continuityFlag = true;
+			#endif
 			}
 		else
 			{

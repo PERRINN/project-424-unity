@@ -370,9 +370,9 @@ public class Underfloor : VehicleBehaviour
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 
