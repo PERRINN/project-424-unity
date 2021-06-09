@@ -67,9 +67,9 @@ namespace Perrinn424
 				channelInfo[4].SetNameAndSemantic("AutopilotPID_PID", Telemetry.Semantic.Custom, pidSemantic);
 			}
 
-			public override float GetPollFrequency()
+			public override Telemetry.PollFrequency GetPollFrequency()
 			{
-				return 50.0f;
+				return Telemetry.PollFrequency.Normal;
 			}
 
             public override void PollValues(float[] values, int index, Object instance)
