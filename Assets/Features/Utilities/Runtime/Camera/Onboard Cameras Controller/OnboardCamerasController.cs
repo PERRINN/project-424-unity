@@ -6,7 +6,7 @@ namespace Perrinn424.Utilities
     {
         private CircularIterator<Camera> iterator;
 
-        private void Awake()
+        private void OnEnable()
         {
             Camera[] cameras = this.GetComponentsInChildren<Camera>(true);
 
@@ -31,5 +31,5 @@ namespace Perrinn424.Utilities
             iterator.Current.gameObject.SetActive(false);
             iterator.MovePrevious().gameObject.SetActive(true);
         }
-    } 
+    }
 }
