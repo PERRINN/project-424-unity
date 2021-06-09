@@ -16,6 +16,17 @@ public class Telemetry
 	// ChannelGroup
 	//----------------------------------------------------------------------------------------------
 
+	// Frequency values for each channel group.
+	// Actual frequency values used by channels may vary up to ±50% depending on the FixedUpdate frequency.
+	//
+	//		VeryLow:	  1 Hz
+	//		Low:		 10 Hz
+	//		Normal:		 50 Hz	(default)
+	//		High:		100 Hz
+	//		Max:		Physics Frequency
+
+	public enum PollFrequency { VeryLow, Low, Normal, High, Max, Count }
+
 	// Telemetry channels are implemented as channel groups by vehicle subsystems and external components.
 	// Use the method RegisterChannels to include them in the exposed telemetry.
 
@@ -27,7 +38,7 @@ public class Telemetry
 
 		// Report the frequency the PollValues method should be called for this group of channels
 
-		public virtual float GetPollFrequency ()
+		public virtual PollFrequency GetPollFrequency ()
 
 		// Return the information of each channel in this group for the given instance.
 		// Fill-in the public fields of each ChannelInfo class in the array.
@@ -173,11 +184,12 @@ public class Telemetry
 		{
 		// Public information
 
-		public ChannelGroup channels { get ; }
-		public int channelCount { get ; }
-		public float expectedFrequency { get ; }
-		public float actualFrequency { get ; }
-		public int updateInterval { get ; }
+		public ChannelGroup channels { get; }
+		public int channelCount { get; }
+		public PollFrequency expectedFrequency { get; }
+		public float actualFrequency { get; }
+		public int updateInterval { get; }
+		public string updateFrequencyLabel { get; }
 
 		public int channelBaseIndex { get; }
 		public Object instance;
@@ -189,7 +201,7 @@ public class Telemetry
 
 		public ChannelGroupInfo (ChannelGroup group, int baseIndex, float fixedUpdateFrequency, int groupTypeIndex)
 
-		public void SetFixedUpdateFrequency (float fixedUpdateFrequency)
+		public void RefreshUpdateFrequency ()
 		public void SetTypeCount (int count)
 		}
 
@@ -268,9 +280,9 @@ public class Telemetry
 	// Register and unregister channels
 	//----------------------------------------------------------------------------------------------
 
-	public void Register<T> (Object instance) where T : ChannelGroup
-	public void Unregister<T> (Object instance) where T : ChannelGroup
-	public bool IsRegistered<T> (Object instance) where T : ChannelGroup
+	public void Register<T> (Object instance) where T : ChannelGroup { }
+	public void Unregister<T> (Object instance) where T : ChannelGroup { }
+	public bool IsRegistered<T> (Object instance) where T : ChannelGroup { }
 
 
 	// Channels
@@ -307,7 +319,7 @@ public class Telemetry
 
 	// Set segment number (i.e. lap number)
 
-	public void SetSegmentNum (int segmentNum)
+	public int segmentNumber { get; set; }
 
 
 	// Markers
