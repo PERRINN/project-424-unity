@@ -442,7 +442,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1004260026653636740}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 7.26, y: -158.9, z: 0}
 --- !u!20 &900275184878562465
 Camera:
   m_ObjectHideFlags: 0
@@ -1965,7 +1965,7 @@ MonoBehaviour:
   tireSideDeflectionRate: 10
   tireAdherentImpulseRatio: 0.5
   wheelSleepVelocity: 0.2
-  advancedSuspensionDamper: 0
+  advancedSuspensionDamper: 1
   suspensionDamperLimitFactor: 2
   contactAngleAffectsTireForce: 0
   dontAdjustSuspensionForcePoint: 0
@@ -2150,7 +2150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showChannelList: 1
+  compactList: 0
   sortedByName: 0
+  activeChannelsOnly: 0
   filter: 
   listSettings:
     position: {x: 8, y: 8}
@@ -2174,7 +2176,8 @@ MonoBehaviour:
   m_Script: {fileID: -639118896, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTemplate: 16
+  showDisplay: 1
+  currentTemplate: 1
   templates:
   - {fileID: 11400000, guid: 2163c5faee1cd694eb855bac7233e4e8, type: 2}
   - {fileID: 11400000, guid: 1b9ee3aa8304a0643a629a8364dc2cc9, type: 2}
@@ -2196,10 +2199,11 @@ MonoBehaviour:
   reference: 0
   drawMode: 0
   valueMode: 0
-  plotDensity: 4
+  plotDensity: 1
   dataRangeFirst: 0
   dataRangeSpan: 30
   autoUpdate: 1
+  keyboardShortcuts: 1
   displayX: -16
   displayY: 8
   displayWidth: 540
@@ -2211,6 +2215,7 @@ MonoBehaviour:
   font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
   fontSize: 12
   fontColor: {r: 1, g: 1, b: 1, a: 1}
+  pointerDebugInfo: 0
 --- !u!114 &2483877716263781650
 MonoBehaviour:
   m_ObjectHideFlags: 0

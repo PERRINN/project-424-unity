@@ -42,13 +42,13 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		{
 		public override int GetChannelCount ()
 			{
-			return 11;
+			return 12;
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 
@@ -58,13 +58,14 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 			channelInfo[1].SetNameAndSemantic("MotorRpmRear", Telemetry.Semantic.EngineRpm);
 			channelInfo[2].SetNameAndSemantic("PowerElectricalFront", Telemetry.Semantic.EnginePower);
 			channelInfo[3].SetNameAndSemantic("PowerElectricalRear", Telemetry.Semantic.EnginePower);
-			channelInfo[4].SetNameAndSemantic("PowerBalance", Telemetry.Semantic.Ratio);
-			channelInfo[5].SetNameAndSemantic("EfficiencyFront", Telemetry.Semantic.Ratio);
-			channelInfo[6].SetNameAndSemantic("EfficiencyRear", Telemetry.Semantic.Ratio);
-			channelInfo[7].SetNameAndSemantic("TorqueMechanicalFront", Telemetry.Semantic.EngineTorque);
-			channelInfo[8].SetNameAndSemantic("TorqueMechanicalRear", Telemetry.Semantic.EngineTorque);
-			channelInfo[9].SetNameAndSemantic("TorqueRotorFront", Telemetry.Semantic.EngineTorque);
-			channelInfo[10].SetNameAndSemantic("TorqueRotorRear", Telemetry.Semantic.EngineTorque);
+			channelInfo[4].SetNameAndSemantic("PowerElectricalTotal", Telemetry.Semantic.EnginePower);
+			channelInfo[5].SetNameAndSemantic("PowerBalance", Telemetry.Semantic.Ratio);
+			channelInfo[6].SetNameAndSemantic("EfficiencyFront", Telemetry.Semantic.Ratio);
+			channelInfo[7].SetNameAndSemantic("EfficiencyRear", Telemetry.Semantic.Ratio);
+			channelInfo[8].SetNameAndSemantic("TorqueMechanicalFront", Telemetry.Semantic.EngineTorque);
+			channelInfo[9].SetNameAndSemantic("TorqueMechanicalRear", Telemetry.Semantic.EngineTorque);
+			channelInfo[10].SetNameAndSemantic("TorqueRotorFront", Telemetry.Semantic.EngineTorque);
+			channelInfo[11].SetNameAndSemantic("TorqueRotorRear", Telemetry.Semantic.EngineTorque);
 			}
 
 
@@ -89,13 +90,14 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 			values[index+1] = rearRpm;
 			values[index+2] = frontElectricalPower;
 			values[index+3] = rearElectricalPower;
-			values[index+4] = frontElectricalPower / (frontElectricalPower + rearElectricalPower);
-			values[index+5] = frontEfficiency;
-			values[index+6] = rearEfficiency;
-			values[index+7] = frontMechanical;
-			values[index+8] = rearMechanical;
-			values[index+9] = frontRotor;
-			values[index+10] = rearRotor;
+			values[index+4] = frontElectricalPower + rearElectricalPower;
+			values[index+5] = frontElectricalPower / (frontElectricalPower + rearElectricalPower);
+			values[index+6] = frontEfficiency;
+			values[index+7] = rearEfficiency;
+			values[index+8] = frontMechanical;
+			values[index+9] = rearMechanical;
+			values[index+10] = frontRotor;
+			values[index+11] = rearRotor;
 			}
 		}
 
