@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public class TelemetryUIIntegration : MonoBehaviour
+    public class TelemetryUIIntegration : UIBehaviour
     {
         [SerializeField]
         private RectTransformToScreenCoordinates screenCoordinatesUtility;
@@ -14,30 +12,41 @@ namespace Perrinn424
         [SerializeField]
         private VPTelemetryDisplay telemetryDisplay;
 
-        private void OnEnable()
+        private Canvas canvas;
+        private Canvas Canvas
+        {
+            get
+            {
+                if (canvas == null)
+                {
+                    canvas = this.GetComponentInParent<Canvas>();
+                }
+
+                return canvas;
+            }
+        }
+
+        protected override void OnEnable()
         {
             screenCoordinatesUtility.onRectTransformDimensionsChange += UpdateTelemetryDimensions;
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
             screenCoordinatesUtility.onRectTransformDimensionsChange -= UpdateTelemetryDimensions;
         }
 
         private void UpdateTelemetryDimensions(Rect screenCoordinates)
         {
-            telemetryDisplay.displayX = (int)screenCoordinates.x;
-            telemetryDisplay.displayY = (int)screenCoordinates.y;
-            telemetryDisplay.displayWidth = (int)screenCoordinates.width;
-            telemetryDisplay.displayHeight = (int)screenCoordinates.height;
-            //telemetryDisplay.displayWidth = (int)rect.width;
-            //telemetryDisplay.displayWidth = (int)(screenCoordinatesUtility.screenCorners[2].x - screenCoordinatesUtility.screenCorners[0].x);
-            //telemetryDisplay.displayHeight = (int)rect.height;
-            //telemetryDisplay.displayHeight = (int)(screenCoordinatesUtility.screenCorners[1].y - screenCoordinatesUtility.screenCorners[0].y);
-            //telemetryDisplay.displayX = (int)rect.x;
-            //telemetryDisplay.displayX = (int)screenCoordinatesUtility.screenCorners[0].x;
-            //telemetryDisplay.displayY = (int)rect.y;
-            //telemetryDisplay.displayY = (int)screenCoordinatesUtility.screenCorners[0].y;
+            telemetryDisplay.displayX = Mathf.RoundToInt(screenCoordinates.x);
+            telemetryDisplay.displayY = Mathf.RoundToInt(screenCoordinates.y);
+            telemetryDisplay.displayWidth = Mathf.RoundToInt(screenCoordinates.width);
+            telemetryDisplay.displayHeight = Mathf.RoundToInt(screenCoordinates.height);
+        }
+
+        protected override void OnCanvasHierarchyChanged()
+        {
+            telemetryDisplay.showDisplay = Canvas.isActiveAndEnabled;
         }
     } 
 }
