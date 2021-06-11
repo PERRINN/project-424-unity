@@ -36,7 +36,7 @@ namespace Perrinn424
             rectTransform.GetWorldCorners(screenCorners);
 
             float x = screenCorners[0].x;
-            float y = screenCorners[0].y;
+            float y = Screen.height - screenCorners[1].y;
             float width = screenCorners[2].x - screenCorners[0].x;
             float height = screenCorners[1].y - screenCorners[0].y;
             Rect = new Rect(x, y, width, height);
