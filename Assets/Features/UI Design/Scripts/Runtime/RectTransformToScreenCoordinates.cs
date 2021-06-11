@@ -14,10 +14,19 @@ namespace Perrinn424
 
         private Vector3 [] screenCorners = new Vector3[4];
 
+        protected override void OnEnable()
+        {
+            UpdateScreenCoordinates();
+        }
+
         protected override void OnRectTransformDimensionsChange()
         {
+            UpdateScreenCoordinates();
+        }
+
+        private void UpdateScreenCoordinates()
+        {
             CalculateScreenSpace();
-            Debug.Log($"{Size} {Position}");
             onRectTransformDimensionsChange?.Invoke(Rect);
         }
 
