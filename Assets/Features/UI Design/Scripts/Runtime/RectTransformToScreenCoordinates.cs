@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Perrinn424
+namespace Perrinn424.UI
 {
     public class RectTransformToScreenCoordinates : UIBehaviour
     {
@@ -10,7 +10,7 @@ namespace Perrinn424
         public Vector2 Position => Rect.position;
         public Rect Rect { get; private set; }
 
-        public event Action<Rect> onRectTransformDimensionsChange;
+        public event Action<Rect> RectTransformDimensionsChanged;
 
         private Vector3 [] screenCorners = new Vector3[4];
 
@@ -27,7 +27,7 @@ namespace Perrinn424
         private void UpdateScreenCoordinates()
         {
             CalculateScreenSpace();
-            onRectTransformDimensionsChange?.Invoke(Rect);
+            RectTransformDimensionsChanged?.Invoke(Rect);
         }
 
         private void CalculateScreenSpace()
