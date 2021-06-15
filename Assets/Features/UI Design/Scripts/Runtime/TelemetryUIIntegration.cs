@@ -46,13 +46,10 @@ namespace Perrinn424.UI
 
         private CircularIterator<Mode> modes;
 
-        protected override void Awake()
-        {
-            modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.ChannelList, Mode.Off });
-        }
-
         protected override void OnEnable()
         {
+            modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.ChannelList, Mode.Off });
+
             screenCoordinatesUtility.RectTransformDimensionsChanged += UpdateTelemetryDimensions;
             SetMode(modes.Current);
         }
