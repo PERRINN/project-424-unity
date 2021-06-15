@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Perrinn424.Utilities;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using VehiclePhysics;
 
@@ -8,8 +9,10 @@ namespace Perrinn424.UI
     {
         public enum Mode
         {
-            Small,
-            Large
+            Slim,
+            Wide,
+            ChannelList,
+            Off
         }
 
         [SerializeField]
@@ -17,13 +20,15 @@ namespace Perrinn424.UI
         
         [SerializeField]
         private VPTelemetryDisplay telemetryDisplay;
+        [SerializeField]
+        private VPTelemetryTools telemetryTools;
 
         [SerializeField]
         private Mode mode;
         [SerializeField]
-        private float smallRatio = 0.20f;
+        private float slimRatio = 0.20f;
         [SerializeField]
-        private float largeRatio = 0.35f;
+        private float wideRatio = 0.35f;
 
         private Canvas canvas;
         private Canvas Canvas
@@ -39,10 +44,17 @@ namespace Perrinn424.UI
             }
         }
 
+        private CircularIterator<Mode> modes;
+
+        protected override void Awake()
+        {
+            modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.ChannelList, Mode.Off });
+        }
+
         protected override void OnEnable()
         {
             screenCoordinatesUtility.RectTransformDimensionsChanged += UpdateTelemetryDimensions;
-            SetMode(mode);
+            SetMode(modes.Current);
         }
 
         protected override void OnDisable()
@@ -56,6 +68,9 @@ namespace Perrinn424.UI
             telemetryDisplay.displayY = Mathf.RoundToInt(screenCoordinates.y);
             telemetryDisplay.displayWidth = Mathf.RoundToInt(screenCoordinates.width);
             telemetryDisplay.displayHeight = Mathf.RoundToInt(screenCoordinates.height);
+
+            telemetryTools.listSettings.position = screenCoordinates.position;
+
         }
 
         protected override void OnCanvasHierarchyChanged()
@@ -67,23 +82,45 @@ namespace Perrinn424.UI
         {
             if (Input.GetKeyDown(KeyCode.T))
             {
-                SetMode(mode == Mode.Small ? Mode.Large : Mode.Small);    
+                modes.MoveNext();
+                SetMode(modes.Current);
             }
         }
 
         private void SetMode(Mode newMode)
         {
             this.mode = newMode;
-            ChangeTelemetrySizeInCanvas();
+            switch (mode)
+            {
+                case Mode.Slim:
+                    SetTelemetryProperties(false, true, slimRatio);
+                    break;
+                case Mode.Wide:
+                    SetTelemetryProperties(false, true, wideRatio);
+                    break;
+                case Mode.ChannelList:
+                    SetTelemetryProperties(true, false, wideRatio);
+                    break;
+                case Mode.Off:
+                    SetTelemetryProperties(false, false, slimRatio);
+                    break;
+            }
         }
 
-        private void ChangeTelemetrySizeInCanvas()
+        private void SetTelemetryProperties(bool showChannelList, bool showDisplay, float size)
+        {
+            telemetryTools.showChannelList = showChannelList;
+            telemetryDisplay.showDisplay = showDisplay;
+            SetSize(size);
+        }
+
+        private void SetSize(float size)
         {
             RectTransform parentRectTransform = this.transform.parent as RectTransform;
             Vector2 anchorMin = parentRectTransform.anchorMin;
-            float minAnchorX = 1.0f - (mode == Mode.Small ? smallRatio : largeRatio);
+            float minAnchorX = 1.0f - size;
             anchorMin.x = minAnchorX;
             parentRectTransform.anchorMin = anchorMin;
         }
-    } 
+    }
 }
