@@ -48,7 +48,8 @@ namespace Perrinn424.UI
 
         protected override void OnEnable()
         {
-            modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.ChannelList, Mode.Off });
+            //modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.ChannelList, Mode.Off });
+            modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.Off });
 
             screenCoordinatesUtility.RectTransformDimensionsChanged += UpdateTelemetryDimensions;
             SetMode(modes.Current);
@@ -66,8 +67,7 @@ namespace Perrinn424.UI
             telemetryDisplay.displayWidth = Mathf.RoundToInt(screenCoordinates.width);
             telemetryDisplay.displayHeight = Mathf.RoundToInt(screenCoordinates.height);
 
-            telemetryTools.listSettings.position = screenCoordinates.position;
-
+            //telemetryTools.listSettings.position = screenCoordinates.position;
         }
 
         protected override void OnCanvasHierarchyChanged()
@@ -106,7 +106,7 @@ namespace Perrinn424.UI
 
         private void SetTelemetryProperties(bool showChannelList, bool showDisplay, float size)
         {
-            telemetryTools.showChannelList = showChannelList;
+            //telemetryTools.showChannelList = showChannelList;
             telemetryDisplay.showDisplay = showDisplay;
             SetSize(size);
         }
