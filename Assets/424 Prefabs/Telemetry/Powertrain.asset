@@ -48,21 +48,27 @@ MonoBehaviour:
       displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.69803923}
     - name: PowerBalance
       displayName: Power Balance
-      labelOffset: 0
-      displayOrigin: 5.4
+      labelOffset: 1
+      displayOrigin: 5
       displayRange: 1.5
       displayColor: {r: 1, g: 0.6666667, b: 0.14999998, a: 1}
+    - name: WheelTorqueBalance
+      displayName: Wheel Torque Balance
+      labelOffset: 0
+      displayOrigin: 5
+      displayRange: 1.5
+      displayColor: {r: 0.57801414, g: 0.5, b: 1, a: 0.74509805}
     - name: EfficiencyFront
       displayName: Efficiency Front
       labelOffset: 1
-      displayOrigin: 4
-      displayRange: 1
+      displayOrigin: 3.9
+      displayRange: 0.7
       displayColor: {r: 0.7307761, g: 0.9622642, b: 0.7401292, a: 0.69803923}
     - name: EfficiencyRear
       displayName: Efficiency Rear
       labelOffset: 0
-      displayOrigin: 4
-      displayRange: 1
+      displayOrigin: 3.9
+      displayRange: 0.7
       displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.69803923}
     - name: TorqueRotorFront
       displayName: Torque Rotor Front
