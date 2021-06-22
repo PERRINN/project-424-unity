@@ -3,7 +3,7 @@ using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public class BaseTelemetryProvider<T,R> : VehicleBehaviour where T:UnityEngine.Object where R: Telemetry.ChannelGroup
+    public abstract class BaseTelemetryProvider<T,R> : VehicleBehaviour where T:UnityEngine.Object where R: Telemetry.ChannelGroup
 	{
 		public bool emitTelemetry = true;
 
