@@ -3,22 +3,22 @@ using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public abstract class BaseTelemetryProvider<T,R> : VehicleBehaviour where T:UnityEngine.Object where R: Telemetry.ChannelGroup
+    public abstract class BaseTelemetryProvider<TComponent,TTelemetry> : VehicleBehaviour where TComponent:UnityEngine.Object where TTelemetry: Telemetry.ChannelGroup
 	{
 		public bool emitTelemetry = true;
 
 		[SerializeField]
-		private T component;
+		private TComponent component;
 
 		public override void OnEnableVehicle()
 		{
 			if (component == null)
 			{
-				component = vehicle.GetComponentInChildren<T>();
+				component = vehicle.GetComponentInChildren<TComponent>();
 
 				if (component == null)
 				{
-					Debug.LogError($"Missing {nameof(T)}. Component disabled");
+					Debug.LogError($"Missing {nameof(TComponent)}. Component disabled");
 					enabled = false;
 				}
 			}
@@ -31,13 +31,13 @@ namespace Perrinn424
 
 		public override void RegisterTelemetry()
 		{
-			vehicle.telemetry.Register<R>(component);
+			vehicle.telemetry.Register<TTelemetry>(component);
 		}
 
 
 		public override void UnregisterTelemetry()
 		{
-			vehicle.telemetry.Unregister<R>(component);
+			vehicle.telemetry.Unregister<TTelemetry>(component);
 		}
 	}
 }
