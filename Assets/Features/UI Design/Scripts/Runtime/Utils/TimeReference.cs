@@ -10,6 +10,8 @@ namespace Perrinn424
         private readonly int count;
         private int previousIndex = -1;
 
+        public float Speed { get; private set; }
+
         public TimeReference(int[] reference)
         {
             count = reference.Length;
@@ -34,6 +36,8 @@ namespace Perrinn424
             float ratio = (currentDistance - distance[index]) / (distance[index + 1] - distance[index]);
             float referenceTime = Mathf.Lerp(time[index], time[index + 1], ratio);
             float diff = currentTime - referenceTime;
+
+            Speed = distance[index + 1] - distance[index];
             return diff;
         }
 
