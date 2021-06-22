@@ -3,43 +3,8 @@ using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public class AutopilotTelemetryProvider : VehicleBehaviour
-    {
-        public bool emitTelemetry = true;
-
-		[SerializeField]
-		private Autopilot autopilot;
-
-		public override void OnEnableVehicle()
-		{
-			if (autopilot == null)
-			{
-				autopilot = vehicle.GetComponentInChildren<Autopilot>();
-
-				if (autopilot == null)
-				{
-					Debug.LogError("Missing Autopilot. Component disabled");
-					enabled = false;
-				}
-			}
-		}
-
-		public override bool EmitTelemetry()
-        {
-            return emitTelemetry;
-        }
-
-		public override void RegisterTelemetry()
-		{
-			vehicle.telemetry.Register<AutopilotTelemetry>(autopilot);
-		}
-
-
-		public override void UnregisterTelemetry()
-		{
-			vehicle.telemetry.Unregister<AutopilotTelemetry>(autopilot);
-		}
-
+    public class AutopilotTelemetryProvider : BaseTelemetryProvider<Autopilot, AutopilotTelemetryProvider.AutopilotTelemetry>
+	{
 		public class AutopilotTelemetry : Telemetry.ChannelGroup
 		{
 			private Autopilot autopilot;
