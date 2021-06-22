@@ -22,6 +22,20 @@ MonoBehaviour:
   startUpBrakeSpeedRatio: 98
   offsetValue: 0
   startLine: {fileID: 0}
+--- !u!114 &4084599790386495565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2476090975454418218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c33ba5556b1bc554ea14161d7b99a925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
+  component: {fileID: 3662052850870299041}
 --- !u!114 &7312595622897392818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,13 +227,19 @@ PrefabInstance:
     - target: {fileID: 2483877716263781649, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: templates.Array.size
-      value: 18
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781649, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: templates.Array.data[17]
       value: 
       objectReference: {fileID: 11400000, guid: e71c5c5827035ed4caac050dc0e7469c,
+        type: 2}
+    - target: {fileID: 2483877716263781649, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: templates.Array.data[18]
+      value: 
+      objectReference: {fileID: 11400000, guid: 46a831ba04da2f64c96b2431ef3ff232,
         type: 2}
     - target: {fileID: 2483877716263781661, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}

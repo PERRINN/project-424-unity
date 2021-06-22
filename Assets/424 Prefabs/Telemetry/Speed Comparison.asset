@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: Speed Comparison
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Speed Comparison
+    verticalRange: 3
+    channels:
+    - name: Speed
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 3
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: PorscheSpeed
+      displayName: Porsche
+      labelOffset: 3.06
+      displayOrigin: 0
+      displayRange: 3
+      displayColor: {r: 0.86666673, g: 0.28627452, b: 0.08627451, a: 1}
+    - name: VolkswagenSpeed
+      displayName: Volkswagen
+      labelOffset: 6.44
+      displayOrigin: 0
+      displayRange: 3
+      displayColor: {r: 0.086274505, g: 0.10202448, b: 0.8666667, a: 1}

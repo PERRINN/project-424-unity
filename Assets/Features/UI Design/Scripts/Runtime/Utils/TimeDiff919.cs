@@ -10,6 +10,9 @@ namespace Perrinn424
         public float PorscheDiff { get; private set; }
         public float VolkswagenDiff { get; private set; }
 
+        public float PorscheSpeed { get; private set; }
+        public float VolkswagenSpeed { get; private set; }
+
         public override void OnEnableVehicle()
         {
             porsche = TimeReferenceHelper.CreatePorsche();
@@ -27,7 +30,8 @@ namespace Perrinn424
             PorscheDiff = porsche.LapDiff(currentTime, currentDistance);
             VolkswagenDiff = volkswagen.LapDiff(currentTime, currentDistance);
 
-            UnityEngine.Debug.Log($"Speed P:{porsche.Speed} V:{volkswagen.Speed}");
+            PorscheSpeed = porsche.Speed;
+            VolkswagenSpeed = volkswagen.Speed;
         }
     }
 }

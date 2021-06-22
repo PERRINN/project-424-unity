@@ -98,7 +98,7 @@ namespace Perrinn424.UI
                 SetMode(modes.Current);
             }
 
-            Debug.Log(telemetryTools.channelListRect);
+            //Debug.Log(telemetryTools.channelListRect);
         }
 
         private void SetMode(Mode newMode)
