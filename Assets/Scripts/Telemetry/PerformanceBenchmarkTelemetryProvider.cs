@@ -3,11 +3,11 @@ using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public class TimeDiffTelemetryProvider : BaseTelemetryProvider<TimeDiff919, TimeDiffTelemetryProvider.TimeDiffTelemetry>
+    public class PerformanceBenchmarkTelemetryProvider : BaseTelemetryProvider<PerformanceBenchmarkController, PerformanceBenchmarkTelemetryProvider.PerformanceBenchmarkTelemetry>
     {
-        public class TimeDiffTelemetry : Telemetry.ChannelGroup
+        public class PerformanceBenchmarkTelemetry : Telemetry.ChannelGroup
         {
-            private TimeDiff919 timeDiff;
+            private PerformanceBenchmarkController performanceBenchmarkController;
 
             public override int GetChannelCount()
             {
@@ -16,7 +16,7 @@ namespace Perrinn424
 
             public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
             {
-                timeDiff = (TimeDiff919)instance;
+                performanceBenchmarkController = (PerformanceBenchmarkController)instance;
 
                 channelInfo[0].SetNameAndSemantic("PorscheSpeed", Telemetry.Semantic.Speed);
                 channelInfo[1].SetNameAndSemantic("VolkswagenSpeed", Telemetry.Semantic.Speed);
@@ -29,8 +29,8 @@ namespace Perrinn424
 
             public override void PollValues(float[] values, int index, Object instance)
             {
-                values[index + 0] = timeDiff.PorscheSpeed;
-                values[index + 1] = timeDiff.VolkswagenSpeed;
+                values[index + 0] = performanceBenchmarkController.PorscheSpeed;
+                values[index + 1] = performanceBenchmarkController.VolkswagenSpeed;
             }
         }
     } 

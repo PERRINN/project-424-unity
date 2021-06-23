@@ -2,10 +2,10 @@
 
 namespace Perrinn424
 {
-    public class TimeDiff919 : VehicleBehaviour
+    public class PerformanceBenchmarkController : VehicleBehaviour
     {
-        private TimeReference porsche;
-        private TimeReference volkswagen;
+        private PerformanceBenchmark porsche;
+        private PerformanceBenchmark volkswagen;
 
         public float PorscheDiff { get; private set; }
         public float VolkswagenDiff { get; private set; }
@@ -15,8 +15,8 @@ namespace Perrinn424
 
         public override void OnEnableVehicle()
         {
-            porsche = TimeReferenceHelper.CreatePorsche();
-            volkswagen = TimeReferenceHelper.CreateVolkswagen();
+            porsche = PerformanceBenchmarkHelper.CreatePorsche();
+            volkswagen = PerformanceBenchmarkHelper.CreateVolkswagen();
         }
 
         private void Update()

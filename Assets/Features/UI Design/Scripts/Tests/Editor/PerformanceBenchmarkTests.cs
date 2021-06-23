@@ -4,14 +4,14 @@ using UnityEngine.TestTools.Constraints;
 using Is = UnityEngine.TestTools.Constraints.Is;
 namespace Perrinn424.Editor.Tests
 {
-    public class TimeReferenceTests
+    public class PerformanceBenchmarkTests
     {
         [TestCase(13.41127f, 657.8914f, 0.370546341f)]
         [TestCase(24.60585f, 1391.423f, -1.62420464f)]
         [TestCase(5.562164f, 544.5441f, -5.81348467f)]
         public void TimeReferenceTest(float time, float distance, float expectedDifference)
         {
-            TimeReference porsche = TimeReferenceHelper.CreatePorsche();
+            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
             float difference = porsche.LapDiff(time, distance);
             Assert.That(expectedDifference, Is.EqualTo(difference).Within(10e-3));
         }
@@ -19,7 +19,7 @@ namespace Perrinn424.Editor.Tests
         [Test]
         public void GCTest()
         {
-            TimeReference porsche = TimeReferenceHelper.CreatePorsche();
+            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
             porsche.LapDiff(0f, 0f);
 
             Assert.That(() =>
@@ -31,7 +31,7 @@ namespace Perrinn424.Editor.Tests
         [Test]
         public void PerformanceTest()
         {
-            TimeReference porsche = TimeReferenceHelper.CreatePorsche();
+            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
             TimeReferenceLegacy porscheLegacy = new TimeReferenceLegacy(porsche.distance);
 
             float t = 5.562164f;
@@ -65,7 +65,7 @@ namespace Perrinn424.Editor.Tests
         [Test]
         public void OutOfIndexTest()
         {
-            TimeReference porsche = TimeReferenceHelper.CreatePorsche();
+            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
             Assert.DoesNotThrow(() => porsche.IsCorrectIndex(320, 0f));
 
             Assert.DoesNotThrow(() => porsche.LapDiff(305.016f, 20737.32f));

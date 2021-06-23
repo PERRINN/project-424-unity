@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Perrinn424
 {
-    public class TimeReference
+    public class PerformanceBenchmark
     {
         internal readonly float[] time;
         internal readonly float[] distance;
@@ -12,7 +12,7 @@ namespace Perrinn424
 
         public float Speed { get; private set; }
 
-        public TimeReference(int[] reference)
+        public PerformanceBenchmark(int[] reference)
         {
             count = reference.Length;
             time = new float[count];
@@ -37,7 +37,6 @@ namespace Perrinn424
             float referenceTime = Mathf.Lerp(time[index], time[index + 1], ratio);
             float diff = currentTime - referenceTime;
 
-            //Speed = distance[index + 1] - distance[index];
             Speed = CalculateSpeed(index, ratio);
             return diff;
         }

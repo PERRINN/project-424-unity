@@ -1,10 +1,10 @@
 ﻿namespace Perrinn424
 {
-    public static class TimeReferenceHelper
+    public static class PerformanceBenchmarkHelper
     {
-        public static TimeReference CreatePorsche()
+        public static PerformanceBenchmark CreatePorsche()
         {
-            var porsche = new TimeReference(new[]
+            var porsche = new PerformanceBenchmark(new[]
            { 
                 0, 41, 94, 147, 186, 217, 244, 279, 326, 383, 449, 519, 587, 655, 726, 799, 876, 939, 991, 1034, 1080, 
                 1135, 1195, 1245, 1291, 1332, 1379, 1433, 1476, 1516, 1556, 1607, 1666, 1737, 1814, 1894, 1978, 2063, 
@@ -31,9 +31,9 @@
             return porsche;
         }
 
-        public static TimeReference CreateVolkswagen()
+        public static PerformanceBenchmark CreateVolkswagen()
         {
-            var volkswagen = new TimeReference(new[]
+            var volkswagen = new PerformanceBenchmark(new[]
             { 
                 0, 39, 87, 139, 185, 219, 248, 278, 316, 363, 416, 475, 539, 603, 665, 730, 799, 871, 933, 984, 1028, 1067, 
                 1108, 1157, 1211, 1259, 1301, 1337, 1373, 1417, 1468, 1512, 1549, 1582, 1625, 1674, 1729, 1791, 1856, 1926, 
