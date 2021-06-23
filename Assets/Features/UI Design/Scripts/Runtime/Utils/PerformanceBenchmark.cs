@@ -70,14 +70,14 @@ namespace Perrinn424
             return binaryIndex;
         }
 
-        private float CalculateSpeed(int index, float ratio)
+        internal float CalculateSpeed(int index, float ratio)
         {
             float speed = CalculateSpeed(index);
             float nextSpeed = CalculateSpeed(index + 1);
             return Mathf.Lerp(speed, nextSpeed, ratio);
         }
 
-        private float CalculateSpeed(int index)
+        internal float CalculateSpeed(int index)
         {
             float currentDistance = distance[index];
             float previousDistance = index == 0 ? 0 : distance[index - 1];

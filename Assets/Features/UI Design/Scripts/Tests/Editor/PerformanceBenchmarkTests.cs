@@ -34,8 +34,8 @@ namespace Perrinn424.Editor.Tests
             PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
             TimeReferenceLegacy porscheLegacy = new TimeReferenceLegacy(porsche.distance);
 
-            float t = 5.562164f;
-            float d = 544.5441f;
+            float t = 174.324f;
+            float d = 11620.74f;
 
             Assert.That(porscheLegacy.LapDiff(t, d), Is.EqualTo(porsche.LapDiff(t, d)).Within(10e-3));
 
@@ -60,6 +60,15 @@ namespace Perrinn424.Editor.Tests
 
             Assert.That(newMethod.Milliseconds, Is.LessThan(legacy.Milliseconds));
 
+        }
+
+        [TestCase(0, 0.0f, ExpectedResult = 0f)]
+        [TestCase(0, 1.0f, ExpectedResult = 41f)]
+        [TestCase(1, 0.5f, ExpectedResult = 47f)]
+        public float SpeedTest(int index, float ratio)
+        {
+            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
+            return porsche.CalculateSpeed(index, ratio);
         }
 
         [Test]
