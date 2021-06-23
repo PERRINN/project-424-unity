@@ -37,7 +37,8 @@ namespace Perrinn424
             float referenceTime = Mathf.Lerp(time[index], time[index + 1], ratio);
             float diff = currentTime - referenceTime;
 
-            Speed = distance[index + 1] - distance[index];
+            //Speed = distance[index + 1] - distance[index];
+            Speed = CalculateSpeed(index, ratio);
             return diff;
         }
 
@@ -70,6 +71,19 @@ namespace Perrinn424
             return binaryIndex;
         }
 
+        private float CalculateSpeed(int index, float ratio)
+        {
+            float speed = CalculateSpeed(index);
+            float nextSpeed = CalculateSpeed(index + 1);
+            return Mathf.Lerp(speed, nextSpeed, ratio);
+        }
+
+        private float CalculateSpeed(int index)
+        {
+            float currentDistance = distance[index];
+            float previousDistance = index == 0 ? 0 : distance[index - 1];
+            return currentDistance - previousDistance;
+        }
 
         internal bool IsCorrectIndex(int index, float d)
         {
