@@ -10,7 +10,9 @@ namespace Perrinn424
         private readonly int count;
         private int previousIndex = -1;
 
-        public float Speed { get; private set; }
+        public float TimeDiff { get; private set; } //[s]
+        public float Speed { get; private set; } //[m/s]
+        public float TraveledDistance { get; private set; } //[m]
 
         public PerformanceBenchmark(int[] reference)
         {
@@ -25,20 +27,28 @@ namespace Perrinn424
             }
         }
 
-        public float LapDiff(float currentTime, float currentDistance)
+        public void Update(float currentTime, float currentDistance)
         {
             int index = FindIndex(currentDistance);
 
             if (index < 0 || index + 1 >= count)
-                return float.NaN;
-
+            {
+                TimeDiff = float.NaN;
+                TraveledDistance = float.NaN;
+                Speed = float.NaN;
+                return;
+            }
             previousIndex = index;
-            float ratio = (currentDistance - distance[index]) / (distance[index + 1] - distance[index]);
+            
+            float ratio = Mathf.InverseLerp(distance[index], distance[index + 1], currentDistance);
+            
             float referenceTime = Mathf.Lerp(time[index], time[index + 1], ratio);
-            float diff = currentTime - referenceTime;
+            TimeDiff = currentTime - referenceTime;
+            
+            TraveledDistance = CalculateTraveledDistance(currentTime);
+
 
             Speed = CalculateSpeed(index, ratio);
-            return diff;
         }
 
         private int FindIndex(float currentDistance)
@@ -82,6 +92,13 @@ namespace Perrinn424
             float currentDistance = distance[index];
             float previousDistance = index == 0 ? 0 : distance[index - 1];
             return currentDistance - previousDistance;
+        }
+
+        internal float CalculateTraveledDistance(float currentTime)
+        {
+            int index = (int)currentTime;
+            float ratio = currentTime - index;
+            return Mathf.Lerp(distance[index], distance[index + 1], ratio);
         }
 
         internal bool IsCorrectIndex(int index, float d)

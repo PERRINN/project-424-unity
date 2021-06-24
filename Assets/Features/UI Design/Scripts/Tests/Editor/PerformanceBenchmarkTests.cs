@@ -12,19 +12,19 @@ namespace Perrinn424.Editor.Tests
         public void TimeReferenceTest(float time, float distance, float expectedDifference)
         {
             PerformanceBenchmark porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
-            float difference = porsche919.LapDiff(time, distance);
-            Assert.That(expectedDifference, Is.EqualTo(difference).Within(10e-3));
+            porsche919.Update(time, distance);
+            Assert.That(expectedDifference, Is.EqualTo(porsche919.TimeDiff).Within(10e-3));
         }
 
         [Test]
         public void GCTest()
         {
             PerformanceBenchmark porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
-            porsche919.LapDiff(0f, 0f);
+            porsche919.Update(0f, 0f);
 
             Assert.That(() =>
             {
-                porsche919.LapDiff(0f, 0f);
+                porsche919.Update(0f, 0f);
             }, Is.Not.AllocatingGCMemory());
         }
 
@@ -37,7 +37,8 @@ namespace Perrinn424.Editor.Tests
             float t = 174.324f;
             float d = 11620.74f;
 
-            Assert.That(porsche919Legacy.LapDiff(t, d), Is.EqualTo(porsche919.LapDiff(t, d)).Within(10e-3));
+            porsche919.Update(t, d);
+            Assert.That(porsche919Legacy.LapDiff(t, d), Is.EqualTo(porsche919.TimeDiff).Within(10e-3));
 
             int numTests = 10000;
             CustomTimer legacy = new CustomTimer("legacy", numTests);
@@ -54,7 +55,7 @@ namespace Perrinn424.Editor.Tests
             {
                 for (int i = 0; i < numTests; i++)
                 {
-                    porsche919.LapDiff(t, d);
+                    porsche919.Update(t, d);
                 }
             }
 
@@ -77,7 +78,7 @@ namespace Perrinn424.Editor.Tests
             PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche919();
             Assert.DoesNotThrow(() => porsche.IsCorrectIndex(320, 0f));
 
-            Assert.DoesNotThrow(() => porsche.LapDiff(305.016f, 20737.32f));
+            Assert.DoesNotThrow(() => porsche.Update(305.016f, 20737.32f));
         }
 
         private class TimeReferenceLegacy
