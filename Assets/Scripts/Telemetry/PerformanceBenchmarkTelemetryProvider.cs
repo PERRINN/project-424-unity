@@ -18,8 +18,8 @@ namespace Perrinn424
             {
                 performanceBenchmarkController = (PerformanceBenchmarkController)instance;
 
-                channelInfo[0].SetNameAndSemantic("PorscheSpeed", Telemetry.Semantic.Speed);
-                channelInfo[1].SetNameAndSemantic("VolkswagenSpeed", Telemetry.Semantic.Speed);
+                channelInfo[0].SetNameAndSemantic("919Speed", Telemetry.Semantic.Speed);
+                channelInfo[1].SetNameAndSemantic("IDRSpeed", Telemetry.Semantic.Speed);
             }
 
             public override Telemetry.PollFrequency GetPollFrequency()
@@ -29,8 +29,8 @@ namespace Perrinn424
 
             public override void PollValues(float[] values, int index, Object instance)
             {
-                values[index + 0] = performanceBenchmarkController.PorscheSpeed;
-                values[index + 1] = performanceBenchmarkController.VolkswagenSpeed;
+                values[index + 0] = performanceBenchmarkController.Porsche919Speed;
+                values[index + 1] = performanceBenchmarkController.IDRSpeed;
             }
         }
     } 

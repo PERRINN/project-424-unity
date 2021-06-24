@@ -11,33 +11,33 @@ namespace Perrinn424.Editor.Tests
         [TestCase(5.562164f, 544.5441f, -5.81348467f)]
         public void TimeReferenceTest(float time, float distance, float expectedDifference)
         {
-            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
-            float difference = porsche.LapDiff(time, distance);
+            PerformanceBenchmark porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
+            float difference = porsche919.LapDiff(time, distance);
             Assert.That(expectedDifference, Is.EqualTo(difference).Within(10e-3));
         }
 
         [Test]
         public void GCTest()
         {
-            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
-            porsche.LapDiff(0f, 0f);
+            PerformanceBenchmark porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
+            porsche919.LapDiff(0f, 0f);
 
             Assert.That(() =>
             {
-                porsche.LapDiff(0f, 0f);
+                porsche919.LapDiff(0f, 0f);
             }, Is.Not.AllocatingGCMemory());
         }
 
         [Test]
         public void PerformanceTest()
         {
-            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
-            TimeReferenceLegacy porscheLegacy = new TimeReferenceLegacy(porsche.distance);
+            PerformanceBenchmark porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
+            TimeReferenceLegacy porsche919Legacy = new TimeReferenceLegacy(porsche919.distance);
 
             float t = 174.324f;
             float d = 11620.74f;
 
-            Assert.That(porscheLegacy.LapDiff(t, d), Is.EqualTo(porsche.LapDiff(t, d)).Within(10e-3));
+            Assert.That(porsche919Legacy.LapDiff(t, d), Is.EqualTo(porsche919.LapDiff(t, d)).Within(10e-3));
 
             int numTests = 10000;
             CustomTimer legacy = new CustomTimer("legacy", numTests);
@@ -45,7 +45,7 @@ namespace Perrinn424.Editor.Tests
             {
                 for (int i = 0; i < numTests; i++)
                 {
-                    porscheLegacy.LapDiff(t, d);
+                    porsche919Legacy.LapDiff(t, d);
                 }
             }
 
@@ -54,7 +54,7 @@ namespace Perrinn424.Editor.Tests
             {
                 for (int i = 0; i < numTests; i++)
                 {
-                    porsche.LapDiff(t, d);
+                    porsche919.LapDiff(t, d);
                 }
             }
 
@@ -67,14 +67,14 @@ namespace Perrinn424.Editor.Tests
         [TestCase(1, 0.5f, ExpectedResult = 47f)]
         public float SpeedTest(int index, float ratio)
         {
-            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
-            return porsche.CalculateSpeed(index, ratio);
+            PerformanceBenchmark porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
+            return porsche919.CalculateSpeed(index, ratio);
         }
 
         [Test]
         public void OutOfIndexTest()
         {
-            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche();
+            PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche919();
             Assert.DoesNotThrow(() => porsche.IsCorrectIndex(320, 0f));
 
             Assert.DoesNotThrow(() => porsche.LapDiff(305.016f, 20737.32f));

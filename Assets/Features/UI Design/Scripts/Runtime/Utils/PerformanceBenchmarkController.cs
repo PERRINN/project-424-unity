@@ -4,19 +4,19 @@ namespace Perrinn424
 {
     public class PerformanceBenchmarkController : VehicleBehaviour
     {
-        private PerformanceBenchmark porsche;
-        private PerformanceBenchmark volkswagen;
+        private PerformanceBenchmark porsche919;
+        private PerformanceBenchmark idr;
 
-        public float PorscheDiff { get; private set; }
-        public float VolkswagenDiff { get; private set; }
+        public float Porsche919Diff { get; private set; } //[s]
+        public float IDRDiff { get; private set; } //[s]
 
-        public float PorscheSpeed { get; private set; }
-        public float VolkswagenSpeed { get; private set; }
+        public float Porsche919Speed { get; private set; } //[m/s]
+        public float IDRSpeed { get; private set; } //[m/s]
 
         public override void OnEnableVehicle()
         {
-            porsche = PerformanceBenchmarkHelper.CreatePorsche();
-            volkswagen = PerformanceBenchmarkHelper.CreateVolkswagen();
+            porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
+            idr = PerformanceBenchmarkHelper.CreateIDR();
         }
 
         private void Update()
@@ -27,11 +27,11 @@ namespace Perrinn424
 
         private void Update(float currentTime, float currentDistance)
         {
-            PorscheDiff = porsche.LapDiff(currentTime, currentDistance);
-            VolkswagenDiff = volkswagen.LapDiff(currentTime, currentDistance);
+            Porsche919Diff = porsche919.LapDiff(currentTime, currentDistance);
+            IDRDiff = idr.LapDiff(currentTime, currentDistance);
 
-            PorscheSpeed = porsche.Speed;
-            VolkswagenSpeed = volkswagen.Speed;
+            Porsche919Speed = porsche919.Speed;
+            IDRSpeed = idr.Speed;
         }
     }
 }
