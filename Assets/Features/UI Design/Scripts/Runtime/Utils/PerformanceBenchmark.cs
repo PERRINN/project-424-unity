@@ -5,11 +5,11 @@ namespace Perrinn424
 {
     public class PerformanceBenchmark
     {
-        internal readonly float[] time;
         internal readonly float[] distance;
         private readonly int count;
         private int previousIndex = -1;
 
+        public float Time { get; private set; } //[s]
         public float TimeDiff { get; private set; } //[s]
         public float Speed { get; private set; } //[m/s]
         public float TraveledDistance { get; private set; } //[m]
@@ -17,12 +17,10 @@ namespace Perrinn424
         public PerformanceBenchmark(int[] reference)
         {
             count = reference.Length;
-            time = new float[count];
             distance = new float[count];
 
             for (int i = 0; i < reference.Length; i++)
             {
-                time[i] = i;
                 distance[i] = reference[i];
             }
         }
@@ -42,8 +40,9 @@ namespace Perrinn424
             
             float ratio = Mathf.InverseLerp(distance[index], distance[index + 1], currentDistance);
             
-            float referenceTime = Mathf.Lerp(time[index], time[index + 1], ratio);
-            TimeDiff = currentTime - referenceTime;
+            //index represents time, so index == m means [m seconds]
+            Time = Mathf.Lerp(index, index + 1, ratio);
+            TimeDiff = currentTime - Time;
             
             TraveledDistance = CalculateTraveledDistance(currentTime);
 
