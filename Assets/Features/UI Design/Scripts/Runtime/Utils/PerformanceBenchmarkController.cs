@@ -21,13 +21,13 @@ namespace Perrinn424
             idr = PerformanceBenchmarkHelper.CreateIDR();
         }
 
-        private void Update()
+        public override void FixedUpdateVehicle()
         {
             Telemetry.DataRow latestTelemetry = vehicle.telemetry.latest;
-            Update((float)latestTelemetry.time, (float)latestTelemetry.distance);
+            UpdateBenchmark((float)latestTelemetry.time, (float)latestTelemetry.distance);
         }
 
-        private void Update(float currentTime, float currentDistance)
+        private void UpdateBenchmark(float currentTime, float currentDistance)
         {
             porsche919.Update(currentTime, currentDistance);
             idr.Update(currentTime, currentDistance);
