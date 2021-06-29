@@ -43,8 +43,8 @@ namespace Perrinn424
             //index represents time, so index == m means [m seconds]
             Time = Mathf.Lerp(index, index + 1, ratio);
             TimeDiff = currentTime - Time;
-            
-            TraveledDistance = CalculateTraveledDistance(currentTime);
+
+            TraveledDistance = Mathf.Lerp(distance[index], distance[index + 1], ratio);
 
 
             Speed = CalculateSpeed(index, ratio);
@@ -91,13 +91,6 @@ namespace Perrinn424
             float currentDistance = distance[index];
             float previousDistance = index == 0 ? 0 : distance[index - 1];
             return currentDistance - previousDistance;
-        }
-
-        internal float CalculateTraveledDistance(float currentTime)
-        {
-            int index = (int)currentTime;
-            float ratio = currentTime - index;
-            return Mathf.Lerp(distance[index], distance[index + 1], ratio);
         }
 
         internal bool IsCorrectIndex(int index, float d)
