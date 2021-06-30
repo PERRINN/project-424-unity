@@ -20,8 +20,8 @@ namespace Perrinn424.UI
 
         private void Update()
         {
-            electricRecord.text = performanceBenchmarkController.IDRDiff.ToString(format);
-            overallRecord.text = performanceBenchmarkController.Porsche919Diff.ToString(format);
+            electricRecord.text = performanceBenchmarkController.IDR.TimeDiff.ToString(format);
+            overallRecord.text = performanceBenchmarkController.Porsche919.TimeDiff.ToString(format);
         }
     }
 }

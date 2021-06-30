@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Perrinn424
 {
-    public class PerformanceBenchmark
+    public class PerformanceBenchmark: IPerformanceBenchmarkData
     {
         internal readonly float[] distance;
         private readonly int count;

@@ -35,10 +35,10 @@ namespace Perrinn424
 
             public override void PollValues(float[] values, int index, Object instance)
             {
-                values[index + 0] = performanceBenchmarkController.Porsche919Speed;
-                values[index + 1] = performanceBenchmarkController.IDRSpeed;
-                values[index + 2] = performanceBenchmarkController.Porsche919TraveledDistance;
-                values[index + 3] = performanceBenchmarkController.IDRTraveledDistance;
+                values[index + 0] = performanceBenchmarkController.Porsche919.Speed;
+                values[index + 1] = performanceBenchmarkController.IDR.Speed;
+                values[index + 2] = performanceBenchmarkController.Porsche919.TraveledDistance;
+                values[index + 3] = performanceBenchmarkController.IDR.TraveledDistance;
             }
         }
     } 

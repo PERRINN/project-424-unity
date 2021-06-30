@@ -6,14 +6,9 @@ namespace Perrinn424
     {
         private PerformanceBenchmark porsche919;
         private PerformanceBenchmark idr;
-        public float Porsche919Diff => porsche919.TimeDiff; //[s]
-        public float IDRDiff => idr.TimeDiff; //[s]
 
-        public float Porsche919Speed => porsche919.Speed;//[m/s]
-        public float IDRSpeed => idr.Speed;//[m/s]
-
-        public float Porsche919TraveledDistance => porsche919.TraveledDistance;//[m]
-        public float IDRTraveledDistance => idr.TraveledDistance;//[m]
+        public IPerformanceBenchmarkData Porsche919 { get => porsche919; }
+        public IPerformanceBenchmarkData IDR { get => idr; } 
 
         public override void OnEnableVehicle()
         {
