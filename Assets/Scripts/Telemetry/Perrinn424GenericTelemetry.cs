@@ -64,6 +64,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Register<Perrinn424Tires>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Distance>(vehicle);
 		vehicle.telemetry.Register<Perrinn424ForceFeedback>(vehicle);
+		vehicle.telemetry.Register<Perrinn424Positions>(vehicle);
 		}
 
 
@@ -75,6 +76,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Unregister<Perrinn424Tires>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Distance>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424ForceFeedback>(vehicle);
+		vehicle.telemetry.Unregister<Perrinn424Positions>(vehicle);
 		}
 
 
@@ -323,7 +325,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			// Custom distance semantic
 
 			var distanceSemantic = new Telemetry.SemanticInfo();
-			distanceSemantic.SetRangeAndFormat(0, 21000, "0.000", " km", multiplier:0.001f);
+			distanceSemantic.SetRangeAndFormat(0, 21000, "0.000", " km", multiplier:0.001f, quantization:1000);
 
 			// Fill-in channel information
 
@@ -385,6 +387,51 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 				values[index+0] = float.NaN;
 				values[index+1] = float.NaN;
 				}
+			}
+		}
+
+
+	public class Perrinn424Positions : Telemetry.ChannelGroup
+		{
+		Transform m_transform;
+
+
+		public override int GetChannelCount ()
+			{
+			return 3;
+			}
+
+
+		public override Telemetry.PollFrequency GetPollFrequency ()
+			{
+			return Telemetry.PollFrequency.Normal;
+			}
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
+			{
+			VehicleBase vehicle = instance as VehicleBase;
+			m_transform = vehicle.cachedRigidbody.transform;
+
+			// Custom position and height semantics
+
+			var positionSemantic = new Telemetry.SemanticInfo();
+			positionSemantic.SetRangeAndFormat(-3500, 3500, "0.0", " m", quantization:500);
+			var heightSemantic = new Telemetry.SemanticInfo();
+			heightSemantic.SetRangeAndFormat(-200, 200, "0.00", " m", quantization:20);
+
+			channelInfo[0].SetNameAndSemantic("PositionX", Telemetry.Semantic.Custom, positionSemantic);
+			channelInfo[1].SetNameAndSemantic("PositionY", Telemetry.Semantic.Custom, heightSemantic);
+			channelInfo[2].SetNameAndSemantic("PositionZ", Telemetry.Semantic.Custom, positionSemantic);
+			}
+
+
+		public override void PollValues (float[] values, int index, Object instance)
+			{
+			Vector3 position = m_transform.position;
+			values[index+0] = position.x;
+			values[index+1] = position.y;
+			values[index+2] = position.z;
 			}
 		}
 	}
