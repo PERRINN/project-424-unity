@@ -1,38 +1,10 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace Perrinn424.TrackMapSystem
 {
     [ExecuteInEditMode]
     public class TrackMap : MonoBehaviour
     {
-        [Serializable]
-        public class TrackReference
-        {
-            [SerializeField]
-            private Transform world = default;
-            [SerializeField]
-            private Image ui = default;
-
-            [SerializeField]
-            private Color color = default;
-
-            public TrackReference(Transform world, Image ui, Color color)
-            {
-                this.world = world;
-                this.ui = ui;
-                this.color = color;
-            }
-
-            public void WorldToCanvas(Matrix4x4 worldToLocalCircuit, Matrix4x4 localCircuitToCanvas)
-            {
-                Vector3 localCircuitPosition = worldToLocalCircuit.inverse.MultiplyPoint3x4(world.position);
-                Vector3 canvasLocalPosition = localCircuitToCanvas * localCircuitPosition;
-                ui.rectTransform.localPosition = canvasLocalPosition;
-                ui.color = color;
-            }
-        }
 
         [SerializeField]
         private Vector3 center = Vector3.zero;
@@ -48,14 +20,14 @@ namespace Perrinn424.TrackMapSystem
         private bool invertZ = false;
 
         [SerializeField]
-        internal TrackReference[] trackReferences = default;
+        internal TransformTrackReference[] trackReferences = default;
 
         void Update()
         {
             Matrix4x4 worldToCircuit = CalculateWorldToCircuitMatrix();
             Matrix4x4 localCircuitToCanvas = CalculateCircuitToCanvasMatrix();
 
-            foreach (TrackReference trackReference in trackReferences)
+            foreach (TransformTrackReference trackReference in trackReferences)
             {
                 trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
             }
