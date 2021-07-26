@@ -6,9 +6,9 @@ namespace Perrinn424.Editor.Tests
 {
     public class PerformanceBenchmarkTests
     {
-        [TestCase(13.41127f, 657.8914f, 0.312821388f)]
-        [TestCase(24.60585f, 1391.423f, -1.77948952f)]
-        [TestCase(5.562164f, 544.5441f, -5.8576026f)]
+        [TestCase(13.41127f, 657.8914f, 0.342376709f)]
+        [TestCase(24.60585f, 1391.423f, -1.70401764f)]
+        [TestCase(5.562164f, 544.5441f, -5.82819128f)]
         public void TimeReferenceTest(float time, float distance, float expectedDifference)
         {
             PerformanceBenchmark porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
