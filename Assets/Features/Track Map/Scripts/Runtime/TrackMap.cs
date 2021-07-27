@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 
 namespace Perrinn424.TrackMapSystem
 {
     [ExecuteInEditMode]
-    public class TrackMap : MonoBehaviour
+    public class TrackMap : UIBehaviour
     {
-
         [SerializeField]
         private Vector3 center = Vector3.zero;
         [SerializeField]
@@ -29,26 +28,44 @@ namespace Perrinn424.TrackMapSystem
         private TelemetryTrackReference telemetryTrackReference = default;
 
         private BaseTrackReference [] trackReferences;
+        
+        private Matrix4x4 worldToCircuit;
+        private Matrix4x4 localCircuitToCanvas;
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
-            trackReferences = 
+            Init();
+        }
+
+        private void Init()
+        {
+            trackReferences =
                 traformTrackReferences
                 .Cast<BaseTrackReference>()
-                .Concat(new [] { telemetryTrackReference })
+                .Concat(new[] { telemetryTrackReference })
                 .ToArray();
 
             foreach (BaseTrackReference trackReference in trackReferences)
             {
                 trackReference.Init();
             }
+
+            CalculateMatrices();
+        }
+
+        protected override void OnRectTransformDimensionsChange()
+        {
+            CalculateMatrices();
+        }
+
+        private void CalculateMatrices()
+        {
+            worldToCircuit = CalculateWorldToCircuitMatrix();
+            localCircuitToCanvas = CalculateCircuitToCanvasMatrix();
         }
 
         void Update()
         {
-            Matrix4x4 worldToCircuit = CalculateWorldToCircuitMatrix();
-            Matrix4x4 localCircuitToCanvas = CalculateCircuitToCanvasMatrix();
-
             foreach (BaseTrackReference trackReference in trackReferences)
             {
                 trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
