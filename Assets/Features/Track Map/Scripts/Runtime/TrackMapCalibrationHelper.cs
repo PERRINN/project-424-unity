@@ -27,7 +27,7 @@ namespace Perrinn424.TrackMapSystem
             Clean();
 
             replay.GetPositions(timeStepGetPositions, out var positions, out _);
-            trackMap.trackReferences = new TransformTrackReference[positions.Length];
+            trackMap.traformTrackReferences = new TransformTrackReference[positions.Length];
 
             for (int i = 0; i < positions.Length; i++)
             {
@@ -38,7 +38,7 @@ namespace Perrinn424.TrackMapSystem
                 GameObject newReference = Instantiate(reference.gameObject, trackMap.transform);
                 newReference.name = child.name;
                 TransformTrackReference trackReference = new TransformTrackReference(child, newReference.GetComponent<Image>(), color);
-                trackMap.trackReferences[i] = trackReference;
+                trackMap.traformTrackReferences[i] = trackReference;
             }
 
             //int referencesCount = worldReferenceParent.childCount;
@@ -64,7 +64,7 @@ namespace Perrinn424.TrackMapSystem
                 catch (Exception) { }
             }
 
-            trackMap.trackReferences = new TransformTrackReference[0];
+            trackMap.traformTrackReferences = new TransformTrackReference[0];
         }
 
         private void RemoveTransformChilds()

@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Perrinn424.TrackMapSystem
 {
@@ -19,15 +22,34 @@ namespace Perrinn424.TrackMapSystem
         [SerializeField]
         private bool invertZ = false;
 
+        [SerializeField][FormerlySerializedAs("trackReferences")]
+        internal TransformTrackReference[] traformTrackReferences = default;
+        
         [SerializeField]
-        internal TransformTrackReference[] trackReferences = default;
+        private TelemetryTrackReference telemetryTrackReference = default;
+
+        private BaseTrackReference [] trackReferences;
+
+        private void OnEnable()
+        {
+            trackReferences = 
+                traformTrackReferences
+                .Cast<BaseTrackReference>()
+                .Concat(new [] { telemetryTrackReference })
+                .ToArray();
+
+            foreach (BaseTrackReference trackReference in trackReferences)
+            {
+                trackReference.Init();
+            }
+        }
 
         void Update()
         {
             Matrix4x4 worldToCircuit = CalculateWorldToCircuitMatrix();
             Matrix4x4 localCircuitToCanvas = CalculateCircuitToCanvasMatrix();
 
-            foreach (TransformTrackReference trackReference in trackReferences)
+            foreach (BaseTrackReference trackReference in trackReferences)
             {
                 trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
             }
