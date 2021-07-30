@@ -44,6 +44,11 @@ namespace Perrinn424.TrackMapSystem
 
         protected override void OnRectTransformDimensionsChange()
         {
+            if (trackMap == null)
+            {
+                return;
+            }
+
             CalculateMatrices();
         }
 
