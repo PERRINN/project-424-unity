@@ -5,7 +5,6 @@ using UnityEngine.Serialization;
 
 namespace Perrinn424.TrackMapSystem
 {
-    [ExecuteInEditMode]
     public class TrackMap : UIBehaviour
     {
         [SerializeField]
@@ -32,6 +31,9 @@ namespace Perrinn424.TrackMapSystem
         private Matrix4x4 worldToCircuit;
         private Matrix4x4 localCircuitToCanvas;
 
+        public TrackMapData data;
+        public global::TrackMap trackMap;
+
         protected override void OnEnable()
         {
             Init();
@@ -50,6 +52,8 @@ namespace Perrinn424.TrackMapSystem
                 trackReference.Init();
             }
 
+            trackMap = data.CreateTrackMap();
+            
             CalculateMatrices();
         }
 
@@ -60,6 +64,7 @@ namespace Perrinn424.TrackMapSystem
 
         private void CalculateMatrices()
         {
+            trackMap.CalculateTRS((RectTransform)transform);
             worldToCircuit = CalculateWorldToCircuitMatrix();
             localCircuitToCanvas = CalculateCircuitToCanvasMatrix();
         }
@@ -68,6 +73,8 @@ namespace Perrinn424.TrackMapSystem
         {
             foreach (BaseTrackReference trackReference in trackReferences)
             {
+                //trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
+                Vector3 localPosition = trackMap.FromWorldPositionToLocalRectTransformPosition(trackReference.Position);
                 trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
             }
         }

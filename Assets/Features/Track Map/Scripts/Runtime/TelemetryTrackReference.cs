@@ -13,7 +13,7 @@ namespace Perrinn424.TrackMapSystem
         private VPTelemetryDisplay telemetryDisplay;
 
         private Vector3 position;
-        protected override Vector3 Position => position;
+        public override Vector3 Position => position;
         
         private bool isValid;
         protected override bool IsValid => isValid;

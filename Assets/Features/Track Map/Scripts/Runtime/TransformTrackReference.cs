@@ -18,7 +18,7 @@ namespace Perrinn424.TrackMapSystem
         }
 
         protected override bool IsValid => true;
-        protected override Vector3 Position => world.position;
+        public override Vector3 Position => world.position;
 
     } 
 }
