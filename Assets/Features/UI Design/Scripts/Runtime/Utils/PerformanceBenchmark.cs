@@ -5,7 +5,7 @@ namespace Perrinn424
 {
     public class PerformanceBenchmark: IPerformanceBenchmarkData
     {
-        internal readonly float[] distance;
+        public readonly float[] distance;
         private readonly int count;
         private int previousIndex = -1;
 
@@ -79,7 +79,7 @@ namespace Perrinn424
             return binaryIndex;
         }
 
-        internal float CalculateSpeed(int index, float ratio)
+        public float CalculateSpeed(int index, float ratio)
         {
             float speed = CalculateSpeed(index);
             float nextSpeed = CalculateSpeed(index + 1);
@@ -93,7 +93,7 @@ namespace Perrinn424
             return currentDistance - previousDistance;
         }
 
-        internal bool IsCorrectIndex(int index, float d)
+        public bool IsCorrectIndex(int index, float d)
         {
             if (index < 0 || index + 1 >= count)
                 return false;
