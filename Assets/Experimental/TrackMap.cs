@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-[Serializable]
 public class TrackMap
 {
     public float scale;
@@ -14,6 +13,14 @@ public class TrackMap
     public Quaternion RotationTransformationMatrix { get; private set; }
     public Vector3 TranslationTransformationMatrix { get; private set; }
 
+    public TrackMap(float scale, float rotation, float position)
+    {
+        this.scale = scale;
+        this.rotation = rotation;
+        this.position = position;
+    }
+
+
     /// <summary>
     /// Creates a transformation matrix that translates from world position to canvas position
     /// </summary>
@@ -22,7 +29,7 @@ public class TrackMap
     /// Finally, it is translated in local coordinates (pixels), to match exacly the image
     /// </remarks>
     /// <param name="rectTransform">The rect transfrom containing the track image</param>
-    public void Update(RectTransform rectTransform)
+    public void CalculateTRS(RectTransform rectTransform)
     {
         Rect rect = rectTransform.rect;
         Vector2 pivot = rectTransform.pivot;

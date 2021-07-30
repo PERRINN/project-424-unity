@@ -7,20 +7,16 @@ using VehiclePhysics;
 
 public class TrackMapExperimental : MonoBehaviour
 {
-    public Image image;
+    public Image mapImage;
+    public Image referenceImage;
     public VPReplayAsset replay;
 
     private CircularIterator<Vector3> iterator;
 
-    public Vector3 s;
-    public Vector3 p;
-    public Vector3 r;
-    public Quaternion quaternion;
-    public Rect rect;
-
     public Vector3[] positions;
     public TrackPosition[] trackPositions;
 
+    public TrackMap trackMap;
     public TrackMapData trackMapData;
 
     public struct TrackPosition
@@ -29,12 +25,6 @@ public class TrackMapExperimental : MonoBehaviour
         public Image image;
     }
 
-    //[Range(0.04f, 0.05f)]
-    public float scale;
-    public float rotation;
-    public float position;
-
-    public TrackMap trackMap;
 
     private void Awake()
     {
@@ -46,13 +36,17 @@ public class TrackMapExperimental : MonoBehaviour
 
         for (int i = 0; i < positions.Length; i++)
         {
-            trackPositions[i] = new TrackPosition() { position = positions[i], image = GameObject.Instantiate(image, image.transform.parent) };
+            trackPositions[i] = new TrackPosition() { position = positions[i], image = GameObject.Instantiate(referenceImage, referenceImage.transform.parent) };
         }
 
-        image.color = Color.red;
-        image.transform.SetSiblingIndex(image.transform.childCount);
+        referenceImage.color = Color.red;
+        referenceImage.transform.SetSiblingIndex(referenceImage.transform.childCount);
 
         StartCoroutine(NextPosition());
+
+        mapImage.sprite = trackMapData.map;
+
+        trackMap = trackMapData.CreateTrackMap();
     }
 
     private IEnumerator NextPosition()
@@ -67,37 +61,19 @@ public class TrackMapExperimental : MonoBehaviour
 
     public void Update()
     {
+        trackMap.CalculateTRS((RectTransform)transform);
+        trackMap.position = trackMapData.position;
+        trackMap.rotation = trackMapData.rotation;
+        trackMap.scale = trackMapData.scale;
+
         Vector3 pos = iterator.Current;
-
-        //Matrix4x4 transformationMatrix = Calculate();
-
-        trackMapData.CalculateTRS((RectTransform)transform);
-
-        Vector3 localPos = trackMapData.FromWorldPositionToLocalRectTransformPosition(pos);
-        image.transform.localPosition = localPos;
+        Vector3 localPos = trackMap.FromWorldPositionToLocalRectTransformPosition(pos);
+        referenceImage.transform.localPosition = localPos;
 
         for (int i = 0; i < trackPositions.Length; i++)
         {
-            localPos = trackMapData.FromWorldPositionToLocalRectTransformPosition(trackPositions[i].position);
+            localPos = trackMap.FromWorldPositionToLocalRectTransformPosition(trackPositions[i].position);
             trackPositions[i].image.transform.localPosition = localPos;
         }
     }
-
-    //public Matrix4x4 Calculate()
-    //{
-    //    RectTransform rectTransform = (RectTransform)transform;
-    //    rect = rectTransform.rect;
-    //    Vector2 pivot = rectTransform.pivot;
-
-
-
-    //    //quaternion = Quaternion.Euler(r);
-    //    quaternion = Quaternion.AngleAxis(rotation, Vector3.forward) * Quaternion.AngleAxis(-90f, Vector3.right);
-        
-        
-    //    s = new Vector3(rect.width, 0, rect.height)*scale;
-
-    //    p = new Vector3((position - pivot.x)*rect.width, (position - pivot.y)* rect.height);
-    //    return Matrix4x4.TRS(p, quaternion, s);
-    //}
 }
