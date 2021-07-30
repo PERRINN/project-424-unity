@@ -1,113 +1,56 @@
-﻿using System.Linq;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 
 namespace Perrinn424.TrackMapSystem
 {
-    public class TrackMap : UIBehaviour
+    public class TrackMap
     {
-        [SerializeField]
-        private Vector3 center = Vector3.zero;
-        [SerializeField]
-        private Vector3 size = Vector3.one;
+        public float scale;
+        public float rotation;
+        public float position;
 
-        [SerializeField]
-        private float rotation = 0;
+        public Matrix4x4 TransformationMatrix { get; private set; }
 
-        [SerializeField]
-        private bool invertX = false;
-        [SerializeField]
-        private bool invertZ = false;
+        public Vector3 ScaleTransformationMatrix { get; private set; }
+        public Quaternion RotationTransformationMatrix { get; private set; }
+        public Vector3 TranslationTransformationMatrix { get; private set; }
 
-        [SerializeField][FormerlySerializedAs("trackReferences")]
-        internal TransformTrackReference[] traformTrackReferences = default;
-        
-        [SerializeField]
-        private TelemetryTrackReference telemetryTrackReference = default;
-
-        private BaseTrackReference [] trackReferences;
-        
-        private Matrix4x4 worldToCircuit;
-        private Matrix4x4 localCircuitToCanvas;
-
-        public TrackMapData data;
-        public global::TrackMap trackMap;
-
-        protected override void OnEnable()
+        public TrackMap(float scale, float rotation, float position)
         {
-            Init();
+            this.scale = scale;
+            this.rotation = rotation;
+            this.position = position;
         }
 
-        private void Init()
+
+        /// <summary>
+        /// Creates a transformation matrix that translates from world position to canvas position
+        /// </summary>
+        /// <remarks>
+        /// First the position is scaled. Then, is rotated from the plane XZ (world plane), to the plane XY, which is the canvas plane
+        /// Finally, it is translated in local coordinates (pixels), to match exacly the image
+        /// </remarks>
+        /// <param name="rectTransform">The rect transfrom containing the track image</param>
+        public void CalculateTRS(RectTransform rectTransform)
         {
-            trackReferences =
-                traformTrackReferences
-                .Cast<BaseTrackReference>()
-                .Concat(new[] { telemetryTrackReference })
-                .ToArray();
+            Rect rect = rectTransform.rect;
+            Vector2 pivot = rectTransform.pivot;
 
-            foreach (BaseTrackReference trackReference in trackReferences)
-            {
-                trackReference.Init();
-            }
+            // Scale takes into account the rectTransform dimensions
+            ScaleTransformationMatrix = new Vector3(rect.width, 0, rect.height) * scale;
 
-            trackMap = data.CreateTrackMap();
-            
-            CalculateMatrices();
+            // Rotation from XZ plane to XY plane =>Quaternion.AngleAxis(-90f, Vector3.right);
+            // Rotation in XY plane => Quaternion.AngleAxis(rotation, Vector3.forward)
+            RotationTransformationMatrix = Quaternion.AngleAxis(rotation, Vector3.forward) * Quaternion.AngleAxis(-90f, Vector3.right);
+
+            // Translation in local coordinates. Position is [0-1]. Pivot translation is applied also
+            TranslationTransformationMatrix = new Vector3((position - pivot.x) * rect.width, (position - pivot.y) * rect.height);
+
+            TransformationMatrix = Matrix4x4.TRS(TranslationTransformationMatrix, RotationTransformationMatrix, ScaleTransformationMatrix);
         }
 
-        protected override void OnRectTransformDimensionsChange()
+        public Vector3 FromWorldPositionToLocalRectTransformPosition(Vector3 worldPosition)
         {
-            CalculateMatrices();
-        }
-
-        private void CalculateMatrices()
-        {
-            trackMap.CalculateTRS((RectTransform)transform);
-            worldToCircuit = CalculateWorldToCircuitMatrix();
-            localCircuitToCanvas = CalculateCircuitToCanvasMatrix();
-        }
-
-        void Update()
-        {
-            foreach (BaseTrackReference trackReference in trackReferences)
-            {
-                //trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
-                Vector3 localPosition = trackMap.FromWorldPositionToLocalRectTransformPosition(trackReference.Position);
-                trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
-            }
-        }
-
-        private Matrix4x4 CalculateWorldToCircuitMatrix()
-        {
-            return Matrix4x4.Translate(center);
-        }
-
-        private Matrix4x4 CalculateCircuitToCanvasMatrix()
-        {
-            RectTransform rectTransform = (RectTransform)transform;
-            float xScale = rectTransform.rect.width / size.x;
-            xScale *= invertX ? -1 : 1;
-            float zScale = rectTransform.rect.height / size.z;
-            zScale *= invertZ ? -1 : 1;
-            Vector3 scale = new Vector3(xScale, 0f, zScale);
-
-            Quaternion q = Quaternion.AngleAxis(90f, Vector3.right); //Converting z axis into y axis in the canvas
-            q = q * Quaternion.AngleAxis(rotation, Vector3.up);
-            Matrix4x4 localCircuitToCanvas = Matrix4x4.TRS(Vector3.zero, q, scale);
-            return localCircuitToCanvas;
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Color c = Color.green;
-            c.a = 0.5f;
-            Gizmos.color = c;
-            Gizmos.DrawCube(center, size);
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(center, 15f);
+            return TransformationMatrix.MultiplyPoint3x4(worldPosition);
         }
     } 
 }

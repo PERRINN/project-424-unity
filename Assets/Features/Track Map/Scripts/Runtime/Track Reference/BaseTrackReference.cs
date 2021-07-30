@@ -15,23 +15,6 @@ namespace Perrinn424.TrackMapSystem
         protected virtual void Precalculate() { }
         protected abstract bool IsValid { get;}
         public abstract Vector3 Position { get;}
-        public void WorldToCanvas(Matrix4x4 worldToLocalCircuit, Matrix4x4 localCircuitToCanvas)
-        {
-            Precalculate();
-
-            if (IsValid)
-            {
-                ui.gameObject.SetActive(true);
-                Vector3 localCircuitPosition = worldToLocalCircuit.inverse.MultiplyPoint3x4(Position);
-                Vector3 canvasLocalPosition = localCircuitToCanvas * localCircuitPosition;
-                ui.rectTransform.localPosition = canvasLocalPosition;
-                ui.color = color;
-            }
-            else
-            {
-                ui.gameObject.SetActive(false);
-            }
-        }
 
         public void SetLocalPosition(Vector3 localPosition)
         {
