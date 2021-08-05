@@ -50,10 +50,11 @@ namespace Perrinn424.UI
         protected override void OnEnable()
         {
             modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.ChannelList, Mode.Off });
-            //modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.Off });
 
             screenCoordinatesUtility.RectTransformDimensionsChanged += UpdateTelemetryDimensions;
+            modes.Current = mode;
             SetMode(modes.Current);
+            StartCoroutine(DoDeferredInit());
         }
 
         protected override void OnDisable()
@@ -61,15 +62,20 @@ namespace Perrinn424.UI
             screenCoordinatesUtility.RectTransformDimensionsChanged -= UpdateTelemetryDimensions;
         }
 
-        private new IEnumerator Start()
+        private IEnumerator DoDeferredInit()
         {
             while (telemetryTools.vehicle == null || !telemetryTools.vehicle.initialized)
                 yield return null;
 
             telemetryTools.showChannelList = true;
             yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
             UpdateTelemetryDimensions(screenCoordinatesUtility.Rect);
-            telemetryTools.showChannelList = false;
+
+            if (mode != Mode.ChannelList)
+            {
+                telemetryTools.showChannelList = false;
+            }
         }
 
         private void UpdateTelemetryDimensions(Rect screenCoordinates)
@@ -82,7 +88,6 @@ namespace Perrinn424.UI
             Vector2 pos = screenCoordinates.position;
             pos.x = screenCoordinates.x + screenCoordinates.size.x - telemetryTools.channelListRect.width;
             telemetryTools.listSettings.position = pos;
-            //StartCoroutine(CalculateScrollLines(screenCoordinatesUtility.Rect.height));
         }
 
         protected override void OnCanvasHierarchyChanged()
@@ -97,8 +102,6 @@ namespace Perrinn424.UI
                 modes.MoveNext();
                 SetMode(modes.Current);
             }
-
-            //Debug.Log(telemetryTools.channelListRect);
         }
 
         private void SetMode(Mode newMode)
@@ -114,8 +117,6 @@ namespace Perrinn424.UI
                     break;
                 case Mode.ChannelList:
                     SetTelemetryProperties(true, false, wideRatio);
-                    //UpdateTelemetryDimensions(screenCoordinatesUtility.Rect);
-                    //StartCoroutine(CalculateScrollLines(screenCoordinatesUtility.Rect.height));
                     break;
                 case Mode.Off:
                     SetTelemetryProperties(false, false, slimRatio);
@@ -138,26 +139,5 @@ namespace Perrinn424.UI
             anchorMin.x = minAnchorX;
             parentRectTransform.anchorMin = anchorMin;
         }
-
-        private IEnumerator CalculateScrollLines(float targetHeight)
-        {
-            telemetryTools.listSettings.scrollLines = 1;
-            yield return new WaitForEndOfFrame();
-            while (telemetryTools.channelListRect.height < targetHeight)
-            {
-                telemetryTools.listSettings.scrollLines++;
-                yield return new WaitForEndOfFrame();
-            }
-        }
-
-        //private bool WithInPercent(float value, float expected, float percent)
-        //{
-        //    float offset = value * percent;
-        //    if ((expected <= value + offset) && (expected >= value - offset))
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Perrinn424.Utilities
@@ -11,6 +12,10 @@ namespace Perrinn424.Utilities
         public T Current 
         {
             get => array[index];
+            set
+            {
+                index = Array.IndexOf(array, value);
+            }
         }
         public CircularIterator(IEnumerable<T> elements)
         {

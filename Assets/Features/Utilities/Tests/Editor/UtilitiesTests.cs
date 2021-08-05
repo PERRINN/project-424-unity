@@ -56,6 +56,11 @@ namespace Perrinn424.Utilities.Editor.Tests
                 Assert.AreEqual(current, circularIterator.Current);
                 circularIterator.MovePrevious();
             }
+
+            circularIterator.Current = 4;
+            Assert.That(circularIterator.Current, Is.EqualTo(4));
+            circularIterator.MoveNext();
+            Assert.That(circularIterator.Current, Is.EqualTo(0));
         }
 
         [Test]
