@@ -16,11 +16,11 @@ namespace Perrinn424.Utilities
 
         private void Update()
         {
-            if (Input.GetKeyDown(nextTimeScale) && Input.GetKey(KeyCode.LeftShift))
+            if (GetKeyDownAndShift(nextTimeScale))
             {
                 timeScaleController.NextTimeScale();
             }
-            else if (Input.GetKeyDown(previousTimeScale) && Input.GetKey(KeyCode.LeftShift))
+            else if (GetKeyDownAndShift(previousTimeScale))
             {
                 timeScaleController.PreviousTimeScale();
             }
@@ -29,6 +29,11 @@ namespace Perrinn424.Utilities
         private void Reset()
         {
             timeScaleController = this.GetComponent<TimeScaleController>();
+        }
+
+        private bool GetKeyDownAndShift(KeyCode key)
+        {
+            return Input.GetKeyDown(key) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
         }
     } 
 }
