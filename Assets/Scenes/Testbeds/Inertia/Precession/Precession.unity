@@ -604,8 +604,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 251567458}
-  com: {fileID: 0}
-  torque: {x: 2.17, y: 5, z: 0}
+  initialAngularVelocity: {x: 2.17, y: 5, z: 0}
+  doInitialAngularVelocity: 1
+  doPrecession: 1
+  rayNumber: 15
+  rayDelay: 0.1
+  rayMult: 3
   angularVelocity: {x: 1, y: 1, z: 0}
   precessionTorque: {x: 0, y: 0, z: 0}
   inertiaTensor:
@@ -628,8 +632,6 @@ MonoBehaviour:
   angularMomentum: {x: 0, y: 0, z: 0}
   angularMomentum_derivative: {x: 0, y: 0, z: 0}
   angularAcceleration: {x: 0, y: 0, z: 0}
-  doInitialAngularVelocity: 1
-  doPrecession: 1
 --- !u!54 &251567458
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1393,8 +1395,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 768065909}
-  com: {fileID: 412872176}
-  torque: {x: 0.1, y: 5, z: 0}
+  initialAngularVelocity: {x: 0.1, y: 5, z: 0}
+  doInitialAngularVelocity: 1
+  doPrecession: 1
+  rayNumber: 15
+  rayDelay: 0.1
+  rayMult: 3
   angularVelocity: {x: 0, y: 0, z: 0}
   precessionTorque: {x: 0, y: 0, z: 0}
   inertiaTensor:
@@ -1417,8 +1423,6 @@ MonoBehaviour:
   angularMomentum: {x: 0, y: 0, z: 0}
   angularMomentum_derivative: {x: 0, y: 0, z: 0}
   angularAcceleration: {x: 0, y: 0, z: 0}
-  doInitialAngularVelocity: 1
-  doPrecession: 1
 --- !u!54 &768065909
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1512,8 +1516,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 865096914}
-  com: {fileID: 1969849400}
-  torque: {x: 0.1, y: 5, z: 0}
+  initialAngularVelocity: {x: 0.1, y: 5, z: 0}
+  doInitialAngularVelocity: 1
+  doPrecession: 0
+  rayNumber: 15
+  rayDelay: 0.1
+  rayMult: 3
   angularVelocity: {x: 0, y: 0, z: 0}
   precessionTorque: {x: 0, y: 0, z: 0}
   inertiaTensor:
@@ -1536,8 +1544,6 @@ MonoBehaviour:
   angularMomentum: {x: 0, y: 0, z: 0}
   angularMomentum_derivative: {x: 0, y: 0, z: 0}
   angularAcceleration: {x: 0, y: 0, z: 0}
-  doInitialAngularVelocity: 1
-  doPrecession: 0
 --- !u!54 &865096914
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1678,8 +1684,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1080083762}
-  com: {fileID: 780471221}
-  torque: {x: 0, y: 10, z: 0}
+  initialAngularVelocity: {x: 0, y: 10, z: 0}
+  doInitialAngularVelocity: 0
+  doPrecession: 1
+  rayNumber: 15
+  rayDelay: 0.1
+  rayMult: 3
   angularVelocity: {x: 0, y: 0, z: 0}
   precessionTorque: {x: 0, y: 0, z: 0}
   inertiaTensor:
@@ -1702,8 +1712,6 @@ MonoBehaviour:
   angularMomentum: {x: 0, y: 0, z: 0}
   angularMomentum_derivative: {x: 0, y: 0, z: 0}
   angularAcceleration: {x: 0, y: 0, z: 0}
-  doInitialAngularVelocity: 0
-  doPrecession: 1
 --- !u!65 &1080083761
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2158,8 +2166,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1854561198}
-  com: {fileID: 0}
-  torque: {x: 0, y: 10, z: 0}
+  initialAngularVelocity: {x: 0, y: 10, z: 0}
+  doInitialAngularVelocity: 0
+  doPrecession: 1
+  rayNumber: 15
+  rayDelay: 0.1
+  rayMult: 3
   angularVelocity: {x: 0, y: 10, z: 0}
   precessionTorque: {x: 0, y: 0, z: 0}
   inertiaTensor:
@@ -2182,8 +2194,6 @@ MonoBehaviour:
   angularMomentum: {x: 0, y: 0, z: 0}
   angularMomentum_derivative: {x: 0, y: 0, z: 0}
   angularAcceleration: {x: 0, y: 0, z: 0}
-  doInitialAngularVelocity: 0
-  doPrecession: 1
 --- !u!54 &1854561198
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2399,7 +2409,6 @@ GameObject:
   - component: {fileID: 2002023996}
   - component: {fileID: 2002023995}
   - component: {fileID: 2002023993}
-  - component: {fileID: 2002023998}
   - component: {fileID: 2002023992}
   - component: {fileID: 2002023994}
   m_Layer: 0
@@ -2422,8 +2431,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 2002023993}
-  com: {fileID: 0}
-  torque: {x: 1, y: 10, z: 0}
+  initialAngularVelocity: {x: 1, y: 10, z: 0}
+  doInitialAngularVelocity: 1
+  doPrecession: 1
+  rayNumber: 15
+  rayDelay: 0.1
+  rayMult: 3
   angularVelocity: {x: 0, y: 0, z: 0}
   precessionTorque: {x: 0, y: 0, z: 0}
   inertiaTensor:
@@ -2446,8 +2459,6 @@ MonoBehaviour:
   angularMomentum: {x: 0, y: 0, z: 0}
   angularMomentum_derivative: {x: 0, y: 0, z: 0}
   angularAcceleration: {x: 0, y: 0, z: 0}
-  doInitialAngularVelocity: 1
-  doPrecession: 1
 --- !u!54 &2002023993
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2539,19 +2550,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2002023998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002023991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61e77db361c591743a3b7842e6a4571a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 2002023993}
-  localPosition: {x: 0, y: 0.5, z: 0}
-  force: {x: 1, y: 0, z: 0}
-  apply: 0
