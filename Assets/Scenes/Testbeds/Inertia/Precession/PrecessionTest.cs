@@ -97,7 +97,8 @@ public class PrecessionTest : MonoBehaviour
 #if UNITY_EDITOR
         GUIStyle style = new GUIStyle();
         style.normal.textColor = Color.red;
-        string msg = $"Precession {doPrecession}\nAngular velocity {rb.angularVelocity:F2}";
+        string angularVelocity = $"({rb.angularVelocity.x:F4}, {rb.angularVelocity.y:F4}, {rb.angularVelocity.z:F4})";
+        string msg = $"Precession {doPrecession}\nAngular velocity {angularVelocity}";
         UnityEditor.Handles.Label(this.transform.position, msg, style);
 #endif
     }
@@ -120,5 +121,11 @@ public class PrecessionTest : MonoBehaviour
 
         Vector3 pos = rb.transform.TransformPoint(rb.centerOfMass);
         Gizmos.DrawRay(pos, rayMult * dir);
+    }
+
+    private void Reset()
+    {
+        rb = this.GetComponent<Rigidbody>();
+        doPrecession = true;
     }
 }
