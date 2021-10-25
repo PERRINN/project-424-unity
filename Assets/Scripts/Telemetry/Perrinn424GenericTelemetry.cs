@@ -264,7 +264,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			// TODO: use built-in semantic when available.
 
 			var slipRatioSemantic = new Telemetry.SemanticInfo();
-			slipRatioSemantic.SetRangeAndFormat(-1.0f, 1.0f, "0.0", " \\%", multiplier:100);
+			slipRatioSemantic.SetRangeAndFormat(-1.0f, 1.0f, "0.0", " %", multiplier:100);
 
 			// Fill-in channel information
 

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: Position
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Position
+    verticalRange: 10
+    channels:
+    - name: Speed
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 10
+      displayColor: {r: 0.54509807, g: 0.7647059, b: 0.2901961, a: 0.7019608}
+    - name: PositionY
+      displayName: Height
+      labelOffset: 0
+      displayOrigin: 5
+      displayRange: 2.5
+      displayColor: {r: 1, g: 1, b: 1, a: 0.8}
+    - name: PositionX
+      displayName: X
+      labelOffset: -1
+      displayOrigin: 5
+      displayRange: 5
+      displayColor: {r: 0.95686275, g: 0.2627451, b: 0.21176471, a: 0.8}
+    - name: PositionZ
+      displayName: Z
+      labelOffset: -2
+      displayOrigin: 5
+      displayRange: 5
+      displayColor: {r: 0.12941177, g: 0.5882353, b: 0.9529412, a: 0.8}

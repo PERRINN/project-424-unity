@@ -38,8 +38,8 @@ namespace VehiclePhysics.UI
         // TODO: Replace these static properties with proper component querying (example: LapTimer)
         public static float bestTime { get; set; } //Autopilot.cs
         public static bool autopilotState { get; set; } //Autopilot.cs
-        public static float batSOC { get; set; } //batteryModel.cs
-        public static float batCapacity { get; set; } //batteryModel.cs
+        public static float batSOC { get; set; } //BatteryModel.cs
+        public static float batCapacity { get; set; } //BatteryModel.cs
 
         float elapsed;
         LapTimer m_lapTimer = null;

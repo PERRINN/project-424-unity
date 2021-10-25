@@ -1,19 +1,19 @@
 ﻿using VehiclePhysics;
 using VehiclePhysics.UI;
 
-public class batteryModel : VehicleBehaviour
+public class BatteryModel : VehicleBehaviour
 {
     public static float batteryCapacity;
-    float batteryTemprature;
     public static float batterySOC;
+    public static float frontPower;
+    public static float rearPower;
+    public static float powerTotal;
+
+
+    float batteryTemprature;
     float batteryDOD;
     float batteryVoltage;
 
-    public static float frontPower;
-    public static float rearPower;
-
-
-    public static float powerTotal;
 
     private void Start()
     {
@@ -32,7 +32,7 @@ public class batteryModel : VehicleBehaviour
 
         powerTotal = frontPower + rearPower;
 
-        batteryCharge();
+        BatteryCharge();
 
         batterySOC = (batteryCapacity / 55) * 100;
         batteryDOD = 100 - batterySOC;
@@ -44,7 +44,7 @@ public class batteryModel : VehicleBehaviour
         SteeringScreen.batCapacity = batteryCapacity;
     }
 
-    void batteryCharge()
+    void BatteryCharge()
     {
         if (powerTotal > 0)
         {

@@ -6,21 +6,19 @@ using EdyCommonTools;
 
 namespace Perrinn424.Editor
 {
-    public class UnderfloorInspector
+    public class Perrinn424UnderfloorInspector
     {
         // No need to override the inspector for now.
-        // Using this for the drawing gizmos method.
-
+        // Using this for drawing gizmos only.
 
         [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active)]
-        static void DrawSceneGizmos(Underfloor src, GizmoType gizmoType)
+        static void DrawSceneGizmos(Perrinn424Underfloor src, GizmoType gizmoType)
         {
             foreach (var cp in src.contactPoints)
                 DrawContactPoint(cp);
         }
 
-
-        static void DrawContactPoint(Underfloor.ContactPoint cp)
+        static void DrawContactPoint(Perrinn424Underfloor.ContactPoint cp)
         {
             if (cp.pointBase == null) return;
 
@@ -37,6 +35,6 @@ namespace Perrinn424.Editor
             Gizmos.color = Color.gray;
             DebugUtility.CrossMarkGizmo(pointBase, cp.pointBase.forward, cp.pointBase.right, Vector3.zero, 0.1f);
         }
-    } 
+    }
 }
 

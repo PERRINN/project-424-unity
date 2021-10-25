@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Perrinn424
 {
 
-public class Underfloor : VehicleBehaviour
+public class Perrinn424Underfloor : VehicleBehaviour
 	{
 	[Serializable]
 	public class ContactPoint
@@ -352,17 +352,17 @@ public class Underfloor : VehicleBehaviour
 
 	public override void RegisterTelemetry ()
 		{
-		vehicle.telemetry.Register<Perrinn424Underfloor>(this);
+		vehicle.telemetry.Register<Perrinn424UnderfloorTelemetry>(this);
 		}
 
 
 	public override void UnregisterTelemetry ()
 		{
-		vehicle.telemetry.Unregister<Perrinn424Underfloor>(this);
+		vehicle.telemetry.Unregister<Perrinn424UnderfloorTelemetry>(this);
 		}
 
 
-	public class Perrinn424Underfloor : Telemetry.ChannelGroup
+	public class Perrinn424UnderfloorTelemetry : Telemetry.ChannelGroup
 		{
 		public override int GetChannelCount ()
 			{
@@ -392,7 +392,7 @@ public class Underfloor : VehicleBehaviour
 
 		public override void PollValues (float[] values, int index, UnityEngine.Object instance)
 			{
-			Underfloor underfloor = instance as Underfloor;
+			Perrinn424Underfloor underfloor = instance as Perrinn424Underfloor;
 
 			// Get contact point data and verify we have at least 4 contact points
 
