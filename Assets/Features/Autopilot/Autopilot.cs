@@ -229,8 +229,8 @@ public class Autopilot : MonoBehaviour
         float carPosX = ((errX + errXBAL * progressive / 100) * cosD) + ((errZ + errZBAL * progressive / 100) * sinD);
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
-        // Telemetry
-        Telemetry(closestFrame1, closestFrame2);
+        // Steering screen display
+        SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
 
         //get error force
         edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height - previousHeight)));
@@ -332,18 +332,6 @@ public class Autopilot : MonoBehaviour
         positionOffset.z = carPosZoffset + offsetTransform.position.z;
 
         return positionOffset;
-    }
-
-    private void Telemetry(int closestFrame1, int closestFrame2)
-    {
-        AutopilotChart.closestFrame1 = closestFrame1;
-        AutopilotChart.closestFrame2 = closestFrame2;
-        AutopilotChart.errorDistance = height;
-        AutopilotChart.proportional = edyPID.proportional;
-        AutopilotChart.integral = edyPID.integral;
-        AutopilotChart.derivative = edyPID.derivative;
-        AutopilotChart.output = edyPID.output;
-        SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
     }
 
     struct CompareTwoValues
