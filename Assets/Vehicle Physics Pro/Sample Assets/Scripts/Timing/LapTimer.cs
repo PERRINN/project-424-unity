@@ -42,7 +42,7 @@ public class LapTimer : MonoBehaviour
 	public Action<float, bool, float[], bool[]> onLap;
 	public Action<int, float> onSector;
 
-	// Current lap time
+	// Current lap time for visual purposes
 
 	public float currentLapTime { get { return Time.time - m_trackStartTime; } }
 
@@ -87,10 +87,10 @@ public class LapTimer : MonoBehaviour
 		m_validSectors = new bool[sectors];
 		UpdateTextProperties();
 
-		// Time.time is zero on application startup
+		// Time.fixedTime is zero on application startup
 
 		if (startCounting)
-			m_trackStartTime = Time.time + 0.0001f;
+			m_trackStartTime = Time.fixedTime + 0.0001f;
 
 		if (externalDisplay != null)
 			externalDisplay.AllocateSectors(sectors);
@@ -110,22 +110,22 @@ public class LapTimer : MonoBehaviour
 		{
 		if (enableTestKeys)
 			{
-			if (Input.GetKeyDown(KeyCode.Alpha1)) DebugOnTimerHit(0, Time.time, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha2)) DebugOnTimerHit(1, Time.time, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha3)) DebugOnTimerHit(2, Time.time, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha4)) DebugOnTimerHit(3, Time.time, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha5)) DebugOnTimerHit(4, Time.time, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha6)) DebugOnTimerHit(5, Time.time, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha7)) DebugOnTimerHit(6, Time.time, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha8)) DebugOnTimerHit(7, Time.time, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha9)) DebugOnTimerHit(8, Time.time, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha1)) DebugOnTimerHit(0, Time.fixedTime, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha2)) DebugOnTimerHit(1, Time.fixedTime, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha3)) DebugOnTimerHit(2, Time.fixedTime, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha4)) DebugOnTimerHit(3, Time.fixedTime, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha5)) DebugOnTimerHit(4, Time.fixedTime, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha6)) DebugOnTimerHit(5, Time.fixedTime, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha7)) DebugOnTimerHit(6, Time.fixedTime, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha8)) DebugOnTimerHit(7, Time.fixedTime, 0.0f);
+			if (Input.GetKeyDown(KeyCode.Alpha9)) DebugOnTimerHit(8, Time.fixedTime, 0.0f);
 
 			if (Input.GetKeyDown(KeyCode.Alpha0)) InvalidateLap();
 			}
 
 		if (Input.GetKey(resetKey))
 			{
-			m_trackStartTime = startCounting? Time.time : 0.0f;
+			m_trackStartTime = startCounting? Time.fixedTime : 0.0f;
 			m_currentSector = 0;
 			m_sectorStartTime = 0.0f;
 			m_invalidSector = false;
@@ -138,6 +138,8 @@ public class LapTimer : MonoBehaviour
 
 			if (m_trackStartTime > 0.0f)
 				{
+				// For visual purposes use Time.time instead of Time.fixedTime
+
 				float t = Time.time - m_trackStartTime;
 
 				// The contact calculation actually "predicts" the exact time the car will be
@@ -223,14 +225,14 @@ public class LapTimer : MonoBehaviour
 
 		if (sector == 0)
 			{
+			float lapTime = hitTime - m_trackStartTime;
+
 			// Start line hit
 			// -------------------------------------------------------------------------------------
 
 			if (m_currentSector == sectors-1)
 				{
 				// Lap completed (previous hit was last sector)
-
-				float lapTime = hitTime - m_trackStartTime;
 
 				if (lapTime > minLapTime)
 					{
@@ -262,6 +264,8 @@ public class LapTimer : MonoBehaviour
 						ClearSectors();
 						}
 					}
+
+				vehicle.telemetry.SetMarkerFlag(m_invalidLap);
 				}
 			else
 				{
@@ -273,7 +277,20 @@ public class LapTimer : MonoBehaviour
 
 					ClearSectors();
 					}
+
+				vehicle.telemetry.SetMarkerFlag(true);
 				}
+
+			// Feed telemetry and restart vehicle counters
+
+			vehicle.telemetry.SetMarker(Telemetry.Marker.StartLinePass);
+			vehicle.telemetry.SetMarkerTime(lapTime);
+			vehicle.telemetry.ResetTime(Time.fixedTime - hitTime);
+			vehicle.telemetry.ResetDistance(-hitDistance);
+			vehicle.telemetry.segmentNumber = m_laps.Count + 1;
+
+			if (debugLog)
+				Debug.Log($"[{gameObject.name}] Telemetry feed: StartLinePass MarkerTime: {lapTime:0.000} ResetTime: {Time.fixedTime - hitTime:0.000} ResetDistance: {-hitDistance:0.000}");
 
 			// Restart timming
 
@@ -282,12 +299,6 @@ public class LapTimer : MonoBehaviour
 			m_sectorStartTime = m_trackStartTime;
 			m_invalidSector = false;
 			m_invalidLap = false;
-
-			// Restart vehicle counters
-
-			vehicle.telemetry.ResetTime(Time.time - hitTime);
-			vehicle.telemetry.ResetDistance(hitDistance);
-			vehicle.telemetry.segmentNumber = m_laps.Count + 1;
 
 			// Also clear continuity flag
 
@@ -319,9 +330,12 @@ public class LapTimer : MonoBehaviour
 
 				m_sectors[sector-1] = hitTime - m_sectorStartTime;
 				m_validSectors[sector-1] = !m_invalidSector;
+				onSector?.Invoke(sector, m_sectors[sector-1]);
+
+				vehicle.telemetry.SetMarkerFlag(m_invalidSector);
+
 				m_sectorStartTime = hitTime;
 				m_invalidSector = false;
-				onSector?.Invoke(sector, m_sectors[sector-1]);
 				}
 			else
 				{
@@ -347,7 +361,14 @@ public class LapTimer : MonoBehaviour
 					m_sectorStartTime = hitTime;
 					m_invalidSector = false;
 					}
+
+				vehicle.telemetry.SetMarkerFlag(true);
 				}
+
+			// Feed telemetry
+
+			vehicle.telemetry.SetMarker(Telemetry.Marker.SectorLinePass);
+			vehicle.telemetry.SetMarkerTime(hitTime - m_sectorStartTime);
 			}
 		}
 
@@ -380,6 +401,8 @@ public class LapTimer : MonoBehaviour
 
 		if (m_trackStartTime > 0.0f)
 			{
+			// For visual purposes use Time.time instead of Time.fixedTime
+
 			float t = Time.time - m_trackStartTime;
 
 			currentTimeText += m_invalidLap? "**" : "S"+(m_currentSector+1);

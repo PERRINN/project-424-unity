@@ -10,7 +10,6 @@ using UnityEngine;
 namespace VehiclePhysics.Utility
 {
 
-[RequireComponent(typeof(Rigidbody))]
 public class MatchInertia : MonoBehaviour
 	{
 	public Rigidbody otherRigidbody;
@@ -30,12 +29,17 @@ public class MatchInertia : MonoBehaviour
 		if (otherRigidbody == null || !otherRigidbody.gameObject.activeInHierarchy)
 			{
 			Debug.LogWarning(this.ToString() + " Other rigidbody missing or inactive. Component disabled.", this);
-
 			enabled = false;
 			return;
 			}
 
-		m_thisRigidbody = GetComponent<Rigidbody>();
+		m_thisRigidbody = GetComponentInParent<Rigidbody>();
+		if (m_thisRigidbody == null)
+			{
+			Debug.LogWarning(this.ToString() + " No rigidbody found. Component disabled.", this);
+			enabled = false;
+			return;
+			}
 
 		if (applyInertiaTo == ApplyTo.ThisRigidbody)
 			Match(m_thisRigidbody, otherRigidbody);
