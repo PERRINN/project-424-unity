@@ -32,7 +32,7 @@ public class BatteryModel : VehicleBehaviour
 
         powerTotal = frontPower + rearPower;
 
-        batteryCharge();
+        BatteryCharge();
 
         batterySOC = (batteryCapacity / 55) * 100;
         batteryDOD = 100 - batterySOC;
@@ -44,7 +44,7 @@ public class BatteryModel : VehicleBehaviour
         SteeringScreen.batCapacity = batteryCapacity;
     }
 
-    void batteryCharge()
+    void BatteryCharge()
     {
         if (powerTotal > 0)
         {
