@@ -11,12 +11,17 @@ using VehiclePhysics;
 public class Autopilot : VehicleBehaviour
 {
     // Public component parameters
-    // TODO: They should have startup values
 
-    public float kp, ki, kd, maxForceP, maxForceD;
-    public int startUpThrottleSpeedRatio, startUpThrottle, startUpBrakeSpeedRatio;
+    public float kp = 600000.0f;
+    public float ki = 0.0f;
+    public float kd = 20000.0f;
+    public float maxForceP = 10000.0f;
+    public float maxForceD = 25000.0f;
+    public int startUpThrottleSpeedRatio = 60;
+    public int startUpThrottle = 70;
+    public int startUpBrakeSpeedRatio = 90;
 
-    public float offsetValue = 0f;
+    public float offsetValue = 0.0f;
     public BoxCollider startLine;
 
     // Exposed for Telemetry
@@ -52,11 +57,10 @@ public class Autopilot : VehicleBehaviour
 
 
     public override int GetUpdateOrder ()
-        {
-        // Execute after input components to override their input
-
+    {
+        // Execute after input components (0) to override their input
         return 10;
-        }
+    }
 
 
     public override void OnEnableVehicle ()
@@ -162,9 +166,7 @@ public class Autopilot : VehicleBehaviour
             }
         }
 
-        CompareTwoValues compareOneTwo = CompareValue(sectionClosestFrame1, sectionClosestFrame2);
-        sectionClosestFrame1 = compareOneTwo.min;
-        sectionClosestFrame2 = compareOneTwo.max;
+        (sectionClosestFrame1, sectionClosestFrame2) = GetAsMinMax(sectionClosestFrame1, sectionClosestFrame2);
 
         // Boundary search conditions
         if (sectionClosestFrame1 == 0 && sectionClosestFrame2 > recordedReplay.Count / 2)
@@ -258,9 +260,7 @@ public class Autopilot : VehicleBehaviour
         appliedForceV3.z = edyPID.output * sinD * 1.000f;
 
         //get recorded driver input
-        CompareTwoValues compareThreeFour = CompareValue(closestFrame1, closestFrame2);
-        closestFrame1 = compareThreeFour.min;
-        closestFrame2 = compareThreeFour.max;
+        (closestFrame1, closestFrame2) = GetAsMinMax(closestFrame1, closestFrame2);
 
         //Car Control System
         float frameAngle = recordedReplay[closestFrame1].rotation.eulerAngles.y;
@@ -284,7 +284,7 @@ public class Autopilot : VehicleBehaviour
             rigidBody424.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
 
             // TODO: Debug this
-            // DebugUtility.DrawCrossMark(offsetFromCurrentVehiclePos, vehicleduration: 1.0f/60.0f);
+            DebugUtility.DrawCrossMark(offsetFromCurrentVehiclePos, vehicle.cachedTransform, GColor.pink); // , duration: 1.0f/60.0f);
 
             if (!lostControl)
             {
@@ -348,20 +348,16 @@ public class Autopilot : VehicleBehaviour
         return positionOffset;
     }
 
-    struct CompareTwoValues
+    (int, int) GetAsMinMax(int valueA, int valueB)
     {
-        public int min;
-        public int max;
-    }
+        if (valueA > valueB)
+            {
+            int tmp = valueA;
+            valueA = valueB;
+            valueB = tmp;
+            }
 
-    CompareTwoValues CompareValue(int valueA, int valueB)
-    {
-        CompareTwoValues values = new CompareTwoValues
-        {
-            min = valueA < valueB ? valueA : valueB,
-            max = valueA > valueB ? valueA : valueB
-        };
-        return values;
+        return (valueA, valueB);
     }
 
     bool referenceLapDuplicated()
