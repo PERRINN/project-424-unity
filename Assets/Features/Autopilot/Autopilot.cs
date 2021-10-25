@@ -24,6 +24,8 @@ public class Autopilot : VehicleBehaviour
     public float offsetValue = 0.0f;
     public BoxCollider startLine;
 
+    public bool debugGizmo = false;
+
     // Exposed for Telemetry
 
     public float Error => height; //[m]
@@ -283,8 +285,11 @@ public class Autopilot : VehicleBehaviour
         {
             rigidBody424.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
 
-            // TODO: Debug this
-            DebugUtility.DrawCrossMark(offsetFromCurrentVehiclePos, vehicle.cachedTransform, GColor.pink); // , duration: 1.0f/60.0f);
+            if (debugGizmo)
+                {
+                DebugUtility.DrawCrossMark(offsetFromCurrentVehiclePos, vehicle.cachedTransform, GColor.pink);
+                Debug.DrawLine(offsetFromCurrentVehiclePos, offsetFromCurrentVehiclePos + appliedForceV3 / 1000.0f, GColor.orange);
+                }
 
             if (!lostControl)
             {
