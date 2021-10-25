@@ -93,11 +93,14 @@ public class Autopilot : VehicleBehaviour
             m_ffbDamperCoefficient = m_deviceInput.damperCoefficient;
         }
 
-        if (referenceLapDuplicated())
+        // (Edy) ReferenceLapDuplicated makes no sense to me
+        /*
+        if (ReferenceLapDuplicated())
         {
             enabled = false;
             return;
         }
+        */
     }
 
 
@@ -365,7 +368,12 @@ public class Autopilot : VehicleBehaviour
         return (valueA, valueB);
     }
 
-    bool referenceLapDuplicated()
+
+    // (Edy) This makes no sense at all to me.
+    // It overrides the size of the box collider of the start line to an arbitrary size for
+    // checking if more than one position of the replay are inside it.
+    /*
+    bool ReferenceLapDuplicated()
     {
         if (startLine == null) return false;
 
@@ -384,4 +392,5 @@ public class Autopilot : VehicleBehaviour
         startLine.size = new Vector3(1, 1, 1);
         return duplicated;
     }
+    */
 }
