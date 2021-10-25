@@ -28,7 +28,7 @@ public class FollowHeading : VehicleBehaviour
 	public override void OnEnableVehicle ()
 		{
 		m_vehicle = vehicle.GetComponent<VPVehicleController>();
-		m_input = vehicle.GetComponent<VPStandardInput>();
+		m_input = vehicle.GetComponentInChildren<VPStandardInput>();
 		}
 
 
