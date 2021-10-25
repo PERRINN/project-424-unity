@@ -19,7 +19,7 @@ public class Autopilot : VehicleBehaviour
     public float maxForceD = 25000.0f;
     public int startUpThrottleSpeedRatio = 60;
     public int startUpThrottle = 70;
-    public int startUpBrakeSpeedRatio = 90;
+    public int startUpBrakeSpeedRatio = 80;
 
     public float offsetValue = 0.0f;
     public BoxCollider startLine;
