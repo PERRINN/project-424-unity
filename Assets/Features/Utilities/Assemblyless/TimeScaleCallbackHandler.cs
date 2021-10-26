@@ -14,12 +14,12 @@ namespace Perrinn424.Utilities
         private GameObject[] gameObjectsActiveOnlyInRealTime;
 
         [SerializeField]
-        private Underfloor underfloor;
+        private Perrinn424Underfloor underfloor;
 
         private void OnEnable()
         {
             if (underfloor == null)
-                underfloor = FindObjectOfType<Underfloor>();
+                underfloor = FindObjectOfType<Perrinn424Underfloor>();
 
             timeScaleController.onTimeScaleChanged += OnTimeScaleChangedEventHandler;
         }
@@ -32,7 +32,7 @@ namespace Perrinn424.Utilities
         private void OnTimeScaleChangedEventHandler(float obj)
         {
             bool isRealTime = timeScaleController.IsRealTime;
-            
+
             foreach (var behaviour in behaviourEnabledOnlyInRealTime)
             {
                 behaviour.enabled = isRealTime;
@@ -46,5 +46,5 @@ namespace Perrinn424.Utilities
             underfloor.isAudioEnabled = isRealTime;
         }
 
-    } 
+    }
 }
