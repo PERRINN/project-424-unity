@@ -36,10 +36,12 @@ public class PrecessionTest : MonoBehaviour
 
     private void OnEnable()
     {
+        if (rb == null)
+            rb = GetComponent<Rigidbody>();
+
         precessionEffect = new PrecessionEffect(rb);
 
         rb.maxAngularVelocity = 20f;
-
 
         if (doInitialAngularVelocity)
         {
@@ -83,7 +85,7 @@ public class PrecessionTest : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!Application.isPlaying)
+        if (!Application.isPlaying || !isActiveAndEnabled)
         {
             return;
         }
