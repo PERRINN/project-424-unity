@@ -3,6 +3,7 @@
 public class PrecessionEffect
 {
     public Rigidbody rb;
+
     public Matrix4x4 InertiaTensor { get; private set; }
     public Vector3 AngularVelocity { get; private set; }
     public Vector3 AngularMomentum { get; private set; }
@@ -17,10 +18,11 @@ public class PrecessionEffect
 
     public void Apply()
     {
+        Matrix4x4 rotationMatrix = Matrix4x4.Rotate(rb.transform.rotation);
+        Matrix4x4 inertiaTensorLocal = rotationMatrix * InertiaTensor * rotationMatrix.transpose;
         AngularVelocity = rb.angularVelocity;
-        AngularMomentum = InertiaTensor * AngularVelocity;
+        AngularMomentum = inertiaTensorLocal * AngularVelocity;
         AngularMomentum_derivative = Vector3.Cross(AngularVelocity, AngularMomentum);
-        AngularAcceleration = InertiaTensor.inverse * AngularMomentum_derivative;
-        rb.AddTorque(AngularAcceleration, ForceMode.Acceleration);
+        rb.AddTorque(-AngularMomentum_derivative);
     }
 }
