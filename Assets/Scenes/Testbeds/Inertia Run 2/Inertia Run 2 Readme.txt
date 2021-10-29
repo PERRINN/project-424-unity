@@ -58,7 +58,7 @@ Inertia Tensors:
        0   1280      0
        0      0    131
 
-Diagonal
+DIAG
 
        1      0      0
        0      1      0
