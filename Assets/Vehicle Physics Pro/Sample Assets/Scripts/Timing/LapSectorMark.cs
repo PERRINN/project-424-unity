@@ -96,8 +96,12 @@ public class LapSectorMark : MonoBehaviour
 
 		// hitDistance is the distance to the detection plane. If negative, the detection point has already passed thru the plane.
 		// contactTime is the time the detection point will touch the detection plane at current speed.
+		//
+		// Assume a minimum speed, otherwise the contact time might be measured in seconds.
+		// This also prevents NaN on zero velocity, i.e. when the vehicle spawns in the trigger.
 
-		float contactTime = hitDistance / velocity.magnitude;
+		float speed = Mathf.Max(velocity.magnitude, 1.0f);
+		float contactTime = hitDistance / speed;
 		if (debugLog)
 			{
 			Debug.Log($"[{gameObject.name}] Sector {sector} pass! Hit Time: {Time.fixedTime:0.000} + {contactTime:0.000} = {Time.fixedTime + contactTime:0.000} Hit Distance: {hitDistance:0.000}");
