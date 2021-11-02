@@ -180,7 +180,7 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 		// Process contact points
 
-		for (int i = 0, c = contactPoints.Length; i < c; i++)
+		for (int i = 0, c = m_contactPointData.Length; i < c; i++)
 			ProcessContactPoint(m_contactPointData[i]);
 		}
 
@@ -191,7 +191,7 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 		// Update audio
 
-		for (int i = 0, c = contactPoints.Length; i < c; i++)
+		for (int i = 0, c = m_contactPointData.Length; i < c; i++)
 			UpdateContactAudio(m_contactPointData[i]);
 
 		// Update widget
@@ -201,7 +201,7 @@ public class Perrinn424Underfloor : VehicleBehaviour
 			m_text.Clear();
 			m_text.Append($"               Stiffnes  Friction  Events    Depth      Fz    Drag\n");
 			m_text.Append($"                   N/mm         μ               mm       N       N");
-			for (int i = 0, c = contactPoints.Length; i < c; i++)
+			for (int i = 0, c = m_contactPointData.Length; i < c; i++)
 				AppendContactPointText(m_text, m_contactPointData[i]);
 			m_textBox.text = m_text.ToString();
 			}
@@ -210,7 +210,10 @@ public class Perrinn424Underfloor : VehicleBehaviour
 
 	public override void OnEnterPause ()
 		{
-		for (int i = 0, c = contactPoints.Length; i < c; i++)
+		// Note: If the scripts are reloaded while paused then OnEnterPause will be called _before_
+		// FixedUpdateVehicle. The runtime data will be empty.
+
+		for (int i = 0, c = m_contactPointData.Length; i < c; i++)
 			m_contactPointData[i].contactAudio.source.Stop();
 		}
 
