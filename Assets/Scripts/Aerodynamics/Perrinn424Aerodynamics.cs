@@ -6,8 +6,6 @@ using Perrinn424.AerodynamicsSystem;
 
 public class Perrinn424Aerodynamics : VehicleBehaviour
 {
-	private Atmosphere atmosphere = new Atmosphere();
-
     [SerializeField]
     private AltitudeConverter altitudeConverter;
 
@@ -40,6 +38,11 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public AeroSettings rear  = new AeroSettings();
 	public AeroSettings drag  = new AeroSettings();
 
+	[Space(5)]
+	public bool emitTelemetry = false;
+
+	// Exposed state
+
 	[HideInInspector] public float flapAngle   = 1.0f;
 	[HideInInspector] public bool  DRSclosing  = false;
 	[HideInInspector] public float DRS      = 0;
@@ -58,8 +61,12 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float frontRideHeight = 0.0f;
 	[HideInInspector] public float rearRideHeight  = 0.0f;
 	[HideInInspector] public float rho = 0.0f;
+
+	// Private members
+
+	Atmosphere atmosphere = new Atmosphere();
 	float DRStime = 0;
-	
+
 
 	// Function Name: CalcAeroCoeff
 	// This function calculates a given aerodynamic coefficient based on:
@@ -74,6 +81,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//	 [IN]	flapAngle_deg [deg]
 	//
 	//	 [OUT]	SCn [m2]
+
 	float CalcAeroCoeff(AeroSettings aeroSetting, float fRH_mm, float rRH_mm, float yawAngle_deg, float steerAngle_deg, float rollAngle_deg, float DRSpos, float flapAngle_deg)
 	{
 		// Assigning return variable
@@ -111,7 +119,8 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//	 [IN]	DRSpos:      0 to 1 [-]
 	//
 	//	 [OUT]	DRSpos:      0 to 1 [-]
-		float CalcDRSPosition(float throttlePos, float brakePos, float DRSpos)
+
+	float CalcDRSPosition(float throttlePos, float brakePos, float DRSpos)
 	{
 		if (throttlePos == 1 && brakePos == 0 && !DRSclosing)
 		{
@@ -191,6 +200,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		aeroBal	= downforceFront / (downforceFront + downforceRear) * 100;
 	}
 
+
     private float CalculateDynamicPressure()
     {
         Rigidbody rb = vehicle.cachedRigidbody;
@@ -202,4 +212,91 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
         float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
         return dynamicPressure;
     }
+
+
+	// Telemetry
+
+
+	public override bool EmitTelemetry ()
+	{
+		return emitTelemetry;
+	}
+
+
+	public override void RegisterTelemetry ()
+	{
+		vehicle.telemetry.Register<Perrinn424AeroTelemetry>(this);
+	}
+
+
+	public override void UnregisterTelemetry ()
+	{
+		vehicle.telemetry.Unregister<Perrinn424AeroTelemetry>(this);
+	}
+
+
+	public class Perrinn424AeroTelemetry : Telemetry.ChannelGroup
+	{
+		public override int GetChannelCount ()
+		{
+			return 0;
+		}
+
+
+		public override Telemetry.PollFrequency GetPollFrequency ()
+		{
+			return Telemetry.PollFrequency.Normal;
+		}
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, UnityEngine.Object instance)
+		{
+			// channelInfo[0].SetNameAndSemantic("SplitterDepthLeft", Telemetry.Semantic.SuspensionTravel);
+			// channelInfo[1].SetNameAndSemantic("SplitterDepthRight", Telemetry.Semantic.SuspensionTravel);
+			// channelInfo[2].SetNameAndSemantic("FloorDepthFront", Telemetry.Semantic.SuspensionTravel);
+			// channelInfo[3].SetNameAndSemantic("FloorDepthRear", Telemetry.Semantic.SuspensionTravel);
+			// channelInfo[4].SetNameAndSemantic("SplitterFzLeft", Telemetry.Semantic.SuspensionForce);
+			// channelInfo[5].SetNameAndSemantic("SplitterFzRight", Telemetry.Semantic.SuspensionForce);
+			// channelInfo[6].SetNameAndSemantic("FloorFzFront", Telemetry.Semantic.SuspensionForce);
+			// channelInfo[7].SetNameAndSemantic("FloorFzRear", Telemetry.Semantic.SuspensionForce);
+		}
+
+
+		public override void PollValues (float[] values, int index, UnityEngine.Object instance)
+		{
+			Perrinn424Aerodynamics aero = instance as Perrinn424Aerodynamics;
+
+			/*
+			// Get contact point data and verify we have at least 4 contact points
+
+			var contactPoints = underfloor.contactPointData;
+			if (contactPoints.Count < 4)
+			{
+				for (int i = 0; i < 8; i++)
+					values[index+i] = float.NaN;
+				return;
+			}
+
+			// Fill in the corresponding channel values
+
+			for (int i = 0; i < 4; i++)
+			{
+				ContactPointData cp = contactPoints[i];
+				if (cp.contact)
+				{
+					values[index+i] = cp.contactDepth;
+					values[index+i+4] = cp.verticalLoad;
+				}
+				else
+				{
+					values[index+i] = 0.0f;
+					values[index+i+4] = 0.0f;
+				}
+			}
+			*/
+		}
+	}
+
+
+
 }
