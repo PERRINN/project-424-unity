@@ -18,11 +18,25 @@ public class PrecessionEffect
 
     public void Apply()
     {
-        Matrix4x4 rotationMatrix = Matrix4x4.Rotate(rb.transform.rotation);
-        Matrix4x4 inertiaTensorLocal = rotationMatrix * InertiaTensor * rotationMatrix.transpose;
-        AngularVelocity = rb.angularVelocity;
-        AngularMomentum = inertiaTensorLocal * AngularVelocity;
+        // first buggy version
+        //AngularVelocity = rb.angularVelocity;
+        //AngularMomentum = InertiaTensor * AngularVelocity;
+        //AngularMomentum_derivative = Vector3.Cross(AngularVelocity, AngularMomentum);
+        //rb.AddTorque(AngularMomentum_derivative);
+
+
+        //Good one, in global coordinates
+        //Matrix4x4 rotationMatrix = Matrix4x4.Rotate(rb.transform.rotation);
+        //Matrix4x4 inertiaTensorLocal = rotationMatrix * InertiaTensor * rotationMatrix.transpose;
+        //AngularVelocity = rb.angularVelocity;
+        //AngularMomentum = inertiaTensorLocal * AngularVelocity;
+        //AngularMomentum_derivative = Vector3.Cross(AngularVelocity, AngularMomentum);
+        //rb.AddTorque(-AngularMomentum_derivative);
+
+        //Good one, in local
+        AngularVelocity = rb.transform.InverseTransformVector(rb.angularVelocity);
+        AngularMomentum = InertiaTensor * AngularVelocity;
         AngularMomentum_derivative = Vector3.Cross(AngularVelocity, AngularMomentum);
-        rb.AddTorque(-AngularMomentum_derivative);
+        rb.AddRelativeTorque(-AngularMomentum_derivative);
     }
 }
