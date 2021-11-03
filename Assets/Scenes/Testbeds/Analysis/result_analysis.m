@@ -29,38 +29,38 @@ x_simdrive = clamp(max_time, x_simdrive);
 y_simdrive = clamp(max_time, y_simdrive);
 z_simdrive = clamp(max_time, z_simdrive);
 
+[x_r, x_RMSE] = analysis(x_simdrive, results(:,[1 2]));
+[y_r, y_RMSE] = analysis(y_simdrive, results(:,[1 3]));
+[z_r, z_RMSE] = analysis(z_simdrive, results(:,[1 4]));
 
+formatSpec = '%s\nCorrelation: %f. RMSE: %e\n';
 subplot(3,1,1);
 plot(x_simdrive(:,1), x_simdrive(:,2));
-title('angular acceleration  x');
+t = sprintf(formatSpec, 'Angular Acceleration X axis', x_r, x_RMSE);
+title(t);
+disp(t);
 hold on
 plot(results(:,1), results(:,2));
 legend('sim drive','unity')
 hold off
 subplot(3,1,2);
 plot(y_simdrive(:,1), y_simdrive(:,2));
-title('angular acceleration  y');
+t = sprintf(formatSpec, 'Angular Acceleration Y axis', y_r, y_RMSE);
+title(t);
+disp(t);
 hold on
 plot(results(:,1), results(:,3));
 legend('sim drive','unity')
 hold off
 subplot(3,1,3);
 plot(z_simdrive(:,1), z_simdrive(:,2));
-title('angular acceleration z');
-hold on
+t = sprintf(formatSpec, 'Angular Acceleration Z axis', z_r, z_RMSE);
+title(t);
+disp(t);hold on
 plot(results(:,1), results(:,4));
 legend('sim drive','unity')
 hold off
 sgt = sgtitle(subplot_title);
-
-[x_r, x_RMSE] = analysis(x_simdrive, results(:,[1 2]));
-[y_r, y_RMSE] = analysis(y_simdrive, results(:,[1 3]));
-[z_r, z_RMSE] = analysis(z_simdrive, results(:,[1 4]));
-
-formatSpec = 'Axis %s => Correlation: %f. RMSE: %e\n';
-fprintf(formatSpec,"x",x_r,x_RMSE);
-fprintf(formatSpec,"y",y_r,y_RMSE);
-fprintf(formatSpec,"z",z_r,z_RMSE);
 
 
 function clamped = clamp(max, raw_values)
