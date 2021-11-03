@@ -72,6 +72,10 @@ public class PrecessionTest : MonoBehaviour
             precessionEffect.Apply();
         }
 
+    }
+
+    private void Update()
+    {
         DebugValues();
     }
 
