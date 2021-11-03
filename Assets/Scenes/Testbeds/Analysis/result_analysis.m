@@ -2,17 +2,17 @@ clc;
 clear;
 
 %% Load data
-subplot_title = 'Inertia Test 5000 X 1000 Z';
-x_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration X.txt'; 
-y_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration Y.txt'; 
-z_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration Z.txt'; 
-results_path = 'Inertia Test 5000_X_1000Z - Results.txt';
+% subplot_title = 'Inertia Test 5000 X 1000 Z';
+% x_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration X.txt'; 
+% y_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration Y.txt'; 
+% z_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration Z.txt'; 
+% results_path = 'Inertia Test 5000_X_1000Z - Results.txt';
 
-% subplot_title = 'Inertia Test 5000 Y 1000 Z';
-% x_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration X.txt'; 
-% y_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration Y.txt'; 
-% z_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration Z.txt'; 
-% results_path = 'Inertia Test 5000_Y_1000Z - Results.txt'; 
+subplot_title = 'Inertia Test 5000 Y 1000 Z';
+x_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration X.txt'; 
+y_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration Y.txt'; 
+z_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration Z.txt'; 
+results_path = 'Inertia Test 5000_Y_1000Z - Results.txt'; 
 
 x_simdrive_file = importdata(x_acceleration_simdrive_path);
 y_simdrive_file = importdata(y_acceleration_simdrive_path);
