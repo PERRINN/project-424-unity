@@ -1,17 +1,18 @@
 clc;
 clear;
 
+%% Load data
+subplot_title = 'Inertia Test 5000 X 1000 Z';
 x_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration X.txt'; 
 y_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration Y.txt'; 
 z_acceleration_simdrive_path = 'Inertia Test 5000_X_1000Z - Simdrive- angular  acceleration Z.txt'; 
 results_path = 'Inertia Test 5000_X_1000Z - Results.txt';
 
-subplot_title = 'Inertia Test 5000 Y 1000 Z';
-x_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration X.txt'; 
-y_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration Y.txt'; 
-z_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration Z.txt'; 
-results_path = 'Inertia Test 5000_Y_1000Z - Results.txt'; 
-
+% subplot_title = 'Inertia Test 5000 Y 1000 Z';
+% x_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration X.txt'; 
+% y_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration Y.txt'; 
+% z_acceleration_simdrive_path = 'Inertia Test 5000_Y_1000Z - Simdrive- angular  acceleration Z.txt'; 
+% results_path = 'Inertia Test 5000_Y_1000Z - Results.txt'; 
 
 x_simdrive_file = importdata(x_acceleration_simdrive_path);
 y_simdrive_file = importdata(y_acceleration_simdrive_path);
@@ -29,10 +30,12 @@ x_simdrive = clamp(max_time, x_simdrive);
 y_simdrive = clamp(max_time, y_simdrive);
 z_simdrive = clamp(max_time, z_simdrive);
 
+%% Calculate error
 [x_r, x_RMSE] = analysis(x_simdrive, results(:,[1 2]));
 [y_r, y_RMSE] = analysis(y_simdrive, results(:,[1 3]));
 [z_r, z_RMSE] = analysis(z_simdrive, results(:,[1 4]));
 
+%% Plot
 formatSpec = '%s\nCorrelation: %f. RMSE: %e\n';
 subplot(3,1,1);
 plot(x_simdrive(:,1), x_simdrive(:,2));
@@ -62,7 +65,7 @@ legend('sim drive','unity')
 hold off
 sgt = sgtitle(subplot_title);
 
-
+%% Functions
 function clamped = clamp(max, raw_values)
     indixes = find(raw_values(:,1) > max);
     first_index = indixes(1);
