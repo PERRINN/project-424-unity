@@ -31,6 +31,8 @@ namespace Perrinn424.UI
         [SerializeField]
         private float wideRatio = 0.35f;
 
+        private bool initialized = false;
+
         private Canvas canvas;
         private Canvas Canvas
         {
@@ -60,10 +62,14 @@ namespace Perrinn424.UI
         protected override void OnDisable()
         {
             screenCoordinatesUtility.RectTransformDimensionsChanged -= UpdateTelemetryDimensions;
+            SetTelemetryProperties(false, false, 0f);
         }
 
         private IEnumerator DoDeferredInit()
         {
+            if (initialized)
+                yield break;
+
             while (telemetryTools.vehicle == null || !telemetryTools.vehicle.initialized)
                 yield return null;
 
@@ -71,11 +77,9 @@ namespace Perrinn424.UI
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
             UpdateTelemetryDimensions(screenCoordinatesUtility.Rect);
+            telemetryTools.showChannelList = mode == Mode.ChannelList;
 
-            if (mode != Mode.ChannelList)
-            {
-                telemetryTools.showChannelList = false;
-            }
+            initialized = true;
         }
 
         private void UpdateTelemetryDimensions(Rect screenCoordinates)
@@ -107,6 +111,7 @@ namespace Perrinn424.UI
         private void SetMode(Mode newMode)
         {
             this.mode = newMode;
+
             switch (mode)
             {
                 case Mode.Slim:
@@ -124,18 +129,19 @@ namespace Perrinn424.UI
             }
         }
 
-        private void SetTelemetryProperties(bool showChannelList, bool showDisplay, float size)
+        private void SetTelemetryProperties(bool showChannelList, bool showDisplay, float ratio)
         {
-            telemetryTools.showChannelList = showChannelList;
+            SetRatio(ratio);
+
             telemetryDisplay.showDisplay = showDisplay;
-            SetSize(size);
+            telemetryTools.showChannelList = showChannelList;
         }
 
-        private void SetSize(float size)
+        private void SetRatio(float ratio)
         {
             RectTransform parentRectTransform = this.transform.parent as RectTransform;
             Vector2 anchorMin = parentRectTransform.anchorMin;
-            float minAnchorX = 1.0f - size;
+            float minAnchorX = 1.0f - ratio;
             anchorMin.x = minAnchorX;
             parentRectTransform.anchorMin = anchorMin;
         }
