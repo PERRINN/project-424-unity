@@ -208,7 +208,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
         float vSquared = rb.velocity.sqrMagnitude;
         float y = rb.worldCenterOfMass.y;
         float altitude = altitudeConverter.ToAltitude(y);
-        altitude = 1.0f; // backwards compatibility with saved replay
+        // altitude = 1.0f; // backwards compatibility with saved replay
         atmosphere.UpdateAtmosphere(altitude, deltaISA);
         float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
         return dynamicPressure;
@@ -240,7 +240,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	{
 		public override int GetChannelCount ()
 		{
-			return 0;
+			return 12;
 		}
 
 
@@ -252,14 +252,46 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, UnityEngine.Object instance)
 		{
-			// channelInfo[0].SetNameAndSemantic("SplitterDepthLeft", Telemetry.Semantic.SuspensionTravel);
-			// channelInfo[1].SetNameAndSemantic("SplitterDepthRight", Telemetry.Semantic.SuspensionTravel);
-			// channelInfo[2].SetNameAndSemantic("FloorDepthFront", Telemetry.Semantic.SuspensionTravel);
-			// channelInfo[3].SetNameAndSemantic("FloorDepthRear", Telemetry.Semantic.SuspensionTravel);
-			// channelInfo[4].SetNameAndSemantic("SplitterFzLeft", Telemetry.Semantic.SuspensionForce);
-			// channelInfo[5].SetNameAndSemantic("SplitterFzRight", Telemetry.Semantic.SuspensionForce);
-			// channelInfo[6].SetNameAndSemantic("FloorFzFront", Telemetry.Semantic.SuspensionForce);
-			// channelInfo[7].SetNameAndSemantic("FloorFzRear", Telemetry.Semantic.SuspensionForce);
+			// Custom semantics
+
+			Telemetry.SemanticInfo aeroCoeffSemantic = new Telemetry.SemanticInfo();
+			aeroCoeffSemantic.SetRangeAndFormat(1.0f, 3.0f, "0.00", "", quantization:0.1f, alternateFormat:"0");
+
+			Telemetry.SemanticInfo aeroForceSemantic = new Telemetry.SemanticInfo();
+			aeroForceSemantic.SetRangeAndFormat(0.0f, 15000.0f, "0", " N", quantization:1000);
+
+			Telemetry.SemanticInfo aeroAngleSemantic = new Telemetry.SemanticInfo();
+			aeroAngleSemantic.SetRangeAndFormat(-5.0f, 5.0f, "0.00", "°", quantization:1, alternateFormat:"0");
+
+			Telemetry.SemanticInfo airDensitySemantic = new Telemetry.SemanticInfo();
+			airDensitySemantic.SetRangeAndFormat(1.1f, 1.2f, "0.0000", " kg/m³", quantization:0.05f, alternateFormat:"0.0");
+
+			// TODO: Use built-in SteerAngle semantic when available.
+			// Current SteerAngle semantic is related to the steering wheel angle and has been
+			// renamed to SteeringWheelAngle in the latest VPP source.
+
+			Perrinn424Aerodynamics aero = instance as Perrinn424Aerodynamics;
+			Steering.Settings steering = aero.vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
+
+			Telemetry.SemanticInfo steerAngleSemantic = new Telemetry.SemanticInfo();
+			steerAngleSemantic.SetRangeAndFormat(-steering.maxSteerAngle, steering.maxSteerAngle, "0.0", "°", quantization:5, alternateFormat:"0");
+
+			// Fill-in channel information
+
+			channelInfo[0].SetNameAndSemantic("AeroDrsPosition", Telemetry.Semantic.Ratio);
+			channelInfo[1].SetNameAndSemantic("AeroSczFront", Telemetry.Semantic.Custom, aeroCoeffSemantic);
+			channelInfo[2].SetNameAndSemantic("AeroSczRear", Telemetry.Semantic.Custom, aeroCoeffSemantic);
+			channelInfo[3].SetNameAndSemantic("AeroDownforceFront", Telemetry.Semantic.Custom, aeroForceSemantic);
+			channelInfo[4].SetNameAndSemantic("AeroDownforceRear", Telemetry.Semantic.Custom, aeroForceSemantic);
+			channelInfo[5].SetNameAndSemantic("AeroDrag", Telemetry.Semantic.Custom, aeroForceSemantic);
+
+			channelInfo[6].SetNameAndSemantic("AeroSteer", Telemetry.Semantic.Custom, steerAngleSemantic);
+			channelInfo[7].SetNameAndSemantic("AeroYaw", Telemetry.Semantic.BankAngle);
+			channelInfo[8].SetNameAndSemantic("AeroRoll", Telemetry.Semantic.BankAngle);
+
+			channelInfo[9].SetNameAndSemantic("AeroBalance", Telemetry.Semantic.Ratio);
+			channelInfo[10].SetNameAndSemantic("AeroFrontFlap", Telemetry.Semantic.Custom, aeroAngleSemantic);
+			channelInfo[11].SetNameAndSemantic("AirDensity", Telemetry.Semantic.Custom, airDensitySemantic);
 		}
 
 
@@ -267,34 +299,20 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		{
 			Perrinn424Aerodynamics aero = instance as Perrinn424Aerodynamics;
 
-			/*
-			// Get contact point data and verify we have at least 4 contact points
+			values[index+0] = aero.DRS;
+			values[index+1] = aero.SCzFront;
+			values[index+2] = aero.SCzRear;
+			values[index+3] = aero.downforceFront;
+			values[index+4] = aero.downforceRear;
+			values[index+5] = aero.dragForce;
 
-			var contactPoints = underfloor.contactPointData;
-			if (contactPoints.Count < 4)
-			{
-				for (int i = 0; i < 8; i++)
-					values[index+i] = float.NaN;
-				return;
-			}
+			values[index+6] = aero.steerAngle;
+			values[index+7] = aero.yawAngle;
+			values[index+8] = aero.rollAngle;
 
-			// Fill in the corresponding channel values
-
-			for (int i = 0; i < 4; i++)
-			{
-				ContactPointData cp = contactPoints[i];
-				if (cp.contact)
-				{
-					values[index+i] = cp.contactDepth;
-					values[index+i+4] = cp.verticalLoad;
-				}
-				else
-				{
-					values[index+i] = 0.0f;
-					values[index+i+4] = 0.0f;
-				}
-			}
-			*/
+			values[index+9] = aero.aeroBal / 100.0f;
+			values[index+10] = aero.flapAngle;
+			values[index+11] = aero.rho;
 		}
 	}
 

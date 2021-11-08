@@ -111,6 +111,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			m_controller = vehicle.GetComponent<Perrinn424CarController>();
 
 			// Fill-in channel information
+			// TODO: Use semantic SteeringWheelAngle instead of SteerAngle when available.
 
 			channelInfo[0].SetNameAndSemantic("Gear", Telemetry.Semantic.Gear);
 			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteerAngle);
