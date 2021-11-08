@@ -33,8 +33,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		// Angular velocity in the range [-90, +90]
 
 		Telemetry.SemanticInfo angularVelocitySemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.AngularVelocity];
-		angularVelocitySemantic.rangeMin = -90.0f * Mathf.Deg2Rad;
-		angularVelocitySemantic.rangeMax = 90.0f * Mathf.Deg2Rad;
+		angularVelocitySemantic.SetRange(-90.0f * Mathf.Deg2Rad, 90.0f * Mathf.Deg2Rad);
 
 		// Weight in newtons (original) instead of kilograms (default)
 
@@ -44,8 +43,13 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		// Max tire forces. TODO: Remove when it's properly applied from specifications above.
 		Telemetry.SemanticInfo tireForceSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.TireForce];
-		tireForceSemantic.rangeMin = -vehicle.telemetry.specs.maxTireForce;
-		tireForceSemantic.rangeMax = vehicle.telemetry.specs.maxTireForce;
+		tireForceSemantic.SetRange(-vehicle.telemetry.specs.maxTireForce, vehicle.telemetry.specs.maxTireForce);
+
+		// Steering angle
+
+		Steering.Settings steering = vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
+		Telemetry.SemanticInfo steeringWheelAngleSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.SteerAngle];
+		steeringWheelAngleSemantic.SetRange(-steering.steeringWheelRange * 0.5f, steering.steeringWheelRange * 0.5f);
 		}
 
 
@@ -106,23 +110,12 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			m_steering = vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
 			m_controller = vehicle.GetComponent<Perrinn424CarController>();
 
-			// Using custom semantics not yet available in the built-in collection.
-			// TODO: use built-in semantics when available.
-
-			float steeringRange = m_steering.steeringWheelRange * 0.5f;
-			var steerAngleSemantic = new Telemetry.SemanticInfo();
-			var brakePressureSemantic = new Telemetry.SemanticInfo();
-			steerAngleSemantic.SetRangeAndFormat(-steeringRange, steeringRange, "0.0", "°", quantization:50, alternateFormat:"0");
-			brakePressureSemantic.SetRangeAndFormat(0, 100, "0.0", " bar", quantization:10, alternateFormat:"0");
-
 			// Fill-in channel information
 
-			// channelInfo[0].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteerAngle);
-			// channelInfo[0].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.BrakePressure);
 			channelInfo[0].SetNameAndSemantic("Gear", Telemetry.Semantic.Gear);
-			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.Custom, steerAngleSemantic);
+			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteerAngle);
 			channelInfo[2].SetNameAndSemantic("Throttle", Telemetry.Semantic.Ratio);
-			channelInfo[3].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.Custom, brakePressureSemantic);
+			channelInfo[3].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.BrakePressure);
 			}
 
 
