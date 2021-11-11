@@ -5,11 +5,11 @@ namespace Perrinn424.LapFileSystem
     public class TelemetryLap
     {
         public Dataset data;
-        private IReadOnlyList<string> headers;
+        public IReadOnlyList<string> Headers { get; private set; }
 
         public TelemetryLap(IReadOnlyList<string> headers, int cacheCount)
         {
-            this.headers = headers;
+            this.Headers = headers;
             data = new Dataset(cacheCount, headers.Count);
         }
 

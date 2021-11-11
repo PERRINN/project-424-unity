@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using VehiclePhysics;
 
 namespace Perrinn424.LapFileSystem
@@ -12,6 +13,8 @@ namespace Perrinn424.LapFileSystem
         public TelemetryLap telemetryLap;
         public float[] row;
         public RowHeader header;
+
+        public float updateTime;
         void Start()
         {
             dataset = new Dataset(8, 3);
@@ -22,6 +25,9 @@ namespace Perrinn424.LapFileSystem
 
         public override void OnEnableVehicle()
         {
+
+            updateTime = 1f / frequency;
+
             var headerCount = RowHeader.ParamCount;
             var channelsCount = vehicle.telemetry.channels.Count;
             int width = headerCount + channelsCount;
@@ -44,6 +50,14 @@ namespace Perrinn424.LapFileSystem
 
         private void FixedUpdate()
         {
+            updateTime -= Time.deltaTime;
+
+            if (updateTime > 0f)
+                return;
+
+            updateTime = 1f / frequency;
+
+
             Telemetry.DataRow dataRow = vehicle.telemetry.latest;
             header.frame = dataRow.frame;
             header.time = dataRow.time;
@@ -73,5 +87,28 @@ namespace Perrinn424.LapFileSystem
             telemetryLap.Write(row);
         }
 
+        private void OnApplicationQuit()
+        {
+            SaveFile();
+        }
+
+        private void SaveFile()
+        {
+            using (LapFileWriter file = new LapFileWriter())
+            {
+                file.WriteHeaders(telemetryLap.Headers);
+
+
+                for (int rowIndex = 0; rowIndex < telemetryLap.data.rowCount; rowIndex++)
+                {
+                    for (int columnIndex = 0; columnIndex < telemetryLap.data.width; columnIndex++)
+                    {
+                        row[columnIndex] = telemetryLap.data[rowIndex, columnIndex];
+                    }
+
+                    file.WriteRowSafe(row);
+                }
+            }
+        }
     }
 }
