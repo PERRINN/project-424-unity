@@ -157,7 +157,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		rho = (float)atmosphere.Density;
 
 		// Setting vehicle parameters for the aero model
-		yawAngle        = vehicle.speedAngle;
+		yawAngle        = vehicle.speed > 1.0f? vehicle.speedAngle : 0.0f;
 		steerAngle      = (vehicle.wheelState[0].steerAngle + vehicle.wheelState[1].steerAngle) / 2;
 		fronRollAngle   = vehicle.data.Get(Channel.Custom, Perrinn424Data.FrontRollAngle) / 1000.0f;
 		rearRollAngle   = vehicle.data.Get(Channel.Custom, Perrinn424Data.RearRollAngle) / 1000.0f;
