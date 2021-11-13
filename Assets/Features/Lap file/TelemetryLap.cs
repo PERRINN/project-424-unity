@@ -17,5 +17,10 @@ namespace Perrinn424.LapFileSystem
         {
             data.Write(dataRow);
         }
+
+        public void Reset()
+        {
+            data.Reset();
+        }
     } 
 }

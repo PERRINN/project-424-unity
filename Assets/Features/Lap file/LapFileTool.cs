@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VehiclePhysics;
+using VehiclePhysics.Timing;
 
 namespace Perrinn424.LapFileSystem
 {
     public class LapFileTool : VehicleBehaviour
     {
+        public LapTimer lapTimer;
+
         public int frequency;
         public Dataset dataset;
         public TelemetryLap telemetryLap;
@@ -25,6 +28,8 @@ namespace Perrinn424.LapFileSystem
 
         public override void OnEnableVehicle()
         {
+
+            lapTimer.onLap += LapCompletedEventHandler;
 
             updateTime = 1f / frequency;
 
@@ -44,8 +49,16 @@ namespace Perrinn424.LapFileSystem
             telemetryLap = new TelemetryLap(headers, cacheCount);
         }
 
+        //lapTime, !m_invalidLap, m_sectors, m_validSectors);
+        private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
+        {
+            SaveFile();
+            telemetryLap.Reset();
+        }
+
         public override void OnDisableVehicle()
         {
+            lapTimer.onLap -= LapCompletedEventHandler;
         }
 
         private void FixedUpdate()
@@ -87,10 +100,10 @@ namespace Perrinn424.LapFileSystem
             telemetryLap.Write(row);
         }
 
-        private void OnApplicationQuit()
-        {
-            SaveFile();
-        }
+        //private void OnApplicationQuit()
+        //{
+        //    SaveFile();
+        //}
 
         private void SaveFile()
         {
@@ -108,6 +121,8 @@ namespace Perrinn424.LapFileSystem
 
                     file.WriteRowSafe(row);
                 }
+
+                Debug.Log($"File Saved {file.Filename}");
             }
         }
     }
