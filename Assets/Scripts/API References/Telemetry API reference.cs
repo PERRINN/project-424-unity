@@ -84,7 +84,7 @@ public class Telemetry
 		Distance,
 		Gear,
 		BankAngle,
-		SteerAngle,
+		SteeringWheelAngle,
 		BrakePressure,
 		AngularVelocity,
 		EngineRpm,

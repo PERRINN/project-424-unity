@@ -389,7 +389,6 @@ public class Perrinn424Underfloor : VehicleBehaviour
 			channelInfo[5].SetNameAndSemantic("SplitterFzRight", Telemetry.Semantic.SuspensionForce);
 			channelInfo[6].SetNameAndSemantic("FloorFzFront", Telemetry.Semantic.SuspensionForce);
 			channelInfo[7].SetNameAndSemantic("FloorFzRear", Telemetry.Semantic.SuspensionForce);
-
 			}
 
 
