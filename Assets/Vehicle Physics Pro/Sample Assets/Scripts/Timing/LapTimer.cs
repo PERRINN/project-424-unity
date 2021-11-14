@@ -41,6 +41,7 @@ public class LapTimer : MonoBehaviour
 
 	public Action<float, bool, float[], bool[]> onLap;
 	public Action<int, float> onSector;
+	public Action onBeginLap;
 
 	// Current lap time for visual purposes
 
@@ -299,6 +300,8 @@ public class LapTimer : MonoBehaviour
 			m_sectorStartTime = m_trackStartTime;
 			m_invalidSector = false;
 			m_invalidLap = false;
+
+			onBeginLap?.Invoke();
 
 			// Also clear continuity flag
 
