@@ -21,88 +21,103 @@ MonoBehaviour:
       labelOffset: 0
       displayOrigin: 0
       displayRange: 14
+      adjustToRange: 0
       displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
     - name: AeroDrsPosition
       displayName: DRS
       labelOffset: 0
       displayOrigin: 13
       displayRange: 1
-      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+      adjustToRange: 0
+      displayColor: {r: 0, g: 1, b: 0.065425634, a: 0.74509805}
     - name: AeroFrontFlap
       displayName: Front Flap
       labelOffset: -1
       displayOrigin: 13
       displayRange: 1
-      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.69803923}
+      adjustToRange: 0
+      displayColor: {r: 0.8679245, g: 0.2874043, b: 0.08597365, a: 0.74509805}
     - name: AeroSczFront
       displayName: SCz Front
       labelOffset: 1
       displayOrigin: 10
       displayRange: 2
+      adjustToRange: 1
       displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
     - name: AeroSczRear
       displayName: SCz Rear
       labelOffset: 0
       displayOrigin: 10
       displayRange: 2
-      displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.69803923}
-    - name: AeroDownforceFront
-      displayName: Downforce Front
-      labelOffset: 3
-      displayOrigin: 6
-      displayRange: 4
-      displayColor: {r: 1, g: 0.6666667, b: 0.14999998, a: 1}
-    - name: AeroDownforceRear
-      displayName: Downforce Rear
-      labelOffset: 2
-      displayOrigin: 6
-      displayRange: 4
-      displayColor: {r: 0.57801414, g: 0.5, b: 1, a: 0.74509805}
+      adjustToRange: 1
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.74509805}
     - name: AeroDrag
       displayName: Drag
       labelOffset: 1
       displayOrigin: 6
       displayRange: 4
-      displayColor: {r: 0.7307761, g: 0.9622642, b: 0.7401292, a: 0.69803923}
+      adjustToRange: 0
+      displayColor: {r: 0.57801414, g: 0.5, b: 1, a: 0.74509805}
     - name: AeroBalance
       displayName: Balance
       labelOffset: 0
       displayOrigin: 6
       displayRange: 4
-      displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.69803923}
+      adjustToRange: 0
+      displayColor: {r: 1, g: 0.6064061, b: 0, a: 0.74509805}
+    - name: AeroDownforceFront
+      displayName: Downforce Front
+      labelOffset: 3
+      displayOrigin: 6
+      displayRange: 4
+      adjustToRange: 0
+      displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.74509805}
+    - name: AeroDownforceRear
+      displayName: Downforce Rear
+      labelOffset: 2
+      displayOrigin: 6
+      displayRange: 4
+      adjustToRange: 0
+      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.74509805}
     - name: RideHeightFront
       displayName: Front Ride Height
       labelOffset: 1
       displayOrigin: 4
       displayRange: 2
-      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.69803923}
+      adjustToRange: 0
+      displayColor: {r: 0.7307761, g: 0.9622642, b: 0.7401292, a: 0.74509805}
     - name: RideHeightRear
       displayName: Rear Ride Height
       labelOffset: 0
       displayOrigin: 4
       displayRange: 2
-      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.69803923}
-    - name: AeroSteer
-      displayName: Steer
-      labelOffset: 0
-      displayOrigin: 3
-      displayRange: 1
-      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
-    - name: AeroYaw
-      displayName: Yaw
-      labelOffset: -1
-      displayOrigin: 3
-      displayRange: 1
-      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+      adjustToRange: 0
+      displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.74509805}
     - name: AeroRoll
       displayName: Roll
       labelOffset: -2
       displayOrigin: 3
       displayRange: 1
-      displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.69803923}
+      adjustToRange: 0
+      displayColor: {r: 0.023529414, g: 0.7058824, b: 0.7843138, a: 0.8}
+    - name: AeroSteer
+      displayName: Steer
+      labelOffset: 0
+      displayOrigin: 3
+      displayRange: 1
+      adjustToRange: 0
+      displayColor: {r: 1, g: 0, b: 0.5697689, a: 0.74509805}
+    - name: AeroYaw
+      displayName: Yaw
+      labelOffset: -1
+      displayOrigin: 3
+      displayRange: 1
+      adjustToRange: 0
+      displayColor: {r: 0.29803923, g: 0.6862745, b: 0.3137255, a: 0.8509804}
     - name: AirDensity
       displayName: Air Density
       labelOffset: 0
       displayOrigin: 1
       displayRange: 1
-      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.69803923}
+      adjustToRange: 1
+      displayColor: {r: 1, g: 1, b: 1, a: 0.7490196}
