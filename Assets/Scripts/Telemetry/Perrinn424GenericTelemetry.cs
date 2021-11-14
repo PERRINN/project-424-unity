@@ -48,7 +48,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		// Steering angle
 
 		Steering.Settings steering = vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
-		Telemetry.SemanticInfo steeringWheelAngleSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.SteerAngle];
+		Telemetry.SemanticInfo steeringWheelAngleSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.SteeringWheelAngle];
 		steeringWheelAngleSemantic.SetRange(-steering.steeringWheelRange * 0.5f, steering.steeringWheelRange * 0.5f);
 		}
 
@@ -111,10 +111,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			m_controller = vehicle.GetComponent<Perrinn424CarController>();
 
 			// Fill-in channel information
-			// TODO: Use semantic SteeringWheelAngle instead of SteerAngle when available.
 
 			channelInfo[0].SetNameAndSemantic("Gear", Telemetry.Semantic.Gear);
-			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteerAngle);
+			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteeringWheelAngle);
 			channelInfo[2].SetNameAndSemantic("Throttle", Telemetry.Semantic.Ratio);
 			channelInfo[3].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.BrakePressure);
 			}

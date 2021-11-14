@@ -264,7 +264,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			aeroAngleSemantic.SetRangeAndFormat(-5.0f, 5.0f, "0.00", "°", quantization:1, alternateFormat:"0");
 
 			Telemetry.SemanticInfo airDensitySemantic = new Telemetry.SemanticInfo();
-			airDensitySemantic.SetRangeAndFormat(1.1f, 1.2f, "0.0000", " kg/m³", quantization:0.05f, alternateFormat:"0.0");
+			airDensitySemantic.SetRangeAndFormat(1.15f, 1.19f, "0.0000", " kg/m³", quantization:0.05f, alternateFormat:"0.0");
 
 			// TODO: Use built-in SteerAngle semantic when available.
 			// Current SteerAngle semantic is related to the steering wheel angle and has been
