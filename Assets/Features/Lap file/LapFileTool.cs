@@ -19,6 +19,9 @@ namespace Perrinn424.LapFileSystem
         public RowHeader header;
 
         public float updateTime;
+
+        public string[] channels;
+        public int [] channelsIndex;
         void Start()
         {
             dataset = new Dataset(8, 3);
@@ -35,15 +38,29 @@ namespace Perrinn424.LapFileSystem
             updateTime = 1f / frequency;
 
             var headerCount = RowHeader.ParamCount;
-            var channelsCount = vehicle.telemetry.channels.Count;
+            var channelsCount = channels.Length;
             int width = headerCount + channelsCount;
             row = new float[width];
-
             List<string> headers = RowHeader.Headers.Split(',').ToList();
-            foreach (Telemetry.ChannelInfo ci in vehicle.telemetry.channels)
+
+            channelsIndex = Enumerable.Repeat(-1, channels.Length).ToArray();
+            IList<Telemetry.ChannelInfo> channelList = vehicle.telemetry.channels;
+            
+
+            for (int totalChannelIndex = 0; totalChannelIndex < channelList.Count; totalChannelIndex++)
             {
-                headers.Add(ci.fullName.ToUpper());
+                Telemetry.ChannelInfo info = channelList[totalChannelIndex];
+                for (int fileChannelIndex = 0; fileChannelIndex < channels.Length; fileChannelIndex++)
+                {
+                    if (info.fullName == channels[fileChannelIndex])
+                    {
+                        channelsIndex[fileChannelIndex] = totalChannelIndex;
+                    }
+                }
             }
+
+            headers.AddRange(channels.Select(c => c.ToUpper()));
+
 
             int expectedLapTime = 6 * 60; // 6 minutes (normally is about 5)
             int cacheCount = expectedLapTime * frequency;
@@ -101,9 +118,10 @@ namespace Perrinn424.LapFileSystem
             row[7] = header.markerTime;
             row[8] = Convert.ToSingle(header.markerFlag);
 
-            for (int i = 0, c = dataRow.values.Length; i < c; i++)
+            for (int i = 0;  i < channelsIndex.Length; i++)
             {
-                row[i + RowHeader.ParamCount] = dataRow.values[i];
+                int valueIndex = channelsIndex[i];
+                row[i + RowHeader.ParamCount] = dataRow.values[valueIndex];
             }
 
             telemetryLap.Write(row);
