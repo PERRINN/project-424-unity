@@ -1,7 +1,9 @@
 ﻿using Perrinn424.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace Perrinn424.LapFileSystem
 {
@@ -9,6 +11,8 @@ namespace Perrinn424.LapFileSystem
     {
         private CSVFileWriter fileWriter;
         public string Filename { get; private set; }
+        public string FullRelativePath { get; private set; }
+        public string FullPath { get; private set; }
         public bool HeadersWritten { get; private set; }
         public int ColumnCount { get; private set; }
         public int LineCount { get; private set; }
@@ -18,10 +22,22 @@ namespace Perrinn424.LapFileSystem
         public LapFileWriter(float lapTime)
         {
             TimeFormatter formater = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
+            string lapTimeStr = formater.ToString(lapTime);
             invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
-            string date = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
-            Filename = $"{formater.ToString(lapTime)} {date}.csv";
-            fileWriter = new CSVFileWriter(Filename);
+            string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
+            Filename = $"{lapTimeStr} {dateStr}.csv";
+
+            string root = "Telemetry";
+            if (!Directory.Exists(root))
+            {
+                Directory.CreateDirectory(root);
+            }
+
+            FullRelativePath = Path.Combine(root, Filename);
+            FullPath = Path.Combine(Application.dataPath, FullRelativePath);
+
+
+            fileWriter = new CSVFileWriter(FullRelativePath);
         }
 
         public void Dispose()

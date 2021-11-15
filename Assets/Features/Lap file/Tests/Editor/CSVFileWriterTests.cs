@@ -19,16 +19,16 @@ namespace Perrinn424.LapFileSystem
         public void TearDown()
         {
             lapFile.Dispose();
-            if (File.Exists(lapFile.Filename))
+            if (File.Exists(lapFile.FullRelativePath))
             {
-                File.Delete(lapFile.Filename);
+                File.Delete(lapFile.FullRelativePath);
             }
         }
 
         [Test]
         public void CreateFileTest()
         {
-            Assert.That(File.Exists(lapFile.Filename), Is.True);
+            Assert.That(File.Exists(lapFile.FullRelativePath), Is.True);
         }
 
         [Test]

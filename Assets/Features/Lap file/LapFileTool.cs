@@ -132,7 +132,7 @@ namespace Perrinn424.LapFileSystem
                     file.WriteRowSafe(row);
                 }
 
-                Debug.Log($"File Saved {file.Filename}");
+                Debug.Log($"File Saved {file.FullRelativePath}");
             }
         }
     }
