@@ -12,7 +12,7 @@ namespace Perrinn424.LapFileSystem
         [SetUp]
         public void SetUp()
         {
-            lapFile = new LapFileWriter("NaN");
+            lapFile = new LapFileWriter(5*60f);
         }
 
         [TearDown]

@@ -29,7 +29,7 @@ namespace Perrinn424.LapFileSystem
 
         public override void OnEnableVehicle()
         {
-
+            lapTimer.onBeginLap += LapBeginEventHandler;
             lapTimer.onLap += LapCompletedEventHandler;
 
             updateTime = 1f / frequency;
@@ -50,16 +50,24 @@ namespace Perrinn424.LapFileSystem
             telemetryLap = new TelemetryLap(headers, cacheCount);
         }
 
+        private void LapBeginEventHandler()
+        {
+            Debug.Log("Lap Begin");
+            telemetryLap.Reset();
+        }
+
         //lapTime, !m_invalidLap, m_sectors, m_validSectors);
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
+            Debug.Log("Lap completed");
             SaveFile(lapTime);
-            telemetryLap.Reset();
         }
 
         public override void OnDisableVehicle()
         {
+            lapTimer.onBeginLap -= LapBeginEventHandler;
             lapTimer.onLap -= LapCompletedEventHandler;
+
         }
 
         private void FixedUpdate()
@@ -109,8 +117,7 @@ namespace Perrinn424.LapFileSystem
         private void SaveFile(float lapTime)
         {
 
-            TimeFormatter timeFormater = TimeFormatter.CreateDefault();
-            using (LapFileWriter file = new LapFileWriter(timeFormater.ToString(lapTime)))
+            using (LapFileWriter file = new LapFileWriter(lapTime))
             {
                 file.WriteHeaders(telemetryLap.Headers);
 

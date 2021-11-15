@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Perrinn424.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,11 +15,12 @@ namespace Perrinn424.LapFileSystem
         private string separator = ",";
         private IFormatProvider invariantCulture;
 
-        public LapFileWriter(string lapTime)
+        public LapFileWriter(float lapTime)
         {
+            TimeFormatter formater = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
             invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
             string date = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
-            Filename = $"{lapTime} {date}.csv";
+            Filename = $"{formater.ToString(lapTime)} {date}.csv";
             fileWriter = new CSVFileWriter(Filename);
         }
 
