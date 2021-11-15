@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Perrinn424.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -52,7 +53,7 @@ namespace Perrinn424.LapFileSystem
         //lapTime, !m_invalidLap, m_sectors, m_validSectors);
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
-            SaveFile();
+            SaveFile(lapTime);
             telemetryLap.Reset();
         }
 
@@ -105,9 +106,11 @@ namespace Perrinn424.LapFileSystem
         //    SaveFile();
         //}
 
-        private void SaveFile()
+        private void SaveFile(float lapTime)
         {
-            using (LapFileWriter file = new LapFileWriter())
+
+            TimeFormatter timeFormater = TimeFormatter.CreateDefault();
+            using (LapFileWriter file = new LapFileWriter(timeFormater.ToString(lapTime)))
             {
                 file.WriteHeaders(telemetryLap.Headers);
 

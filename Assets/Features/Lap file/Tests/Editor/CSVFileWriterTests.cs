@@ -12,7 +12,7 @@ namespace Perrinn424.LapFileSystem
         [SetUp]
         public void SetUp()
         {
-            lapFile = new LapFileWriter();
+            lapFile = new LapFileWriter("NaN");
         }
 
         [TearDown]
@@ -21,7 +21,7 @@ namespace Perrinn424.LapFileSystem
             lapFile.Dispose();
             if (File.Exists(lapFile.Filename))
             {
-                //File.Delete(lapFile.Filename);
+                File.Delete(lapFile.Filename);
             }
         }
 

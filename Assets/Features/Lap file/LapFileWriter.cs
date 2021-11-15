@@ -14,12 +14,11 @@ namespace Perrinn424.LapFileSystem
         private string separator = ",";
         private IFormatProvider invariantCulture;
 
-        public LapFileWriter()
+        public LapFileWriter(string lapTime)
         {
             invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
             string date = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
-            string laptime = $"5.15.956";
-            Filename = $"{laptime} {date}.csv";
+            Filename = $"{lapTime} {date}.csv";
             fileWriter = new CSVFileWriter(Filename);
         }
 
@@ -72,16 +71,16 @@ namespace Perrinn424.LapFileSystem
             return h.Contains(separator);
         }
 
-        public static void Save(IEnumerable<string> headers, IEnumerable<IEnumerable<float>> values)
-        {
-            using (LapFileWriter lapFileWriter = new LapFileWriter())
-            {
-                lapFileWriter.WriteHeaders(headers);
-                foreach (var row in values)
-                {
-                    lapFileWriter.WriteRow(row);
-                }
-            }
-        }
+        //public static void Save(IEnumerable<string> headers, IEnumerable<IEnumerable<float>> values)
+        //{
+        //    using (LapFileWriter lapFileWriter = new LapFileWriter())
+        //    {
+        //        lapFileWriter.WriteHeaders(headers);
+        //        foreach (var row in values)
+        //        {
+        //            lapFileWriter.WriteRow(row);
+        //        }
+        //    }
+        //}
     } 
 }
