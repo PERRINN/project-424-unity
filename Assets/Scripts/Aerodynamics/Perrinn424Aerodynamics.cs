@@ -42,6 +42,15 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[Space(5)]
 	public bool emitTelemetry = false;
 
+	[Header("Visual elements")]
+	public Transform drsFlap;
+	public float drsClosedAngle = 0.0f;
+	public float drsOpenAngle = -90.0f;
+
+	[Space(5)]
+	public Transform frontFlap;
+	public float frontFlapRestAngle = 0.0f;
+
 	// Exposed state
 
 	[HideInInspector] public float flapAngle   = 1.0f;
@@ -202,13 +211,29 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	}
 
 
+	public override void UpdateVehicle()
+	{
+		if (drsFlap != null)
+		{
+	        float drsAngle = Mathf.Lerp(drsClosedAngle, drsOpenAngle, DRS);
+	        drsFlap.localRotation = Quaternion.Euler(drsAngle, 0.0f, 0.0f);
+		}
+
+		if (frontFlap != null)
+		{
+        	float flapNorm  = (flapAngle - frontFlapStaticAngle) / ((frontFlapStaticAngle + frontFlapFlexDeltaAngle) - frontFlapStaticAngle);
+        	float visualFlapAngle = Mathf.Lerp(frontFlapStaticAngle, frontFlapStaticAngle + frontFlapFlexDeltaAngle, flapNorm);
+        	frontFlap.localRotation = Quaternion.Euler(visualFlapAngle + frontFlapRestAngle, 0.0f, 0.0f);
+		}
+	}
+
+
     private float CalculateDynamicPressure()
     {
         Rigidbody rb = vehicle.cachedRigidbody;
         float vSquared = rb.velocity.sqrMagnitude;
         float y = rb.worldCenterOfMass.y;
         float altitude = altitudeConverter.ToAltitude(y);
-        // altitude = 1.0f; // backwards compatibility with saved replay
         atmosphere.UpdateAtmosphere(altitude, deltaISA);
         float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
         return dynamicPressure;
