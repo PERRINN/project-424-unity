@@ -234,7 +234,6 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
         float vSquared = rb.velocity.sqrMagnitude;
         float y = rb.worldCenterOfMass.y;
         float altitude = altitudeConverter.ToAltitude(y);
-        // altitude = 1.0f; // backwards compatibility with saved replay
         atmosphere.UpdateAtmosphere(altitude, deltaISA);
         float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
         return dynamicPressure;
