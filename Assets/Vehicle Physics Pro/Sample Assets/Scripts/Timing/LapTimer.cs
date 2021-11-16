@@ -45,7 +45,11 @@ public class LapTimer : MonoBehaviour
 
 	// Current lap time for visual purposes
 
-	public float currentLapTime { get { return Time.time - m_trackStartTime; } }
+	public float currentLapTime => Time.time - m_trackStartTime;
+
+	// Current sector
+
+	public float currentSector => m_currentSector;
 
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
