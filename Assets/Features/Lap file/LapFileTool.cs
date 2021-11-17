@@ -9,19 +9,20 @@ namespace Perrinn424.LapFileSystem
 {
     public class LapFileTool : VehicleBehaviour
     {
-        public LapTimer lapTimer;
+        [SerializeField]
+        private LapTimer lapTimer;
 
         public int frequency;
-        public TelemetryLap telemetryLap;
-        public float[] row;
-        public RowHeader header;
+        private float updateTime;
 
-        public float updateTime;
+        private TelemetryLap telemetryLap;
+        private RowHeader rowHeader;
+        private float[] rowCache;
 
-        public string[] channels;
-        public int [] channelsIndex;
+        private string[] channels;
+        private int [] channelsIndex;
 
-        public LapFileMetadata metadata;
+        private LapFileMetadata metadata;
 
         public override void OnEnableVehicle()
         {
@@ -33,7 +34,7 @@ namespace Perrinn424.LapFileSystem
             var headerCount = RowHeader.ParamCount;
             var channelsCount = channels.Length;
             int width = headerCount + channelsCount;
-            row = new float[width];
+            rowCache = new float[width];
             List<string> headers = RowHeader.Headers.Split(',').ToList();
 
             channelsIndex = Enumerable.Repeat(-1, channels.Length).ToArray();
@@ -54,7 +55,6 @@ namespace Perrinn424.LapFileSystem
 
             headers.AddRange(channels.Select(c => c.ToUpper()));
 
-
             int expectedLapTime = 6 * 60; // 6 minutes (normally is about 5)
             int cacheCount = expectedLapTime * frequency;
             telemetryLap = new TelemetryLap(headers, cacheCount);
@@ -66,7 +66,6 @@ namespace Perrinn424.LapFileSystem
             telemetryLap.Reset();
         }
 
-        //lapTime, !m_invalidLap, m_sectors, m_validSectors);
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
             Debug.Log("Lap completed");
@@ -100,42 +99,50 @@ namespace Perrinn424.LapFileSystem
 
             updateTime = 1f / frequency;
 
-
-            Telemetry.DataRow dataRow = vehicle.telemetry.latest;
-            header.frame = dataRow.frame;
-            header.time = dataRow.time;
-            header.distance = dataRow.distance;
-            header.totalTime = dataRow.totalTime;
-            header.totalDistance = dataRow.totalDistance;
-            header.segmentNum = dataRow.segmentNum;
-            header.markers = dataRow.markers;
-            header.markerTime = dataRow.markerTime;
-            header.markerFlag = dataRow.markerFlag;
-
-            row[0] = header.frame;
-            row[1] = (float)header.time;
-            row[2] = (float)header.distance;
-            row[3] = (float)header.totalTime;
-            row[4] = (float)header.totalDistance;
-            row[5] = header.segmentNum;
-            row[6] = lapTimer.currentSector;
-            row[7] = header.markers;
-            row[8] = header.markerTime;
-            row[9] = Convert.ToSingle(header.markerFlag);
-
-            for (int i = 0;  i < channelsIndex.Length; i++)
-            {
-                int valueIndex = channelsIndex[i];
-                row[i + RowHeader.ParamCount] = dataRow.values[valueIndex];
-            }
-
-            telemetryLap.Write(row);
+            WriteLine();
         }
 
-        //private void OnApplicationQuit()
-        //{
-        //    SaveFile();
-        //}
+        private void WriteLine()
+        {
+            Telemetry.DataRow dataRow = vehicle.telemetry.latest;
+            WriteHeaders(dataRow);
+            WriteChannels(dataRow);
+            
+            telemetryLap.Write(rowCache);
+        }
+
+        private void WriteHeaders(Telemetry.DataRow dataRow)
+        {
+            rowHeader.frame = dataRow.frame;
+            rowHeader.time = dataRow.time;
+            rowHeader.distance = dataRow.distance;
+            rowHeader.totalTime = dataRow.totalTime;
+            rowHeader.totalDistance = dataRow.totalDistance;
+            rowHeader.segmentNum = dataRow.segmentNum;
+            rowHeader.markers = dataRow.markers;
+            rowHeader.markerTime = dataRow.markerTime;
+            rowHeader.markerFlag = dataRow.markerFlag;
+
+            rowCache[0] = rowHeader.frame;
+            rowCache[1] = (float)rowHeader.time;
+            rowCache[2] = (float)rowHeader.distance;
+            rowCache[3] = (float)rowHeader.totalTime;
+            rowCache[4] = (float)rowHeader.totalDistance;
+            rowCache[5] = rowHeader.segmentNum;
+            rowCache[6] = lapTimer.currentSector;
+            rowCache[7] = rowHeader.markers;
+            rowCache[8] = rowHeader.markerTime;
+            rowCache[9] = Convert.ToSingle(rowHeader.markerFlag);
+        }
+
+        private void WriteChannels(Telemetry.DataRow dataRow)
+        {
+            for (int i = 0; i < channelsIndex.Length; i++)
+            {
+                int valueIndex = channelsIndex[i];
+                rowCache[i + RowHeader.ParamCount] = dataRow.values[valueIndex];
+            }
+        }
 
         private void SaveFile(LapFileMetadata meta)
         {
@@ -149,10 +156,10 @@ namespace Perrinn424.LapFileSystem
                 {
                     for (int columnIndex = 0; columnIndex < telemetryLap.data.width; columnIndex++)
                     {
-                        row[columnIndex] = telemetryLap.data[rowIndex, columnIndex];
+                        rowCache[columnIndex] = telemetryLap.data[rowIndex, columnIndex];
                     }
 
-                    file.WriteRowSafe(row);
+                    file.WriteRowSafe(rowCache);
                 }
 
                 Debug.Log($"File Saved {file.FullRelativePath}");
