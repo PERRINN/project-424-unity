@@ -1,34 +1,31 @@
 ﻿using NUnit.Framework;
-using System;
 using System.IO;
-using UnityEngine.TestTools;
 
 namespace Perrinn424.LapFileSystem
 {
-    public class CSVFileWriterTests
+    public class LapFileWriterTests
     {
         private LapFileWriter lapFile;
 
         [SetUp]
         public void SetUp()
         {
-            lapFile = new LapFileWriter(5*60f);
+            LapFileMetadata metadata = new LapFileMetadata();
+            lapFile = new LapFileWriter(metadata);
         }
 
         [TearDown]
         public void TearDown()
         {
             lapFile.Dispose();
-            if (File.Exists(lapFile.FullRelativePath))
-            {
-                File.Delete(lapFile.FullRelativePath);
-            }
+            lapFile.Delete();
         }
 
         [Test]
         public void CreateFileTest()
         {
             Assert.That(File.Exists(lapFile.FullRelativePath), Is.True);
+            Assert.That(File.Exists(lapFile.MetadataFullRelativePath), Is.True);
         }
 
         [Test]

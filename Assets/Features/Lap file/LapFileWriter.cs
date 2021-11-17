@@ -16,13 +16,16 @@ namespace Perrinn424.LapFileSystem
         public bool HeadersWritten { get; private set; }
         public int ColumnCount { get; private set; }
         public int LineCount { get; private set; }
+
         private string separator = ",";
         private IFormatProvider invariantCulture;
 
-        public LapFileWriter(float lapTime)
+        public string MetadataFullRelativePath { get; private set; }
+
+        public LapFileWriter(LapFileMetadata meta)
         {
             TimeFormatter formater = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
-            string lapTimeStr = formater.ToString(lapTime);
+            string lapTimeStr = formater.ToString(meta.lapTime);
             invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
             string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
             Filename = $"{lapTimeStr} {dateStr}.csv";
@@ -38,6 +41,24 @@ namespace Perrinn424.LapFileSystem
 
 
             fileWriter = new CSVFileWriter(FullRelativePath);
+
+            meta.csvFile = FullRelativePath;
+            string json = JsonUtility.ToJson(meta, true);
+            MetadataFullRelativePath = $"{FullRelativePath}.metadata";
+            File.WriteAllText(MetadataFullRelativePath, json);
+        }
+
+        public void Delete()
+        {
+            if (File.Exists(FullRelativePath))
+            {
+                File.Delete(FullRelativePath);
+            }
+
+            if (File.Exists(MetadataFullRelativePath))
+            {
+                File.Delete(MetadataFullRelativePath);
+            }
         }
 
         public void Dispose()

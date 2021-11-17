@@ -1,5 +1,4 @@
-﻿using Perrinn424.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,7 +12,6 @@ namespace Perrinn424.LapFileSystem
         public LapTimer lapTimer;
 
         public int frequency;
-        public Dataset dataset;
         public TelemetryLap telemetryLap;
         public float[] row;
         public RowHeader header;
@@ -22,13 +20,8 @@ namespace Perrinn424.LapFileSystem
 
         public string[] channels;
         public int [] channelsIndex;
-        void Start()
-        {
-            dataset = new Dataset(8, 3);
-            dataset.Write(new[] { 1f, 2f, 3f });
-            dataset.Write(new[] { 4f, 5f, 6f });
-            dataset.Write(new[] { 7f, 8f, 9f });
-        }
+
+        public LapFileMetadata metadata;
 
         public override void OnEnableVehicle()
         {
@@ -77,7 +70,18 @@ namespace Perrinn424.LapFileSystem
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
             Debug.Log("Lap completed");
-            SaveFile(lapTime);
+
+            metadata = new LapFileMetadata()
+            {
+                frequency = frequency,
+                lapIndex = vehicle.telemetry.latest.segmentNum,
+                lapTime = lapTime,
+                sectorsTime = sectors,
+                headers = telemetryLap.Headers.ToArray(),
+                count = telemetryLap.data.rowCount
+            };
+
+            SaveFile(metadata);
         }
 
         public override void OnDisableVehicle()
@@ -114,9 +118,10 @@ namespace Perrinn424.LapFileSystem
             row[3] = (float)header.totalTime;
             row[4] = (float)header.totalDistance;
             row[5] = header.segmentNum;
-            row[6] = header.markers;
-            row[7] = header.markerTime;
-            row[8] = Convert.ToSingle(header.markerFlag);
+            row[6] = lapTimer.currentSector;
+            row[7] = header.markers;
+            row[8] = header.markerTime;
+            row[9] = Convert.ToSingle(header.markerFlag);
 
             for (int i = 0;  i < channelsIndex.Length; i++)
             {
@@ -132,10 +137,10 @@ namespace Perrinn424.LapFileSystem
         //    SaveFile();
         //}
 
-        private void SaveFile(float lapTime)
+        private void SaveFile(LapFileMetadata meta)
         {
 
-            using (LapFileWriter file = new LapFileWriter(lapTime))
+            using (LapFileWriter file = new LapFileWriter(meta))
             {
                 file.WriteHeaders(telemetryLap.Headers);
 
