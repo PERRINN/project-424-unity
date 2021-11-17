@@ -9051,13 +9051,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lapTimer: {fileID: 114863622256485037}
   frequency: 50
-  dataset:
-    rows: 0
-    width: 0
-    rowCount: 0
-    data: []
-  row: []
-  updateTime: 0
+  channels:
+  - PositionX
+  - PositionZ
+  - PositionY
+  - Speed
+  - SteeringAngle
 --- !u!4 &1391364165
 Transform:
   m_ObjectHideFlags: 0
