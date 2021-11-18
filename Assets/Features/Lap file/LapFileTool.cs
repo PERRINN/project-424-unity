@@ -12,13 +12,14 @@ namespace Perrinn424.LapFileSystem
         [SerializeField]
         private LapTimer lapTimer;
 
-        public int frequency;
-        private float updateTime;
+        [SerializeField]
+        private Frequency frequency;
 
         private TelemetryLap telemetryLap;
         private RowHeader rowHeader;
         private float[] rowCache;
 
+        [SerializeField]
         private string[] channels;
         private int [] channelsIndex;
 
@@ -29,7 +30,7 @@ namespace Perrinn424.LapFileSystem
             lapTimer.onBeginLap += LapBeginEventHandler;
             lapTimer.onLap += LapCompletedEventHandler;
 
-            updateTime = 1f / frequency;
+            frequency.Reset();
 
             var headerCount = RowHeader.ParamCount;
             var channelsCount = channels.Length;
@@ -92,14 +93,10 @@ namespace Perrinn424.LapFileSystem
 
         private void FixedUpdate()
         {
-            updateTime -= Time.deltaTime;
-
-            if (updateTime > 0f)
-                return;
-
-            updateTime = 1f / frequency;
-
-            WriteLine();
+            if (frequency.Update(Time.deltaTime))
+            {
+                WriteLine();
+            }
         }
 
         private void WriteLine()
@@ -165,5 +162,10 @@ namespace Perrinn424.LapFileSystem
                 Debug.Log($"File Saved {file.FullRelativePath}");
             }
         }
+
+        //private void OnApplicationQuit()
+        //{
+        //    SaveFile(new LapFileMetadata());
+        //}
     }
 }
