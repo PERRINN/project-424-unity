@@ -10,6 +10,9 @@ namespace Perrinn424.LapFileSystem
     public class LapFileTool : VehicleBehaviour
     {
         [SerializeField]
+        private bool log;
+
+        [SerializeField]
         private LapTimer lapTimer;
 
         [SerializeField]
@@ -29,18 +32,19 @@ namespace Perrinn424.LapFileSystem
         {
             lapTimer.onBeginLap += LapBeginEventHandler;
             lapTimer.onLap += LapCompletedEventHandler;
-
             frequency.Reset();
 
-            var headerCount = RowHeader.ParamCount;
-            var channelsCount = channels.Length;
-            int width = headerCount + channelsCount;
-            rowCache = new float[width];
-            List<string> headers = RowHeader.Headers.Split(',').ToList();
+            GetChannelsIndex();
 
+            List<string> headers = GetHeaders();
+
+            file = new LapFileWriter(headers);
+        }
+
+        private void GetChannelsIndex()
+        {
             channelsIndex = Enumerable.Repeat(-1, channels.Length).ToArray();
             IList<Telemetry.ChannelInfo> channelList = vehicle.telemetry.channels;
-            
 
             for (int totalChannelIndex = 0; totalChannelIndex < channelList.Count; totalChannelIndex++)
             {
@@ -53,22 +57,28 @@ namespace Perrinn424.LapFileSystem
                     }
                 }
             }
-
-            headers.AddRange(channels.Select(c => c.ToUpper()));
-
-            file = new LapFileWriter(headers);
         }
+
+        private List<string> GetHeaders()
+        {
+            var rowHeaderCount = RowHeader.ParamCount;
+            var channelsCount = channels.Length;
+            int width = rowHeaderCount + channelsCount;
+            rowCache = new float[width];
+            List<string> headers = RowHeader.Headers.Split(',').ToList();
+            headers.AddRange(channels.Select(c => c.ToUpper()));
+            return headers;
+        }
+
 
         private void LapBeginEventHandler()
         {
-            Debug.Log("Lap Begin");
             file.StartRecording();
+            Log($"Recording at {file.TempFullRelativePath}");
         }
 
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
-            Debug.Log("Lap completed");
-
             metadata = new LapFileMetadata()
             {
                 frequency = frequency,
@@ -139,7 +149,15 @@ namespace Perrinn424.LapFileSystem
         private void SaveFile(LapFileMetadata meta)
         {
             file.StopRecordingAndSaveFile(meta);
-            Debug.Log($"File Saved {file.FullRelativePath}");
+            Log($"File Saved at {file.FullRelativePath}");
+        }
+
+        private void Log(string str)
+        {
+            if (!log)
+                return;
+
+            Debug.Log(str);
         }
 
         //private void OnApplicationQuit()
