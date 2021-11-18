@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Perrinn424.LapFileSystem
+namespace Perrinn424.TelemetryLapSystem
 {
     [Serializable]
     public class Frequency

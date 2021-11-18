@@ -1,7 +1,7 @@
-﻿namespace Perrinn424.LapFileSystem
+﻿namespace Perrinn424.TelemetryLapSystem
 {
     [System.Serializable]
-    public class LapFileMetadata
+    public class TelemetryLapMetadata
     {
         public int frequency;
         public int lapIndex;

@@ -1,16 +1,16 @@
 ﻿using NUnit.Framework;
 using System.IO;
 
-namespace Perrinn424.LapFileSystem
+namespace Perrinn424.TelemetryLapSystem.Editor.Tests
 {
-    public class LapFileWriterTests
+    public class TelemetryLapFileWriterTests
     {
-        private LapFileWriter lapFile;
+        private TelemetryLapFileWriter lapFile;
 
         [SetUp]
         public void SetUp()
         {
-            lapFile = new LapFileWriter(new string[0]);
+            lapFile = new TelemetryLapFileWriter(new string[0]);
         }
 
         [TearDown]

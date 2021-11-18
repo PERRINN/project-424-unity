@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Perrinn424.LapFileSystem
+namespace Perrinn424.TelemetryLapSystem
 {
     [System.Serializable]
     public struct Dataset

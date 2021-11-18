@@ -1,4 +1,4 @@
-﻿namespace Perrinn424.LapFileSystem
+﻿namespace Perrinn424.TelemetryLapSystem
 {
     public struct RowHeader
     {

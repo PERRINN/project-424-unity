@@ -5,9 +5,9 @@ using UnityEngine;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
 
-namespace Perrinn424.LapFileSystem
+namespace Perrinn424.TelemetryLapSystem
 {
-    public class LapFileTool : VehicleBehaviour
+    public class TelemetryLapWriter : VehicleBehaviour
     {
         [SerializeField]
         private bool log;
@@ -25,8 +25,8 @@ namespace Perrinn424.LapFileSystem
         private string[] channels;
         private int [] channelsIndex;
 
-        private LapFileMetadata metadata;
-        private LapFileWriter file;
+        private TelemetryLapMetadata metadata;
+        private TelemetryLapFileWriter file;
 
         public override void OnEnableVehicle()
         {
@@ -38,7 +38,7 @@ namespace Perrinn424.LapFileSystem
 
             List<string> headers = GetHeaders();
 
-            file = new LapFileWriter(headers);
+            file = new TelemetryLapFileWriter(headers);
         }
 
         private void GetChannelsIndex()
@@ -79,7 +79,7 @@ namespace Perrinn424.LapFileSystem
 
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
-            metadata = new LapFileMetadata()
+            metadata = new TelemetryLapMetadata()
             {
                 frequency = frequency,
                 lapIndex = vehicle.telemetry.latest.segmentNum,
@@ -146,7 +146,7 @@ namespace Perrinn424.LapFileSystem
             }
         }
 
-        private void SaveFile(LapFileMetadata meta)
+        private void SaveFile(TelemetryLapMetadata meta)
         {
             file.StopRecordingAndSaveFile(meta);
             Log($"File Saved at {file.FullRelativePath}");

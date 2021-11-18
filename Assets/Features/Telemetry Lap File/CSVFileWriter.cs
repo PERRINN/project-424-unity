@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Perrinn424.LapFileSystem
+namespace Perrinn424.TelemetryLapSystem
 {
     public class CSVFileWriter : StreamWriter
     {

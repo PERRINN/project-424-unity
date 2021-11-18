@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Perrinn424.LapFileSystem
+namespace Perrinn424.TelemetryLapSystem
 {
-    public class LapFileWriter
+    public class TelemetryLapFileWriter
     {
         private CSVFileWriter fileWriter;
         public string Filename { get; private set; }
@@ -30,7 +30,7 @@ namespace Perrinn424.LapFileSystem
         public IReadOnlyList<string> Headers { get; private set; }
         public bool IsRecordingReady { get; private set; }
 
-        public LapFileWriter(IReadOnlyList<string> headers)
+        public TelemetryLapFileWriter(IReadOnlyList<string> headers)
         {
             this.Headers = headers;
             invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
@@ -56,7 +56,7 @@ namespace Perrinn424.LapFileSystem
             IsRecordingReady = true;
         }
 
-        public void StopRecordingAndSaveFile(LapFileMetadata meta)
+        public void StopRecordingAndSaveFile(TelemetryLapMetadata meta)
         {
             SetFileNames(meta);
             DisposeFileAndRename();
@@ -65,7 +65,7 @@ namespace Perrinn424.LapFileSystem
             IsRecordingReady = false;
         }
 
-        private void SetFileNames(LapFileMetadata meta)
+        private void SetFileNames(TelemetryLapMetadata meta)
         {
             string lapTimeStr = timeFormatter.ToString(meta.lapTime);
             string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
@@ -80,7 +80,7 @@ namespace Perrinn424.LapFileSystem
             File.Move(TempFullRelativePath, FullRelativePath); // Rename the oldFileName into newFileName
         }
 
-        private void Writemetadata(LapFileMetadata meta)
+        private void Writemetadata(TelemetryLapMetadata meta)
         {
             meta.csvFile = Filename;
             meta.headers = Headers.ToArray();
