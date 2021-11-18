@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace Perrinn424.LapFileSystem
@@ -17,10 +18,14 @@ namespace Perrinn424.LapFileSystem
         public int ColumnCount { get; private set; }
         public int LineCount { get; private set; }
 
+        public string TempFullRelativePath { get; private set; }
+
         private string separator = ",";
         private IFormatProvider invariantCulture;
 
         public string MetadataFullRelativePath { get; private set; }
+
+        StringBuilder builder = new StringBuilder();
 
         public LapFileWriter(LapFileMetadata meta)
         {
@@ -47,6 +52,60 @@ namespace Perrinn424.LapFileSystem
             MetadataFullRelativePath = $"{FullRelativePath}.metadata";
             File.WriteAllText(MetadataFullRelativePath, json);
         }
+
+        private IReadOnlyList<string> headers;
+        public LapFileWriter(IReadOnlyList<string> headers)
+        {
+            this.headers = headers;
+
+        }
+
+        public bool IsRecordingReady { get; private set; }
+        public void StartRecording()
+        {
+            string root = "Telemetry";
+            if (!Directory.Exists(root))
+            {
+                Directory.CreateDirectory(root);
+            }
+
+            TempFullRelativePath = Path.Combine(root, "temp.csv");
+
+            FileStream fs = new FileStream(TempFullRelativePath, FileMode.Create, FileAccess.Write);
+            fileWriter = new CSVFileWriter(fs);
+            HeadersWritten = false;
+            WriteHeaders(headers);
+            IsRecordingReady = true;
+        }
+
+        public void StopRecordingAndSaveFile(LapFileMetadata meta)
+        {
+            TimeFormatter formater = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
+            string lapTimeStr = formater.ToString(meta.lapTime);
+            invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
+            string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
+            Filename = $"{lapTimeStr} {dateStr}.csv";
+
+            string root = "Telemetry";
+            if (!Directory.Exists(root))
+            {
+                Directory.CreateDirectory(root);
+            }
+
+            FullRelativePath = Path.Combine(root, Filename);
+            FullPath = Path.Combine(Application.dataPath, FullRelativePath);
+
+            fileWriter.Dispose();
+            File.Move(TempFullRelativePath, FullRelativePath); // Rename the oldFileName into newFileName
+
+            meta.csvFile = FullRelativePath;
+            string json = JsonUtility.ToJson(meta, true);
+            MetadataFullRelativePath = $"{FullRelativePath}.metadata";
+            File.WriteAllText(MetadataFullRelativePath, json);
+
+            IsRecordingReady = false;
+        }
+
 
         public void Delete()
         {
@@ -85,7 +144,18 @@ namespace Perrinn424.LapFileSystem
 
         public void WriteRow(IEnumerable<float> row)
         {
-            string line = String.Join(separator, row.Select(v => v.ToString("F5", invariantCulture)));
+            builder.Length = 0;
+
+            foreach (float v in row)
+            {
+                builder.AppendFormat(invariantCulture,"{0:F2},", v);
+            }
+
+            builder.Length = builder.Length - 1;
+
+            string line = builder.ToString();
+            //string line = string.Format(invariantCulture, "{0:F5},{1:F5}", row);
+            //string line = String.Join(separator, row.Select(v => v.ToString("F5", invariantCulture)));
             fileWriter.WriteLine(line);
             LineCount++;
         }

@@ -16,12 +16,10 @@ namespace Perrinn424.LapFileSystem
 
             if (remainingTime <= 0f)
             {
-                Debug.Log("YES");
                 remainingTime = 1f / frequency;
                 return true;
             }
 
-            Debug.Log("NO");
             return false;
         }
 
