@@ -10,14 +10,12 @@ namespace Perrinn424.LapFileSystem
         [SetUp]
         public void SetUp()
         {
-            LapFileMetadata metadata = new LapFileMetadata();
-            lapFile = new LapFileWriter(metadata);
+            lapFile = new LapFileWriter(new string[0]);
         }
 
         [TearDown]
         public void TearDown()
         {
-            lapFile.Dispose();
             lapFile.Delete();
         }
 

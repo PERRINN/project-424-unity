@@ -8,121 +8,87 @@ using UnityEngine;
 
 namespace Perrinn424.LapFileSystem
 {
-    public class LapFileWriter : IDisposable
+    public class LapFileWriter
     {
         private CSVFileWriter fileWriter;
         public string Filename { get; private set; }
         public string FullRelativePath { get; private set; }
         public string FullPath { get; private set; }
+        public string MetadataFullRelativePath { get; private set; }
+        public string TempFullRelativePath { get; private set; }
         public bool HeadersWritten { get; private set; }
         public int ColumnCount { get; private set; }
         public int LineCount { get; private set; }
 
-        public string TempFullRelativePath { get; private set; }
-
-        private string separator = ",";
-        private IFormatProvider invariantCulture;
-
-        public string MetadataFullRelativePath { get; private set; }
-
-        StringBuilder builder = new StringBuilder();
-
-        public LapFileWriter(LapFileMetadata meta)
-        {
-            TimeFormatter formater = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
-            string lapTimeStr = formater.ToString(meta.lapTime);
-            invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
-            string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
-            Filename = $"{lapTimeStr} {dateStr}.csv";
-
-            string root = "Telemetry";
-            if (!Directory.Exists(root))
-            {
-                Directory.CreateDirectory(root);
-            }
-
-            FullRelativePath = Path.Combine(root, Filename);
-            FullPath = Path.Combine(Application.dataPath, FullRelativePath);
+        private const string root = "Telemetry";
+        private const string separator = ",";
+        private readonly IFormatProvider invariantCulture;
+        private readonly StringBuilder builder;
+        private readonly TimeFormatter timeFormatter;
 
 
-            fileWriter = new CSVFileWriter(FullRelativePath);
+        public IReadOnlyList<string> Headers { get; private set; }
+        public bool IsRecordingReady { get; private set; }
 
-            meta.csvFile = FullRelativePath;
-            string json = JsonUtility.ToJson(meta, true);
-            MetadataFullRelativePath = $"{FullRelativePath}.metadata";
-            File.WriteAllText(MetadataFullRelativePath, json);
-        }
-
-        private IReadOnlyList<string> headers;
         public LapFileWriter(IReadOnlyList<string> headers)
         {
-            this.headers = headers;
+            this.Headers = headers;
+            invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
+            builder = new StringBuilder();
+            timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
 
-        }
-
-        public bool IsRecordingReady { get; private set; }
-        public void StartRecording()
-        {
-            string root = "Telemetry";
             if (!Directory.Exists(root))
             {
                 Directory.CreateDirectory(root);
             }
+        }
 
+        public void StartRecording()
+        {
             TempFullRelativePath = Path.Combine(root, "temp.csv");
 
             FileStream fs = new FileStream(TempFullRelativePath, FileMode.Create, FileAccess.Write);
             fileWriter = new CSVFileWriter(fs);
+            
             HeadersWritten = false;
-            WriteHeaders(headers);
+            WriteHeaders(Headers);
+            
             IsRecordingReady = true;
         }
 
         public void StopRecordingAndSaveFile(LapFileMetadata meta)
         {
-            TimeFormatter formater = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
-            string lapTimeStr = formater.ToString(meta.lapTime);
-            invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
-            string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
-            Filename = $"{lapTimeStr} {dateStr}.csv";
-
-            string root = "Telemetry";
-            if (!Directory.Exists(root))
-            {
-                Directory.CreateDirectory(root);
-            }
-
-            FullRelativePath = Path.Combine(root, Filename);
-            FullPath = Path.Combine(Application.dataPath, FullRelativePath);
-
-            fileWriter.Dispose();
-            File.Move(TempFullRelativePath, FullRelativePath); // Rename the oldFileName into newFileName
-
-            meta.csvFile = FullRelativePath;
-            string json = JsonUtility.ToJson(meta, true);
-            MetadataFullRelativePath = $"{FullRelativePath}.metadata";
-            File.WriteAllText(MetadataFullRelativePath, json);
+            SetFileNames(meta);
+            DisposeFileAndRename();
+            Writemetadata(meta);
 
             IsRecordingReady = false;
         }
 
-
-        public void Delete()
+        private void SetFileNames(LapFileMetadata meta)
         {
-            if (File.Exists(FullRelativePath))
-            {
-                File.Delete(FullRelativePath);
-            }
+            string lapTimeStr = timeFormatter.ToString(meta.lapTime);
+            string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
 
-            if (File.Exists(MetadataFullRelativePath))
-            {
-                File.Delete(MetadataFullRelativePath);
-            }
+            Filename = $"{lapTimeStr} {dateStr}.csv";
+            FullRelativePath = Path.Combine(root, Filename);
+            FullPath = Path.Combine(Application.dataPath, FullRelativePath);
         }
-
-        public void Dispose()
+        private void DisposeFileAndRename()
         {
             fileWriter.Dispose();
+            File.Move(TempFullRelativePath, FullRelativePath); // Rename the oldFileName into newFileName
+        }
+
+        private void Writemetadata(LapFileMetadata meta)
+        {
+            meta.csvFile = Filename;
+            meta.headers = Headers.ToArray();
+            meta.count = LineCount;
+
+            string json = JsonUtility.ToJson(meta, true);
+            MetadataFullRelativePath = $"{FullRelativePath}.metadata";
+            File.WriteAllText(MetadataFullRelativePath, json);
         }
 
         public void WriteHeaders(IEnumerable<string> headers)
@@ -136,6 +102,7 @@ namespace Perrinn424.LapFileSystem
             {
                 throw new FormatException($"string:{separator} is not allowed in headers");
             }
+            
             ColumnCount = headers.Count();
             string line = String.Join(separator, headers);
             fileWriter.WriteLine(line);
@@ -148,14 +115,12 @@ namespace Perrinn424.LapFileSystem
 
             foreach (float v in row)
             {
-                builder.AppendFormat(invariantCulture,"{0:F2},", v);
+                builder.AppendFormat(invariantCulture,"{0:F5},", v);
             }
 
             builder.Length = builder.Length - 1;
 
             string line = builder.ToString();
-            //string line = string.Format(invariantCulture, "{0:F5},{1:F5}", row);
-            //string line = String.Join(separator, row.Select(v => v.ToString("F5", invariantCulture)));
             fileWriter.WriteLine(line);
             LineCount++;
         }
@@ -180,16 +145,22 @@ namespace Perrinn424.LapFileSystem
             return h.Contains(separator);
         }
 
-        //public static void Save(IEnumerable<string> headers, IEnumerable<IEnumerable<float>> values)
-        //{
-        //    using (LapFileWriter lapFileWriter = new LapFileWriter())
-        //    {
-        //        lapFileWriter.WriteHeaders(headers);
-        //        foreach (var row in values)
-        //        {
-        //            lapFileWriter.WriteRow(row);
-        //        }
-        //    }
-        //}
+        public void Delete()
+        {
+            if (File.Exists(FullRelativePath))
+            {
+                File.Delete(FullRelativePath);
+            }
+
+            if (File.Exists(MetadataFullRelativePath))
+            {
+                File.Delete(MetadataFullRelativePath);
+            }
+
+            if (File.Exists(TempFullRelativePath))
+            {
+                File.Delete(TempFullRelativePath);
+            }
+        }
     } 
 }

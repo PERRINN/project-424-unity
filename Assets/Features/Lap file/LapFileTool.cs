@@ -15,7 +15,6 @@ namespace Perrinn424.LapFileSystem
         [SerializeField]
         private Frequency frequency;
 
-        private TelemetryLap telemetryLap;
         private RowHeader rowHeader;
         private float[] rowCache;
 
@@ -24,7 +23,6 @@ namespace Perrinn424.LapFileSystem
         private int [] channelsIndex;
 
         private LapFileMetadata metadata;
-
         private LapFileWriter file;
 
         public override void OnEnableVehicle()
@@ -58,17 +56,12 @@ namespace Perrinn424.LapFileSystem
 
             headers.AddRange(channels.Select(c => c.ToUpper()));
 
-            int expectedLapTime = 6 * 60; // 6 minutes (normally is about 5)
-            int cacheCount = expectedLapTime * frequency;
-            telemetryLap = new TelemetryLap(headers, cacheCount);
-
             file = new LapFileWriter(headers);
         }
 
         private void LapBeginEventHandler()
         {
             Debug.Log("Lap Begin");
-            telemetryLap.Reset();
             file.StartRecording();
         }
 
@@ -81,9 +74,7 @@ namespace Perrinn424.LapFileSystem
                 frequency = frequency,
                 lapIndex = vehicle.telemetry.latest.segmentNum,
                 lapTime = lapTime,
-                sectorsTime = sectors,
-                headers = telemetryLap.Headers.ToArray(),
-                count = telemetryLap.data.rowCount
+                sectorsTime = sectors
             };
 
             SaveFile(metadata);
@@ -110,8 +101,6 @@ namespace Perrinn424.LapFileSystem
             WriteHeaders(dataRow);
             WriteChannels(dataRow);
             file.WriteRow(rowCache);
-
-            //telemetryLap.Write(rowCache);
         }
 
         private void WriteHeaders(Telemetry.DataRow dataRow)
@@ -149,27 +138,8 @@ namespace Perrinn424.LapFileSystem
 
         private void SaveFile(LapFileMetadata meta)
         {
-
             file.StopRecordingAndSaveFile(meta);
             Debug.Log($"File Saved {file.FullRelativePath}");
-
-            //using (LapFileWriter file = new LapFileWriter(meta))
-            //{
-            //    file.WriteHeaders(telemetryLap.Headers);
-
-
-            //    for (int rowIndex = 0; rowIndex < telemetryLap.data.rowCount; rowIndex++)
-            //    {
-            //        for (int columnIndex = 0; columnIndex < telemetryLap.data.width; columnIndex++)
-            //        {
-            //            rowCache[columnIndex] = telemetryLap.data[rowIndex, columnIndex];
-            //        }
-
-            //        file.WriteRowSafe(rowCache);
-            //    }
-
-            //    Debug.Log($"File Saved {file.FullRelativePath}");
-            //}
         }
 
         //private void OnApplicationQuit()
