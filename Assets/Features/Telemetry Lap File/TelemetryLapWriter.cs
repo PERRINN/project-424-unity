@@ -84,6 +84,8 @@ namespace Perrinn424.TelemetryLapSystem
                 frequency = frequency,
                 lapIndex = vehicle.telemetry.latest.segmentNum,
                 lapTime = lapTime,
+                completed = true,
+                completedSectors = sectors.Length,
                 sectorsTime = sectors
             };
 
@@ -160,9 +162,22 @@ namespace Perrinn424.TelemetryLapSystem
             Debug.Log(str);
         }
 
-        //private void OnApplicationQuit()
-        //{
-        //    SaveFile(new LapFileMetadata());
-        //}
+        private void OnApplicationQuit()
+        {
+            if (!file.IsRecordingReady)
+                return;
+
+            metadata = new TelemetryLapMetadata()
+            {
+                frequency = frequency,
+                lapIndex = vehicle.telemetry.latest.segmentNum,
+                lapTime = lapTimer.currentLapTime,
+                completed = false,
+                completedSectors = lapTimer.currentSector,
+                sectorsTime = new float[0]
+            };
+
+            SaveFile(metadata);
+        }
     }
 }
