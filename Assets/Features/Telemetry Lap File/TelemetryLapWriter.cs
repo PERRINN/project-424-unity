@@ -24,6 +24,8 @@ namespace Perrinn424.TelemetryLapSystem
         [SerializeField]
         private string[] channels;
         private int [] channelsIndex;
+        private const int channelNotFoundIndex = -1;
+        private int lastChannelCount;
 
         private TelemetryLapMetadata metadata;
         private TelemetryLapFileWriter file;
@@ -34,6 +36,7 @@ namespace Perrinn424.TelemetryLapSystem
             lapTimer.onLap += LapCompletedEventHandler;
             frequency.Reset();
 
+            channelsIndex = Enumerable.Repeat(channelNotFoundIndex, channels.Length).ToArray();
             GetChannelsIndex();
 
             List<string> headers = GetHeaders();
@@ -43,20 +46,37 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void GetChannelsIndex()
         {
-            channelsIndex = Enumerable.Repeat(-1, channels.Length).ToArray();
             IList<Telemetry.ChannelInfo> channelList = vehicle.telemetry.channels;
+            lastChannelCount = channelList.Count;
 
-            for (int totalChannelIndex = 0; totalChannelIndex < channelList.Count; totalChannelIndex++)
+            for (int fileChannelIndex = 0; fileChannelIndex < channels.Length; fileChannelIndex++)
             {
-                Telemetry.ChannelInfo info = channelList[totalChannelIndex];
-                for (int fileChannelIndex = 0; fileChannelIndex < channels.Length; fileChannelIndex++)
+                if (channelsIndex[fileChannelIndex] != channelNotFoundIndex)
                 {
+                    continue;
+                }
+                for (int totalChannelIndex = 0; totalChannelIndex < lastChannelCount; totalChannelIndex++)
+                {
+                    Telemetry.ChannelInfo info = channelList[totalChannelIndex];
                     if (info.fullName == channels[fileChannelIndex])
                     {
                         channelsIndex[fileChannelIndex] = totalChannelIndex;
                     }
                 }
             }
+
+
+            //    for (int totalChannelIndex = 0; totalChannelIndex < channelList.Count; totalChannelIndex++)
+            //{
+            //    Telemetry.ChannelInfo info = channelList[totalChannelIndex];
+            //    for (int fileChannelIndex = 0; fileChannelIndex < channels.Length; fileChannelIndex++)
+            //    {
+            //        if (info.fullName == channels[fileChannelIndex])
+            //        {
+            //            channelsIndex[fileChannelIndex] = totalChannelIndex;
+            //        }
+            //    }
+            //}
         }
 
         private List<string> GetHeaders()
@@ -103,6 +123,12 @@ namespace Perrinn424.TelemetryLapSystem
         {
             if (frequency.Update(Time.deltaTime)  && file.IsRecordingReady)
             {
+
+                if (vehicle.telemetry.channels.Count != lastChannelCount && channelsIndex.Any(index => index == channelNotFoundIndex))
+                {
+                    GetChannelsIndex();
+                }
+
                 WriteLine();
             }
         }
@@ -144,7 +170,8 @@ namespace Perrinn424.TelemetryLapSystem
             for (int i = 0; i < channelsIndex.Length; i++)
             {
                 int valueIndex = channelsIndex[i];
-                rowCache[i + RowHeader.ParamCount] = dataRow.values[valueIndex];
+                float value = valueIndex != channelNotFoundIndex ? dataRow.values[valueIndex] : float.NaN;
+                rowCache[i + RowHeader.ParamCount] = value;
             }
         }
 
