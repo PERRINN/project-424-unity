@@ -70,7 +70,7 @@ namespace Perrinn424.TelemetryLapSystem
             string lapTimeStr = timeFormatter.ToString(meta.lapTime);
             string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
 
-            Filename = $"{lapTimeStr} {dateStr}.csv";
+            Filename = $"{dateStr} {lapTimeStr}.csv";
             FullRelativePath = Path.Combine(root, Filename);
             FullPath = Path.Combine(Application.dataPath, FullRelativePath);
         }
