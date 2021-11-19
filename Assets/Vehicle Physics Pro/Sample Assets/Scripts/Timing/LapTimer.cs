@@ -47,9 +47,11 @@ public class LapTimer : MonoBehaviour
 
 	public float currentLapTime => Time.time - m_trackStartTime;
 
-	// Current sector
+	// Current sectors
 
 	public float currentSector => m_currentSector;
+	IReadOnlyList<float> currentSectors => m_sectors;
+	IReadOnlyList<bool> currentValidSectors => m_validSectors;
 
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
