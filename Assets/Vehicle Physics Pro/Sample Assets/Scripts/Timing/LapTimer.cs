@@ -50,8 +50,8 @@ public class LapTimer : MonoBehaviour
 	// Current sectors
 
 	public float currentSector => m_currentSector;
-	IReadOnlyList<float> currentSectors => m_sectors;
-	IReadOnlyList<bool> currentValidSectors => m_validSectors;
+	public IReadOnlyList<float> currentSectors => m_sectors;
+	public IReadOnlyList<bool> currentValidSectors => m_validSectors;
 
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
