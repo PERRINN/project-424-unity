@@ -1,6 +1,6 @@
 ﻿namespace Perrinn424.TelemetryLapSystem
 {
-    public struct RowHeader
+    public struct DataRow
     {
         public int frame;
         public double time;
