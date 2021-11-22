@@ -35,7 +35,7 @@ namespace Perrinn424.TelemetryLapSystem
 
             for (int channelIndex = 0; channelIndex < channels.Length; channelIndex++)
             {
-                if (channelsIndex[channelIndex] != channelNotFoundIndex)
+                if (IsChannelValidAndActive(channelIndex))
                 {
                     continue;
                 }
@@ -45,7 +45,7 @@ namespace Perrinn424.TelemetryLapSystem
                     Telemetry.ChannelInfo info = telemetryChannelList[telemetryChannelIndex];
                     if (info.fullName == channels[channelIndex])
                     {
-                        channelsIndex[channelIndex] = telemetryChannelIndex;
+                        SetTelemetryChannelIndex(channelIndex, telemetryChannelIndex);
                     }
                 }
             }
@@ -67,23 +67,50 @@ namespace Perrinn424.TelemetryLapSystem
                 }
             }
 
-            //if (vehicle.telemetry.channels.Count != lastChannelCount && channelsIndex.Any(index => index == channelNotFoundIndex))
-            //{
-            //    GetChannelsIndex();
-            //}
         }
-
 
         public float GetValue(int index)
         {
-            int valueIndex = channelsIndex[index];
-            float value = valueIndex != channelNotFoundIndex ? DataRow.values[valueIndex] : float.NaN;
-            return value;
+            if (IsChannelValidAndActive(index))
+            {
+                int telemetryChannelIndex = GetTelemetryChannelIndex(index);
+                return DataRow.values[telemetryChannelIndex];
+            }
+
+            return float.NaN;
         }
 
         public IEnumerable<string> GetHeaders()
         {
             return channels.Select(c => c.ToUpper());
+        }
+
+
+        private bool IsChannelValidAndActive(int index)
+        {
+            int telemetryChannelIndex = GetTelemetryChannelIndex(index);
+
+            if (telemetryChannelIndex == channelNotFoundIndex)
+            {
+                return false;
+            }
+
+            if (vehicle.telemetry.channels[telemetryChannelIndex].group.instance == null) //registered but not active
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private int GetTelemetryChannelIndex(int channelIndex)
+        {
+            return channelsIndex[channelIndex];
+        }
+
+        private void SetTelemetryChannelIndex(int channelIndex, int telemetryChannelIndex)
+        {
+            channelsIndex[channelIndex] = telemetryChannelIndex;
         }
     } 
 }
