@@ -3,6 +3,7 @@
     [System.Serializable]
     public class TelemetryLapMetadata
     {
+        public int fileFormatVersion;
         public int frequency;
         public int lapIndex;
         public float lapTime;

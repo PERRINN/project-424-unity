@@ -72,6 +72,7 @@ namespace Perrinn424.TelemetryLapSystem
         {
             metadata = new TelemetryLapMetadata()
             {
+                fileFormatVersion = 1,
                 frequency = frequency,
                 lapIndex = vehicle.telemetry.latest.segmentNum,
                 lapTime = lapTime,
@@ -159,6 +160,7 @@ namespace Perrinn424.TelemetryLapSystem
 
             metadata = new TelemetryLapMetadata()
             {
+                fileFormatVersion = 1,
                 frequency = frequency,
                 lapIndex = vehicle.telemetry.latest.segmentNum,
                 lapTime = lapTimer.currentLapTime,
