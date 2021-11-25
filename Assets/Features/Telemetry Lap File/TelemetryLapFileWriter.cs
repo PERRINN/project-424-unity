@@ -67,8 +67,8 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void SetFileNames(TelemetryLapMetadata meta)
         {
-            string lapTimeStr = timeFormatter.ToString(meta.lapTime);
             string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
+            string lapTimeStr = meta.completed ? timeFormatter.ToString(meta.lapTime) : "unfinished";
 
             Filename = $"{dateStr} {lapTimeStr}.csv";
             FullRelativePath = Path.Combine(root, Filename);
