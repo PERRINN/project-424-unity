@@ -1,3 +1,4 @@
+
 using EdyCommonTools;
 using Project424;
 using System;
@@ -6,17 +7,40 @@ using VehiclePhysics.UI;
 using UnityEngine;
 using VehiclePhysics;
 
-public class Autopilot : MonoBehaviour
+
+public class Autopilot : VehicleBehaviour
 {
+    // Public component parameters
+
+    public float kp = 600000.0f;
+    public float ki = 0.0f;
+    public float kd = 20000.0f;
+    public float maxForceP = 10000.0f;
+    public float maxForceD = 25000.0f;
+    public int startUpThrottleSpeedRatio = 60;
+    public int startUpThrottle = 70;
+    public int startUpBrakeSpeedRatio = 80;
+
+    public float offsetValue = 0.0f;
+    public BoxCollider startLine;
+
+    public bool debugGizmo = false;
+
+    // Exposed for Telemetry
+
+    public float Error => height; //[m]
+    public float P => edyPID.proportional; //[N]
+    public float I => edyPID.integral; //[N]
+    public float D => edyPID.derivative; //[N]
+    public float PID => edyPID.output; //[N]
+
+    // Private members
+
     Rigidbody rigidBody424;
-    VehicleBase vehicleBase;
-    VPReplay target;
+    VPReplay replaySystem;
     VPReplayController replayController;
     List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
     readonly PidController edyPID = new PidController();
-
-    public float kp, ki, kd, maxForceP, maxForceD;
-    public int startUpThrottleSpeedRatio, startUpThrottle, startUpBrakeSpeedRatio;
 
     int sectionSize;
     float height = 0, previousHeight = 0;
@@ -33,20 +57,18 @@ public class Autopilot : MonoBehaviour
     float m_ffbForceIntensity;
     float m_ffbDamperCoefficient;
 
-    public float offsetValue = 0f;
-    public BoxCollider startLine;
 
-    public float Error => height; //[m]
-    public float P => edyPID.proportional; //[N]
-    public float I => edyPID.integral; //[N]
-    public float D => edyPID.derivative; //[N]
-    public float PID => edyPID.output; //[N]
+    public override int GetUpdateOrder ()
+    {
+        // Execute after input components (0) to override their input
+        return 10;
+    }
 
-    void OnEnable()
+
+    public override void OnEnableVehicle ()
     {
         rigidBody424 = GetComponent<Rigidbody>();
-        vehicleBase = GetComponent<VehicleBase>();
-        target = GetComponentInChildren<VPReplay>();
+        replaySystem = GetComponentInChildren<VPReplay>();
         replayController = GetComponentInChildren<VPReplayController>();
 
         m_lastPosition = rigidBody424.position;
@@ -64,21 +86,25 @@ public class Autopilot : MonoBehaviour
         recordedReplay = replayController.predefinedReplay.recordedData;
         sectionSize = (int)Math.Sqrt(recordedReplay.Count); // Breakdown recorded replay into even sections
 
-        m_deviceInput = vehicleBase.GetComponentInChildren<VPDeviceInput>();
+        m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
         if (m_deviceInput != null)
         {
             m_ffbForceIntensity = m_deviceInput.forceIntensity;
             m_ffbDamperCoefficient = m_deviceInput.damperCoefficient;
         }
 
-        if (referenceLapDuplicated())
+        // (Edy) ReferenceLapDuplicated makes no sense to me
+        /*
+        if (ReferenceLapDuplicated())
         {
             enabled = false;
             return;
         }
+        */
     }
 
-    void Update()
+
+    public override void UpdateVehicle ()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -105,17 +131,13 @@ public class Autopilot : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-        if (Time.time > 0) { AutopilotOnStart(); }
-    }
 
-    void AutopilotOnStart()
+    public override void FixedUpdateVehicle ()
     {
         // Current Vehicle Position
-        int currentFrame = target.currentFrame;
-        float currentPosX = target.recordedData[currentFrame].position.x;
-        float currentPosZ = target.recordedData[currentFrame].position.z;
+        int currentFrame = replaySystem.currentFrame;
+        float currentPosX = replaySystem.recordedData[currentFrame].position.x;
+        float currentPosZ = replaySystem.recordedData[currentFrame].position.z;
 
         int sectionClosestFrame1 = 0;
         int sectionClosestFrame2 = 0;
@@ -149,9 +171,7 @@ public class Autopilot : MonoBehaviour
             }
         }
 
-        CompareTwoValues compareOneTwo = CompareValue(sectionClosestFrame1, sectionClosestFrame2);
-        sectionClosestFrame1 = compareOneTwo.min;
-        sectionClosestFrame2 = compareOneTwo.max;
+        (sectionClosestFrame1, sectionClosestFrame2) = GetAsMinMax(sectionClosestFrame1, sectionClosestFrame2);
 
         // Boundary search conditions
         if (sectionClosestFrame1 == 0 && sectionClosestFrame2 > recordedReplay.Count / 2)
@@ -198,7 +218,7 @@ public class Autopilot : MonoBehaviour
         // Reference point offset: Recorded vehicle
         Vector3 offsetFromClosestFrame1 = GetOffsetPosition(offsetValue, recordedReplay[closestFrame1]);
         Vector3 offsetFromClosestFrame2 = GetOffsetPosition(offsetValue, recordedReplay[closestFrame2]);
-        Vector3 offsetFromCurrentVehiclePos = GetOffsetPosition(offsetValue, target.recordedData[currentFrame]);
+        Vector3 offsetFromCurrentVehiclePos = GetOffsetPosition(offsetValue, replaySystem.recordedData[currentFrame]);
 
         // get height
         float valueDiffPosX = offsetFromClosestFrame1.x - offsetFromClosestFrame2.x; //recordedReplay[frame3].position.x - recordedReplay[frame4].position.x;
@@ -229,8 +249,8 @@ public class Autopilot : MonoBehaviour
         float carPosX = ((errX + errXBAL * progressive / 100) * cosD) + ((errZ + errZBAL * progressive / 100) * sinD);
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
-        // Telemetry
-        Telemetry(closestFrame1, closestFrame2);
+        // Steering screen display
+        SteeringScreen.bestTime = replaySystem.FramesToTime(closestFrame1);
 
         //get error force
         edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height - previousHeight)));
@@ -245,9 +265,7 @@ public class Autopilot : MonoBehaviour
         appliedForceV3.z = edyPID.output * sinD * 1.000f;
 
         //get recorded driver input
-        CompareTwoValues compareThreeFour = CompareValue(closestFrame1, closestFrame2);
-        closestFrame1 = compareThreeFour.min;
-        closestFrame2 = compareThreeFour.max;
+        (closestFrame1, closestFrame2) = GetAsMinMax(closestFrame1, closestFrame2);
 
         //Car Control System
         float frameAngle = recordedReplay[closestFrame1].rotation.eulerAngles.y;
@@ -270,12 +288,18 @@ public class Autopilot : MonoBehaviour
         {
             rigidBody424.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
 
+            if (debugGizmo)
+                {
+                DebugUtility.DrawCrossMark(offsetFromCurrentVehiclePos, vehicle.cachedTransform, GColor.pink);
+                Debug.DrawLine(offsetFromCurrentVehiclePos, offsetFromCurrentVehiclePos + appliedForceV3 / 1000.0f, GColor.orange);
+                }
+
             if (!lostControl)
             {
                 // Steer angle
                 int steerERR = recordedReplay[closestFrame2].inputData[InputData.Steer] - recordedReplay[closestFrame1].inputData[InputData.Steer];
                 showSteer = (steerERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Steer];
-                vehicleBase.data.Set(Channel.Input, InputData.Steer, showSteer);
+                vehicle.data.Set(Channel.Input, InputData.Steer, showSteer);
 
                 // Speed check
                 float replayTravelingDistance = (recordedReplay[closestFrame2].position - recordedReplay[closestFrame1].position).magnitude;
@@ -287,33 +311,31 @@ public class Autopilot : MonoBehaviour
                 int brakeERR = recordedReplay[closestFrame2].inputData[InputData.Brake] - recordedReplay[closestFrame1].inputData[InputData.Brake];
                 showBrake = (brakeERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Brake];
 
-                if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
+                if (vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
                 {
                     showBrake = 0;
                 }
-                vehicleBase.data.Set(Channel.Input, InputData.Brake, showBrake);
+                vehicle.data.Set(Channel.Input, InputData.Brake, showBrake);
                 m_lastTime += SecondsPerFrame;
 
                 // Throttle
                 int throttleERR = recordedReplay[closestFrame2].inputData[InputData.Throttle] - recordedReplay[closestFrame1].inputData[InputData.Throttle];
                 showThrottle = (throttleERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Throttle];
 
-                if (vehicleBase.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
+                if (vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
                 {
-                    vehicleBase.data.Set(Channel.Input, InputData.Throttle, startUpThrottle * 100);
+                    vehicle.data.Set(Channel.Input, InputData.Throttle, startUpThrottle * 100);
                 }
                 else
                 {
-                    vehicleBase.data.Set(Channel.Input, InputData.Throttle, showThrottle);
+                    vehicle.data.Set(Channel.Input, InputData.Throttle, showThrottle);
                 }
 
                 // AutomaticGear
-                vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[closestFrame1].inputData[InputData.AutomaticGear]);
+                vehicle.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[closestFrame1].inputData[InputData.AutomaticGear]);
             }
         }
     }
-
-
 
 
     Vector3 GetOffsetPosition(float offsetValue, VPReplay.Frame offsetTransform)
@@ -334,35 +356,24 @@ public class Autopilot : MonoBehaviour
         return positionOffset;
     }
 
-    private void Telemetry(int closestFrame1, int closestFrame2)
+    (int, int) GetAsMinMax(int valueA, int valueB)
     {
-        AutopilotChart.closestFrame1 = closestFrame1;
-        AutopilotChart.closestFrame2 = closestFrame2;
-        AutopilotChart.errorDistance = height;
-        AutopilotChart.proportional = edyPID.proportional;
-        AutopilotChart.integral = edyPID.integral;
-        AutopilotChart.derivative = edyPID.derivative;
-        AutopilotChart.output = edyPID.output;
-        SteeringScreen.bestTime = target.FramesToTime(closestFrame1);
+        if (valueA > valueB)
+            {
+            int tmp = valueA;
+            valueA = valueB;
+            valueB = tmp;
+            }
+
+        return (valueA, valueB);
     }
 
-    struct CompareTwoValues
-    {
-        public int min;
-        public int max;
-    }
 
-    CompareTwoValues CompareValue(int valueA, int valueB)
-    {
-        CompareTwoValues values = new CompareTwoValues
-        {
-            min = valueA < valueB ? valueA : valueB,
-            max = valueA > valueB ? valueA : valueB
-        };
-        return values;
-    }
-
-    bool referenceLapDuplicated()
+    // (Edy) This makes no sense at all to me.
+    // It overrides the size of the box collider of the start line to an arbitrary size for
+    // checking if more than one position of the replay are inside it.
+    /*
+    bool ReferenceLapDuplicated()
     {
         if (startLine == null) return false;
 
@@ -381,4 +392,5 @@ public class Autopilot : MonoBehaviour
         startLine.size = new Vector3(1, 1, 1);
         return duplicated;
     }
+    */
 }
