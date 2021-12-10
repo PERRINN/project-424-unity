@@ -48,7 +48,6 @@ namespace Perrinn424.TelemetryLapSystem
         {
             lapTimer.onBeginLap -= LapBeginEventHandler;
             lapTimer.onLap -= LapCompletedEventHandler;
-
         }
 
         private List<string> GetHeaders()
@@ -190,7 +189,7 @@ namespace Perrinn424.TelemetryLapSystem
                 SaveFile(metadata);
             }
 
-            SyntheticTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas);
+            SyntheticTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas, lapTimer.sectors);
         }
     }
 }

@@ -8,54 +8,49 @@ namespace Perrinn424.TelemetryLapSystem
 {
     public class SyntheticTelemetryLapCreator
     {
-        private IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas;
+        private readonly int sectorCount;
+        private IReadOnlyList<TelemetryLapMetadata> metadatas;
         private LapTimeTable timeTable;
 
         private Dictionary<int, string> lapToFilename;
         public string[] headers;
 
 
-        public static void CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
+        public static void CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas, int sectorCount)
         {
-            new SyntheticTelemetryLapCreator(telemetryLapMetadatas).CreateSyntheticFile();
+            new SyntheticTelemetryLapCreator(telemetryLapMetadatas, sectorCount).CreateSyntheticFile();
         }
 
-        public SyntheticTelemetryLapCreator(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
+        public SyntheticTelemetryLapCreator(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas, int sectorCount)
         {
-            this.telemetryLapMetadatas = telemetryLapMetadatas;
-            lapToFilename = new Dictionary<int, string>();
-            timeTable = new LapTimeTable(5);
+            this.sectorCount = sectorCount;
+            this.metadatas = telemetryLapMetadatas;
+            this.lapToFilename = new Dictionary<int, string>();
+            this.timeTable = new LapTimeTable(sectorCount);
         }
 
         private void CreateSyntheticFile()
         {
-            foreach (TelemetryLapMetadata metadata in telemetryLapMetadatas)
-            {
-                ProcessMetadata(metadata);
-            }
+            ProcessMetadata();
 
             int[] bestLapsPerSector = timeTable.GetBestLapForEachSector();
 
 
-            FileStream fs = new FileStream("Telemetry/sync.csv", FileMode.Create, FileAccess.Write);
-            CSVFileWriter fileWriter = new CSVFileWriter(fs);
-            fileWriter.WriteLine(string.Join(",", headers));
 
             TelemetryLapFileWriter telemetryLapFileWriter = new TelemetryLapFileWriter(headers);
             telemetryLapFileWriter.StartRecording();
 
-            for (int sectorIndex = 0; sectorIndex < 5; sectorIndex++)
+            for (int sectorIndex = 0; sectorIndex < sectorCount; sectorIndex++)
             {
                 int indexOfbestLapInSectorI = bestLapsPerSector[sectorIndex];
                 string filename = lapToFilename[indexOfbestLapInSectorI];
                 string msg = $"Best lap in sector {sectorIndex} is {filename}";
                 print(msg);
-                Read(sectorIndex, filename, fileWriter, telemetryLapFileWriter);
+                Read(sectorIndex, filename, telemetryLapFileWriter);
             }
 
-            fileWriter.Dispose();
 
-            TelemetryLapMetadata bestLapInFirstSector = telemetryLapMetadatas[bestLapsPerSector[0]];
+            TelemetryLapMetadata bestLapInFirstSector = metadatas[bestLapsPerSector[0]];
 
             float[] sectorsTime = new float[5];
             string[] origin = new string[5];
@@ -81,21 +76,89 @@ namespace Perrinn424.TelemetryLapSystem
             };
             telemetryLapFileWriter.StopRecordingAndSaveFile(finalMetadata);
 
-            //Read(3, indexDictionary[3]);
+        }
+
+        private void ProcessMetadata()
+        {
+            Validate();
+
+            foreach (TelemetryLapMetadata metadata in metadatas)
+            {
+                ProcessMetadata(metadata);
+            }
+
+            headers = metadatas[0].headers;
+        }
+
+        private void Validate()
+        {
+            if (!metadatas.All(m => m.sectorsTime.Length == sectorCount))
+            {
+                throw new ArgumentException($"All sectors must be {sectorCount}");
+            }
+
+            if (!metadatas.Any(m => m.completed))
+            {
+                throw new ArgumentException($"At least one lap must be completed");
+            }
+
+            if (!SameValue(m => m.fileFormatVersion, (x, y) => x == y))
+            {
+                throw new ArgumentException($"All laps must have the same file format");
+            }
+
+            if (!SameValue(m => m.frequency, (x, y) => x == y))
+            {
+                throw new ArgumentException($"All laps must have the same frequency");
+            }
+
+            if (!SameValue(m => m.trackName, (x, y) => x == y))
+            {
+                throw new ArgumentException($"All laps must be associated to the same track");
+            }
+
+            if (!SameValue(m => m.headers, HeaderComparer))
+            {
+                throw new ArgumentException($"All laps must have the same headers");
+            }
+        }
+
+        private bool HeaderComparer(string [] a, string [] b)
+        {
+            if (a.Length != b.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] != b[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool SameValue<T>(Func<TelemetryLapMetadata, T> getter, Func<T,T,bool> comparer)
+        {
+            var firstItem = getter(metadatas[0]);
+            bool allEqual = metadatas.Skip(1)
+              .All(m => comparer(getter(m), firstItem));
+            
+            return allEqual;
         }
 
         private void ProcessMetadata(TelemetryLapMetadata telemetryLapMetadata)
         {
-            if (telemetryLapMetadata.sectorsTime.Length == 5)
-            {
-                lapToFilename[timeTable.LapCount] = telemetryLapMetadata.csvFile;
-                timeTable.AddLap(telemetryLapMetadata.sectorsTime);
-            }
-
-            headers = telemetryLapMetadata.headers;
+            lapToFilename[timeTable.LapCount] = telemetryLapMetadata.csvFile;
+            timeTable.AddLap(telemetryLapMetadata.sectorsTime);
         }
 
-        private void Read(int sector, string filename, CSVFileWriter csv, TelemetryLapFileWriter telemetryLapFileWriter)
+
+
+        private void Read(int sector, string filename, TelemetryLapFileWriter telemetryLapFileWriter)
         {
             print("-------------------------------------------");
             print(filename);
@@ -119,7 +182,7 @@ namespace Perrinn424.TelemetryLapSystem
             string[] headers = enumerator.Current.Split(',');
             int sectorIndex = Array.IndexOf(headers, "SECTOR");
 
-            int count = 1;
+            int lineCount = 1;
             bool inSector = false;
             foreach (string line in enumerable)
             {
@@ -133,24 +196,24 @@ namespace Perrinn424.TelemetryLapSystem
                 int currentSector = (int)values[sectorIndex];
                 if (currentSector == sector && !inSector)
                 {
-                    Debug.Log($"Sector {sector} starts in line {count} with {line}");
+                    Debug.Log($"Sector {sector} starts in line {lineCount} with {line}");
                     inSector = true;
                 }
 
                 if (currentSector != sector && inSector)
                 {
-                    Debug.Log($"Sector {sector} ends in line {count}  with {line}");
+                    Debug.Log($"Sector {sector} ends in line {lineCount}  with {line}");
                     inSector = false;
                     return;
                 }
 
                 if (inSector)
                 {
-                    csv.WriteLine(line);
+                    //csv.WriteLine(line);
                     telemetryLapFileWriter.WriteRow(values);
                 }
 
-                count++;
+                lineCount++;
             }
         }
 
