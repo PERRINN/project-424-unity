@@ -69,8 +69,9 @@ namespace Perrinn424.TelemetryLapSystem
         {
             string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
             string lapTimeStr = meta.completed ? timeFormatter.ToString(meta.lapTime) : "unfinished";
+            string synthetic = meta.synthetic ? " synthetic" : string.Empty;
 
-            Filename = $"{dateStr} {lapTimeStr}.csv";
+            Filename = $"{dateStr} {lapTimeStr}{synthetic}.csv";
             FullRelativePath = Path.Combine(root, Filename);
             FullPath = Path.Combine(Application.dataPath, FullRelativePath);
         }
@@ -85,6 +86,7 @@ namespace Perrinn424.TelemetryLapSystem
             meta.csvFile = Filename;
             meta.headers = Headers.ToArray();
             meta.count = LineCount;
+            meta.timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
             string json = JsonUtility.ToJson(meta, true);
             MetadataFullRelativePath = $"{FullRelativePath}.metadata";

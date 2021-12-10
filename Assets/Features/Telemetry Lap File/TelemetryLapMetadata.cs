@@ -3,6 +3,7 @@
     [System.Serializable]
     public class TelemetryLapMetadata
     {
+        public string trackName;
         public int fileFormatVersion;
         public int frequency;
         public int lapIndex;
@@ -13,5 +14,8 @@
         public string[] headers;
         public int count;
         public string csvFile;
+        public long timeStamp;
+        public bool synthetic;
+        public string[] syntheticSectorOrigin;
     } 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
 
@@ -24,8 +25,9 @@ namespace Perrinn424.TelemetryLapSystem
         [SerializeField]
         private Channels channels;
 
-        private TelemetryLapMetadata metadata;
         private TelemetryLapFileWriter file;
+
+        private List<TelemetryLapMetadata> telemetryLapMetadatas;
 
         public override void OnEnableVehicle()
         {
@@ -38,6 +40,8 @@ namespace Perrinn424.TelemetryLapSystem
             List<string> headers = GetHeaders();
 
             file = new TelemetryLapFileWriter(headers);
+
+            telemetryLapMetadatas = new List<TelemetryLapMetadata>();
         }
 
         public override void OnDisableVehicle()
@@ -70,15 +74,18 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
-            metadata = new TelemetryLapMetadata()
+            TelemetryLapMetadata metadata = new TelemetryLapMetadata()
             {
+                trackName = SceneManager.GetActiveScene().name,
                 fileFormatVersion = 1,
                 frequency = frequency,
                 lapIndex = vehicle.telemetry.latest.segmentNum,
                 lapTime = lapTime,
                 completed = true,
                 completedSectors = sectors.Length,
-                sectorsTime = sectors
+                sectorsTime = sectors.ToArray(), //make copy
+                synthetic = false,
+                syntheticSectorOrigin = new string[0]
             };
 
             SaveFile(metadata);
@@ -143,6 +150,7 @@ namespace Perrinn424.TelemetryLapSystem
         {
             file.StopRecordingAndSaveFile(meta);
             Log($"File Saved at {file.FullRelativePath}");
+            telemetryLapMetadatas.Add(meta);
         }
 
         private void Log(string str)
@@ -155,29 +163,34 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void OnApplicationQuit()
         {
-            if (!file.IsRecordingReady)
-                return;
-
-            metadata = new TelemetryLapMetadata()
+            if (file.IsRecordingReady)
             {
-                fileFormatVersion = 1,
-                frequency = frequency,
-                lapIndex = vehicle.telemetry.latest.segmentNum,
-                lapTime = lapTimer.currentLapTime,
-                completed = false,
-            };
+                TelemetryLapMetadata metadata = new TelemetryLapMetadata()
+                {
+                    trackName = SceneManager.GetActiveScene().name,
+                    fileFormatVersion = 1,
+                    frequency = frequency,
+                    lapIndex = vehicle.telemetry.latest.segmentNum,
+                    lapTime = lapTimer.currentLapTime,
+                    completed = false,
+                    synthetic = false,
+                    syntheticSectorOrigin = new string[0]
+                };
 
 
-            metadata.completedSectors = lapTimer.currentValidSectors.Count(validSector => validSector);
-            
-            //if the sector is valid, get its time. Infinity otherwise
-            metadata.sectorsTime = 
-                lapTimer
-                .currentValidSectors
-                .Select((validSector, index) => validSector ? lapTimer.currentSectors[index] : float.PositiveInfinity)
-                .ToArray();
-            
-            SaveFile(metadata);
+                metadata.completedSectors = lapTimer.currentValidSectors.Count(validSector => validSector);
+
+                //if the sector is valid, get its time. Infinity otherwise
+                metadata.sectorsTime =
+                    lapTimer
+                    .currentValidSectors
+                    .Select((validSector, index) => validSector ? lapTimer.currentSectors[index] : float.PositiveInfinity)
+                    .ToArray();
+
+                SaveFile(metadata);
+            }
+
+            SyntheticTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas);
         }
     }
 }
