@@ -191,7 +191,7 @@ namespace Perrinn424.TelemetryLapSystem
 
             if (telemetryLapMetadatas.Count > 1)
             {
-                IdealTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas, lapTimer.sectors);
+                IdealTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas);
             }
         }
     }

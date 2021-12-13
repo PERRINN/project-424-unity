@@ -8,7 +8,7 @@ namespace Perrinn424.TelemetryLapSystem
 {
     public class IdealTelemetryLapCreator
     {
-        private readonly int sectorCount;
+        private int sectorCount;
         private IReadOnlyList<TelemetryLapMetadata> metadatas;
         private LapTimeTable timeTable;
 
@@ -19,17 +19,15 @@ namespace Perrinn424.TelemetryLapSystem
         private float dt;
         private float time;
 
-        public static void CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas, int sectorCount)
+        public static void CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
         {
-            new IdealTelemetryLapCreator(telemetryLapMetadatas, sectorCount).CreateSyntheticFile();
+            new IdealTelemetryLapCreator(telemetryLapMetadatas).CreateSyntheticFile();
         }
 
-        public IdealTelemetryLapCreator(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas, int sectorCount)
+        public IdealTelemetryLapCreator(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
         {
-            this.sectorCount = sectorCount;
             this.metadatas = telemetryLapMetadatas;
             this.lapToFilename = new Dictionary<int, string>();
-            this.timeTable = new LapTimeTable(sectorCount);
         }
 
         private void CreateSyntheticFile()
@@ -67,7 +65,7 @@ namespace Perrinn424.TelemetryLapSystem
                 frequency = bestLapInFirstSector.frequency,
                 lapIndex = 0,
                 completed = true,
-                completedSectors = bestLapInFirstSector.completedSectors,
+                completedSectors = sectorCount,
                 lapTime = sectorsTime.Sum(),
                 sectorsTime = sectorsTime,
                 ideal = true,
@@ -88,6 +86,9 @@ namespace Perrinn424.TelemetryLapSystem
             timeIndex = Array.IndexOf(headers, "TIME");
             dt = 1f / metadatas[0].frequency;
             time = 0f;
+            sectorCount = metadatas[0].sectorsTime.Length;
+            this.timeTable = new LapTimeTable(sectorCount);
+
 
             foreach (TelemetryLapMetadata metadata in metadatas)
             {
@@ -110,9 +111,9 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void ValidateMetadata()
         {
-            if (!metadatas.All(m => m.sectorsTime.Length == sectorCount))
+            if (!AllEqual(m => m.sectorsTime, SectorComparer))
             {
-                throw new ArgumentException($"All sectors must be {sectorCount}");
+                throw new ArgumentException($"All laps must contains the same number of sector and greater than 0");
             }
 
             if (!metadatas.Any(m => m.completed))
@@ -157,6 +158,11 @@ namespace Perrinn424.TelemetryLapSystem
             }
 
             return true;
+        }
+
+        private bool SectorComparer(float[] a, float [] b)
+        {
+            return a.Length == b.Length && a.Length > 0;
         }
 
         private bool AllEqual<T>(Func<TelemetryLapMetadata, T> getter, Func<T,T,bool> comparer)
