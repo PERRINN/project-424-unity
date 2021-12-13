@@ -14,6 +14,10 @@ namespace Perrinn424.TelemetryLapSystem
 
         private Dictionary<int, string> lapToFilename;
         private string[] headers;
+        private int sectorIndex;
+        private int timeIndex;
+        private float dt;
+        private float time;
 
         public static void CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas, int sectorCount)
         {
@@ -34,8 +38,6 @@ namespace Perrinn424.TelemetryLapSystem
 
             int[] bestLapsPerSector = timeTable.GetBestLapForEachSector();
 
-
-
             TelemetryLapFileWriter telemetryLapFileWriter = new TelemetryLapFileWriter(headers);
             telemetryLapFileWriter.StartRecording();
 
@@ -43,14 +45,14 @@ namespace Perrinn424.TelemetryLapSystem
             {
                 int indexOfbestLapInSectorI = bestLapsPerSector[sectorIndex];
                 string filename = lapToFilename[indexOfbestLapInSectorI];
-                Read(sectorIndex, filename, telemetryLapFileWriter);
+                WriteSectorInFile(sectorIndex, filename, telemetryLapFileWriter);
             }
 
 
             TelemetryLapMetadata bestLapInFirstSector = metadatas[bestLapsPerSector[0]];
 
-            float[] sectorsTime = new float[5];
-            string[] origin = new string[5];
+            float[] sectorsTime = new float[sectorCount];
+            string[] origin = new string[sectorCount];
             for (int i = 0; i < sectorsTime.Length; i++)
             {
                 int indexOfbestLapInSectorI = bestLapsPerSector[i];
@@ -71,23 +73,42 @@ namespace Perrinn424.TelemetryLapSystem
                 ideal = true,
                 idealSectorOrigin = origin
             };
+
             telemetryLapFileWriter.StopRecordingAndSaveFile(finalMetadata);
 
         }
 
         private void ProcessMetadata()
         {
-            Validate();
+            ValidateMetadata();
+            
+            headers = metadatas[0].headers;
+            ValidateHeaders();
+            sectorIndex = Array.IndexOf(headers, "SECTOR");
+            timeIndex = Array.IndexOf(headers, "TIME");
+            dt = 1f / metadatas[0].frequency;
+            time = 0f;
 
             foreach (TelemetryLapMetadata metadata in metadatas)
             {
                 ProcessMetadata(metadata);
             }
-
-            headers = metadatas[0].headers;
         }
 
-        private void Validate()
+        private void ValidateHeaders()
+        {
+            if (!headers.Contains("SECTOR"))
+            {
+                throw new ArgumentException($"Headers must contain SECTOR field");
+            }
+
+            if (!headers.Contains("TIME"))
+            {
+                throw new ArgumentException($"Headers must contain TIME field");
+            }
+        }
+
+        private void ValidateMetadata()
         {
             if (!metadatas.All(m => m.sectorsTime.Length == sectorCount))
             {
@@ -156,7 +177,7 @@ namespace Perrinn424.TelemetryLapSystem
         }
 
 
-        private void Read(int sector, string filename, TelemetryLapFileWriter telemetryLapFileWriter)
+        private void WriteSectorInFile(int sector, string filename, TelemetryLapFileWriter telemetryLapFileWriter)
         {
             if (!filename.Contains("Telemetry"))
             {
@@ -174,10 +195,6 @@ namespace Perrinn424.TelemetryLapSystem
             IEnumerator<string> enumerator = enumerable.GetEnumerator();
             enumerator.MoveNext();//skip headers
 
-            string[] headers = enumerator.Current.Split(',');
-            int sectorIndex = Array.IndexOf(headers, "SECTOR");
-
-            int lineCount = 1;
             bool inSector = false;
             foreach (string line in enumerable)
             {
@@ -187,23 +204,23 @@ namespace Perrinn424.TelemetryLapSystem
                 int currentSector = (int)values[sectorIndex];
                 if (currentSector == sector && !inSector)
                 {
-                    Debug.Log($"Sector {sector} starts in line {lineCount} with {line}");
+                    //Debug.Log($"Sector {sector} starts in line {lineCount} with {line}");
                     inSector = true;
                 }
 
                 if (currentSector != sector && inSector)
                 {
-                    Debug.Log($"Sector {sector} ends in line {lineCount}  with {line}");
+                    //Debug.Log($"Sector {sector} ends in line {lineCount}  with {line}");
                     inSector = false;
                     return;
                 }
 
                 if (inSector)
                 {
+                    values[timeIndex] = time;
                     telemetryLapFileWriter.WriteRow(values);
+                    time += dt;
                 }
-
-                lineCount++;
             }
         }
     }
