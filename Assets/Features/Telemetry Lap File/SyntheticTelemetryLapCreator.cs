@@ -102,22 +102,22 @@ namespace Perrinn424.TelemetryLapSystem
                 throw new ArgumentException($"At least one lap must be completed");
             }
 
-            if (!SameValue(m => m.fileFormatVersion, (x, y) => x == y))
+            if (!AllEqual(m => m.fileFormatVersion, (x, y) => x == y))
             {
                 throw new ArgumentException($"All laps must have the same file format");
             }
 
-            if (!SameValue(m => m.frequency, (x, y) => x == y))
+            if (!AllEqual(m => m.frequency, (x, y) => x == y))
             {
                 throw new ArgumentException($"All laps must have the same frequency");
             }
 
-            if (!SameValue(m => m.trackName, (x, y) => x == y))
+            if (!AllEqual(m => m.trackName, (x, y) => x == y))
             {
                 throw new ArgumentException($"All laps must be associated to the same track");
             }
 
-            if (!SameValue(m => m.headers, HeaderComparer))
+            if (!AllEqual(m => m.headers, HeaderComparer))
             {
                 throw new ArgumentException($"All laps must have the same headers");
             }
@@ -141,13 +141,15 @@ namespace Perrinn424.TelemetryLapSystem
             return true;
         }
 
-        private bool SameValue<T>(Func<TelemetryLapMetadata, T> getter, Func<T,T,bool> comparer)
+        private bool AllEqual<T>(Func<TelemetryLapMetadata, T> getter, Func<T,T,bool> comparer)
         {
-            var firstItem = getter(metadatas[0]);
-            bool allEqual = metadatas.Skip(1)
-              .All(m => comparer(getter(m), firstItem));
-            
-            return allEqual;
+            TelemetryLapMetadata firstItem = metadatas[0];
+            Func<TelemetryLapMetadata, bool> predicate = metadata => comparer(getter(metadata), getter(firstItem)); // comparison with the first item 
+
+            return
+                metadatas
+                .Skip(1)
+                .All(predicate);            
         }
 
         private void ProcessMetadata(TelemetryLapMetadata telemetryLapMetadata)
