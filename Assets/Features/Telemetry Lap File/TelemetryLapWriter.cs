@@ -189,7 +189,10 @@ namespace Perrinn424.TelemetryLapSystem
                 SaveFile(metadata);
             }
 
-            IdealTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas, lapTimer.sectors);
+            if (telemetryLapMetadatas.Count > 1)
+            {
+                IdealTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas, lapTimer.sectors);
+            }
         }
     }
 }
