@@ -15,7 +15,7 @@
         public int count;
         public string csvFile;
         public long timeStamp;
-        public bool synthetic;
-        public string[] syntheticSectorOrigin;
+        public bool ideal;
+        public string[] idealSectorOrigin;
     } 
 }

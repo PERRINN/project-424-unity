@@ -69,7 +69,7 @@ namespace Perrinn424.TelemetryLapSystem
         {
             string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
             string lapTimeStr = meta.completed ? timeFormatter.ToString(meta.lapTime) : "unfinished";
-            string synthetic = meta.synthetic ? " synthetic" : string.Empty;
+            string synthetic = meta.ideal ? " ideal" : string.Empty;
 
             Filename = $"{dateStr} {lapTimeStr}{synthetic}.csv";
             FullRelativePath = Path.Combine(root, Filename);

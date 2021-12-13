@@ -6,22 +6,21 @@ using UnityEngine;
 
 namespace Perrinn424.TelemetryLapSystem
 {
-    public class SyntheticTelemetryLapCreator
+    public class IdealTelemetryLapCreator
     {
         private readonly int sectorCount;
         private IReadOnlyList<TelemetryLapMetadata> metadatas;
         private LapTimeTable timeTable;
 
         private Dictionary<int, string> lapToFilename;
-        public string[] headers;
-
+        private string[] headers;
 
         public static void CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas, int sectorCount)
         {
-            new SyntheticTelemetryLapCreator(telemetryLapMetadatas, sectorCount).CreateSyntheticFile();
+            new IdealTelemetryLapCreator(telemetryLapMetadatas, sectorCount).CreateSyntheticFile();
         }
 
-        public SyntheticTelemetryLapCreator(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas, int sectorCount)
+        public IdealTelemetryLapCreator(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas, int sectorCount)
         {
             this.sectorCount = sectorCount;
             this.metadatas = telemetryLapMetadatas;
@@ -44,8 +43,6 @@ namespace Perrinn424.TelemetryLapSystem
             {
                 int indexOfbestLapInSectorI = bestLapsPerSector[sectorIndex];
                 string filename = lapToFilename[indexOfbestLapInSectorI];
-                string msg = $"Best lap in sector {sectorIndex} is {filename}";
-                print(msg);
                 Read(sectorIndex, filename, telemetryLapFileWriter);
             }
 
@@ -71,8 +68,8 @@ namespace Perrinn424.TelemetryLapSystem
                 completedSectors = bestLapInFirstSector.completedSectors,
                 lapTime = sectorsTime.Sum(),
                 sectorsTime = sectorsTime,
-                synthetic = true,
-                syntheticSectorOrigin = origin
+                ideal = true,
+                idealSectorOrigin = origin
             };
             telemetryLapFileWriter.StopRecordingAndSaveFile(finalMetadata);
 
@@ -159,18 +156,16 @@ namespace Perrinn424.TelemetryLapSystem
         }
 
 
-
         private void Read(int sector, string filename, TelemetryLapFileWriter telemetryLapFileWriter)
         {
-            print("-------------------------------------------");
-            print(filename);
             if (!filename.Contains("Telemetry"))
             {
                 filename = Path.Combine("Telemetry", filename);
             }
+            
             if (!File.Exists(@filename))
             {
-                Debug.LogError($"{filename} erroooooooooooooooor");
+                Debug.LogError($"{filename} not found");
                 return;
             }
 
@@ -178,8 +173,6 @@ namespace Perrinn424.TelemetryLapSystem
             IEnumerable<string> enumerable = File.ReadLines(@filename);
             IEnumerator<string> enumerator = enumerable.GetEnumerator();
             enumerator.MoveNext();//skip headers
-            print(enumerator.Current);
-            print("______________");
 
             string[] headers = enumerator.Current.Split(',');
             int sectorIndex = Array.IndexOf(headers, "SECTOR");
@@ -188,13 +181,9 @@ namespace Perrinn424.TelemetryLapSystem
             bool inSector = false;
             foreach (string line in enumerable)
             {
-                //print(line);
-                //count++;
-                //if (count > 10)
-                //    return;
 
                 float[] values = line.Split(',').Select(v => float.Parse(v, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
-                //int currentSector = (int)float.Parse(line.Split(',')[sectorIndex], System.Globalization.CultureInfo.InvariantCulture);
+                
                 int currentSector = (int)values[sectorIndex];
                 if (currentSector == sector && !inSector)
                 {
@@ -211,18 +200,11 @@ namespace Perrinn424.TelemetryLapSystem
 
                 if (inSector)
                 {
-                    //csv.WriteLine(line);
                     telemetryLapFileWriter.WriteRow(values);
                 }
 
                 lineCount++;
             }
         }
-
-        private void print(string s)
-        {
-            Debug.Log(s);
-        }
     }
-
 }

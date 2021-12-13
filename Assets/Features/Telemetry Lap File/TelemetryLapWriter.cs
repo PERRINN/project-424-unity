@@ -83,8 +83,8 @@ namespace Perrinn424.TelemetryLapSystem
                 completed = true,
                 completedSectors = sectors.Length,
                 sectorsTime = sectors.ToArray(), //make copy
-                synthetic = false,
-                syntheticSectorOrigin = new string[0]
+                ideal = false,
+                idealSectorOrigin = new string[0]
             };
 
             SaveFile(metadata);
@@ -172,8 +172,8 @@ namespace Perrinn424.TelemetryLapSystem
                     lapIndex = vehicle.telemetry.latest.segmentNum,
                     lapTime = lapTimer.currentLapTime,
                     completed = false,
-                    synthetic = false,
-                    syntheticSectorOrigin = new string[0]
+                    ideal = false,
+                    idealSectorOrigin = new string[0]
                 };
 
 
@@ -189,7 +189,7 @@ namespace Perrinn424.TelemetryLapSystem
                 SaveFile(metadata);
             }
 
-            SyntheticTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas, lapTimer.sectors);
+            IdealTelemetryLapCreator.CreateSyntheticTelemetryLap(telemetryLapMetadatas, lapTimer.sectors);
         }
     }
 }
