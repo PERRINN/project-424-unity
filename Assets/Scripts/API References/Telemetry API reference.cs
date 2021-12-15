@@ -139,10 +139,10 @@ public class Telemetry
 
 		// Shortcut methods
 
-		public void SetRangeAndFormat (float min, float max, string format, string unitsSuffix, float quantization = 0.1f, float multiplier = 1.0f, string alternateFormat = "")
+		public void SetRangeAndFormat (float min, float max, string format, string unitsSuffix, float quantization = 0.1f, float multiplier = 1.0f, string alternateFormat = "0")
 		public void SetUnits (string unitsSuffix, float multiplier = 1.0f)
 		public void SetRange (float min, float max)
-		public void SetFormat (string format, float quantization = 0.1f, string alternateFormat = "")
+		public void SetFormat (string format, float quantization = 0.1f, string alternateFormat = "0")
 		}
 
 

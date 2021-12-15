@@ -280,16 +280,16 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			// Custom semantics
 
 			Telemetry.SemanticInfo aeroCoeffSemantic = new Telemetry.SemanticInfo();
-			aeroCoeffSemantic.SetRangeAndFormat(1.0f, 3.0f, "0.00", "", quantization:0.1f, alternateFormat:"0");
+			aeroCoeffSemantic.SetRangeAndFormat(1.0f, 3.0f, "0.00", "", quantization:0.1f);
 
 			Telemetry.SemanticInfo aeroForceSemantic = new Telemetry.SemanticInfo();
 			aeroForceSemantic.SetRangeAndFormat(0.0f, 15000.0f, "0", " N", quantization:1000);
 
 			Telemetry.SemanticInfo aeroAngleSemantic = new Telemetry.SemanticInfo();
-			aeroAngleSemantic.SetRangeAndFormat(-5.0f, 5.0f, "0.00", "°", quantization:1, alternateFormat:"0");
+			aeroAngleSemantic.SetRangeAndFormat(-5.0f, 5.0f, "0.00", "°", quantization:1);
 
 			Telemetry.SemanticInfo airDensitySemantic = new Telemetry.SemanticInfo();
-			airDensitySemantic.SetRangeAndFormat(1.15f, 1.19f, "0.0000", " kg/m³", quantization:0.05f, alternateFormat:"0.0");
+			airDensitySemantic.SetRangeAndFormat(1.15f, 1.19f, "0.0000", " kg/m³", quantization:0.05f, alternateFormat:"0.00");
 
 			// TODO: Use built-in SteerAngle semantic when available.
 			// Current SteerAngle semantic is related to the steering wheel angle and has been
@@ -299,7 +299,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			Steering.Settings steering = aero.vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
 
 			Telemetry.SemanticInfo steerAngleSemantic = new Telemetry.SemanticInfo();
-			steerAngleSemantic.SetRangeAndFormat(-steering.maxSteerAngle, steering.maxSteerAngle, "0.0", "°", quantization:5, alternateFormat:"0");
+			steerAngleSemantic.SetRangeAndFormat(-steering.maxSteerAngle, steering.maxSteerAngle, "0.0", "°", quantization:5);
 
 			// Fill-in channel information
 

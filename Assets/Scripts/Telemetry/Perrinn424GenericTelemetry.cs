@@ -391,7 +391,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		public override int GetChannelCount ()
 			{
-			return 3;
+			return 6;
 			}
 
 
@@ -412,10 +412,15 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			positionSemantic.SetRangeAndFormat(-3500, 3500, "0.0", " m", quantization:500);
 			var heightSemantic = new Telemetry.SemanticInfo();
 			heightSemantic.SetRangeAndFormat(-200, 200, "0.00", " m", quantization:20);
+			var yawSemantic = new Telemetry.SemanticInfo();
+			yawSemantic.SetRangeAndFormat(0, 360, "0.0", "°", quantization:20);
 
 			channelInfo[0].SetNameAndSemantic("PositionX", Telemetry.Semantic.Custom, positionSemantic);
 			channelInfo[1].SetNameAndSemantic("PositionY", Telemetry.Semantic.Custom, heightSemantic);
 			channelInfo[2].SetNameAndSemantic("PositionZ", Telemetry.Semantic.Custom, positionSemantic);
+			channelInfo[3].SetNameAndSemantic("RotationX", Telemetry.Semantic.BankAngle);
+			channelInfo[4].SetNameAndSemantic("RotationY", Telemetry.Semantic.Custom, yawSemantic);
+			channelInfo[5].SetNameAndSemantic("RotationZ", Telemetry.Semantic.BankAngle);
 			}
 
 
@@ -425,6 +430,16 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+0] = position.x;
 			values[index+1] = position.y;
 			values[index+2] = position.z;
+
+			Vector3 rotation = m_transform.rotation.eulerAngles;
+			float pitch = rotation.x;
+			if (pitch > 180) pitch -= 360;
+			float roll = rotation.z;
+			if (roll > 180) roll -= 360;
+
+			values[index+3] = pitch;
+			values[index+4] = rotation.y;
+			values[index+5] = roll;
 			}
 		}
 	}
