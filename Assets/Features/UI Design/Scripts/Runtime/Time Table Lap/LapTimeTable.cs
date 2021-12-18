@@ -48,13 +48,7 @@ namespace Perrinn424.UI
 
         public void AddSector(float sector)
         {
-            bool newLapAdded = timeTable.AddSector(sector);
-
-            //if (newLapAdded)
-            //{
-            //    AddRow();
-            //}
-
+            timeTable.AddSector(sector);
             Refresh();
         }
 

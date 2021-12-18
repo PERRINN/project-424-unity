@@ -20,8 +20,6 @@ namespace Perrinn424.UI
             for (int i = 0; i < lap.TimesCount; i++)
             {
                 Refresh(i, lap[i], format);
-                //timeCells[i+1].SetTime(lap[i]);
-                //timeCells[i+1].ApplyFormat(format);
             }
         }
 
