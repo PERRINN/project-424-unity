@@ -37,7 +37,10 @@ namespace Perrinn424.UI
         private void Update()
         {
             if (lapTimer != null)
+            {
                 timeCell.SetTime(lapTimer.currentLapTime);
+                lapTimeTable.UpdateRollingTime(lapTimer.currentSectors[(int)lapTimer.currentSector], lapTimer.currentLapTime);
+            }
         }
     }
 }

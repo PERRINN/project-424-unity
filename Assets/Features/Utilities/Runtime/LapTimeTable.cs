@@ -14,6 +14,7 @@ namespace Perrinn424.Utilities
         private LapTime idealLap;
 
         public int LapCount => laps.Count;
+        public bool IsEmpty => laps.Count == 0;
 
         /// <summary>
         /// Contains the best lap of each sector

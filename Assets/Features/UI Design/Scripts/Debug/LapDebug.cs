@@ -10,29 +10,19 @@ namespace Perrinn424.UI.Debug
 
         private IEnumerator Start()
         {
-            //IEnumerator getLaps = GetLaps().GetEnumerator();
-
-            //while (getLaps.MoveNext())
-            //{
-            //    float[] lap = (float[])getLaps.Current;
-            //    tapTimeTable.AddLap(lap);
-            //    yield return new WaitForSeconds(waitTime);
-            //}
-
-            //IEnumerator getSectors = GetSectors().GetEnumerator();
-
-            //while (getSectors.MoveNext())
-            //{
-            //    float sector = (float)getSectors.Current;
-            //    tapTimeTable.AddSector(sector);
-            //    yield return new WaitForSeconds(waitTime);
-            //}
+            //yield break;
+            yield return new WaitForSeconds(waitTime);
 
             foreach (float sector in GetSectorsFromLaps())
             {
                 tapTimeTable.AddSector(sector);
                 yield return new WaitForSeconds(waitTime);
             }
+        }
+
+        private void Update()
+        {
+            tapTimeTable.UpdateRollingTime(Time.time, Time.time * 2f);
         }
 
         IEnumerable GetLaps()

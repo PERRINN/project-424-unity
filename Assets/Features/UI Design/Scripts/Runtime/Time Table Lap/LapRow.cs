@@ -19,9 +19,16 @@ namespace Perrinn424.UI
             timeCells[0].ApplyFormat(format);
             for (int i = 0; i < lap.TimesCount; i++)
             {
-                timeCells[i+1].SetTime(lap[i]);
-                timeCells[i+1].ApplyFormat(format);
+                Refresh(i, lap[i], format);
+                //timeCells[i+1].SetTime(lap[i]);
+                //timeCells[i+1].ApplyFormat(format);
             }
+        }
+
+        public void Refresh(int cellIndex, float time, FormatCell format)
+        {
+            timeCells[cellIndex + 1].SetTime(time);
+            timeCells[cellIndex + 1].ApplyFormat(format);
         }
 
         public void ApplyFormat(int cellIndex, FormatCell format)
