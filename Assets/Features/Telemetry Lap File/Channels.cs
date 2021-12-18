@@ -30,7 +30,7 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void GetChannelsIndex()
         {
-            IList<Telemetry.ChannelInfo> telemetryChannelList = vehicle.telemetry.channels;
+            IReadOnlyList<Telemetry.ChannelInfo> telemetryChannelList = vehicle.telemetry.channels;
             lastTelemetryChannelCount = telemetryChannelList.Count;
 
             for (int channelIndex = 0; channelIndex < channels.Length; channelIndex++)
@@ -40,14 +40,8 @@ namespace Perrinn424.TelemetryLapSystem
                     continue;
                 }
 
-                for (int telemetryChannelIndex = 0; telemetryChannelIndex < lastTelemetryChannelCount; telemetryChannelIndex++)
-                {
-                    Telemetry.ChannelInfo info = telemetryChannelList[telemetryChannelIndex];
-                    if (info.fullName == channels[channelIndex])
-                    {
-                        SetTelemetryChannelIndex(channelIndex, telemetryChannelIndex);
-                    }
-                }
+                int telemetryChannelIndex = vehicle.telemetry.GetChannelIndex(channels[channelIndex]);
+                SetTelemetryChannelIndex(channelIndex, telemetryChannelIndex);
             }
         }
 
