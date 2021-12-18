@@ -11,6 +11,8 @@ namespace Perrinn424
         private readonly int sectorCount;
         private readonly int timeColumsCount;
 
+        private LapTime idealLap;
+
         public int LapCount => laps.Count;
 
         /// <summary>
@@ -43,6 +45,7 @@ namespace Perrinn424
 
             bestLapForEachSector = new int[timeColumsCount];
             improvedTimes = new List<int>();
+            idealLap = new LapTime(sectorCount);
         }
 
         public void AddLap(IEnumerable<float> sectors)
@@ -98,6 +101,12 @@ namespace Perrinn424
             return bestLapForEachSector[timeColumsCount-1];
         }
 
+        public LapTime GetIdealLap()
+        {
+            CalculateBest();
+            return idealLap;
+        }
+
         private void CalculateBest()
         {
             if(!isDirty)
@@ -111,6 +120,7 @@ namespace Perrinn424
                 bestLapForEachSector[sectorIndex] = 0;
             }
 
+            //Calculate best sectors
             for (int lapIndex = 1; lapIndex < laps.Count; lapIndex++)
             {
                 for (int sectorIndex = 0; sectorIndex < timeColumsCount; sectorIndex++)
@@ -128,11 +138,19 @@ namespace Perrinn424
                 }
             }
 
+
+            //Calculate the ideal laps
+            for (int sectorIndex = 0; sectorIndex < sectorCount; sectorIndex++)
+            {
+                int lapIndex = bestLapForEachSector[sectorIndex];
+                float sectorTime = laps[lapIndex][sectorIndex];
+                idealLap.UpdateSector(sectorIndex, sectorTime);
+            }
+
             isDirty = false;
         }
 
         public LapTime this[int i] => laps[i];
-
 
         public IEnumerator<LapTime> GetEnumerator()
         {
