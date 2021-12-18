@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Perrinn424
+namespace Perrinn424.Utilities
 {
     public class LapTime : IEnumerable<float>
     {

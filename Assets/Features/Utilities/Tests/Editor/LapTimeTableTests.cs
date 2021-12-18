@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Perrinn424.Editor.Tests
+namespace Perrinn424.Utilities.Editor.Tests
 {
 
     public class LapTimeTableTests

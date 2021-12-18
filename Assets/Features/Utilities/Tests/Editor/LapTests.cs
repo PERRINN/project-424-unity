@@ -3,7 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Perrinn424.Editor.Tests
+namespace Perrinn424.Utilities.Editor.Tests
 {
     public class LapTests
     {

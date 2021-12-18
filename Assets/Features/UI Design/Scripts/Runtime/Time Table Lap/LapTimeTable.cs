@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Perrinn424.Utilities;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,11 +27,11 @@ namespace Perrinn424.UI
         private int sectorCount = 3;
 
         private List<LapRow> rowList;
-        private Perrinn424.LapTimeTable table;
+        private Utilities.LapTimeTable table;
 
         private void OnEnable()
         {
-            table = new Perrinn424.LapTimeTable(sectorCount);
+            table = new Utilities.LapTimeTable(sectorCount);
             rowList = new List<LapRow>();
             lapUIPrefab.gameObject.SetActive(false);
         }
