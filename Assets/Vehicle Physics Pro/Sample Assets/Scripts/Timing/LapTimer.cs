@@ -43,13 +43,14 @@ public class LapTimer : MonoBehaviour
 	public Action<int, float> onSector;
 	public Action onBeginLap;
 
-	// Current lap time for visual purposes
+	// Current lap and sector times for visual purposes
 
 	public float currentLapTime => Time.time - m_trackStartTime;
+	public float currentSectorTime => Time.time - m_sectorStartTime;
 
 	// Current sector
 
-	public float currentSector => m_currentSector;
+	public int currentSector => m_currentSector;
 
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
@@ -301,7 +302,7 @@ public class LapTimer : MonoBehaviour
 
 			m_currentSector = 0;
 			m_trackStartTime = hitTime;
-			m_sectorStartTime = m_trackStartTime;
+			m_sectorStartTime = hitTime;
 			m_invalidSector = false;
 			m_invalidLap = false;
 
