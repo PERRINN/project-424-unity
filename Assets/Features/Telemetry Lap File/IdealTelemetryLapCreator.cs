@@ -14,10 +14,9 @@ namespace Perrinn424.TelemetryLapSystem
 
         private Dictionary<int, string> lapToFilename;
         private string[] headers;
-        private int sectorIndex;
-        private int timeIndex;
-        private float dt;
-        private float time;
+
+        private IdealTelemetryLapCreatorCorrector corrector;
+        private CSVLine currentLine;
 
         public static void CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
         {
@@ -81,11 +80,11 @@ namespace Perrinn424.TelemetryLapSystem
             ValidateMetadata();
             
             headers = metadatas[0].headers;
+            currentLine = new CSVLine(headers);
+
             ValidateHeaders();
-            sectorIndex = Array.IndexOf(headers, "SECTOR");
-            timeIndex = Array.IndexOf(headers, "TIME");
-            dt = 1f / metadatas[0].frequency;
-            time = 0f;
+            float dt = 1f / metadatas[0].frequency;
+            corrector = new IdealTelemetryLapCreatorCorrector(dt);
             sectorCount = metadatas[0].sectorsTime.Length;
             this.timeTable = new LapTimeTable(sectorCount);
 
@@ -205,9 +204,9 @@ namespace Perrinn424.TelemetryLapSystem
             foreach (string line in enumerable)
             {
 
-                float[] values = line.Split(',').Select(v => float.Parse(v, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
-                
-                int currentSector = (int)values[sectorIndex];
+                currentLine.UpdateValues(line);
+
+                int currentSector = currentLine.Sector;
                 if (currentSector == sector && !inSector)
                 {
                     //Debug.Log($"Sector {sector} starts in line {lineCount} with {line}");
@@ -223,9 +222,8 @@ namespace Perrinn424.TelemetryLapSystem
 
                 if (inSector)
                 {
-                    values[timeIndex] = time;
-                    telemetryLapFileWriter.WriteRow(values);
-                    time += dt;
+                    corrector.Correct(currentLine);
+                    telemetryLapFileWriter.WriteRow(currentLine.Values);
                 }
             }
         }
