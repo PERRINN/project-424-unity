@@ -6,44 +6,68 @@ namespace Perrinn424.TelemetryLapSystem
     {
         private float dt;
         private float time;
-        //private float distance;
         private float distanceOffset;
-        public IdealTelemetryLapCreatorCorrector(float dt)
+
+        private CSVLine temp;
+        private CSVLine current;
+        private CSVLine previous;
+        private CSVLine corrected;
+
+        public int LineSector => temp.Sector;
+        public float[] CorrectedValues => corrected.Values;
+
+        public void ReadLine(string line)
         {
+            temp.UpdateValues(line);
+        }
+        public IdealTelemetryLapCreatorCorrector(string [] headers, float dt)
+        {
+            temp = new CSVLine(headers);
+            current = new CSVLine(headers);
+            previous = new CSVLine(headers);
+            corrected = new CSVLine(headers);
+
             this.dt = dt;
             time = 0f;
-            //distance = 0f;
             distanceOffset = 0f;
         }
-        public void Correct(CSVLine current, CSVLine previous)
+
+        //public void Correct(CSVLine corrected, CSVLine current, CSVLine previous)
+        //{
+        //    previous.UpdateValues(current);
+        //    current.UpdateValues(temp);
+        //    corrected.UpdateValues(current);
+
+        //    corrected.Time = time;
+        //    time += dt;
+
+        //    if (!previous.HasValues)
+        //        return;
+
+        //    float distanceDifference = current.Distance - previous.Distance;
+        //    float distanceDifferenceFromSpeed = current.Speed * dt;
+        //    float offset = distanceDifferenceFromSpeed - distanceDifference;
+        //    float error = offset / (distanceDifferenceFromSpeed);
+
+        //    if (Mathf.Abs(error) > 0.05f)
+        //    {
+        //        distanceOffset = distanceOffset + offset;
+        //    }
+
+        //    corrected.Distance = current.Distance + distanceOffset;
+        //}
+
+        public void Correct()
         {
-            current.Time = time;
-            time += dt;
-            return;
-
-            if (current.Distance < 0f)
-                return;
-
-            float error = ((current.Distance - previous.Distance) - (current.Speed*dt))/ (current.Speed * dt);
-
-            if (Mathf.Abs(error) > 0.05f)
-            {
-                distanceOffset = distanceOffset + (current.Speed * dt - (current.Distance - previous.Distance));
-            }
-
-            //distance = distance + current.Speed;
-            current.Distance = current.Distance + distanceOffset;
-        }
-
-        public void Correct(CSVLine corrected, CSVLine current, CSVLine previous)
-        {
+            previous.UpdateValues(current);
+            current.UpdateValues(temp);
             corrected.UpdateValues(current);
 
             corrected.Time = time;
             time += dt;
 
-            if (!previous.HasValues)
-                return;
+            //if (!previous.HasValues)
+            //    return;
 
             float distanceDifference = current.Distance - previous.Distance;
             float distanceDifferenceFromSpeed = current.Speed * dt;
@@ -56,8 +80,9 @@ namespace Perrinn424.TelemetryLapSystem
             }
 
 
-            //distance = distance + current.Speed;
             corrected.Distance = current.Distance + distanceOffset;
+
+            //previous.UpdateValues(current);
         }
     } 
 }

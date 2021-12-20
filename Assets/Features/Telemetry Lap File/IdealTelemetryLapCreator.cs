@@ -16,9 +16,9 @@ namespace Perrinn424.TelemetryLapSystem
         private string[] headers;
 
         private IdealTelemetryLapCreatorCorrector corrector;
-        private CSVLine previousLine;
-        private CSVLine currentLine;
-        private CSVLine correctedLine;
+        //private CSVLine previousLine;
+        //private CSVLine currentLine;
+        //private CSVLine correctedLine;
 
         public static TelemetryLapMetadata CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
         {
@@ -84,13 +84,13 @@ namespace Perrinn424.TelemetryLapSystem
             ValidateMetadata();
             
             headers = metadatas[0].headers;
-            previousLine = new CSVLine(headers);
-            currentLine = new CSVLine(headers);
-            correctedLine = new CSVLine(headers);
+            //previousLine = new CSVLine(headers);
+            //currentLine = new CSVLine(headers);
+            //correctedLine = new CSVLine(headers);
 
             ValidateHeaders();
             float dt = 1f / metadatas[0].frequency;
-            corrector = new IdealTelemetryLapCreatorCorrector(dt);
+            corrector = new IdealTelemetryLapCreatorCorrector(headers, dt);
             sectorCount = metadatas[0].sectorsTime.Length;
             this.timeTable = new LapTimeTable(sectorCount);
 
@@ -209,16 +209,17 @@ namespace Perrinn424.TelemetryLapSystem
             bool inSector = false;
             foreach (string line in enumerable)
             {
-                currentLine.UpdateValues(line);
+                corrector.ReadLine(line);
+                //currentLine.UpdateValues(line);
 
-                int currentSector = currentLine.Sector;
-                if (currentSector == sector && !inSector)
+                int sectorInLine = corrector.LineSector;
+                if (sectorInLine == sector && !inSector)
                 {
                     //Debug.Log($"Sector {sector} starts in line {lineCount} with {line}");
                     inSector = true;
                 }
 
-                if (currentSector != sector && inSector)
+                if (sectorInLine != sector && inSector)
                 {
                     //Debug.Log($"Sector {sector} ends in line {lineCount}  with {line}");
                     inSector = false;
@@ -227,10 +228,11 @@ namespace Perrinn424.TelemetryLapSystem
 
                 if (inSector)
                 {
-                    corrector.Correct(correctedLine, currentLine, previousLine);
+                    //corrector.Correct(correctedLine, currentLine, previousLine);
+                    corrector.Correct();
                     //corrector.Correct(currentLine, previousLine);
-                    telemetryLapFileWriter.WriteRow(correctedLine.Values);
-                    previousLine.UpdateValues(currentLine);
+                    telemetryLapFileWriter.WriteRow(corrector.CorrectedValues);
+                    //previousLine.UpdateValues(currentLine);
                 }
             }
         }
