@@ -8,6 +8,7 @@ namespace Perrinn424.TelemetryLapSystem
     {
         private float [] values;
         private Dictionary<string, int> headersIndex;
+        public bool HasValues { get; private set; }
         public CSVLine(string[] headers)
         {
             values = new float[headers.Length];
@@ -25,6 +26,11 @@ namespace Perrinn424.TelemetryLapSystem
             set => values[headersIndex[header]] = value;
         }
 
+        public void UpdateValues(CSVLine other)
+        {
+            UpdateValues(other.Values);
+        }
+
         public void UpdateValues(string line)
         {
             float[] aux = line.Split(',').Select(v => float.Parse(v, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
@@ -37,6 +43,8 @@ namespace Perrinn424.TelemetryLapSystem
             {
                 values[i] = newValues[i];
             }
+
+            HasValues = true;
         }
 
         public bool Contains(string header)

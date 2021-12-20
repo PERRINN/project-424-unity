@@ -16,11 +16,13 @@ namespace Perrinn424.TelemetryLapSystem
         private string[] headers;
 
         private IdealTelemetryLapCreatorCorrector corrector;
+        private CSVLine previousLine;
         private CSVLine currentLine;
+        private CSVLine correctedLine;
 
-        public static void CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
+        public static TelemetryLapMetadata CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
         {
-            new IdealTelemetryLapCreator(telemetryLapMetadatas).CreateSyntheticFile();
+            return new IdealTelemetryLapCreator(telemetryLapMetadatas).CreateSyntheticFile();
         }
 
         public IdealTelemetryLapCreator(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
@@ -29,7 +31,7 @@ namespace Perrinn424.TelemetryLapSystem
             this.lapToFilename = new Dictionary<int, string>();
         }
 
-        private void CreateSyntheticFile()
+        private TelemetryLapMetadata CreateSyntheticFile()
         {
             ProcessMetadata();
 
@@ -73,6 +75,8 @@ namespace Perrinn424.TelemetryLapSystem
 
             telemetryLapFileWriter.StopRecordingAndSaveFile(finalMetadata);
 
+            return finalMetadata;
+
         }
 
         private void ProcessMetadata()
@@ -80,7 +84,9 @@ namespace Perrinn424.TelemetryLapSystem
             ValidateMetadata();
             
             headers = metadatas[0].headers;
+            previousLine = new CSVLine(headers);
             currentLine = new CSVLine(headers);
+            correctedLine = new CSVLine(headers);
 
             ValidateHeaders();
             float dt = 1f / metadatas[0].frequency;
@@ -203,7 +209,6 @@ namespace Perrinn424.TelemetryLapSystem
             bool inSector = false;
             foreach (string line in enumerable)
             {
-
                 currentLine.UpdateValues(line);
 
                 int currentSector = currentLine.Sector;
@@ -222,8 +227,10 @@ namespace Perrinn424.TelemetryLapSystem
 
                 if (inSector)
                 {
-                    corrector.Correct(currentLine);
-                    telemetryLapFileWriter.WriteRow(currentLine.Values);
+                    corrector.Correct(correctedLine, currentLine, previousLine);
+                    //corrector.Correct(currentLine, previousLine);
+                    telemetryLapFileWriter.WriteRow(correctedLine.Values);
+                    previousLine.UpdateValues(currentLine);
                 }
             }
         }
