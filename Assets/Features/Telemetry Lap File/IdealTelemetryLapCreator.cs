@@ -16,9 +16,6 @@ namespace Perrinn424.TelemetryLapSystem
         private string[] headers;
 
         private IdealTelemetryLapCreatorCorrector corrector;
-        //private CSVLine previousLine;
-        //private CSVLine currentLine;
-        //private CSVLine correctedLine;
 
         public static TelemetryLapMetadata CreateSyntheticTelemetryLap(IReadOnlyList<TelemetryLapMetadata> telemetryLapMetadatas)
         {
@@ -84,9 +81,6 @@ namespace Perrinn424.TelemetryLapSystem
             ValidateMetadata();
             
             headers = metadatas[0].headers;
-            //previousLine = new CSVLine(headers);
-            //currentLine = new CSVLine(headers);
-            //correctedLine = new CSVLine(headers);
 
             ValidateHeaders();
             float dt = 1f / metadatas[0].frequency;
@@ -210,16 +204,15 @@ namespace Perrinn424.TelemetryLapSystem
             foreach (string line in enumerable)
             {
                 corrector.ReadLine(line);
-                //currentLine.UpdateValues(line);
 
                 int sectorInLine = corrector.LineSector;
-                if (sectorInLine == sector && !inSector)
+                if (sectorInLine == sector && !inSector) //entering the sector
                 {
                     //Debug.Log($"Sector {sector} starts in line {lineCount} with {line}");
                     inSector = true;
                 }
 
-                if (sectorInLine != sector && inSector)
+                if (sectorInLine != sector && inSector) //exiting the sector
                 {
                     //Debug.Log($"Sector {sector} ends in line {lineCount}  with {line}");
                     inSector = false;
@@ -228,11 +221,8 @@ namespace Perrinn424.TelemetryLapSystem
 
                 if (inSector)
                 {
-                    //corrector.Correct(correctedLine, currentLine, previousLine);
                     corrector.Correct();
-                    //corrector.Correct(currentLine, previousLine);
                     telemetryLapFileWriter.WriteRow(corrector.CorrectedValues);
-                    //previousLine.UpdateValues(currentLine);
                 }
             }
         }
