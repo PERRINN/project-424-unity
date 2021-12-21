@@ -1,4 +1,4 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
 //          Copyright © 2011-2020 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
@@ -43,13 +43,14 @@ public class LapTimer : MonoBehaviour
 	public Action<int, float> onSector;
 	public Action onBeginLap;
 
-	// Current lap time for visual purposes
+	// Current lap and sector times for visual purposes
 
 	public float currentLapTime => Time.time - m_trackStartTime;
+	public float currentSectorTime => Time.time - m_sectorStartTime;
 
 	// Current sectors
 
-	public float currentSector => m_currentSector;
+	public int currentSector => m_currentSector;
 	public IReadOnlyList<float> currentSectors => m_sectors;
 	public IReadOnlyList<bool> currentValidSectors => m_validSectors;
 
@@ -305,7 +306,7 @@ public class LapTimer : MonoBehaviour
 
 			m_currentSector = 0;
 			m_trackStartTime = hitTime;
-			m_sectorStartTime = m_trackStartTime;
+			m_sectorStartTime = hitTime;
 			m_invalidSector = false;
 			m_invalidLap = false;
 
