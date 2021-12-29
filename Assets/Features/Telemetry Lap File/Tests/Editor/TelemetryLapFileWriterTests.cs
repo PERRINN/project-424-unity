@@ -10,7 +10,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor.Tests
         [SetUp]
         public void SetUp()
         {
-            lapFile = new TelemetryLapFileWriter(new string[0]);
+            lapFile = new TelemetryLapFileWriter(new string[0], new string[0]);
         }
 
         [TearDown]

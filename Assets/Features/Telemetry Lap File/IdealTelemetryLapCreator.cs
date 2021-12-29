@@ -14,6 +14,7 @@ namespace Perrinn424.TelemetryLapSystem
 
         private Dictionary<int, string> lapToFilename;
         private string[] headers;
+        private string[] units;
 
         private IdealTelemetryLapCreatorCorrector corrector;
 
@@ -34,7 +35,7 @@ namespace Perrinn424.TelemetryLapSystem
 
             int[] bestLapsPerSector = timeTable.GetBestLapForEachSector();
 
-            TelemetryLapFileWriter telemetryLapFileWriter = new TelemetryLapFileWriter(headers);
+            TelemetryLapFileWriter telemetryLapFileWriter = new TelemetryLapFileWriter(headers, units);
             telemetryLapFileWriter.StartRecording();
 
             for (int sectorIndex = 0; sectorIndex < sectorCount; sectorIndex++)
@@ -81,6 +82,7 @@ namespace Perrinn424.TelemetryLapSystem
             ValidateMetadata();
             
             headers = metadatas[0].headers;
+            units = metadatas[0].headerUnits;
 
             ValidateHeaders();
             float dt = 1f / metadatas[0].frequency;
@@ -138,6 +140,11 @@ namespace Perrinn424.TelemetryLapSystem
             if (!AllEqual(m => m.headers, HeaderComparer))
             {
                 throw new ArgumentException($"All laps must have the same headers");
+            }
+
+            if (!AllEqual(m => m.headerUnits, HeaderComparer))
+            {
+                throw new ArgumentException($"All laps must have the same header units");
             }
         }
 
@@ -199,6 +206,7 @@ namespace Perrinn424.TelemetryLapSystem
             IEnumerable<string> enumerable = File.ReadLines(@filename);
             IEnumerator<string> enumerator = enumerable.GetEnumerator();
             enumerator.MoveNext();//skip headers
+            enumerator.MoveNext();//skip units
 
             bool inSector = false;
             foreach (string line in enumerable)

@@ -37,9 +37,11 @@ namespace Perrinn424.TelemetryLapSystem
             frequency.Reset();
             channels.Reset(vehicle);
 
-            List<string> headers = GetHeaders();
+            List<string> headers = new List<string>();
+            List<string> units = new List<string>();
+            GetHeadersAndUnits(headers, units);
 
-            file = new TelemetryLapFileWriter(headers);
+            file = new TelemetryLapFileWriter(headers, units);
 
             telemetryLapMetadatas = new List<TelemetryLapMetadata>();
         }
@@ -50,18 +52,19 @@ namespace Perrinn424.TelemetryLapSystem
             lapTimer.onLap -= LapCompletedEventHandler;
         }
 
-        private List<string> GetHeaders()
+        private void GetHeadersAndUnits(List<string> headers, List<string> units)
         {
             var dataRowCount = DataRow.ParamCount;
             var channelsCount = channels.Length;
             int width = dataRowCount + channelsCount;
             
             rowCache = new float[width];
-            
-            List<string> headers = DataRow.Headers.Split(',').ToList();
+
+            headers.AddRange(DataRow.Headers);
             headers.AddRange(channels.GetHeaders());
-            
-            return headers;
+
+            units.AddRange(DataRow.Units);
+            units.AddRange(channels.Units);
         }
 
 

@@ -11,6 +11,8 @@ namespace Perrinn424.TelemetryLapSystem
     {
         [SerializeField]
         private string[] channels;
+        public string[] Units { get; private set; }
+
         private int[] channelsIndex;
         private const int channelNotFoundIndex = -1;
         private int lastTelemetryChannelCount;
@@ -26,6 +28,7 @@ namespace Perrinn424.TelemetryLapSystem
             this.vehicle = vehicle;
             channelsIndex = Enumerable.Repeat(channelNotFoundIndex, channels.Length).ToArray();
             GetChannelsIndex();
+            GetUnits();
         }
 
         private void GetChannelsIndex()
@@ -43,6 +46,14 @@ namespace Perrinn424.TelemetryLapSystem
                 int telemetryChannelIndex = vehicle.telemetry.GetChannelIndex(channels[channelIndex]);
                 SetTelemetryChannelIndex(channelIndex, telemetryChannelIndex);
             }
+        }
+
+        private void GetUnits()
+        {
+            Units =
+                channelsIndex
+                .Select(index => vehicle.telemetry.GetChannelSemmantic(index).displayUnits)
+                .ToArray();
         }
 
         public void RefreshIfNeeded()
