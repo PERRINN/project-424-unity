@@ -12,6 +12,7 @@ namespace Perrinn424.TelemetryLapSystem
         [SerializeField]
         private string[] channels;
         public string[] Units { get; private set; }
+        private float[] unitsMultiplier;
 
         private int[] channelsIndex;
         private const int channelNotFoundIndex = -1;
@@ -50,10 +51,12 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void GetUnits()
         {
-            Units =
+            var semantics =
                 channelsIndex
-                .Select(index => vehicle.telemetry.GetChannelSemmantic(index).displayUnits)
-                .ToArray();
+                .Select(index => vehicle.telemetry.GetChannelSemmantic(index));
+
+            Units = semantics.Select(semantic => semantic.displayUnits).ToArray();
+            unitsMultiplier = semantics.Select(semantic => semantic.displayMultiplier).ToArray();
         }
 
         public void RefreshIfNeeded()
@@ -79,7 +82,7 @@ namespace Perrinn424.TelemetryLapSystem
             if (IsChannelValidAndActive(index))
             {
                 int telemetryChannelIndex = GetTelemetryChannelIndex(index);
-                return DataRow.values[telemetryChannelIndex];
+                return DataRow.values[telemetryChannelIndex] * unitsMultiplier[index];
             }
 
             return float.NaN;
