@@ -74,7 +74,6 @@ namespace Perrinn424.TelemetryLapSystem
                     return;
                 }
             }
-
         }
 
         public float GetValue(int index)

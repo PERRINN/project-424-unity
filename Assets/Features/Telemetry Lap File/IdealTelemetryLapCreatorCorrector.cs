@@ -41,8 +41,6 @@ namespace Perrinn424.TelemetryLapSystem
             corrected.Time = time;
             time += dt;
 
-            //if (!previous.HasValues) 
-            //    return;
 
             float distanceDifference = current.Distance - previous.Distance;
             float distanceDifferenceFromSpeed = current.Speed * dt;
@@ -53,7 +51,6 @@ namespace Perrinn424.TelemetryLapSystem
             {
                 distanceOffset = distanceOffset + offset;
             }
-
 
             corrected.Distance = current.Distance + distanceOffset;
         }
