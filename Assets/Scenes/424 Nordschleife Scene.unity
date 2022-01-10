@@ -9020,6 +9020,66 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1391364163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1391364165}
+  - component: {fileID: 1391364164}
+  m_Layer: 0
+  m_Name: TelemetryLapWriter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1391364164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391364163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3867e8e5dc6c9f140a545a7811541508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  log: 1
+  lapTimer: {fileID: 114863622256485037}
+  frequency:
+    frequency: 50
+  channels:
+    channels:
+    - PositionX
+    - PositionY
+    - PositionZ
+    - RotationX
+    - RotationY
+    - RotationZ
+    - SteeringAngle
+    - Throttle
+    - BrakePressure
+    - Gear
+    - Speed
+--- !u!4 &1391364165
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391364163}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 773184386}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1536732955 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2973885201336558946, guid: 8368094040e50bc48a2a58a0a8db460a,

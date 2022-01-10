@@ -49,7 +49,7 @@ namespace Perrinn424
         public LapTime(float[] s) : this(s.Length, s){}
         public LapTime(int sectorCount) : this(sectorCount, new float[0]){}
 
-        public float this[int i] => times[i];
+        public float this[int index] => times[index];
 
         public void AddSector(float newTime)
         {
@@ -58,6 +58,22 @@ namespace Perrinn424
 
             times[SectorsCompletedIndex++] = newTime;
 
+            RefreshSum();
+        }
+
+        public void UpdateSector(int index, float newValue)
+        {
+            if (times[index] == Mathf.Infinity && newValue != Mathf.Infinity)
+            {
+                SectorsCompletedIndex++;
+            }
+
+            times[index] = newValue;
+            RefreshSum();
+        }
+
+        private void RefreshSum()
+        {
             if (IsCompleted)
             {
                 float sum = 0;

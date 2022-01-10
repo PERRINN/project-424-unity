@@ -97,11 +97,12 @@ namespace Perrinn424.Utilities.Editor.Tests
         [TestCase(52.123f, TimeFormatter.Mode.MinutesAndSeconds, @"m\:ss\.fff", @"ss\.fff", "52.123")]
         [TestCase(62.123f, TimeFormatter.Mode.TotalSeconds, @"m\:ss\.fff", @"m\:ss\.fff", "62.123")]
         [TestCase(62.123f, TimeFormatter.Mode.MinutesAndSeconds, @"mm\:ss\.fff", @"ss\.fff", "01:02.123")]
+        [TestCase(62.123f, TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff", "01.02.123")]
         public void TimeFormartterTests(
             float seconds, TimeFormatter.Mode mode, string formatWithMinutes,string formatWithoutMinutes, string expectedResult)
         {
-            TimeFormatter formartter = new TimeFormatter(mode, formatWithMinutes, formatWithoutMinutes);
-            Assert.That(formartter.ToString(seconds), Is.EqualTo(expectedResult));
+            TimeFormatter formatter = new TimeFormatter(mode, formatWithMinutes, formatWithoutMinutes);
+            Assert.That(formatter.ToString(seconds), Is.EqualTo(expectedResult));
         }
     }
 }

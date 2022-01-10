@@ -1,4 +1,4 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
 //          Copyright © 2011-2020 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
@@ -48,9 +48,11 @@ public class LapTimer : MonoBehaviour
 	public float currentLapTime => Time.time - m_trackStartTime;
 	public float currentSectorTime => Time.time - m_sectorStartTime;
 
-	// Current sector
+	// Current sectors
 
 	public int currentSector => m_currentSector;
+	public IReadOnlyList<float> currentSectors => m_sectors;
+	public IReadOnlyList<bool> currentValidSectors => m_validSectors;
 
 	// Non-serialized allows to use DontDestroyOnLoad
 	// and the component resetting itself on reloading the scene
@@ -223,8 +225,10 @@ public class LapTimer : MonoBehaviour
 
 	public void OnTimerHit (VehicleBase vehicle, int sector, float hitTime, float hitDistance)
 		{
+		int sectorLen = m_sectors.Length;
+
 		if (!isActiveAndEnabled) return;
-		if (sector >= sectors) return;
+		if (sector >= sectorLen) return;
 
 		if (debugLog)
 			Debug.Log("Sector hit: " + sector);
@@ -236,16 +240,16 @@ public class LapTimer : MonoBehaviour
 			// Start line hit
 			// -------------------------------------------------------------------------------------
 
-			if (m_currentSector == sectors-1)
+			if (m_currentSector == sectorLen-1)
 				{
 				// Lap completed (previous hit was last sector)
 
 				if (lapTime > minLapTime)
 					{
-					m_sectors[sectors-1] = hitTime - m_sectorStartTime;
-					m_validSectors[sectors-1] = !m_invalidSector;
+					m_sectors[sectorLen-1] = hitTime - m_sectorStartTime;
+					m_validSectors[sectorLen-1] = !m_invalidSector;
 
-					onSector?.Invoke(sectors, m_sectors[sectors - 1]);
+					onSector?.Invoke(sectorLen, m_sectors[sectorLen - 1]);
 					onLap?.Invoke(lapTime, !m_invalidLap, m_sectors, m_validSectors);
 
 					if (debugLog)
@@ -260,7 +264,7 @@ public class LapTimer : MonoBehaviour
 						// Okey - we have a lap time
 						// Report last sector and new lap
 
-						SectorPass(sectors, hitTime - m_trackStartTime);
+						SectorPass(sectorLen, hitTime - m_trackStartTime);
 						NewLap(lapTime);
 						}
 					else
@@ -417,7 +421,9 @@ public class LapTimer : MonoBehaviour
 			currentTimeText += " " + FormatLapTime(t);
 			}
 
-		if (sectors > 1)
+		int sectorLen = m_sectors.Length;
+
+		if (sectorLen > 1)
 			{
 			for (int i=0, c=m_sectors.Length; i<c; i++)
 				{
@@ -430,7 +436,7 @@ public class LapTimer : MonoBehaviour
 		smallText += "\n";
 		smallText += "\n\nBest " + (m_bestTime > 0.0f ? FormatLapTime(m_bestTime) : "-") + "\n\n";
 
-		float heightDelta = (sectors - 3) * m_style.lineHeight;
+		float heightDelta = (sectorLen - 3) * m_style.lineHeight;
 		float boxWidth = 180;
 		float boxHeight = 180 + heightDelta;
 
