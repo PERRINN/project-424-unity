@@ -14,6 +14,7 @@
         public bool markerFlag;
 
         public static int ParamCount => 10;
-        public static string Headers => "FRAME,TIME,DISTANCE,TOTALTIME,TOTALDISTANCE,SEGMENTNUM,SECTOR,MARKERS,MARKERTIME,MARKERFLAG";
+        public static string[] Headers = new string[]{ "FRAME", "TIME", "DISTANCE", "TOTALTIME", "TOTALDISTANCE", "SEGMENTNUM", "SECTOR", "MARKERS", "MARKERTIME", "MARKERFLAG" };
+        public static string[] Units = new string[]{ "n/a", "s", "m", "s", "m", "n/a", "n/a", "n/a", "n/a", "n/a" };
     } 
 }

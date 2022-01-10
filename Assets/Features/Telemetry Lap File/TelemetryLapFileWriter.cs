@@ -28,11 +28,14 @@ namespace Perrinn424.TelemetryLapSystem
 
 
         public IReadOnlyList<string> Headers { get; private set; }
+        public IReadOnlyList<string> Units { get; private set; }
         public bool IsRecordingReady { get; private set; }
 
-        public TelemetryLapFileWriter(IReadOnlyList<string> headers)
+        public TelemetryLapFileWriter(IReadOnlyList<string> headers, IReadOnlyList<string> units)
         {
             this.Headers = headers;
+            this.Units = units;
+
             invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
             builder = new StringBuilder();
             timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
@@ -51,7 +54,7 @@ namespace Perrinn424.TelemetryLapSystem
             fileWriter = new CSVFileWriter(fs);
             
             HeadersWritten = false;
-            WriteHeaders(Headers);
+            WriteHeaders(Headers, Units);
             
             IsRecordingReady = true;
         }
@@ -85,6 +88,7 @@ namespace Perrinn424.TelemetryLapSystem
         {
             meta.csvFile = Filename;
             meta.headers = Headers.ToArray();
+            meta.headerUnits = Units.ToArray();
             meta.count = LineCount;
             meta.timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
@@ -93,7 +97,7 @@ namespace Perrinn424.TelemetryLapSystem
             File.WriteAllText(MetadataFullRelativePath, json);
         }
 
-        public void WriteHeaders(IEnumerable<string> headers)
+        public void WriteHeaders(IEnumerable<string> headers, IEnumerable<string> units)
         {
             if (HeadersWritten)
             {
@@ -104,10 +108,24 @@ namespace Perrinn424.TelemetryLapSystem
             {
                 throw new FormatException($"string:{separator} is not allowed in headers");
             }
-            
+
+            if (units.Any(h => ValidateHeader(h)))
+            {
+                throw new FormatException($"string:{separator} is not allowed in header units");
+            }
+
+            if (headers.Count() != units.Count())
+            {
+                throw new FormatException($"Headers and header units must have the same length");
+            }
+
             ColumnCount = headers.Count();
-            string line = String.Join(separator, headers);
-            fileWriter.WriteLine(line);
+            string headerLine = String.Join(separator, headers);
+            fileWriter.WriteLine(headerLine);
+
+            string headerUnitsLine = String.Join(separator, units);
+            fileWriter.WriteLine(headerUnitsLine);
+
             HeadersWritten = true;
         }
 

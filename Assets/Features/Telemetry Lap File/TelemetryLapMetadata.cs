@@ -12,6 +12,7 @@
         public float completedSectors;
         public float[] sectorsTime;
         public string[] headers;
+        public string[] headerUnits;
         public int count;
         public string csvFile;
         public long timeStamp;
