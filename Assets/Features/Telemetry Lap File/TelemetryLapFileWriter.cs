@@ -55,7 +55,8 @@ namespace Perrinn424.TelemetryLapSystem
             
             HeadersWritten = false;
             WriteHeaders(Headers, Units);
-            
+
+            LineCount = 0;
             IsRecordingReady = true;
         }
 
