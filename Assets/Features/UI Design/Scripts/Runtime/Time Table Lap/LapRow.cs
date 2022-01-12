@@ -13,13 +13,14 @@ namespace Perrinn424.UI
             timeCells = this.GetComponentsInChildren<TimeCell>();
         }
 
-        public void Refresh(string title, LapTime lap, FormatCell format)
+        public void Refresh(string title, FormatCell titleFormat, LapTime lap, FormatCell cellFormat)
         {
             timeCells[0].SetText(title);
-            timeCells[0].ApplyFormat(format);
+            timeCells[0].ApplyFormat(titleFormat);
+
             for (int i = 0; i < lap.TimesCount; i++)
             {
-                Refresh(i, lap[i], format);
+                Refresh(i, lap[i], cellFormat);
             }
         }
 
