@@ -326,7 +326,8 @@ public class Autopilot : VehicleBehaviour
 
                 // Speed check
                 float replayTravelingDistance = (autopilotProvider[closestFrame2].position - autopilotProvider[closestFrame1].position).magnitude;
-                float SecondsPerFrame = Time.time - m_lastTime;
+                //float SecondsPerFrame = Time.time - m_lastTime;
+                float SecondsPerFrame = (closestFrame2 - closestFrame1) * autopilotProvider.TimeStep;
                 m_lastPosition = vehicle.transform.position;
                 m_totalDistance += replayTravelingDistance;
 
@@ -334,7 +335,8 @@ public class Autopilot : VehicleBehaviour
                 int brakeERR = autopilotProvider[closestFrame2].inputData[InputData.Brake] - autopilotProvider[closestFrame1].inputData[InputData.Brake];
                 showBrake = (brakeERR * progressive / 100) + autopilotProvider[closestFrame1].inputData[InputData.Brake];
 
-                if (vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
+                //if (vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
+                if (MagicMethod(replayTravelingDistance, SecondsPerFrame, startUpBrakeSpeedRatio))   //startup
                 {
                     showBrake = 0;
                 }
@@ -345,9 +347,11 @@ public class Autopilot : VehicleBehaviour
                 int throttleERR = autopilotProvider[closestFrame2].inputData[InputData.Throttle] - autopilotProvider[closestFrame1].inputData[InputData.Throttle];
                 showThrottle = (throttleERR * progressive / 100) + autopilotProvider[closestFrame1].inputData[InputData.Throttle];
 
-                if (vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
+                //if (vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
+                if (MagicMethod(replayTravelingDistance, SecondsPerFrame, startUpThrottleSpeedRatio))   //startup
                 {
                     vehicle.data.Set(Channel.Input, InputData.Throttle, startUpThrottle * 100);
+                    print("startup");
                 }
                 else
                 {
@@ -358,6 +362,14 @@ public class Autopilot : VehicleBehaviour
                 vehicle.data.Set(Channel.Input, InputData.AutomaticGear, autopilotProvider[closestFrame1].inputData[InputData.AutomaticGear]);
             }
         }
+    }
+
+    private bool MagicMethod(float replayTravelingDistance, float SecondsPerFrame, float ratio)
+    {
+        //return vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * ratio / 100;
+        float speed = replayTravelingDistance / SecondsPerFrame;
+        float speedRatio = speed * ratio / 100f;
+        return vehicle.speed < speedRatio;
     }
 
     private float FramesToTime(int frames)

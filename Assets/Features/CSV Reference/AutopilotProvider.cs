@@ -24,6 +24,8 @@ namespace Perrinn424
             selected = index;
         }
 
+        public float TimeStep => GetReplayAsset().timeStep; 
+
 
         public int Count => GetReplayAsset().recordedData.Count;
 
