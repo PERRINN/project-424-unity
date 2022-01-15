@@ -125,6 +125,7 @@ public class Autopilot : VehicleBehaviour
             else
             {
                 autopilotON = true;
+                autopilotProvider.SetSelected(Input.GetKey(KeyCode.LeftShift) ? 1 : 0);
                 SteeringScreen.autopilotState = true;
                 if (m_deviceInput != null)
                 {
@@ -155,6 +156,7 @@ public class Autopilot : VehicleBehaviour
         float closestDisFrame1 = float.MaxValue;
         float closestDisFrame2 = float.MaxValue;
 
+        sectionSize = (int)Math.Sqrt(autopilotProvider.Count);
         // Search two closest section frames
         for (int i = 0; i <= sectionSize; i++)
         {

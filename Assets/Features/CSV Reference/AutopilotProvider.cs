@@ -14,6 +14,17 @@ namespace Perrinn424
             return replayAssets[selected];
         }
 
+        public VPReplayAsset GetReplayAsset(int index)
+        {
+            return replayAssets[index];
+        }
+
+        public void SetSelected(int index)
+        {
+            selected = index;
+        }
+
+
         public int Count => GetReplayAsset().recordedData.Count;
 
         public VPReplay.Frame this[int index]
