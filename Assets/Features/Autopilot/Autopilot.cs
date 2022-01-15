@@ -36,10 +36,12 @@ public class Autopilot : VehicleBehaviour
 
     // Private members
 
-    Rigidbody rigidBody424;
-    VPReplay replaySystem;
-    VPReplayController replayController;
-    List<VPReplay.Frame> recordedReplay = new List<VPReplay.Frame>();
+    //Rigidbody rigidBody424;
+    //VPReplay replaySystem;
+    //VPReplayController replayController;
+
+    public AutopilotProvider autopilotProvider;
+    //List<VPReplay.Frame> recordedReplay => autopilotProvider.GetReplayAsset().recordedData;
     readonly PidController edyPID = new PidController();
 
     int sectionSize;
@@ -67,24 +69,26 @@ public class Autopilot : VehicleBehaviour
 
     public override void OnEnableVehicle ()
     {
-        rigidBody424 = GetComponent<Rigidbody>();
-        replaySystem = GetComponentInChildren<VPReplay>();
-        replayController = GetComponentInChildren<VPReplayController>();
+        //rigidBody424 = GetComponent<Rigidbody>();
+        //replaySystem = GetComponentInChildren<VPReplay>();
+        //replayController = GetComponentInChildren<VPReplayController>();
 
-        m_lastPosition = rigidBody424.position;
+        //m_lastPosition = rigidBody424.position;
+        m_lastPosition = vehicle.transform.position;
         m_totalDistance = 0;
         m_lastTime = 0;
 
         // Disable autopilot when no replay data is available
-        if (replayController == null || replayController.predefinedReplay == null)
+        //if (replayController == null || replayController.predefinedReplay == null)
+        if (autopilotProvider == null)
         {
             enabled = false;
             return;
         }
 
         SteeringScreen.autopilotState = false;
-        recordedReplay = replayController.predefinedReplay.recordedData;
-        sectionSize = (int)Math.Sqrt(recordedReplay.Count); // Breakdown recorded replay into even sections
+        //recordedReplay = replayController.predefinedReplay.recordedData;
+        sectionSize = (int)Math.Sqrt(autopilotProvider.Count); // Breakdown recorded replay into even sections
 
         m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
         if (m_deviceInput != null)
@@ -135,9 +139,13 @@ public class Autopilot : VehicleBehaviour
     public override void FixedUpdateVehicle ()
     {
         // Current Vehicle Position
-        int currentFrame = replaySystem.currentFrame;
-        float currentPosX = replaySystem.recordedData[currentFrame].position.x;
-        float currentPosZ = replaySystem.recordedData[currentFrame].position.z;
+        //int currentFrame = replaySystem.currentFrame;
+        //float currentPosX = replaySystem.recordedData[currentFrame].position.x;
+        //float currentPosZ = replaySystem.recordedData[currentFrame].position.z;
+
+        Vector3 position = vehicle.transform.position;
+        float currentPosX = position.x;
+        float currentPosZ = position.z;
 
         int sectionClosestFrame1 = 0;
         int sectionClosestFrame2 = 0;
@@ -150,10 +158,10 @@ public class Autopilot : VehicleBehaviour
         // Search two closest section frames
         for (int i = 0; i <= sectionSize; i++)
         {
-            int recordedFrameNum = (i == sectionSize) ? recordedReplay.Count - sectionSize : sectionSize * i;
+            int recordedFrameNum = (i == sectionSize) ? autopilotProvider.Count - sectionSize : sectionSize * i;
 
-            float x = recordedReplay[recordedFrameNum].position.x - currentPosX;
-            float z = recordedReplay[recordedFrameNum].position.z - currentPosZ;
+            float x = autopilotProvider[recordedFrameNum].position.x - currentPosX;
+            float z = autopilotProvider[recordedFrameNum].position.z - currentPosZ;
 
             float distanceCalculation = (float)Math.Sqrt((x * x) + (z * z));
 
@@ -174,13 +182,13 @@ public class Autopilot : VehicleBehaviour
         (sectionClosestFrame1, sectionClosestFrame2) = GetAsMinMax(sectionClosestFrame1, sectionClosestFrame2);
 
         // Boundary search conditions
-        if (sectionClosestFrame1 == 0 && sectionClosestFrame2 > recordedReplay.Count / 2)
+        if (sectionClosestFrame1 == 0 && sectionClosestFrame2 > autopilotProvider.Count / 2)
         {
             sectionClosestFrame1 = sectionClosestFrame2;
-            sectionClosestFrame2 = recordedReplay.Count - 1;
+            sectionClosestFrame2 = autopilotProvider.Count - 1;
         }
         else
-        if (sectionClosestFrame1 == sectionSize && sectionClosestFrame2 == recordedReplay.Count - sectionSize)
+        if (sectionClosestFrame1 == sectionSize && sectionClosestFrame2 == autopilotProvider.Count - sectionSize)
         {
             sectionClosestFrame1 = sectionSize * sectionSize;
         }
@@ -191,13 +199,13 @@ public class Autopilot : VehicleBehaviour
 
         // Boundary search conditions
         sectionClosestFrame1 = (sectionClosestFrame1 - sectionSize / 2 <= 0) ? 0 : sectionClosestFrame1 -= sectionSize / 2;
-        sectionClosestFrame2 = (sectionClosestFrame2 + sectionSize / 2 >= recordedReplay.Count) ? recordedReplay.Count - 1 : sectionClosestFrame2 += sectionSize / 2;
+        sectionClosestFrame2 = (sectionClosestFrame2 + sectionSize / 2 >= autopilotProvider.Count) ? autopilotProvider.Count - 1 : sectionClosestFrame2 += sectionSize / 2;
 
         // Search two closest frames
         for (int i = sectionClosestFrame1; i <= sectionClosestFrame2; i++)
         {
-            float x = recordedReplay[i].position.x - currentPosX;
-            float z = recordedReplay[i].position.z - currentPosZ;
+            float x = autopilotProvider[i].position.x - currentPosX;
+            float z = autopilotProvider[i].position.z - currentPosZ;
 
             float distanceCalculation = (float)Math.Sqrt((x * x) + (z * z));
 
@@ -215,10 +223,20 @@ public class Autopilot : VehicleBehaviour
             }
         }
 
+        for (int i = closestFrame1; i <= sectionClosestFrame2; i++)
+        {
+            if (Vector3.Distance(autopilotProvider[closestFrame1].position, autopilotProvider[i].position) > 0f)
+            {
+                closestFrame2 = i;
+                break;
+            }
+        }
+        autopilotProvider.DebugFrames(new int[] { closestFrame1, closestFrame2 });
         // Reference point offset: Recorded vehicle
-        Vector3 offsetFromClosestFrame1 = GetOffsetPosition(offsetValue, recordedReplay[closestFrame1]);
-        Vector3 offsetFromClosestFrame2 = GetOffsetPosition(offsetValue, recordedReplay[closestFrame2]);
-        Vector3 offsetFromCurrentVehiclePos = GetOffsetPosition(offsetValue, replaySystem.recordedData[currentFrame]);
+        Vector3 offsetFromClosestFrame1 = GetOffsetPosition(offsetValue, autopilotProvider[closestFrame1]);
+        Vector3 offsetFromClosestFrame2 = GetOffsetPosition(offsetValue, autopilotProvider[closestFrame2]);
+        //Vector3 offsetFromCurrentVehiclePos = GetOffsetPosition(offsetValue, replaySystem.recordedData[currentFrame]);
+        Vector3 offsetFromCurrentVehiclePos = GetOffsetPosition(offsetValue, vehicle.transform.position, vehicle.transform.rotation);
 
         // get height
         float valueDiffPosX = offsetFromClosestFrame1.x - offsetFromClosestFrame2.x; //recordedReplay[frame3].position.x - recordedReplay[frame4].position.x;
@@ -232,8 +250,8 @@ public class Autopilot : VehicleBehaviour
         float area = (float)Math.Sqrt(tryCatchArea);
         float checkHeight = area * 2 / distanceBetweenTwoFrames;
 
-        float nextFrameX = recordedReplay[closestFrame2].position.x - currentPosX;
-        float nextFrameZ = recordedReplay[closestFrame2].position.z - currentPosZ;
+        float nextFrameX = autopilotProvider[closestFrame2].position.x - currentPosX;
+        float nextFrameZ = autopilotProvider[closestFrame2].position.z - currentPosZ;
         float nextFrameDistance = (float)Math.Sqrt((nextFrameX * nextFrameX) + (nextFrameZ * nextFrameZ));
         float prograssiveCalculation = (float)Math.Sqrt((nextFrameDistance * nextFrameDistance) - (checkHeight * checkHeight));
         int progressive = (int)((distanceBetweenTwoFrames - prograssiveCalculation) / distanceBetweenTwoFrames * 100);
@@ -242,15 +260,16 @@ public class Autopilot : VehicleBehaviour
         float errXBAL = (offsetFromClosestFrame2.x - offsetFromCurrentVehiclePos.x) - errX;
         float errZ = offsetFromClosestFrame1.z - offsetFromCurrentVehiclePos.z; //recordedReplay[frame3].position.z - currentPosZ;
         float errZBAL = (offsetFromClosestFrame2.z - offsetFromCurrentVehiclePos.z) - errZ;
-        float degree = -(float)(Math.PI * recordedReplay[closestFrame1].rotation.eulerAngles.y / 180);
-        float degreeERR = -(float)(Math.PI * recordedReplay[closestFrame2].rotation.eulerAngles.y / 180) - degree;
+        float degree = -(float)(Math.PI * autopilotProvider[closestFrame1].rotation.eulerAngles.y / 180);
+        float degreeERR = -(float)(Math.PI * autopilotProvider[closestFrame2].rotation.eulerAngles.y / 180) - degree;
         float cosD = (float)Math.Cos(degree + degreeERR * progressive / 100);
         float sinD = (float)Math.Sin(degree + degreeERR * progressive / 100);
         float carPosX = ((errX + errXBAL * progressive / 100) * cosD) + ((errZ + errZBAL * progressive / 100) * sinD);
         height = (carPosX > 0) ? -checkHeight : checkHeight;
 
         // Steering screen display
-        SteeringScreen.bestTime = replaySystem.FramesToTime(closestFrame1);
+        //SteeringScreen.bestTime = replaySystem.FramesToTime(closestFrame1);
+        SteeringScreen.bestTime = FramesToTime(closestFrame1);
 
         //get error force
         edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height - previousHeight)));
@@ -268,8 +287,9 @@ public class Autopilot : VehicleBehaviour
         (closestFrame1, closestFrame2) = GetAsMinMax(closestFrame1, closestFrame2);
 
         //Car Control System
-        float frameAngle = recordedReplay[closestFrame1].rotation.eulerAngles.y;
-        float carAngle = rigidBody424.rotation.eulerAngles.y;
+        float frameAngle = autopilotProvider[closestFrame1].rotation.eulerAngles.y;
+        //float carAngle = rigidBody424.rotation.eulerAngles.y;
+        float carAngle = vehicle.transform.rotation.eulerAngles.y;
 
         if ((frameAngle - carAngle) < -350) { frameAngle += 360; }
         else if ((frameAngle - carAngle) > 350) { frameAngle -= 360; }
@@ -286,7 +306,8 @@ public class Autopilot : VehicleBehaviour
 
         if (autopilotON)
         {
-            rigidBody424.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
+            //rigidBody424.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
+            vehicle.cachedRigidbody.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
 
             if (debugGizmo)
                 {
@@ -297,19 +318,19 @@ public class Autopilot : VehicleBehaviour
             if (!lostControl)
             {
                 // Steer angle
-                int steerERR = recordedReplay[closestFrame2].inputData[InputData.Steer] - recordedReplay[closestFrame1].inputData[InputData.Steer];
-                showSteer = (steerERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Steer];
+                int steerERR = autopilotProvider[closestFrame2].inputData[InputData.Steer] - autopilotProvider[closestFrame1].inputData[InputData.Steer];
+                showSteer = (steerERR * progressive / 100) + autopilotProvider[closestFrame1].inputData[InputData.Steer];
                 vehicle.data.Set(Channel.Input, InputData.Steer, showSteer);
 
                 // Speed check
-                float replayTravelingDistance = (recordedReplay[closestFrame2].position - recordedReplay[closestFrame1].position).magnitude;
+                float replayTravelingDistance = (autopilotProvider[closestFrame2].position - autopilotProvider[closestFrame1].position).magnitude;
                 float SecondsPerFrame = Time.time - m_lastTime;
-                m_lastPosition = rigidBody424.position;
+                m_lastPosition = vehicle.transform.position;
                 m_totalDistance += replayTravelingDistance;
 
                 // Brake Control
-                int brakeERR = recordedReplay[closestFrame2].inputData[InputData.Brake] - recordedReplay[closestFrame1].inputData[InputData.Brake];
-                showBrake = (brakeERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Brake];
+                int brakeERR = autopilotProvider[closestFrame2].inputData[InputData.Brake] - autopilotProvider[closestFrame1].inputData[InputData.Brake];
+                showBrake = (brakeERR * progressive / 100) + autopilotProvider[closestFrame1].inputData[InputData.Brake];
 
                 if (vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpBrakeSpeedRatio / 100)   //startup
                 {
@@ -319,8 +340,8 @@ public class Autopilot : VehicleBehaviour
                 m_lastTime += SecondsPerFrame;
 
                 // Throttle
-                int throttleERR = recordedReplay[closestFrame2].inputData[InputData.Throttle] - recordedReplay[closestFrame1].inputData[InputData.Throttle];
-                showThrottle = (throttleERR * progressive / 100) + recordedReplay[closestFrame1].inputData[InputData.Throttle];
+                int throttleERR = autopilotProvider[closestFrame2].inputData[InputData.Throttle] - autopilotProvider[closestFrame1].inputData[InputData.Throttle];
+                showThrottle = (throttleERR * progressive / 100) + autopilotProvider[closestFrame1].inputData[InputData.Throttle];
 
                 if (vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000 < replayTravelingDistance / SecondsPerFrame * startUpThrottleSpeedRatio / 100)   //startup
                 {
@@ -332,26 +353,49 @@ public class Autopilot : VehicleBehaviour
                 }
 
                 // AutomaticGear
-                vehicle.data.Set(Channel.Input, InputData.AutomaticGear, recordedReplay[closestFrame1].inputData[InputData.AutomaticGear]);
+                vehicle.data.Set(Channel.Input, InputData.AutomaticGear, autopilotProvider[closestFrame1].inputData[InputData.AutomaticGear]);
             }
         }
     }
 
+    private float FramesToTime(int frames)
+    {
+        return frames * Time.fixedDeltaTime;
+    }
 
     Vector3 GetOffsetPosition(float offsetValue, VPReplay.Frame offsetTransform)
     {
+        return GetOffsetPosition(offsetValue, offsetTransform.position, offsetTransform.rotation);
+        //Vector3 positionOffset;
+
+        //float degreeOFFSET = (float)(Math.PI * offsetTransform.rotation.eulerAngles.y / 180);
+        //float errOffsetZ = offsetValue;
+        //float cosDOffset = (float)Math.Cos(degreeOFFSET);
+        //float sinDOffset = (float)Math.Sin(degreeOFFSET);
+        //float carPosXoffset = errOffsetZ * sinDOffset;
+        //float carPosZoffset = errOffsetZ * cosDOffset;
+
+        //positionOffset.x = carPosXoffset + offsetTransform.position.x;
+        //positionOffset.y = offsetTransform.position.y;
+        //positionOffset.z = carPosZoffset + offsetTransform.position.z;
+
+        //return positionOffset;
+    }
+
+    Vector3 GetOffsetPosition(float offsetValue, Vector3 position, Quaternion rotation)
+    {
         Vector3 positionOffset;
 
-        float degreeOFFSET = (float)(Math.PI * offsetTransform.rotation.eulerAngles.y / 180);
+        float degreeOFFSET = (float)(Math.PI * rotation.eulerAngles.y / 180);
         float errOffsetZ = offsetValue;
         float cosDOffset = (float)Math.Cos(degreeOFFSET);
         float sinDOffset = (float)Math.Sin(degreeOFFSET);
         float carPosXoffset = errOffsetZ * sinDOffset;
         float carPosZoffset = errOffsetZ * cosDOffset;
 
-        positionOffset.x = carPosXoffset + offsetTransform.position.x;
-        positionOffset.y = offsetTransform.position.y;
-        positionOffset.z = carPosZoffset + offsetTransform.position.z;
+        positionOffset.x = carPosXoffset + position.x;
+        positionOffset.y = position.y;
+        positionOffset.z = carPosZoffset + position.z;
 
         return positionOffset;
     }
