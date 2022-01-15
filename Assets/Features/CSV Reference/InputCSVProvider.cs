@@ -47,10 +47,10 @@ public class InputCSVProvider : VehicleBehaviour
 			//Telemetry.SemanticInfo pidSemantic = new Telemetry.SemanticInfo();
 			//pidSemantic.SetRangeAndFormat(-range, range, "0", " N");
 
-			channelInfo[0].SetNameAndSemantic("STEERCSV", Telemetry.Semantic.SignedRatio);
-			channelInfo[1].SetNameAndSemantic("THROTTLECSV", Telemetry.Semantic.Ratio);
-			channelInfo[2].SetNameAndSemantic("BRAKECSV", Telemetry.Semantic.Ratio);
-			channelInfo[3].SetNameAndSemantic("AUTOMATICGEARCSV", Telemetry.Semantic.Gear);
+			channelInfo[0].SetNameAndSemantic("STEERCSV", Telemetry.Semantic.Default);
+			channelInfo[1].SetNameAndSemantic("THROTTLECSV", Telemetry.Semantic.Default);
+			channelInfo[2].SetNameAndSemantic("BRAKECSV", Telemetry.Semantic.Default);
+			channelInfo[3].SetNameAndSemantic("AUTOMATICGEARCSV", Telemetry.Semantic.Default);
 		}
 
 		public override Telemetry.PollFrequency GetPollFrequency()
