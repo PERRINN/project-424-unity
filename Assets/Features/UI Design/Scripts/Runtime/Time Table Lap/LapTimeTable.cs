@@ -37,10 +37,23 @@ namespace Perrinn424.UI
 
         private void OnEnable()
         {
+            CleanTable();
+
             timeTable = new Utilities.LapTimeTable(sectorCount);
             uiRowList = new List<LapRow>();
             lapUIPrefab.gameObject.SetActive(false);
             RefreshIdealLap();
+        }
+
+        private void CleanTable()
+        {
+            if (uiRowList != null && uiRowList.Count > 0)
+            {
+                foreach (LapRow row in uiRowList)
+                {
+                    GameObject.Destroy(row.gameObject);
+                }
+            }
         }
 
         public void AddLap(float[] sectors)
