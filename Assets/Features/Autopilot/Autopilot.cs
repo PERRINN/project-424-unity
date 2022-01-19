@@ -43,6 +43,7 @@ public class Autopilot : VehicleBehaviour
     public AutopilotProvider autopilotProvider;
     //List<VPReplay.Frame> recordedReplay => autopilotProvider.GetReplayAsset().recordedData;
     readonly PidController edyPID = new PidController();
+    private FrameSearcher frameSearcher;
 
     int sectionSize;
     float height = 0, previousHeight = 0;
@@ -86,6 +87,8 @@ public class Autopilot : VehicleBehaviour
             return;
         }
 
+
+        frameSearcher = new FrameSearcher(vehicle.transform, autopilotProvider);
         SteeringScreen.autopilotState = false;
         //recordedReplay = replayController.predefinedReplay.recordedData;
         sectionSize = (int)Math.Sqrt(autopilotProvider.Count); // Breakdown recorded replay into even sections
@@ -139,100 +142,16 @@ public class Autopilot : VehicleBehaviour
 
     public override void FixedUpdateVehicle ()
     {
-        // Current Vehicle Position
-        //int currentFrame = replaySystem.currentFrame;
-        //float currentPosX = replaySystem.recordedData[currentFrame].position.x;
-        //float currentPosZ = replaySystem.recordedData[currentFrame].position.z;
-
         Vector3 position = vehicle.transform.position;
         float currentPosX = position.x;
         float currentPosZ = position.z;
 
-        int sectionClosestFrame1 = 0;
-        int sectionClosestFrame2 = 0;
-        int closestFrame1 = 0;
-        int closestFrame2 = 0;
+        frameSearcher.Search(autopilotProvider.GetReplayAsset().recordedData, vehicle.transform.position);
+        int closestFrame1 = frameSearcher.closestFrame1;
+        int closestFrame2 = frameSearcher.closestFrame2;
+        float closestDisFrame1 = frameSearcher.closestDisFrame1;
+        float closestDisFrame2 = frameSearcher.closestDisFrame2;
 
-        float closestDisFrame1 = float.MaxValue;
-        float closestDisFrame2 = float.MaxValue;
-
-        sectionSize = (int)Math.Sqrt(autopilotProvider.Count);
-        // Search two closest section frames
-        for (int i = 0; i <= sectionSize; i++)
-        {
-            int recordedFrameNum = (i == sectionSize) ? autopilotProvider.Count - sectionSize : sectionSize * i;
-
-            float x = autopilotProvider[recordedFrameNum].position.x - currentPosX;
-            float z = autopilotProvider[recordedFrameNum].position.z - currentPosZ;
-
-            float distanceCalculation = (float)Math.Sqrt((x * x) + (z * z));
-
-            if (distanceCalculation < closestDisFrame1)
-            {
-                sectionClosestFrame2 = sectionClosestFrame1;
-                sectionClosestFrame1 = recordedFrameNum;
-                closestDisFrame2 = closestDisFrame1;
-                closestDisFrame1 = distanceCalculation;
-            }
-            else if (distanceCalculation < closestDisFrame2)
-            {
-                sectionClosestFrame1 = recordedFrameNum;
-                closestDisFrame2 = distanceCalculation;
-            }
-        }
-
-        (sectionClosestFrame1, sectionClosestFrame2) = GetAsMinMax(sectionClosestFrame1, sectionClosestFrame2);
-
-        // Boundary search conditions
-        if (sectionClosestFrame1 == 0 && sectionClosestFrame2 > autopilotProvider.Count / 2)
-        {
-            sectionClosestFrame1 = sectionClosestFrame2;
-            sectionClosestFrame2 = autopilotProvider.Count - 1;
-        }
-        else
-        if (sectionClosestFrame1 == sectionSize && sectionClosestFrame2 == autopilotProvider.Count - sectionSize)
-        {
-            sectionClosestFrame1 = sectionSize * sectionSize;
-        }
-
-        // Reset Distance value
-        closestDisFrame1 = float.MaxValue;
-        closestDisFrame2 = float.MaxValue;
-
-        // Boundary search conditions
-        sectionClosestFrame1 = (sectionClosestFrame1 - sectionSize / 2 <= 0) ? 0 : sectionClosestFrame1 -= sectionSize / 2;
-        sectionClosestFrame2 = (sectionClosestFrame2 + sectionSize / 2 >= autopilotProvider.Count) ? autopilotProvider.Count - 1 : sectionClosestFrame2 += sectionSize / 2;
-
-        // Search two closest frames
-        for (int i = sectionClosestFrame1; i <= sectionClosestFrame2; i++)
-        {
-            float x = autopilotProvider[i].position.x - currentPosX;
-            float z = autopilotProvider[i].position.z - currentPosZ;
-
-            float distanceCalculation = (float)Math.Sqrt((x * x) + (z * z));
-
-            if (distanceCalculation < closestDisFrame1)
-            {
-                closestFrame2 = closestFrame1;
-                closestFrame1 = i;
-                closestDisFrame2 = closestDisFrame1;
-                closestDisFrame1 = distanceCalculation;
-            }
-            else if (distanceCalculation < closestDisFrame2)
-            {
-                closestFrame2 = i;
-                closestDisFrame2 = distanceCalculation;
-            }
-        }
-
-        for (int i = closestFrame1; i <= sectionClosestFrame2; i++)
-        {
-            if (Vector3.Distance(autopilotProvider[closestFrame1].position, autopilotProvider[i].position) > 0f)
-            {
-                closestFrame2 = i;
-                break;
-            }
-        }
         autopilotProvider.DebugFrames(new int[] { closestFrame1, closestFrame2 });
         // Reference point offset: Recorded vehicle
         Vector3 offsetFromClosestFrame1 = GetOffsetPosition(offsetValue, autopilotProvider[closestFrame1]);
@@ -273,8 +192,12 @@ public class Autopilot : VehicleBehaviour
         //SteeringScreen.bestTime = replaySystem.FramesToTime(closestFrame1);
         SteeringScreen.bestTime = FramesToTime(closestFrame1);
 
+        float kpTemp = checkHeight == 0 ? kp : Mathf.Min(kp, maxForceP / checkHeight);
+        float kiTemp = ki;
+        float kdTemp = Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height - previousHeight));
+
         //get error force
-        edyPID.SetParameters(Mathf.Min(kp, maxForceP / checkHeight), ki, Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(height - previousHeight)));
+        edyPID.SetParameters(kpTemp, kiTemp, kdTemp);
         edyPID.input = height;
         edyPID.Compute();
 
