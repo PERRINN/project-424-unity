@@ -60,7 +60,8 @@ public static class TelemetryToReplay
 
             asset.recordedData.Add(currentFrame);
         }
-        
+
+        asset.name = Path.GetFileNameWithoutExtension(metadata.csvFile);
         return asset;
     }
 }
