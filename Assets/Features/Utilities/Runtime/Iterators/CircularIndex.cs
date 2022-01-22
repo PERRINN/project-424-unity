@@ -32,7 +32,7 @@ namespace Perrinn424.Utilities
             return FitCircular(@base + increment, length);
         }
 
-        private static int FitCircular(int @base, int length)
+        public static int FitCircular(int @base, int length)
         {
             return (@base % length + length) % length;
         }

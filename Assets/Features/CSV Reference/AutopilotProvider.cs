@@ -64,11 +64,11 @@ namespace Perrinn424
         {
             this.frames = frames;
 
-            for (int i = 0; i < frames.Length; i++)
-            {
-                string pos = Vector3ToString(this[frames[i]].position);
-                //print($"{frames[i]} pos: {pos}");
-            }
+            //for (int i = 0; i < frames.Length; i++)
+            //{
+            //    string pos = Vector3ToString(this[frames[i]].position);
+            //    print($"{frames[i]} pos: {pos}");
+            //}
         }
 
         private string Vector3ToString(Vector3 v)

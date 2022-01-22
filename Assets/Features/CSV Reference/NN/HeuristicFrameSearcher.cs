@@ -30,7 +30,18 @@ public class HeuristicFrameSearcher : IFrameSearcher
 
     public void Search(Transform t)
     {
-        int index = FindClosest(GetIndexesToCheck(), t.position);
+
+        int start = 0;
+        int count = frames.Count;
+
+        if (hasHeuristics)
+        {
+            start = new CircularIndex(ClosestFrame1 - lookBehind, frames.Count);
+            count = lookCount;
+        }
+
+        //int index = FindClosest(GetIndexesToCheck(), t.position);
+        int index = FindClosest(start, count, t.position);
 
         Vector3 closestPosition = frames[index].position;
         CircularIndex i = new CircularIndex(index, frames.Count);
@@ -82,6 +93,26 @@ public class HeuristicFrameSearcher : IFrameSearcher
             if (dist < minDistance)
             {
                 closestIndex = index;
+                minDistance = dist;
+            }
+        }
+
+        return closestIndex;
+    }
+
+    private int FindClosest(int start, int count, Vector3 pos)
+    {
+        int closestIndex = -1;
+        float minDistance = float.PositiveInfinity;
+
+        for (int index = start; index < (start + count); index++)
+        {
+            int circularIndex = CircularIndex.FitCircular(index, frames.Count);
+            Vector3 checkPosition = frames[circularIndex].position;
+            float dist = Squared2DDistance(checkPosition, pos);
+            if (dist < minDistance)
+            {
+                closestIndex = circularIndex;
                 minDistance = dist;
             }
         }
