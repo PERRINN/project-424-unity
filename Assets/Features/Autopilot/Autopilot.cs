@@ -88,7 +88,7 @@ public class Autopilot : VehicleBehaviour
         }
 
 
-        frameSearcher = new FrameSearcher(vehicle.transform, autopilotProvider);
+        frameSearcher = new FrameSearcher();
         SteeringScreen.autopilotState = false;
         //recordedReplay = replayController.predefinedReplay.recordedData;
         sectionSize = (int)Math.Sqrt(autopilotProvider.Count); // Breakdown recorded replay into even sections
@@ -146,11 +146,17 @@ public class Autopilot : VehicleBehaviour
         float currentPosX = position.x;
         float currentPosZ = position.z;
 
-        frameSearcher.Search(autopilotProvider.GetReplayAsset().recordedData, vehicle.transform.position);
-        int closestFrame1 = frameSearcher.closestFrame1;
-        int closestFrame2 = frameSearcher.closestFrame2;
-        float closestDisFrame1 = frameSearcher.closestDisFrame1;
-        float closestDisFrame2 = frameSearcher.closestDisFrame2;
+        frameSearcher.Search(autopilotProvider.GetReplayAsset().recordedData, vehicle.transform);
+        int closestFrame1 = frameSearcher.ClosestFrame1;
+        int closestFrame2 = frameSearcher.ClosestFrame2;
+        float closestDisFrame1 = frameSearcher.ClosestDisFrame1;
+        float closestDisFrame2 = frameSearcher.ClosestDisFrame2;
+
+        //DebugGraph.MultiLog("Frame", DebugGraph.DefaultBlue, closestFrame1);
+        //DebugGraph.MultiLog("Frame", DebugGraph.DefaultGreen, closestFrame2);
+
+        //DebugGraph.MultiLog("Dist", DebugGraph.DefaultBlue, closestDisFrame1);
+        //DebugGraph.MultiLog("Dist", DebugGraph.DefaultGreen, closestDisFrame2);
 
         autopilotProvider.DebugFrames(new int[] { closestFrame1, closestFrame2 });
         // Reference point offset: Recorded vehicle

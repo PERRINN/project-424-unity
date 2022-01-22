@@ -4,38 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using VehiclePhysics;
 
-public class FrameSearcher
+public class FrameSearcher : IFrameSearcher
 {
 
-    //private Transform vehicle;
-    //private AutopilotProvider autopilotProvider;
-
-    public FrameSearcher(Transform vehicle, AutopilotProvider provider)
-    {
-        //this.vehicle = vehicle;
-        //this.autopilotProvider = provider;
-    }
     public FrameSearcher() { }
 
-    public int closestFrame1;
-    public int closestFrame2;
-    public float closestDisFrame1;
-    public float closestDisFrame2;
+    public int ClosestFrame1 { get; private set; }
+    public int ClosestFrame2 { get; private set; }
+    public float ClosestDisFrame1 { get; private set; }
+    public float ClosestDisFrame2 { get; private set; }
     int sectionSize;
 
-    public void Search(IList<VPReplay.Frame> frames, Vector3 position)
+    public void Search(IReadOnlyList<VPReplay.Frame> frames,Transform t)
     {
-        //Vector3 position = vehicle.transform.position;
+        Vector3 position = t.position;
         float currentPosX = position.x;
         float currentPosZ = position.z;
 
         int sectionClosestFrame1 = 0;
         int sectionClosestFrame2 = 0;
-        closestFrame1 = 0;
-        closestFrame2 = 0;
+        ClosestFrame1 = 0;
+        ClosestFrame2 = 0;
 
-        closestDisFrame1 = float.MaxValue;
-        closestDisFrame2 = float.MaxValue;
+        ClosestDisFrame1 = float.MaxValue;
+        ClosestDisFrame2 = float.MaxValue;
 
         sectionSize = (int)Mathf.Sqrt(frames.Count);
         // Search two closest section frames
@@ -58,17 +50,17 @@ public class FrameSearcher
 
             float distanceCalculation = (float)Mathf.Sqrt((x * x) + (z * z));
 
-            if (distanceCalculation < closestDisFrame1)
+            if (distanceCalculation < ClosestDisFrame1)
             {
                 sectionClosestFrame2 = sectionClosestFrame1;
                 sectionClosestFrame1 = recordedFrameNum;
-                closestDisFrame2 = closestDisFrame1;
-                closestDisFrame1 = distanceCalculation;
+                ClosestDisFrame2 = ClosestDisFrame1;
+                ClosestDisFrame1 = distanceCalculation;
             }
-            else if (distanceCalculation < closestDisFrame2)
+            else if (distanceCalculation < ClosestDisFrame2)
             {
                 sectionClosestFrame1 = recordedFrameNum;
-                closestDisFrame2 = distanceCalculation;
+                ClosestDisFrame2 = distanceCalculation;
             }
         }
 
@@ -87,8 +79,8 @@ public class FrameSearcher
         }
 
         // Reset Distance value
-        closestDisFrame1 = float.MaxValue;
-        closestDisFrame2 = float.MaxValue;
+        ClosestDisFrame1 = float.MaxValue;
+        ClosestDisFrame2 = float.MaxValue;
 
         // Boundary search conditions
         sectionClosestFrame1 = (sectionClosestFrame1 - sectionSize / 2 <= 0) ? 0 : sectionClosestFrame1 -= sectionSize / 2;
@@ -102,17 +94,17 @@ public class FrameSearcher
 
             float distanceCalculation = (float)Mathf.Sqrt((x * x) + (z * z));
 
-            if (distanceCalculation < closestDisFrame1)
+            if (distanceCalculation < ClosestDisFrame1)
             {
-                closestFrame2 = closestFrame1;
-                closestFrame1 = i;
-                closestDisFrame2 = closestDisFrame1;
-                closestDisFrame1 = distanceCalculation;
+                ClosestFrame2 = ClosestFrame1;
+                ClosestFrame1 = i;
+                ClosestDisFrame2 = ClosestDisFrame1;
+                ClosestDisFrame1 = distanceCalculation;
             }
-            else if (distanceCalculation < closestDisFrame2)
+            else if (distanceCalculation < ClosestDisFrame2)
             {
-                closestFrame2 = i;
-                closestDisFrame2 = distanceCalculation;
+                ClosestFrame2 = i;
+                ClosestDisFrame2 = distanceCalculation;
             }
         }
 
@@ -124,33 +116,33 @@ public class FrameSearcher
 
             float distanceCalculation = (float)Mathf.Sqrt((x * x) + (z * z));
 
-            if (distanceCalculation < closestDisFrame1)
+            if (distanceCalculation < ClosestDisFrame1)
             {
-                closestFrame2 = closestFrame1;
-                closestFrame1 = i;
-                closestDisFrame2 = closestDisFrame1;
-                closestDisFrame1 = distanceCalculation;
+                ClosestFrame2 = ClosestFrame1;
+                ClosestFrame1 = i;
+                ClosestDisFrame2 = ClosestDisFrame1;
+                ClosestDisFrame1 = distanceCalculation;
             }
-            else if (distanceCalculation < closestDisFrame2)
+            else if (distanceCalculation < ClosestDisFrame2)
             {
-                closestFrame2 = i;
-                closestDisFrame2 = distanceCalculation;
+                ClosestFrame2 = i;
+                ClosestDisFrame2 = distanceCalculation;
             }
         }
 
-        if (closestFrame1 == closestFrame2)
+        if (ClosestFrame1 == ClosestFrame2)
         {
-            Debug.LogError($"closest are equal {closestFrame1}");
-            closestFrame2 = closestFrame1 + 1;
+            Debug.LogError($"closest are equal {ClosestFrame1}");
+            ClosestFrame2 = ClosestFrame1 + 1;
 
-            float x = frames[closestFrame2].position.x - currentPosX;
-            float z = frames[closestFrame2].position.z - currentPosZ;
-            closestDisFrame2 = (float)Mathf.Sqrt((x * x) + (z * z));
+            float x = frames[ClosestFrame2].position.x - currentPosX;
+            float z = frames[ClosestFrame2].position.z - currentPosZ;
+            ClosestDisFrame2 = (float)Mathf.Sqrt((x * x) + (z * z));
         }
 
-        (closestFrame1, closestFrame2) = GetAsMinMax(closestFrame1, closestFrame2);
-        closestDisFrame1 = Distance2D(frames[closestFrame1].position, position);
-        closestDisFrame2 = Distance2D(frames[closestFrame2].position, position);
+        (ClosestFrame1, ClosestFrame2) = GetAsMinMax(ClosestFrame1, ClosestFrame2);
+        ClosestDisFrame1 = Distance2D(frames[ClosestFrame1].position, position);
+        ClosestDisFrame2 = Distance2D(frames[ClosestFrame2].position, position);
 
     }
 
