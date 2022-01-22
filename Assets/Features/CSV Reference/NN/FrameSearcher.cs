@@ -7,7 +7,11 @@ using VehiclePhysics;
 public class FrameSearcher : IFrameSearcher
 {
 
-    public FrameSearcher() { }
+    private readonly IReadOnlyList<VPReplay.Frame> frames;
+    public FrameSearcher(IReadOnlyList<VPReplay.Frame> frames) 
+    {
+        this.frames = frames;
+    }
 
     public int ClosestFrame1 { get; private set; }
     public int ClosestFrame2 { get; private set; }
@@ -15,7 +19,7 @@ public class FrameSearcher : IFrameSearcher
     public float ClosestDisFrame2 { get; private set; }
     int sectionSize;
 
-    public void Search(IReadOnlyList<VPReplay.Frame> frames,Transform t)
+    public void Search(Transform t)
     {
         Vector3 position = t.position;
         float currentPosX = position.x;

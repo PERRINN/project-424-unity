@@ -43,7 +43,7 @@ public class Autopilot : VehicleBehaviour
     public AutopilotProvider autopilotProvider;
     //List<VPReplay.Frame> recordedReplay => autopilotProvider.GetReplayAsset().recordedData;
     readonly PidController edyPID = new PidController();
-    private FrameSearcher frameSearcher;
+    private IFrameSearcher frameSearcher;
 
     int sectionSize;
     float height = 0, previousHeight = 0;
@@ -88,7 +88,7 @@ public class Autopilot : VehicleBehaviour
         }
 
 
-        frameSearcher = new FrameSearcher();
+        //frameSearcher = new FrameSearcher();
         SteeringScreen.autopilotState = false;
         //recordedReplay = replayController.predefinedReplay.recordedData;
         sectionSize = (int)Math.Sqrt(autopilotProvider.Count); // Breakdown recorded replay into even sections
@@ -129,6 +129,12 @@ public class Autopilot : VehicleBehaviour
             {
                 autopilotON = true;
                 autopilotProvider.SetSelected(Input.GetKey(KeyCode.LeftShift) ? 1 : 0);
+                //frameSearcher = new FrameSearcher(autopilotProvider.GetReplayAsset().recordedData);
+                VPReplayAsset replayAsset = autopilotProvider.GetReplayAsset();
+                int lookAroundFramesCount = (int)(10f / replayAsset.timeStep);
+                int lookBehind = (int)(lookAroundFramesCount * 0.05f); //5% behind, just in case
+                frameSearcher = new HeuristicFrameSearcher(autopilotProvider.GetReplayAsset().recordedData, 5f, lookBehind, lookAroundFramesCount);
+
                 SteeringScreen.autopilotState = true;
                 if (m_deviceInput != null)
                 {
@@ -142,11 +148,17 @@ public class Autopilot : VehicleBehaviour
 
     public override void FixedUpdateVehicle ()
     {
+        if (!autopilotON)
+        {
+            return;
+        }
+
+
         Vector3 position = vehicle.transform.position;
         float currentPosX = position.x;
         float currentPosZ = position.z;
 
-        frameSearcher.Search(autopilotProvider.GetReplayAsset().recordedData, vehicle.transform);
+        frameSearcher.Search(vehicle.transform);
         int closestFrame1 = frameSearcher.ClosestFrame1;
         int closestFrame2 = frameSearcher.ClosestFrame2;
         float closestDisFrame1 = frameSearcher.ClosestDisFrame1;

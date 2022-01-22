@@ -24,7 +24,7 @@ public class FrameSearch : MonoBehaviour, IComparer<Vector3>
     public Vector3 AB;
 
     public bool belong;
-    FrameSearcher frameSearcher;
+    IFrameSearcher frameSearcher;
 
     public AutopilotProvider provider;
 
@@ -36,7 +36,8 @@ public class FrameSearch : MonoBehaviour, IComparer<Vector3>
     // Update is called once per frame
     void Update()
     {
-        if (frameSearcher == null) frameSearcher = new FrameSearcher();
+        //if (frameSearcher == null) frameSearcher = new FrameSearcher(provider.GetReplayAsset().recordedData);
+        if (frameSearcher == null) frameSearcher = new HeuristicFrameSearcher(provider.GetReplayAsset().recordedData, 5, -10, 100);
         //AB = b.position - a.position;
         //projection = Vector3.Project(this.transform.position - a.position, b.position - a.position);
 
@@ -48,9 +49,13 @@ public class FrameSearch : MonoBehaviour, IComparer<Vector3>
         //a.position = asset.recordedData[index].position;
         //b.position = asset.recordedData[index+1].position;
 
-        frameSearcher.Search(provider.GetReplayAsset().recordedData, this.transform.position);
-        index = frameSearcher.closestFrame1;
-        nextIndex = frameSearcher.closestFrame2;
+        frameSearcher.Search(this.transform);
+        index = frameSearcher.ClosestFrame1;
+        nextIndex = frameSearcher.ClosestFrame2;
+        this.transform.position = new Vector3(transform.position.x, provider.GetReplayAsset().recordedData[index].position.y, transform.position.z);
+
+        a.transform.position = provider.GetReplayAsset().recordedData[index].position;
+        b.transform.position = provider.GetReplayAsset().recordedData[nextIndex].position;
     }
 
     private void SearchLinear()
