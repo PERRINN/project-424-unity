@@ -131,9 +131,10 @@ public class Autopilot : VehicleBehaviour
                 autopilotProvider.SetSelected(Input.GetKey(KeyCode.LeftShift) ? 1 : 0);
                 //frameSearcher = new FrameSearcher(autopilotProvider.GetReplayAsset().recordedData);
                 VPReplayAsset replayAsset = autopilotProvider.GetReplayAsset();
-                int lookAroundFramesCount = (int)(3f / replayAsset.timeStep); //seconds to look around
+                int lookAroundFramesCount = (int)(1f / replayAsset.timeStep); //seconds to look around
                 int lookBehind = (int)(lookAroundFramesCount * 0.05f); //5% behind, just in case
-                frameSearcher = new HeuristicFrameSearcher(autopilotProvider.GetReplayAsset().recordedData, 5f, lookBehind, lookAroundFramesCount);
+                frameSearcher = new HeuristicFrameSearcher(replayAsset.recordedData, 5f, lookBehind, lookAroundFramesCount);
+                //frameSearcher = new FrameSearcher(replayAsset.recordedData);
 
                 SteeringScreen.autopilotState = true;
                 if (m_deviceInput != null)

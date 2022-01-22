@@ -18,9 +18,10 @@ public class FrameSearcher : IFrameSearcher
     public float ClosestDisFrame1 { get; private set; }
     public float ClosestDisFrame2 { get; private set; }
     int sectionSize;
-
+    public int count;
     public void Search(Transform t)
     {
+        count = 0;
         Vector3 position = t.position;
         float currentPosX = position.x;
         float currentPosZ = position.z;
@@ -37,6 +38,7 @@ public class FrameSearcher : IFrameSearcher
         // Search two closest section frames
         for (int i = 0; i <= sectionSize; i++)
         {
+            count++;
             //int recordedFrameNum = (i == sectionSize) ? frames.Count - sectionSize : sectionSize * i;
             int recordedFrameNum = (i == sectionSize) ? frames.Count - sectionSize : sectionSize * i;
 
@@ -93,6 +95,7 @@ public class FrameSearcher : IFrameSearcher
         // Search two closest frames
         for (int i = sectionClosestFrame1; i <= sectionClosestFrame2; i++)
         {
+            count++;
             float x = frames[i].position.x - currentPosX;
             float z = frames[i].position.z - currentPosZ;
 
@@ -147,6 +150,7 @@ public class FrameSearcher : IFrameSearcher
         (ClosestFrame1, ClosestFrame2) = GetAsMinMax(ClosestFrame1, ClosestFrame2);
         ClosestDisFrame1 = Distance2D(frames[ClosestFrame1].position, position);
         ClosestDisFrame2 = Distance2D(frames[ClosestFrame2].position, position);
+        UnityEngine.Debug.Log($"Count: {count}");
 
     }
 

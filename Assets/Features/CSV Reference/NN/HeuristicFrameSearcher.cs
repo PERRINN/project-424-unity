@@ -1,6 +1,5 @@
 ﻿using Perrinn424.Utilities;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using VehiclePhysics;
 
@@ -64,40 +63,6 @@ public class HeuristicFrameSearcher : IFrameSearcher
         {
             hasHeuristics = true;
         }
-    }
-
-
-
-    private IEnumerable<int> GetIndexesToCheck()
-    {
-        if (hasHeuristics)
-        {
-            CircularIndex index = new CircularIndex(ClosestFrame1, frames.Count);
-            return index.Range(lookCount, -lookBehind);
-        }
-        else
-        {
-            return Enumerable.Range(0, frames.Count);
-        }
-    }
-
-    private int FindClosest(IEnumerable<int> indexes, Vector3 pos)
-    {
-        int closestIndex = -1;
-        float minDistance = float.PositiveInfinity;
-
-        foreach (int index in indexes)
-        {
-            Vector3 checkPosition = frames[index].position;
-            float dist = Squared2DDistance(checkPosition, pos);
-            if (dist < minDistance)
-            {
-                closestIndex = index;
-                minDistance = dist;
-            }
-        }
-
-        return closestIndex;
     }
 
     private int FindClosest(int start, int count, Vector3 pos)
