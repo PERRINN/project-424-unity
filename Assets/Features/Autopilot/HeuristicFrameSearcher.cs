@@ -5,14 +5,15 @@ using VehiclePhysics;
 
 namespace Perrinn424.AutopilotSystem
 {
+    /// <summary>
+    /// Search the closest frame to a position with the heuristic that the closest frame should be placed around the last found frame
+    /// This heuristic works in a path following algorithm, with the frames sorted as a path
+    /// </summary>
     public class HeuristicFrameSearcher : IFrameSearcher
     {
         public int ClosestFrame1 { get; private set; }
-
         public int ClosestFrame2 { get; private set; }
-
         public float ClosestDisFrame1 { get; private set; }
-
         public float ClosestDisFrame2 { get; private set; }
 
         private bool hasHeuristics;
@@ -31,7 +32,6 @@ namespace Perrinn424.AutopilotSystem
 
         public void Search(Transform t)
         {
-
             int start = 0;
             int count = frames.Count;
 
@@ -41,14 +41,12 @@ namespace Perrinn424.AutopilotSystem
                 count = lookCount;
             }
 
-            //int index = FindClosest(GetIndexesToCheck(), t.position);
             int index = FindClosest(start, count, t.position);
 
             Vector3 closestPosition = frames[index].position;
             CircularIndex i = new CircularIndex(index, frames.Count);
 
-            float localZ = t.InverseTransformPoint(closestPosition).z;
-
+            float localZ = t.InverseTransformPoint(closestPosition).z; // if the point is ahead, the segment is [closest-1, closest]
             if (localZ > 0) i--;
 
             ClosestFrame1 = i;
@@ -56,7 +54,7 @@ namespace Perrinn424.AutopilotSystem
             ClosestDisFrame1 = Mathf.Sqrt(Squared2DDistance(frames[ClosestFrame1].position, t.position));
             ClosestDisFrame2 = Mathf.Sqrt(Squared2DDistance(frames[ClosestFrame2].position, t.position));
 
-            if (ClosestDisFrame1 > distanceThreshold && hasHeuristics == true)
+            if (ClosestDisFrame1 > distanceThreshold && hasHeuristics == true) // not good enough. Search again with recursion without heuristics
             {
                 hasHeuristics = false;
                 Search(t);

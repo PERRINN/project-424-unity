@@ -4,6 +4,10 @@ using VehiclePhysics;
 
 namespace Perrinn424.AutopilotSystem
 {
+ 
+    /// <summary>
+    /// Frame searcher used in the previous implementation. It returns buggy results, so it will be removed
+    /// </summary>
     public class FrameSearcher : IFrameSearcher
     {
 
