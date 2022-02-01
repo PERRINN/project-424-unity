@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using VehiclePhysics;
 
@@ -10,6 +12,7 @@ namespace Perrinn424.TelemetryLapSystem
         public static VPReplayAsset Create(string metadataPath)
         {
             TelemetryLapMetadata metadata = JsonUtility.FromJson<TelemetryLapMetadata>(File.ReadAllText(metadataPath));
+            CheckHeaders(metadata.headers);
 
             string directoryPath = Path.GetDirectoryName(metadataPath);
             string telemetryPath = Path.Combine(directoryPath, metadata.csvFile);
@@ -48,16 +51,34 @@ namespace Perrinn424.TelemetryLapSystem
 
                 currentFrame.inputData = new int[InputData.Max];
 
-                currentFrame.inputData[InputData.Steer] = (int)(csvLine["STEERCSV"]);
-                currentFrame.inputData[InputData.Throttle] = (int)(csvLine["THROTTLECSV"]);
-                currentFrame.inputData[InputData.Brake] = (int)(csvLine["BRAKECSV"]);
-                currentFrame.inputData[InputData.AutomaticGear] = (int)(csvLine["AUTOMATICGEARCSV"]);
+                currentFrame.inputData[InputData.Steer] = (int)(csvLine["RAWSTEER"]);
+                currentFrame.inputData[InputData.Throttle] = (int)(csvLine["RAWTHROTTLE"]);
+                currentFrame.inputData[InputData.Brake] = (int)(csvLine["RAWBRAKE"]);
+                currentFrame.inputData[InputData.AutomaticGear] = (int)(csvLine["RAWAUTOMATICGEAR"]);
 
                 asset.recordedData.Add(currentFrame);
             }
 
             asset.name = Path.GetFileNameWithoutExtension(metadata.csvFile);
             return asset;
+        }
+
+        private static void CheckHeaders(string[] headers)
+        {
+            string[] requiredHeaders = new[] {
+                "POSITIONX", "POSITIONY", "POSITIONZ",
+                "ROTATIONX", "ROTATIONY", "ROTATIONZ",
+                "RAWSTEER", "RAWTHROTTLE", "RAWBRAKE", "AUTOMATICGEAR"
+            };
+
+            foreach (string requiredHeader in requiredHeaders)
+            {
+                if (!headers.Contains(requiredHeader))
+                {
+                    throw new ArgumentException($"{requiredHeader} header not found");
+                }
+            }
+
         }
     } 
 }

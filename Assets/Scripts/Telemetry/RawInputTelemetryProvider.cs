@@ -34,10 +34,10 @@ public class RawInputTelemetryProvider : VehicleBehaviour
 		{
 			vehicle = (VehicleBase)instance;
 
-			channelInfo[0].SetNameAndSemantic("RAWSTEER", Telemetry.Semantic.Default);
-			channelInfo[1].SetNameAndSemantic("RAWTHROTTLE", Telemetry.Semantic.Default);
-			channelInfo[2].SetNameAndSemantic("RAWBRAKE", Telemetry.Semantic.Default);
-			channelInfo[3].SetNameAndSemantic("RAWAUTOMATICGEAR", Telemetry.Semantic.Default);
+			channelInfo[0].SetNameAndSemantic("RawSteer", Telemetry.Semantic.Default);
+			channelInfo[1].SetNameAndSemantic("RawThrottle", Telemetry.Semantic.Default);
+			channelInfo[2].SetNameAndSemantic("RawBrake", Telemetry.Semantic.Default);
+			channelInfo[3].SetNameAndSemantic("AutomaticGear", Telemetry.Semantic.Default);
 		}
 
 		public override Telemetry.PollFrequency GetPollFrequency()

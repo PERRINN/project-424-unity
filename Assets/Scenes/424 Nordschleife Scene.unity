@@ -8814,50 +8814,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39243bf9ec4890d4b8ab24c2e0176ff1, type: 3}
---- !u!1 &654982002
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 654982004}
-  - component: {fileID: 654982003}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &654982003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 654982002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 613789259ec99c6448e6f57ebe9cb910, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  path: .\Telemetry\2022-01-15 10.43.29 UTC 05.12.889.csv.metadata
---- !u!4 &654982004
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 654982002}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &772789292 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2292733907331487657, guid: 8b88624d1f8e64345a093a515559c5bb,
@@ -9115,7 +9071,7 @@ MonoBehaviour:
   selected: 1
   replayAssets:
   - {fileID: 11400000, guid: 4798faf1eb7464f268fe7bae22d48e06, type: 2}
-  - {fileID: 11400000, guid: b95730b960265184b9927a5ffe635eeb, type: 2}
+  - {fileID: 0}
   frames: 
 --- !u!223 &1088376467 stripped
 Canvas:
@@ -9274,7 +9230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1391364164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9304,10 +9260,10 @@ MonoBehaviour:
     - BrakePressure
     - Gear
     - Speed
-    - STEERCSV
-    - THROTTLECSV
-    - BRAKECSV
-    - AUTOMATICGEARCSV
+    - RawSteer
+    - RawThrottle
+    - RawBrake
+    - AutomaticGear
 --- !u!4 &1391364165
 Transform:
   m_ObjectHideFlags: 0
@@ -9608,21 +9564,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2292733907331487657, guid: 8b88624d1f8e64345a093a515559c5bb,
-        type: 3}
-      propertyPath: timeScales.Array.data[4]
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2292733907331487657, guid: 8b88624d1f8e64345a093a515559c5bb,
-        type: 3}
-      propertyPath: timeScales.Array.data[5]
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2292733907331487657, guid: 8b88624d1f8e64345a093a515559c5bb,
-        type: 3}
-      propertyPath: timeScales.Array.data[6]
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 2292733907331487658, guid: 8b88624d1f8e64345a093a515559c5bb,
         type: 3}
       propertyPath: underfloor
