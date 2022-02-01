@@ -3,92 +3,95 @@ using System.Collections.Generic;
 using UnityEngine;
 using VehiclePhysics;
 
-public class HeuristicFrameSearcher : IFrameSearcher
+namespace Perrinn424.AutopilotSystem
 {
-    public int ClosestFrame1 { get; private set; }
-
-    public int ClosestFrame2 { get; private set; }
-
-    public float ClosestDisFrame1 { get; private set; }
-
-    public float ClosestDisFrame2 { get; private set; }
-
-    private bool hasHeuristics;
-    IReadOnlyList<VPReplay.Frame> frames;
-
-    private readonly float distanceThreshold;
-    private readonly int lookBehind; 
-    private readonly int lookCount; 
-    public HeuristicFrameSearcher(IReadOnlyList<VPReplay.Frame> frames, float distanceThreshold, int lookBehind, int lookAhead)
+    public class HeuristicFrameSearcher : IFrameSearcher
     {
-        this.frames = frames;
-        this.distanceThreshold = distanceThreshold;
-        this.lookBehind = lookBehind;
-        this.lookCount = lookAhead - lookBehind;
-    }
+        public int ClosestFrame1 { get; private set; }
 
-    public void Search(Transform t)
-    {
+        public int ClosestFrame2 { get; private set; }
 
-        int start = 0;
-        int count = frames.Count;
+        public float ClosestDisFrame1 { get; private set; }
 
-        if (hasHeuristics)
+        public float ClosestDisFrame2 { get; private set; }
+
+        private bool hasHeuristics;
+        IReadOnlyList<VPReplay.Frame> frames;
+
+        private readonly float distanceThreshold;
+        private readonly int lookBehind;
+        private readonly int lookCount;
+        public HeuristicFrameSearcher(IReadOnlyList<VPReplay.Frame> frames, float distanceThreshold, int lookBehind, int lookAhead)
         {
-            start = new CircularIndex(ClosestFrame1 - lookBehind, frames.Count);
-            count = lookCount;
+            this.frames = frames;
+            this.distanceThreshold = distanceThreshold;
+            this.lookBehind = lookBehind;
+            this.lookCount = lookAhead - lookBehind;
         }
 
-        //int index = FindClosest(GetIndexesToCheck(), t.position);
-        int index = FindClosest(start, count, t.position);
-
-        Vector3 closestPosition = frames[index].position;
-        CircularIndex i = new CircularIndex(index, frames.Count);
-
-        float localZ = t.InverseTransformPoint(closestPosition).z;
-
-        if (localZ > 0) i--;
-
-        ClosestFrame1 = i;
-        ClosestFrame2 = i+1;
-        ClosestDisFrame1 = Mathf.Sqrt(Squared2DDistance(frames[ClosestFrame1].position, t.position));
-        ClosestDisFrame2 = Mathf.Sqrt(Squared2DDistance(frames[ClosestFrame2].position, t.position));
-
-        if (ClosestDisFrame1 > distanceThreshold && hasHeuristics == true)
+        public void Search(Transform t)
         {
-            hasHeuristics = false;
-            Search(t);
-        }
-        else
-        {
-            hasHeuristics = true;
-        }
-    }
 
-    private int FindClosest(int start, int count, Vector3 pos)
-    {
-        int closestIndex = -1;
-        float minDistance = float.PositiveInfinity;
+            int start = 0;
+            int count = frames.Count;
 
-        for (int index = start; index < (start + count); index++)
-        {
-            int circularIndex = CircularIndex.FitCircular(index, frames.Count);
-            Vector3 checkPosition = frames[circularIndex].position;
-            float dist = Squared2DDistance(checkPosition, pos);
-            if (dist < minDistance)
+            if (hasHeuristics)
             {
-                closestIndex = circularIndex;
-                minDistance = dist;
+                start = new CircularIndex(ClosestFrame1 - lookBehind, frames.Count);
+                count = lookCount;
+            }
+
+            //int index = FindClosest(GetIndexesToCheck(), t.position);
+            int index = FindClosest(start, count, t.position);
+
+            Vector3 closestPosition = frames[index].position;
+            CircularIndex i = new CircularIndex(index, frames.Count);
+
+            float localZ = t.InverseTransformPoint(closestPosition).z;
+
+            if (localZ > 0) i--;
+
+            ClosestFrame1 = i;
+            ClosestFrame2 = i + 1;
+            ClosestDisFrame1 = Mathf.Sqrt(Squared2DDistance(frames[ClosestFrame1].position, t.position));
+            ClosestDisFrame2 = Mathf.Sqrt(Squared2DDistance(frames[ClosestFrame2].position, t.position));
+
+            if (ClosestDisFrame1 > distanceThreshold && hasHeuristics == true)
+            {
+                hasHeuristics = false;
+                Search(t);
+            }
+            else
+            {
+                hasHeuristics = true;
             }
         }
 
-        return closestIndex;
-    }
+        private int FindClosest(int start, int count, Vector3 pos)
+        {
+            int closestIndex = -1;
+            float minDistance = float.PositiveInfinity;
 
-    private float Squared2DDistance(Vector3 a, Vector3 b)
-    {
-        float xDiff = (a.x - b.x);
-        float zDiff = (a.z - b.z);
-        return xDiff * xDiff + zDiff * zDiff;
-    }
+            for (int index = start; index < (start + count); index++)
+            {
+                int circularIndex = CircularIndex.FitCircular(index, frames.Count);
+                Vector3 checkPosition = frames[circularIndex].position;
+                float dist = Squared2DDistance(checkPosition, pos);
+                if (dist < minDistance)
+                {
+                    closestIndex = circularIndex;
+                    minDistance = dist;
+                }
+            }
+
+            return closestIndex;
+        }
+
+        private float Squared2DDistance(Vector3 a, Vector3 b)
+        {
+            float xDiff = (a.x - b.x);
+            float zDiff = (a.z - b.z);
+            return xDiff * xDiff + zDiff * zDiff;
+        }
+    } 
 }

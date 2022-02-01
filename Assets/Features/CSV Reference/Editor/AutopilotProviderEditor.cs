@@ -1,5 +1,5 @@
 ﻿using UnityEditor;
-namespace Perrinn424
+namespace Perrinn424.AutopilotSystem.Editor
 {
     [CustomEditor(typeof(AutopilotProvider))]
     public class AutopilotProviderEditor : UnityEditor.Editor
