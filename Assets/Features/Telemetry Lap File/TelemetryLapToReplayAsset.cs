@@ -54,7 +54,7 @@ namespace Perrinn424.TelemetryLapSystem
                 currentFrame.inputData[InputData.Steer] = (int)(csvLine["RAWSTEER"]);
                 currentFrame.inputData[InputData.Throttle] = (int)(csvLine["RAWTHROTTLE"]);
                 currentFrame.inputData[InputData.Brake] = (int)(csvLine["RAWBRAKE"]);
-                currentFrame.inputData[InputData.AutomaticGear] = (int)(csvLine["RAWAUTOMATICGEAR"]);
+                currentFrame.inputData[InputData.AutomaticGear] = (int)(csvLine["AUTOMATICGEAR"]);
 
                 asset.recordedData.Add(currentFrame);
             }

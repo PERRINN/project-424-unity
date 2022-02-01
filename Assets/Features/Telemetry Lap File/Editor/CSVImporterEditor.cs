@@ -36,16 +36,11 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     {
                     }
                 }
-                catch (ArgumentException e)
+                catch (Exception e)
                 {
-                    string msg = $"Error. {e.Message}";
+                    string msg = $"Error importing. {e.Message}";
                     EditorUtility.DisplayDialog("CSV Importer", msg, "ok");
                 }
-                catch
-                {
-                    EditorUtility.DisplayDialog("CSV Importer", "Error importing", "ok");
-                }
-
             }
         }
     } 
