@@ -10,7 +10,7 @@ using VehiclePhysics;
 //https://github.com/viliwonka/KDTree
 
 [ExecuteInEditMode]
-public class FrameSearch : MonoBehaviour, IComparer<Vector3>
+public class FrameSearcherTest : MonoBehaviour, IComparer<Vector3>
 {
     //public VPReplayAsset asset;
     public VPReplayAsset asset => provider.GetReplayAsset();
