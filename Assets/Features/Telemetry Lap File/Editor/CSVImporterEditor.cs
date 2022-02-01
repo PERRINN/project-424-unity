@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Perrinn424.AutopilotSystem;
+using System;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -34,6 +35,14 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     AssetDatabase.CreateAsset(asset, filePath);
                     if (EditorUtility.DisplayDialog("CSV Importer", $"Replay Asset correctly created at {filePath}. Do you want to use it at the autopilot?", "ok", "cancel"))
                     {
+                        AutopilotProvider provider = FindObjectOfType<AutopilotProvider>();
+                        provider.replayAssets = new[] { asset };
+                        Undo.RecordObject(provider, "Autopilot Replay Asset");
+                        Selection.activeGameObject = provider.gameObject;
+                    }
+                    else
+                    {
+                        Selection.activeObject = asset;
                     }
                 }
                 catch (Exception e)
