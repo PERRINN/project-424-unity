@@ -36,7 +36,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     if (EditorUtility.DisplayDialog("CSV Importer", $"Replay Asset correctly created at {filePath}. Do you want to use it at the autopilot?", "ok", "cancel"))
                     {
                         AutopilotProvider provider = FindObjectOfType<AutopilotProvider>();
-                        provider.replayAssets = new[] { asset };
+                        provider.replayAsset = asset;
                         Undo.RecordObject(provider, "Autopilot Replay Asset");
                         Selection.activeGameObject = provider.gameObject;
                     }

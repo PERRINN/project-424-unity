@@ -10,7 +10,7 @@ using VehiclePhysics;
 [ExecuteInEditMode]
 public class FrameSearcherTest : MonoBehaviour
 {
-    public VPReplayAsset asset => provider.GetReplayAsset();
+    public VPReplayAsset asset => provider.replayAsset;
     public Vector3[] positions;
     public int index;
     public int nextIndex;
@@ -25,16 +25,16 @@ public class FrameSearcherTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (frameSearcher == null) frameSearcher = new HeuristicFrameSearcher(provider.GetReplayAsset().recordedData, 5, -10, 100);
+        if (frameSearcher == null) frameSearcher = new HeuristicFrameSearcher(provider.replayAsset.recordedData, 5, -10, 100);
 
 
         frameSearcher.Search(this.transform);
         index = frameSearcher.ClosestFrame1;
         nextIndex = frameSearcher.ClosestFrame2;
-        this.transform.position = new Vector3(transform.position.x, provider.GetReplayAsset().recordedData[index].position.y, transform.position.z);
+        this.transform.position = new Vector3(transform.position.x, provider.replayAsset.recordedData[index].position.y, transform.position.z);
 
-        a.transform.position = provider.GetReplayAsset().recordedData[index].position;
-        b.transform.position = provider.GetReplayAsset().recordedData[nextIndex].position;
+        a.transform.position = provider.replayAsset.recordedData[index].position;
+        b.transform.position = provider.replayAsset.recordedData[nextIndex].position;
     }
 
 

@@ -9,7 +9,7 @@ namespace Perrinn424.AutopilotSystem.Editor
         void OnEnable()
         {
             autopilotProvider = (AutopilotProvider)(target);
-            replayAssetEditor = CreateEditor(autopilotProvider.GetReplayAsset());
+            replayAssetEditor = CreateEditor(autopilotProvider.replayAsset);
 
         }
 
@@ -20,7 +20,7 @@ namespace Perrinn424.AutopilotSystem.Editor
 
             if (EditorGUI.EndChangeCheck())
             {
-                UnityEditor.Editor  tmpEditor = CreateEditor(autopilotProvider.GetReplayAsset());
+                UnityEditor.Editor  tmpEditor = CreateEditor(autopilotProvider.replayAsset);
                 if (replayAssetEditor != null)
                 {
                     DestroyImmediate(replayAssetEditor);

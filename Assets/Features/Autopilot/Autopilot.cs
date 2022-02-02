@@ -103,8 +103,7 @@ namespace Perrinn424.AutopilotSystem
                 else
                 {
                     autopilotON = true;
-                    autopilotProvider.SetSelected(Input.GetKey(KeyCode.LeftShift) ? 1 : 0);
-                    VPReplayAsset replayAsset = autopilotProvider.GetReplayAsset();
+                    VPReplayAsset replayAsset = autopilotProvider.replayAsset;
                     int lookAroundFramesCount = (int)(1f / replayAsset.timeStep); //seconds to look around
                     int lookBehind = (int)(lookAroundFramesCount * 0.05f); //5% behind, just in case
                     frameSearcher = new HeuristicFrameSearcher(replayAsset.recordedData, 5f, lookBehind, lookAroundFramesCount);
@@ -138,7 +137,6 @@ namespace Perrinn424.AutopilotSystem
             float closestDisFrame1 = frameSearcher.ClosestDisFrame1;
             float closestDisFrame2 = frameSearcher.ClosestDisFrame2;
 
-            autopilotProvider.DebugFrames(new int[] { closestFrame1, closestFrame2 });
             // Reference point offset: Recorded vehicle
             Vector3 offsetFromClosestFrame1 = GetOffsetPosition(offsetValue, autopilotProvider[closestFrame1]);
             Vector3 offsetFromClosestFrame2 = GetOffsetPosition(offsetValue, autopilotProvider[closestFrame2]);
