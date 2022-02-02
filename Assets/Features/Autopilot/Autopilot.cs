@@ -275,7 +275,7 @@ namespace Perrinn424.AutopilotSystem
 
         private float FramesToTime(int frames)
         {
-            return frames * Time.fixedDeltaTime;
+            return frames * autopilotProvider.replayAsset.timeStep;
         }
 
         Vector3 GetOffsetPosition(float offsetValue, VPReplay.Frame offsetTransform)
