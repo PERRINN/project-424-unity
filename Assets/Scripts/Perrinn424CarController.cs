@@ -16,14 +16,15 @@ using VehiclePhysics;
 
 public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EXAMPLE
 	{
-	public const int ThrottleInput				= 0;		// Throttle input sent to mgu			ratio		1000			1000 = 1.0 = 100%
+	public const int ThrottleInput				= 0;		// Throttle input sent to MGU			ratio		1000			1000 = 1.0 = 100%
 	public const int BrakePressure				= 1;		// Brake circuit pressure				bar			1000			30500 = 30.5 bar
-	public const int DrsPosition				= 2;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
+	public const int SteeringWheelAngle			= 2;		// Angle in the steering column			deg			1000			12420 = 12.42 degrees
+	public const int DrsPosition				= 3;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
 
-	public const int FrontRideHeight			= 3;		// Front ride height					m			1000			230 = 0.23 m = 230 mm
-	public const int FrontRollAngle				= 4;		// Front roll angle (signed)			deg			1000			2334 = 2.345 degrees
-	public const int RearRideHeight				= 5;		// Rear ride height						m			1000			230 = 0.23 m = 230 mm
-	public const int RearRollAngle				= 6;		// Rear roll angle (signed)				deg			1000			2334 = 2.345 degrees
+	public const int FrontRideHeight			= 4;		// Front ride height					m			1000			230 = 0.23 m = 230 mm
+	public const int FrontRollAngle				= 5;		// Front roll angle (signed)			deg			1000			2334 = 2.345 degrees
+	public const int RearRideHeight				= 6;		// Rear ride height						m			1000			230 = 0.23 m = 230 mm
+	public const int RearRollAngle				= 7;		// Rear roll angle (signed)				deg			1000			2334 = 2.345 degrees
 
 	// MGU data. Combine base ID with values.
 
@@ -93,6 +94,7 @@ public class Perrinn424CarController : VehicleBase
 
 	public float throttleInput { get => m_throttleInput; }
 	public float brakePressure { get => m_brakePressure; }
+	public float steerAngle { get => m_steerAngle; }
 	public int gear { get => m_gear; }
 
 
@@ -106,6 +108,7 @@ public class Perrinn424CarController : VehicleBase
 
 	float m_throttleInput;
 	float m_brakePressure;
+	float m_steerAngle;
 	int m_gearMode;
 	int m_prevGearMode;
 	int m_gear;
@@ -384,7 +387,6 @@ public class Perrinn424CarController : VehicleBase
 		int[] settingsData = data.Get(Channel.Settings);
 
 		float brakePosition = Mathf.Clamp01(inputData[InputData.Brake] / 10000.0f);
-		float handbrakePosition = Mathf.Clamp01(inputData[InputData.Handbrake] / 10000.0f);
 		float throttlePosition = Mathf.Clamp01(inputData[InputData.Throttle] / 10000.0f);
 		float steerPosition = Mathf.Clamp(inputData[InputData.Steer] / 10000.0f, -1.0f, 1.0f);
 
@@ -415,7 +417,7 @@ public class Perrinn424CarController : VehicleBase
 		else
 			throttlePosition = SpeedControl.GetThrottle(speedControl, inputData, data.Get(Channel.Vehicle));
 
-		// Process inputs
+		// Process inputs and steering
 		// Input settings are configured in the car independently of the torque maps.
 		// Being in a separate class allows all intermediate steps to be traced separately
 		// (pedal > input > electrical torque > mechanical torque > wheel torque)
@@ -423,12 +425,21 @@ public class Perrinn424CarController : VehicleBase
 		m_gear = m_gearMode - (int)Gearbox.AutomaticGear.N;
 		m_throttleInput = input.GetThrottleInput(throttlePosition);
 		m_brakePressure = input.GetBrakePressure(brakePosition);
-		if (m_brakePressure > brakePressureThreshold) m_throttleInput = 0.0f;
 
+		if (settingsData[SettingsData.SteeringAidsOverride] != 2)
+			SteeringAids.Apply(this, steering, steeringAids, ref steerPosition);
+		m_steerAngle = steerPosition * steering.steeringWheelRange * 0.5f;
+
+		// Apply inputs to the car elements
+
+		if (m_brakePressure > brakePressureThreshold) m_throttleInput = 0.0f;
 		m_frontPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure);
 		m_rearPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure);
 
-		// Traction control
+		m_steering.steerInput = steerPosition;
+		m_steering.DoUpdate();
+
+		// Traction control (TO-DO)
 
 		if (m_gear != 0)
 			{
@@ -454,13 +465,6 @@ public class Perrinn424CarController : VehicleBase
 			m_frontPowertrain.electricMotor.motorInput = motorInput * (1.0f - frontToRearBalance);
 			*/
 			}
-
-		// Steering
-
-		if (settingsData[SettingsData.SteeringAidsOverride] != 2)
-			SteeringAids.Apply(this, steering, steeringAids, ref steerPosition);
-		m_steering.steerInput = steerPosition;
-		m_steering.DoUpdate();
 
 		// Track changes in the inertia settings
 
@@ -538,6 +542,7 @@ public class Perrinn424CarController : VehicleBase
 		int[] customData = data.Get(Channel.Custom);
 		customData[Perrinn424Data.ThrottleInput] = (int)(m_throttleInput * 1000.0f);
 		customData[Perrinn424Data.BrakePressure] = (int)(m_brakePressure * 1000.0f);
+		customData[Perrinn424Data.SteeringWheelAngle] = (int)(m_steerAngle * 1000.0f);
 
 		m_frontPowertrain.FillDataBus(customData, Perrinn424Data.FrontMguBase);
 		m_rearPowertrain.FillDataBus(customData, Perrinn424Data.RearMguBase);

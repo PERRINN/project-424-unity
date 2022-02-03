@@ -121,18 +121,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		public override void PollValues (float[] values, int index, Object instance)
 			{
-			// Gear
-
 			values[index+0] = m_controller.gear;
-
-			// Steer angle
-
-			float steerInput = m_controller.data.Get(Channel.Vehicle, VehicleData.AidedSteer) / 10000.0f;
-			float steerAngle = steerInput * m_steering.steeringWheelRange * 0.5f;
-			values[index+1] = steerAngle;
-
-			// Throttle and brake
-
+			values[index+1] = m_controller.steerAngle;
 			values[index+2] = m_controller.throttleInput;
 			values[index+3] = m_controller.brakePressure;
 			}
