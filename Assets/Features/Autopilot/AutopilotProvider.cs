@@ -16,6 +16,11 @@ namespace Perrinn424.AutopilotSystem
             get => replayAsset.recordedData[index];
         }
 
+        public float CalculateDuration()
+        {
+            return Count * TimeStep;
+        }
+
 
         private void OnDrawGizmos()
         {
