@@ -113,5 +113,10 @@ namespace Perrinn424.Utilities
         {
             return this.index == other.index;
         }
+
+        public override string ToString()
+        {
+            return index.ToString();
+        }
     } 
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Dynamic;
+﻿using System.Dynamic;
 using System.Linq;
 
 namespace Perrinn424.TelemetryLapSystem
@@ -7,15 +6,12 @@ namespace Perrinn424.TelemetryLapSystem
     public class CSVLine: DynamicObject
     {
         private float [] values;
-        private Dictionary<string, int> headersIndex;
+        private readonly HeadersIndex headersIndex;
         public bool HasValues { get; private set; }
         public CSVLine(string[] headers)
         {
             values = new float[headers.Length];
-            headersIndex =
-                headers
-                    .Select((header, index) => new { header, index })
-                    .ToDictionary(x => x.header, x => x.index);
+            headersIndex = new HeadersIndex(headers);
         }
 
         public float[] Values => values;
@@ -49,7 +45,7 @@ namespace Perrinn424.TelemetryLapSystem
 
         public bool Contains(string header)
         {
-            return headersIndex.ContainsKey(header);
+            return headersIndex.HasHeader(header);
         }
 
         public int Sector => (int)this["SECTOR"];
