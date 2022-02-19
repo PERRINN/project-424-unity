@@ -14,6 +14,8 @@ namespace Perrinn424.TelemetryLapSystem
         public string[] Units { get; private set; }
         private float[] unitsMultiplier;
 
+        public float [] Frequencies { get; private set; }
+
         private int[] channelsIndex;
         private const int channelNotFoundIndex = -1;
         private int lastTelemetryChannelCount;
@@ -28,8 +30,15 @@ namespace Perrinn424.TelemetryLapSystem
         {
             this.vehicle = vehicle;
             channelsIndex = Enumerable.Repeat(channelNotFoundIndex, channels.Length).ToArray();
+
+            BuildInfoArrays();
+        }
+
+        private void BuildInfoArrays()
+        {
             GetChannelsIndex();
             GetUnits();
+            GetFrequencies();
         }
 
         private void GetChannelsIndex()
@@ -59,6 +68,22 @@ namespace Perrinn424.TelemetryLapSystem
             unitsMultiplier = semantics.Select(semantic => semantic.displayMultiplier).ToArray();
         }
 
+        private void GetFrequencies()
+        {
+
+            Frequencies = channelsIndex.Select(GetFrequency).ToArray();
+        }
+
+        private float GetFrequency(int channelIndex)
+        {
+            if (channelIndex == channelNotFoundIndex)
+            {
+                return -1.0f;
+            }
+            
+            return vehicle.telemetry.channels[channelIndex].group.actualFrequency;
+        }
+
         public void RefreshIfNeeded()
         {
             if (vehicle.telemetry.channels.Count == lastTelemetryChannelCount)
@@ -70,7 +95,7 @@ namespace Perrinn424.TelemetryLapSystem
             {
                 if (channelIndex == channelNotFoundIndex)
                 {
-                    GetChannelsIndex();
+                    BuildInfoArrays();
                     return;
                 }
             }
