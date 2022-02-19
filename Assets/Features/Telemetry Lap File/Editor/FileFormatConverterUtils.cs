@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Perrinn424.AutopilotSystem;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -139,6 +140,48 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             replayAsset.name = telemetryLap.name;
             replayAsset.recordedData = recordedData;
             return replayAsset;
+        }
+
+        public static RecordedLap TelemetryLapToRecordedLap(TelemetryLapAsset telemetryLap)
+        {
+            RecordedLap recordedLap = ScriptableObject.CreateInstance<RecordedLap>();
+            TelemetryLapMetadata metadata = telemetryLap.metadata;
+            recordedLap.frequency = metadata.frequency;
+            
+            Table table = telemetryLap.table;
+            List<Sample> samples = new List<Sample>(table.RowCount);
+
+            for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
+            {
+                Sample sample = new Sample();
+
+                float x = table[rowIndex, "POSITIONX"];
+                float y = table[rowIndex, "POSITIONY"];
+                float z = table[rowIndex, "POSITIONZ"];
+
+                float eulerX = table[rowIndex, "ROTATIONX"];
+                float eulerY = table[rowIndex, "ROTATIONY"];
+                float eulerZ = table[rowIndex, "ROTATIONZ"];
+
+                sample.position = new Vector3(x, y, z);
+                sample.rotation = Quaternion.Euler(eulerX, eulerY, eulerZ);
+
+
+                sample.rawSteer = (int)(table[rowIndex, "RAWSTEER"]);
+                sample.rawThrottle = (int)(table[rowIndex, "RAWTHROTTLE"]);
+                sample.rawBrake = (int)(table[rowIndex, "RAWBRAKE"]);
+                sample.automaticGear = (int)(table[rowIndex, "AUTOMATICGEAR"]);
+
+                sample.steeringAngle = table[rowIndex, "STEERINGANGLE"];
+                sample.throttle = table[rowIndex, "THROTTLE"];
+                sample.brakePressure = table[rowIndex, "BRAKEPRESSURE"];
+
+                samples.Add(sample);
+            }
+
+            recordedLap.name = telemetryLap.name;
+            recordedLap.samples = samples;
+            return recordedLap;
         }
     }
 }

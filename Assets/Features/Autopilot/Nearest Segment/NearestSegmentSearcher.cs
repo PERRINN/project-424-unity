@@ -88,8 +88,10 @@ public class NearestSegmentSearcher
         float dotProduct_point = Vector3.Dot(segment, pointVector);
         float dotProduct_segment = Vector3.Dot(segment, segment);
 
-        bool belong = dotProduct_point >= 0f && dotProduct_point <= dotProduct_segment;
+        //bool belong = dotProduct_point >= 0f && dotProduct_point <= dotProduct_segment;
         float ratio = dotProduct_point / dotProduct_segment;
+
+        bool belong = (ratio > 0 || Approx(ratio, 0)) && (ratio < 1.0f || Approx(ratio, 1.0f));
 
         if ((Approx(ratio, 0f) || Approx(ratio, 1f)) && !belong)
         {

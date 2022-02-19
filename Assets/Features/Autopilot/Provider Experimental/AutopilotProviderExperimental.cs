@@ -15,7 +15,7 @@ namespace Perrinn424.AutopilotSystem
             segmentSearcher = new NearestSegmentSearcher(this);
         }
 
-        Vector3 IReadOnlyList<Vector3>.this[int index] => this[index].positition;
+        Vector3 IReadOnlyList<Vector3>.this[int index] => this[index].position;
 
         public Sample this[int index] => samples[index];
 
@@ -46,7 +46,7 @@ namespace Perrinn424.AutopilotSystem
         {
             foreach (Sample s in samples)
             {
-                yield return s.positition;
+                yield return s.position;
             }
         }
     }

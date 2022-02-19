@@ -6,6 +6,7 @@ namespace Perrinn424.AutopilotSystem
 {
     public class RecordedLap : ScriptableObject, IReadOnlyList<Sample>
     {
+        public float frequency;
         public List<Sample> samples;
 
         public Sample this[int index] => samples[index];

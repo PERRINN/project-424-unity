@@ -3,9 +3,10 @@ using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
 {
+    [Serializable]
     public struct Sample
     {
-        public Vector3 positition;
+        public Vector3 position;
         public Quaternion rotation;
 
         public int rawSteer;
@@ -23,7 +24,7 @@ namespace Perrinn424.AutopilotSystem
             return new Sample
             {
 
-                positition = Vector3.Lerp(a.positition, b.positition, t),
+                position = Vector3.Lerp(a.position, b.position, t),
                 rotation = Quaternion.Lerp(a.rotation, b.rotation, t),
                 rawSteer = IntLerp(a.rawSteer, b.rawSteer, t),
                 rawThrottle = IntLerp(a.rawThrottle, b.rawThrottle, t),
