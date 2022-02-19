@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using VehiclePhysics;
 
@@ -32,22 +31,25 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             {
                 try
                 {
-                    VPReplayAsset asset = TelemetryLapToReplayAsset.Create(path);
-                    string filePath = $"Assets/Replays/{asset.name}.asset";
-                    AssetDatabase.CreateAsset(asset, filePath);
+                    TelemetryLapAsset telemetryLap = FileFormatConverterUtils.CSVToTelemetryLapAsset(path);
+                    VPReplayAsset replayAsset = FileFormatConverterUtils.TelemetryLapToReplayAsset(telemetryLap);
 
-                    TelemetryLapAsset lapAsset = Create(path);
-                    AssetDatabase.CreateAsset(lapAsset, "Assets/lap.asset");
-                    if (EditorUtility.DisplayDialog("CSV Importer", $"Replay Asset correctly created at {filePath}. Do you want to use it at the autopilot?", "ok", "cancel"))
+                    string telemetryLapFilePath = $"Assets/Replays/{telemetryLap.name}.asset";
+                    AssetDatabase.CreateAsset(telemetryLap, telemetryLapFilePath);
+
+                    string replayFilePath = $"Assets/Replays/{replayAsset.name}_replay.asset";
+                    AssetDatabase.CreateAsset(replayAsset, replayFilePath);
+
+                    if (EditorUtility.DisplayDialog("CSV Importer", $"CSV correctly created at {telemetryLapFilePath}. Do you want to use the replayassset at the autopilot?", "ok", "cancel"))
                     {
                         AutopilotProvider provider = FindObjectOfType<AutopilotProvider>();
-                        provider.replayAsset = asset;
+                        provider.replayAsset = replayAsset;
                         Undo.RecordObject(provider, "Autopilot Replay Asset");
                         Selection.activeGameObject = provider.gameObject;
                     }
                     else
                     {
-                        Selection.activeObject = asset;
+                        Selection.activeObject = telemetryLap;
                     }
                 }
                 catch (Exception e)
@@ -56,24 +58,6 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     EditorUtility.DisplayDialog("CSV Importer", msg, "ok");
                 }
             }
-        }
-        private static TelemetryLapAsset Create(string filePath)
-        {
-            TelemetryLapMetadata metadata = JsonUtility.FromJson<TelemetryLapMetadata>(File.ReadAllText(filePath));
-
-            string directoryPath = Path.GetDirectoryName(filePath);
-            string telemetryPath = Path.Combine(directoryPath, metadata.csvFile);
-
-            TelemetryLapAsset asset = ScriptableObject.CreateInstance<TelemetryLapAsset>();
-            asset.metadata = metadata;
-
-            using (var s = new StreamReader(telemetryPath))
-            {
-                asset.table = Table.FromStream(s);
-            }
-
-            return asset;
-
         }
     } 
 }

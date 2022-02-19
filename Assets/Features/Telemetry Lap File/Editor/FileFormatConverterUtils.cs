@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using VehiclePhysics;
 
-namespace Perrinn424.TelemetryLapSystem
+namespace Perrinn424.TelemetryLapSystem.Editor
 {
-    public static class TelemetryLapToReplayAsset
+    public static class FileFormatConverterUtils
     {
-        public static VPReplayAsset Create(string metadataPath)
+        public static VPReplayAsset CSVToReplayAsset(string metadataPath)
         {
             TelemetryLapMetadata metadata = JsonUtility.FromJson<TelemetryLapMetadata>(File.ReadAllText(metadataPath));
             CheckHeaders(metadata.headers);
@@ -78,7 +79,66 @@ namespace Perrinn424.TelemetryLapSystem
                     throw new ArgumentException($"{requiredHeader} header not found");
                 }
             }
-
         }
-    } 
+
+        public static TelemetryLapAsset CSVToTelemetryLapAsset(string metadataPath)
+        {
+            TelemetryLapMetadata metadata = JsonUtility.FromJson<TelemetryLapMetadata>(File.ReadAllText(metadataPath));
+
+            string directoryPath = Path.GetDirectoryName(metadataPath);
+            string telemetryPath = Path.Combine(directoryPath, metadata.csvFile);
+
+            TelemetryLapAsset asset = ScriptableObject.CreateInstance<TelemetryLapAsset>();
+            asset.metadata = metadata;
+
+            using (var s = new StreamReader(telemetryPath))
+            {
+                asset.table = Table.FromStream(s);
+            }
+
+            asset.name = Path.GetFileNameWithoutExtension(metadata.csvFile);
+            return asset;
+        }
+
+        public static VPReplayAsset TelemetryLapToReplayAsset(TelemetryLapAsset telemetryLap)
+        {
+            VPReplayAsset replayAsset = ScriptableObject.CreateInstance<VPReplayAsset>();
+            TelemetryLapMetadata metadata = telemetryLap.metadata;
+            replayAsset.timeStep = 1f / metadata.frequency;
+            replayAsset.notes = $"created synthetically from {AssetDatabase.GetAssetPath(telemetryLap)}";
+            replayAsset.sceneName = metadata.trackName;
+
+            List <VPReplay.Frame> recordedData = new List<VPReplay.Frame>();//TODO pre allocate with meta.count
+            Table table = telemetryLap.table;
+
+            for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
+            {
+                VPReplay.Frame currentFrame = new VPReplay.Frame();
+
+                float x = table[rowIndex,"POSITIONX"];
+                float y = table[rowIndex, "POSITIONY"];
+                float z = table[rowIndex, "POSITIONZ"];
+
+                float eulerX = table[rowIndex, "ROTATIONX"];
+                float eulerY = table[rowIndex, "ROTATIONY"];
+                float eulerZ = table[rowIndex, "ROTATIONZ"];
+
+                currentFrame.position = new Vector3(x, y, z);
+                currentFrame.rotation = Quaternion.Euler(eulerX, eulerY, eulerZ);
+
+                currentFrame.inputData = new int[InputData.Max];
+
+                currentFrame.inputData[InputData.Steer] = (int)(table[rowIndex, "RAWSTEER"]);
+                currentFrame.inputData[InputData.Throttle] = (int)(table[rowIndex, "RAWTHROTTLE"]);
+                currentFrame.inputData[InputData.Brake] = (int)(table[rowIndex, "RAWBRAKE"]);
+                currentFrame.inputData[InputData.AutomaticGear] = (int)(table[rowIndex, "AUTOMATICGEAR"]);
+
+                recordedData.Add(currentFrame);
+            }
+
+            replayAsset.name = telemetryLap.name;
+            replayAsset.recordedData = recordedData;
+            return replayAsset;
+        }
+    }
 }

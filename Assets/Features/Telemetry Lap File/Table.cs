@@ -124,6 +124,9 @@ namespace Perrinn424.TelemetryLapSystem
             }
         }
 
+        public float this[int rowIndex, string header] => this[rowIndex, headerIndex[header]];
+
+
         public IEnumerable<float> this[string header]
         {
             get => this.GetColumn(header);
