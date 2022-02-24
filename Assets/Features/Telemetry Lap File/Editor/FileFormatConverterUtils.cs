@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using VehiclePhysics;
+using Path = System.IO.Path;
 
 namespace Perrinn424.TelemetryLapSystem.Editor
 {

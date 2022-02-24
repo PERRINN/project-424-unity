@@ -218,7 +218,7 @@ namespace Perrinn424.AutopilotSystem
 
                 if (debugGizmo)
                 {
-                    DebugUtility.DrawCrossMark(offsetFromCurrentVehiclePos, vehicle.cachedTransform, GColor.pink);
+                    DebugUtility.DrawCrossMark(offsetFromCurrentVehiclePos, vehicle.cachedTransform, GColor.pink, 1f);
                     Debug.DrawLine(offsetFromCurrentVehiclePos, offsetFromCurrentVehiclePos + appliedForceV3 / 1000.0f, GColor.orange);
                 }
 

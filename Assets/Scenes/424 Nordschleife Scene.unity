@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.4
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.059739947, g: 0.076523535, b: 0.09404072, a: 0.4}
+  m_IndirectSpecularColor: {r: 0.05970783, g: 0.076506756, b: 0.09413897, a: 0.4}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -9121,6 +9121,7 @@ GameObject:
   - component: {fileID: 1070817990}
   - component: {fileID: 1070817991}
   - component: {fileID: 1070817992}
+  - component: {fileID: 1070817993}
   m_Layer: 8
   m_Name: Autopilot
   m_TagString: Untagged
@@ -9178,7 +9179,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9080681e1b4aa3645b2d07314a691a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  replayAsset: {fileID: 11400000, guid: 4798faf1eb7464f268fe7bae22d48e06, type: 2}
+  replayAsset: {fileID: 11400000, guid: 740c61bdd74dd504d96f6a865ee9cc8e, type: 2}
+--- !u!114 &1070817993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1070817989}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa0d9ed4cff0fa41909d27bd652429e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kp: 600000
+  ki: 0
+  kd: 20000
+  recordedLap: {fileID: 11400000, guid: 22d4b4dbb7d9a9841a3a70c8d6e8cb39, type: 2}
+  nearestInterpolatedSample:
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 0}
+    rawSteer: 0
+    rawThrottle: 0
+    rawBrake: 0
+    steeringAngle: 0
+    throttle: 0
+    brakePressure: 0
+    automaticGear: 0
 --- !u!223 &1088376467 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 4251215812570826028, guid: 8368094040e50bc48a2a58a0a8db460a,
