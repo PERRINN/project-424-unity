@@ -23,7 +23,6 @@ namespace Perrinn424.AutopilotSystem
         {
             return new Sample
             {
-
                 position = Vector3.Lerp(a.position, b.position, t),
                 rotation = Quaternion.Lerp(a.rotation, b.rotation, t),
                 rawSteer = IntLerp(a.rawSteer, b.rawSteer, t),

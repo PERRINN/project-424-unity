@@ -21,6 +21,7 @@ public class PathErrorCorrector
     public void Correct(Vector3 targetPosition)
     {
         Vector3 distanceError = rb.transform.position - targetPosition;
+        distanceError = Vector3.ProjectOnPlane(distanceError, rb.transform.up);
 
         float distanceErrorMagnitude = distanceError.magnitude;
         Vector3 distanceErrorDir = distanceError.normalized;
@@ -29,5 +30,6 @@ public class PathErrorCorrector
         pid.Compute();
 
         rb.AddForceAtPosition(distanceErrorDir * pid.output, rb.transform.position);
+        //rb.AddForce(distanceErrorDir * pid.output);
     }
 }
