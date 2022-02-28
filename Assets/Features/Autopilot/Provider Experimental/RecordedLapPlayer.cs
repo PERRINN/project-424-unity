@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class RecordedLapPlayer : MonoBehaviour
 {
+    public enum Type
+    {
+        Discrete,
+        Continous
+    }
+
     public RecordedLap lap;
 
     private float playingTime;
@@ -11,20 +17,34 @@ public class RecordedLapPlayer : MonoBehaviour
     private CircularIndex circularIndex;
 
     private bool isPlaying;
-    
+    public Type reproductionType;
+    public float reproductionSpeed = 1f;
+
+    public float PlayingTime => playingTime;
+    public float TotalTime => lap.Count * dt;
     private void Awake()
     {
         dt = 1f / lap.frequency;
         circularIndex = new CircularIndex(lap.Count);
     }
 
-    private void SetPlayingTime(float time)
+    public void SetPlayingTime(float time)
     {
         playingTime = time;
 
         (int frameIndex, float interpolationKey) = GetKeyFrame(playingTime);
         circularIndex.Assign(frameIndex);
-        Sample s = Sample.Lerp(lap[circularIndex], lap[circularIndex + 1], interpolationKey);
+
+        Sample s;
+        if (reproductionType == Type.Discrete)
+        {
+            s = lap[circularIndex];
+        }
+        else
+        {
+            s = Sample.Lerp(lap[circularIndex], lap[circularIndex + 1], interpolationKey);
+        }
+
         Set(s);
     }
 
@@ -32,7 +52,7 @@ public class RecordedLapPlayer : MonoBehaviour
     {
         if (isPlaying)
         {
-            SetPlayingTime(playingTime + Time.deltaTime);
+            SetPlayingTime(playingTime + Time.deltaTime * reproductionSpeed);
         }
     }
 
