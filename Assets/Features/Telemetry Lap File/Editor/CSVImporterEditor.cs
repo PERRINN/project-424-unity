@@ -2,7 +2,9 @@
 using System;
 using UnityEditor;
 using UnityEditor.PackageManager;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using VehiclePhysics;
 
 namespace Perrinn424.TelemetryLapSystem.Editor
@@ -37,8 +39,10 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     {
                         AutopilotProvider provider = FindObjectOfType<AutopilotProvider>();
                         provider.replayAsset = asset;
-                        Undo.RecordObject(provider, "Autopilot Replay Asset");
                         Selection.activeGameObject = provider.gameObject;
+                        Scene scene = provider.gameObject.scene;
+                        EditorSceneManager.MarkSceneDirty(scene);
+                        EditorSceneManager.SaveScene(scene);
                     }
                     else
                     {
