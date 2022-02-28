@@ -1,13 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+using VehiclePhysics.Timing;
 
+[RequireComponent(typeof(RecordedLapPlayer))]
 public class GhostPlayer : MonoBehaviour
 {
+    [SerializeField]
+    private RecordedLapPlayer player;
+
+    [SerializeField]
+    private LapTimer lapTimer;
 
     private Material material;
     public Color color;
     private void OnEnable()
+    {
+        SetMaterial();
+        lapTimer.onBeginLap += LapBeginEventHandler;
+    }
+
+    private void Start()
+    {
+        player.Stop();
+    }
+
+    private void LapBeginEventHandler()
+    {
+        player.Restart();
+    }
+
+    private void SetMaterial()
     {
         material = new Material(Shader.Find("Standard"));
         material.SetFloat("_Mode", 3f);
@@ -32,5 +54,6 @@ public class GhostPlayer : MonoBehaviour
     private void OnDisable()
     {
         Destroy(material);
+        lapTimer.onBeginLap -= LapBeginEventHandler;
     }
 }

@@ -1,28 +1,26 @@
 ﻿using Perrinn424.AutopilotSystem;
-using Perrinn424.TelemetryLapSystem;
 using Perrinn424.Utilities;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayRecordedLap : MonoBehaviour
+public class RecordedLapPlayer : MonoBehaviour
 {
     public RecordedLap lap;
 
     private float playingTime;
     private float dt;
     private CircularIndex circularIndex;
+
+    private bool isPlaying;
     
-    public void OnEnable()
+    private void Awake()
     {
         dt = 1f / lap.frequency;
         circularIndex = new CircularIndex(lap.Count);
     }
 
-
-    private void FixedUpdate()
+    private void SetPlayingTime(float time)
     {
-        playingTime += Time.deltaTime;
+        playingTime = time;
 
         (int frameIndex, float interpolationKey) = GetKeyFrame(playingTime);
         circularIndex.Assign(frameIndex);
@@ -30,6 +28,13 @@ public class PlayRecordedLap : MonoBehaviour
         Set(s);
     }
 
+    private void FixedUpdate()
+    {
+        if (isPlaying)
+        {
+            SetPlayingTime(playingTime + Time.deltaTime);
+        }
+    }
 
     private (int, float) GetKeyFrame(float time)
     {
@@ -40,28 +45,31 @@ public class PlayRecordedLap : MonoBehaviour
         return (frameIndex, percentage);
     }
 
-
-
-    //public CircularIndex index;
-    //public Frequency frequency;
-
-    //private void OnEnable()
-    //{
-    //    frequency.frequency = (int)lap.frequency;
-    //    index = new CircularIndex(lap.Count);
-    //}
-
-    //private void FixedUpdate()
-    //{
-    //    if (frequency.Update(Time.deltaTime))
-    //    {
-    //        Set(lap[++index]);
-    //    }
-    //}
-
     private void Set(Sample s)
     {
         this.transform.position = s.position;
         this.transform.rotation = s.rotation;
+    }
+
+    public void Play()
+    {
+        isPlaying = true;
+    }
+
+    public void Pause()
+    {
+        isPlaying = false;
+    }
+
+    public void Stop()
+    {
+        Pause();
+        SetPlayingTime(0f);
+    }
+
+    public void Restart()
+    {
+        Stop();
+        Play();
     }
 }
