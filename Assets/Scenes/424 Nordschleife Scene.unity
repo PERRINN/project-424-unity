@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.3
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.044782605, g: 0.05738021, b: 0.07060575, a: 0.3}
+  m_IndirectSpecularColor: {r: 0.044780876, g: 0.05738007, b: 0.070604235, a: 0.3}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -9018,6 +9018,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2476090976614632314, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: brakeRangeMax
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476090976614632314, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: brakeRangeMin
+      value: 0.3969359
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476090976614632314, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: selectedDevice
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476090976614632314, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: configuredWheelRange
+      value: 850
+      objectReference: {fileID: 0}
     - target: {fileID: 5604649752922501110, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
       propertyPath: startLine
@@ -9178,7 +9198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9080681e1b4aa3645b2d07314a691a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  replayAsset: {fileID: 11400000, guid: 45c7bcf6a95e4436998e9d8687f25992, type: 2}
+  replayAsset: {fileID: 11400000, guid: ef8b9dbca6891234691b9ce976b5b449, type: 2}
 --- !u!223 &1088376467 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 4251215812570826028, guid: 8368094040e50bc48a2a58a0a8db460a,
@@ -9761,6 +9781,11 @@ PrefabInstance:
       objectReference: {fileID: 773184386}
     - target: {fileID: 6905166633222581524, guid: f67f11fd176aacd40b543b5bef4279c3,
         type: 3}
+      propertyPath: driverCameraFov
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905166633222581524, guid: f67f11fd176aacd40b543b5bef4279c3,
+        type: 3}
       propertyPath: lookAt.nearPlaneAtMinFov
       value: 2
       objectReference: {fileID: 0}
@@ -9768,6 +9793,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera Controller
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905166633232544994, guid: f67f11fd176aacd40b543b5bef4279c3,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6905166633232598312, guid: f67f11fd176aacd40b543b5bef4279c3,
         type: 3}
