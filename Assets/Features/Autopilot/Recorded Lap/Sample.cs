@@ -35,9 +35,30 @@ namespace Perrinn424.AutopilotSystem
             };
         }
 
+        public static Sample LerpUncampled(Sample a, Sample b, float t)
+        {
+            return new Sample
+            {
+                position = Vector3.LerpUnclamped(a.position, b.position, t),
+                rotation = Quaternion.LerpUnclamped(a.rotation, b.rotation, t),
+                rawSteer = IntLerpUncampled(a.rawSteer, b.rawSteer, t),
+                rawThrottle = IntLerpUncampled(a.rawThrottle, b.rawThrottle, t),
+                rawBrake = IntLerpUncampled(a.rawBrake, b.rawBrake, t),
+                steeringAngle = Mathf.LerpUnclamped(a.steeringAngle, b.steeringAngle, t),
+                throttle = Mathf.LerpUnclamped(a.throttle, b.throttle, t),
+                brakePressure = Mathf.LerpUnclamped(a.brakePressure, b.brakePressure, t),
+                automaticGear = a.automaticGear
+            };
+        }
+
         private static int IntLerp(int a, int b, float t)
         {
             return (int)Mathf.Lerp(a, b, t);
+        }
+
+        private static int IntLerpUncampled(int a, int b, float t)
+        {
+            return (int)Mathf.LerpUnclamped(a, b, t);
         }
     } 
 }
