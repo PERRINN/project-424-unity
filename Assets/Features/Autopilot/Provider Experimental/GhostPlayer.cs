@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Perrinn424.TrackMapSystem;
+using System;
 using UnityEngine;
 using VehiclePhysics.Timing;
 
@@ -11,6 +12,11 @@ public class GhostPlayer : MonoBehaviour
     [SerializeField]
     private LapTimer lapTimer;
 
+    public bool addToMapUI;
+
+    [SerializeField]
+    private TrackMapUI map;
+
     private Material material;
     public Color color;
     private void OnEnable()
@@ -22,6 +28,11 @@ public class GhostPlayer : MonoBehaviour
     private void Start()
     {
         player.Stop();
+
+        if (addToMapUI)
+        {
+            map.AddTrackReference(this.transform, color);
+        }
     }
 
     private void LapBeginEventHandler()

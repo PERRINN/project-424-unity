@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Perrinn424.TrackMapSystem
 {
@@ -17,11 +19,16 @@ namespace Perrinn424.TrackMapSystem
         [SerializeField]
         private TelemetryTrackReference telemetryTrackReference = default;
 
-        private BaseTrackReference [] trackReferences;
-        
+        private List<BaseTrackReference> trackReferences;
+
+        [SerializeField]
+        private Image defaultIcon = default;
+
+
         protected override void OnEnable()
         {
             Init();
+            defaultIcon.gameObject.SetActive(false);
         }
 
         private void Init()
@@ -30,7 +37,7 @@ namespace Perrinn424.TrackMapSystem
                 traformTrackReferences
                 .Cast<BaseTrackReference>()
                 .Concat(new[] { telemetryTrackReference })
-                .ToArray();
+                .ToList();
 
             foreach (BaseTrackReference trackReference in trackReferences)
             {
@@ -64,6 +71,15 @@ namespace Perrinn424.TrackMapSystem
                 Vector3 localPosition = trackMap.FromWorldPositionToLocalRectTransformPosition(trackReference.Position);
                 trackReference.SetLocalPosition(localPosition);
             }
+        }
+
+        public void AddTrackReference(Transform newTrackReference, Color c)
+        {
+            Image newIcon = Object.Instantiate(defaultIcon, defaultIcon.transform.parent);
+            newIcon.gameObject.SetActive(true);
+            TransformTrackReference newReference = new TransformTrackReference(newTrackReference, newIcon, c);
+            newReference.Init();
+            trackReferences.Add(newReference);
         }
     } 
 }
