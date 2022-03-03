@@ -7,7 +7,7 @@ using VehiclePhysics;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class Autopilot : VehicleBehaviour
+    public class Autopilot : VehicleBehaviour, IPIDInfo
     {
         // Public component parameters
 
@@ -33,6 +33,9 @@ namespace Perrinn424.AutopilotSystem
         public float D => edyPID.derivative; //[N]
         public float PID => edyPID.output; //[N]
 
+        public float MaxForceP => maxForceP;
+
+        public float MaxForceD => maxForceD;
 
         public AutopilotProvider autopilotProvider;
         readonly PidController edyPID = new PidController();

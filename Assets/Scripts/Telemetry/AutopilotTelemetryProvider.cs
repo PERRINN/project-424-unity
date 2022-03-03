@@ -4,11 +4,11 @@ using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public class AutopilotTelemetryProvider : BaseTelemetryProvider<Autopilot, AutopilotTelemetryProvider.AutopilotTelemetry>
+    public class AutopilotTelemetryProvider : BaseTelemetryProvider<AutopilotDebugHelper, AutopilotTelemetryProvider.AutopilotTelemetry>
 	{
 		public class AutopilotTelemetry : Telemetry.ChannelGroup
 		{
-			private Autopilot autopilot;
+			private IPIDInfo pid;
 
 			public override int GetChannelCount()
 			{
@@ -17,12 +17,12 @@ namespace Perrinn424
 
             public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
             {
-				autopilot = (Autopilot)instance;
+				pid = (IPIDInfo)instance;
 
 				Telemetry.SemanticInfo errorSemantic = new Telemetry.SemanticInfo();
 				errorSemantic.SetRangeAndFormat(-5, 5, "0.000", " m");
 
-				float range = Mathf.Max(autopilot.maxForceP, autopilot.maxForceD);
+				float range = Mathf.Max(pid.MaxForceP, pid.MaxForceD);
 				Telemetry.SemanticInfo pidSemantic = new Telemetry.SemanticInfo();
 				pidSemantic.SetRangeAndFormat(-range, range, "0", " N");
 
@@ -40,11 +40,11 @@ namespace Perrinn424
 
             public override void PollValues(float[] values, int index, Object instance)
             {
-				values[index + 0] = autopilot.Error;
-				values[index + 1] = autopilot.P;
-				values[index + 2] = autopilot.I;
-				values[index + 3] = autopilot.D;
-				values[index + 4] = autopilot.PID;
+				values[index + 0] = pid.Error;
+				values[index + 1] = pid.P;
+				values[index + 2] = pid.I;
+				values[index + 3] = pid.D;
+				values[index + 4] = pid.PID;
             }
         }
 	}
