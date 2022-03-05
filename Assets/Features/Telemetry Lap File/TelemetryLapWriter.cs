@@ -77,24 +77,6 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
         {
-
-            //TelemetryLapMetadata metadata = new TelemetryLapMetadata()
-            //{
-            //    trackName = SceneManager.GetActiveScene().name,
-            //    fileFormatVersion = 1,
-            //    frequency = frequency,
-            //    lapIndex = vehicle.telemetry.latest.segmentNum,
-            //    lapTime = lapTime,
-            //    completed = true,
-            //    completedSectors = sectors.Length,
-            //    sectorsTime = sectors.ToArray(), //make copy
-            //    ideal = false,
-            //    idealSectorOrigin = new string[0],
-            //    csvFile = file.Filename
-            //};
-
-            //SaveFile(metadata);
-
             Save(true, lapTime, () => CreateRegularLapMetadata(lapTime, sectors));
         }
 
@@ -152,13 +134,6 @@ namespace Perrinn424.TelemetryLapSystem
         {
             file.WriteRow(rowCache);
         }
-
-        //private void SaveFile(TelemetryLapMetadata meta)
-        //{
-        //    //file.StopRecordingAndSaveFile(meta);
-        //    Log($"File Saved at {file.FullRelativePath}");
-        //    telemetryLapMetadatas.Add(meta);
-        //}
 
         private void Save(bool isCompleted, float lapTime, Func<TelemetryLapMetadata> createMetadata)
         {
@@ -228,30 +203,6 @@ namespace Perrinn424.TelemetryLapSystem
         {
             if (file.IsRecordingReady)
             {
-                //TelemetryLapMetadata metadata = new TelemetryLapMetadata()
-                //{
-                //    trackName = SceneManager.GetActiveScene().name,
-                //    fileFormatVersion = 1,
-                //    frequency = frequency,
-                //    lapIndex = vehicle.telemetry.latest.segmentNum,
-                //    lapTime = lapTimer.currentLapTime,
-                //    completed = false,
-                //    ideal = false,
-                //    idealSectorOrigin = new string[0]
-                //};
-
-
-                //metadata.completedSectors = lapTimer.currentValidSectors.Count(validSector => validSector);
-
-                ////if the sector is valid, get its time. Infinity otherwise
-                //metadata.sectorsTime =
-                //    lapTimer
-                //    .currentValidSectors
-                //    .Select((validSector, index) => validSector ? lapTimer.currentSectors[index] : float.PositiveInfinity)
-                //    .ToArray();
-
-                //SaveFile(metadata);
-
                 Save(false, lapTimer.currentLapTime, CreateUnfinishLapMetadata);
             }
 

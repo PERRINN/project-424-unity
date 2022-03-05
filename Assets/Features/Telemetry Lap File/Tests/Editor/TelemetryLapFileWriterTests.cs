@@ -28,7 +28,6 @@ namespace Perrinn424.TelemetryLapSystem.Editor.Tests
             Assert.That(File.Exists(lapFile.MetadataFullRelativePath), Is.False);
             lapFile.StopRecordingAndSaveFile(false, false, 0f);
             lapFile.WriteMetadata(new TelemetryLapMetadata());
-            //lapFile.StopRecordingAndSaveFile(new TelemetryLapMetadata());
             Assert.That(File.Exists(lapFile.FullRelativePath), Is.True);
             Assert.That(File.Exists(lapFile.MetadataFullRelativePath), Is.True);
         }

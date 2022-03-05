@@ -34,7 +34,7 @@ namespace Perrinn424.TelemetryLapSystem
         {
             ProcessMetadata();
 
-
+            //Write file
             TelemetryLapFileWriter telemetryLapFileWriter = new TelemetryLapFileWriter(headers, units);
             telemetryLapFileWriter.StartRecording();
 
@@ -47,7 +47,6 @@ namespace Perrinn424.TelemetryLapSystem
             }
 
 
-            TelemetryLapMetadata bestLapInFirstSector = metadatas[bestLapsPerSector[0]];
 
             float[] sectorsTime = new float[sectorCount];
             string[] origin = new string[sectorCount];
@@ -61,7 +60,8 @@ namespace Perrinn424.TelemetryLapSystem
             float lapTime = sectorsTime.Sum();
             telemetryLapFileWriter.StopRecordingAndSaveFile(true, true, lapTime);
 
-
+            //Write metadata
+            TelemetryLapMetadata bestLapInFirstSector = metadatas[bestLapsPerSector[0]];
             TelemetryLapMetadata finalMetadata = bestLapInFirstSector.Copy();
             finalMetadata.lapIndex = 0;
             finalMetadata.completed = true;
@@ -74,28 +74,6 @@ namespace Perrinn424.TelemetryLapSystem
             finalMetadata.count = telemetryLapFileWriter.LineCount;
             finalMetadata.timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             telemetryLapFileWriter.WriteMetadata(finalMetadata);
-
-            //TelemetryLapMetadata finalMetadata = new TelemetryLapMetadata()
-            //{
-            //    trackName = bestLapInFirstSector.trackName,
-            //    fileFormatVersion = bestLapInFirstSector.fileFormatVersion,
-            //    frequency = bestLapInFirstSector.frequency,
-            //    lapIndex = 0,
-            //    completed = true,
-            //    completedSectors = sectorCount,
-            //    lapTime = sectorsTime.Sum(),
-            //    sectorsTime = sectorsTime,
-            //    ideal = true,
-            //    idealSectorOrigin = origin
-            //};
-
-
-            //finalMetadata.csvFile = telemetryLapFileWriter.Filename;
-            //finalMetadata.count = telemetryLapFileWriter.LineCount;
-            //finalMetadata.timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-            //telemetryLapFileWriter.WriteMetadata(finalMetadata);
-
-            //telemetryLapFileWriter.StopRecordingAndSaveFile(finalMetadata);
 
             return finalMetadata;
 
