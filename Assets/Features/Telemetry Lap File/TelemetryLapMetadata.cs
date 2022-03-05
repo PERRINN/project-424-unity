@@ -1,4 +1,6 @@
-﻿namespace Perrinn424.TelemetryLapSystem
+﻿using UnityEngine;
+
+namespace Perrinn424.TelemetryLapSystem
 {
     [System.Serializable]
     public class TelemetryLapMetadata
@@ -20,5 +22,11 @@
         public long timeStamp;
         public bool ideal;
         public string[] idealSectorOrigin;
+
+
+        public TelemetryLapMetadata Copy()
+        {
+            return JsonUtility.FromJson<TelemetryLapMetadata>(JsonUtility.ToJson(this));
+        }
     } 
 }

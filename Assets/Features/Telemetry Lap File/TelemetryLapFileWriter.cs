@@ -102,11 +102,11 @@ namespace Perrinn424.TelemetryLapSystem
 
         public void WriteMetadata(TelemetryLapMetadata meta)
         {
-            meta.csvFile = Filename;
-            meta.headers = Headers.ToArray();
-            meta.headerUnits = Units.ToArray();
-            meta.count = LineCount;
-            meta.timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            //meta.csvFile = Filename;
+            //meta.headers = Headers.ToArray();
+            //meta.headerUnits = Units.ToArray();
+            //meta.count = LineCount;
+            //meta.timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
 
             string json = JsonUtility.ToJson(meta, true);
             MetadataFullRelativePath = $"{FullRelativePath}.metadata";
