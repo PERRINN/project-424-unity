@@ -13,6 +13,8 @@
         public float[] sectorsTime;
         public string[] headers;
         public string[] headerUnits;
+        public string [] channels;
+        public float [] channelsFrequency;
         public int count;
         public string csvFile;
         public long timeStamp;
