@@ -36,7 +36,8 @@ namespace Perrinn424.AutopilotSystem
 
         public AutopilotProvider autopilotProvider;
         readonly PidController edyPID = new PidController();
-        private IFrameSearcher frameSearcher;
+        private HeuristicFrameSearcher heuristicFrameSearcher;
+        private FrameSearcher deprecatedFrameSearcher;
 
         int sectionSize;
         float height = 0, previousHeight = 0;
@@ -76,6 +77,12 @@ namespace Perrinn424.AutopilotSystem
 
             SteeringScreen.autopilotState = false;
             sectionSize = (int)Math.Sqrt(autopilotProvider.Count); // Breakdown recorded replay into even sections
+            
+            VPReplayAsset replayAsset = autopilotProvider.replayAsset;
+            int lookAroundFramesCount = (int)(5f / replayAsset.timeStep); //seconds to look around
+            int lookBehind = (int)(lookAroundFramesCount * 0.05f); //5% behind, just in case
+            heuristicFrameSearcher = new HeuristicFrameSearcher(replayAsset.recordedData, 5f, lookBehind, lookAroundFramesCount);
+            deprecatedFrameSearcher = new FrameSearcher(replayAsset.recordedData);
 
             m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
             if (m_deviceInput != null)
@@ -103,11 +110,6 @@ namespace Perrinn424.AutopilotSystem
                 else
                 {
                     autopilotON = true;
-                    VPReplayAsset replayAsset = autopilotProvider.replayAsset;
-                    int lookAroundFramesCount = (int)(1f / replayAsset.timeStep); //seconds to look around
-                    int lookBehind = (int)(lookAroundFramesCount * 0.05f); //5% behind, just in case
-                    frameSearcher = new HeuristicFrameSearcher(replayAsset.recordedData, 5f, lookBehind, lookAroundFramesCount);
-
                     SteeringScreen.autopilotState = true;
                     if (m_deviceInput != null)
                     {
@@ -121,21 +123,21 @@ namespace Perrinn424.AutopilotSystem
 
         public override void FixedUpdateVehicle()
         {
+            Vector3 position = vehicle.transform.position;
+            float currentPosX = position.x;
+            float currentPosZ = position.z;
+
+            int closestFrame1, closestFrame2;
+            float closestDisFrame1, closestDisFrame2;
+            CalculateNearestFrame(out closestFrame1, out closestFrame2, out closestDisFrame1, out closestDisFrame2);
+            SteeringScreen.bestTime = FramesToTime(closestFrame1);
+
+
             if (!autopilotON)
             {
                 return;
             }
 
-
-            Vector3 position = vehicle.transform.position;
-            float currentPosX = position.x;
-            float currentPosZ = position.z;
-
-            frameSearcher.Search(vehicle.transform);
-            int closestFrame1 = frameSearcher.ClosestFrame1;
-            int closestFrame2 = frameSearcher.ClosestFrame2;
-            float closestDisFrame1 = frameSearcher.ClosestDisFrame1;
-            float closestDisFrame2 = frameSearcher.ClosestDisFrame2;
 
             // Reference point offset: Recorded vehicle
             Vector3 offsetFromClosestFrame1 = GetOffsetPosition(offsetValue, autopilotProvider[closestFrame1]);
@@ -171,9 +173,7 @@ namespace Perrinn424.AutopilotSystem
             float carPosX = ((errX + errXBAL * progressive / 100) * cosD) + ((errZ + errZBAL * progressive / 100) * sinD);
             height = (carPosX > 0) ? -checkHeight : checkHeight;
 
-            // Steering screen display
-            //SteeringScreen.bestTime = replaySystem.FramesToTime(closestFrame1);
-            SteeringScreen.bestTime = FramesToTime(closestFrame1);
+
 
             float kpTemp = checkHeight == 0 ? kp : Mathf.Min(kp, maxForceP / checkHeight);
             float kiTemp = ki;
@@ -264,6 +264,21 @@ namespace Perrinn424.AutopilotSystem
                     vehicle.data.Set(Channel.Input, InputData.AutomaticGear, autopilotProvider[closestFrame1].inputData[InputData.AutomaticGear]);
                 }
             }
+        }
+
+        private void CalculateNearestFrame(out int closestFrame1, out int closestFrame2, out float closestDisFrame1, out float closestDisFrame2)
+        {
+            // heuristicFrameSearcher is used when the autopilot is on because it trusts that the previous frame was correclty found.
+            // When autopilot is off, we still need to find the closest frame because of the SteeringScreen.bestTime.
+            // We use the last framesearcher version, because, altough its buggy and it returns false results, it works well in the majority
+            // of the cases and it is fast
+            IFrameSearcher selectedFrameSearcher = autopilotON ? heuristicFrameSearcher : (IFrameSearcher)deprecatedFrameSearcher;
+            selectedFrameSearcher.Search(vehicle.transform);
+
+            closestFrame1 = selectedFrameSearcher.ClosestFrame1;
+            closestFrame2 = selectedFrameSearcher.ClosestFrame2;
+            closestDisFrame1 = selectedFrameSearcher.ClosestDisFrame1;
+            closestDisFrame2 = selectedFrameSearcher.ClosestDisFrame2;
         }
 
         private bool CheckStartupSpeed(float segmentLength, float SecondsPerFrame, float ratio)
