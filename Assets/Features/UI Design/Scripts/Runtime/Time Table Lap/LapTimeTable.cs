@@ -95,6 +95,7 @@ namespace Perrinn424.UI
             uiRowList.Add(newLapUI);
             newLapUI.Refresh($"Lap {uiRowList.Count}", normalFormat, new LapTime(sectorCount), normalFormat);
             newLapUI.gameObject.SetActive(true);
+            newLapUI.gameObject.name = $"Lap {uiRowList.Count}";
         }
 
         private void Refresh()

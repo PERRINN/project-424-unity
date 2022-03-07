@@ -28,6 +28,7 @@ namespace Perrinn424.UI
         {
             text.color = format.textColor;
             background.color = format.backgroundColor;
+            background.sprite = format.backgroundSprite;
         }
 
         private void Reset()
