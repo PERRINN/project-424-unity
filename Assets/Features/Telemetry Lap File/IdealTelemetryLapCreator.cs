@@ -34,11 +34,11 @@ namespace Perrinn424.TelemetryLapSystem
         {
             ProcessMetadata();
 
-            int[] bestLapsPerSector = timeTable.GetBestLapForEachSector();
-
+            //Write file
             TelemetryLapFileWriter telemetryLapFileWriter = new TelemetryLapFileWriter(headers, units);
             telemetryLapFileWriter.StartRecording();
 
+            int[] bestLapsPerSector = timeTable.GetBestLapForEachSector();
             for (int sectorIndex = 0; sectorIndex < sectorCount; sectorIndex++)
             {
                 int indexOfbestLapInSectorI = bestLapsPerSector[sectorIndex];
@@ -47,7 +47,6 @@ namespace Perrinn424.TelemetryLapSystem
             }
 
 
-            TelemetryLapMetadata bestLapInFirstSector = metadatas[bestLapsPerSector[0]];
 
             float[] sectorsTime = new float[sectorCount];
             string[] origin = new string[sectorCount];
@@ -58,21 +57,23 @@ namespace Perrinn424.TelemetryLapSystem
                 origin[i] = lapToFilename[indexOfbestLapInSectorI];
             }
 
-            TelemetryLapMetadata finalMetadata = new TelemetryLapMetadata()
-            {
-                trackName = bestLapInFirstSector.trackName,
-                fileFormatVersion = bestLapInFirstSector.fileFormatVersion,
-                frequency = bestLapInFirstSector.frequency,
-                lapIndex = 0,
-                completed = true,
-                completedSectors = sectorCount,
-                lapTime = sectorsTime.Sum(),
-                sectorsTime = sectorsTime,
-                ideal = true,
-                idealSectorOrigin = origin
-            };
+            float lapTime = sectorsTime.Sum();
+            telemetryLapFileWriter.StopRecordingAndSaveFile(true, true, lapTime);
 
-            telemetryLapFileWriter.StopRecordingAndSaveFile(finalMetadata);
+            //Write metadata
+            TelemetryLapMetadata bestLapInFirstSector = metadatas[bestLapsPerSector[0]];
+            TelemetryLapMetadata finalMetadata = bestLapInFirstSector.Copy();
+            finalMetadata.lapIndex = 0;
+            finalMetadata.completed = true;
+            finalMetadata.completedSectors = sectorCount;
+            finalMetadata.lapTime = lapTime;
+            finalMetadata.sectorsTime = sectorsTime;
+            finalMetadata.ideal = true;
+            finalMetadata.idealSectorOrigin = origin;
+            finalMetadata.csvFile = telemetryLapFileWriter.Filename;
+            finalMetadata.count = telemetryLapFileWriter.LineCount;
+            finalMetadata.timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            telemetryLapFileWriter.WriteMetadata(finalMetadata);
 
             return finalMetadata;
 
@@ -147,6 +148,11 @@ namespace Perrinn424.TelemetryLapSystem
             {
                 throw new ArgumentException($"All laps must have the same header units");
             }
+
+            if (!AllEqual(m => m.channelsFrequency, FloatComparer))
+            {
+                throw new ArgumentException($"All channels must have the same frequency");
+            }
         }
 
         private bool HeaderComparer(string [] a, string [] b)
@@ -159,6 +165,24 @@ namespace Perrinn424.TelemetryLapSystem
             for (int i = 0; i < a.Length; i++)
             {
                 if (a[i] != b[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool FloatComparer(float[] a, float[] b)
+        {
+            if (a.Length != b.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (!Mathf.Approximately(a[i], b[i]))
                 {
                     return false;
                 }
