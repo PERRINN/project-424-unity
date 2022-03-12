@@ -5,6 +5,9 @@ public class CorrectorDebug : MonoBehaviour
 {
     public Rigidbody rb;
     public Transform com;
+
+    public bool position;
+    public bool rotation;
     public PositionCorrector positionCorrector;
     public RotationCorrector rotationCorrector;
 
@@ -17,12 +20,18 @@ public class CorrectorDebug : MonoBehaviour
 
     private void FixedUpdate()
     {
-        positionCorrector.Correct(this.transform.position);
-        rotationCorrector.Correct(this.transform.rotation);
+        if (position)
+        {
+            positionCorrector.Correct(this.transform.position);
+        }
+        if (rotation)
+        {
+            rotationCorrector.Correct(this.transform.rotation);
+        }
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawRay(rb.transform.position, positionCorrector.Force);
+        Gizmos.DrawRay(positionCorrector.ApplicationPosition, positionCorrector.Force);
     }
 }
