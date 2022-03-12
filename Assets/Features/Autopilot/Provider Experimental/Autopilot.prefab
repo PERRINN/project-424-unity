@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2603859344292933203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2603859344292933200}
+  - component: {fileID: 2603859344292933215}
+  - component: {fileID: 2603859344292933201}
+  - component: {fileID: 2603859344292933214}
+  - component: {fileID: 2603859344292933212}
+  - component: {fileID: 2603859344292933213}
+  m_Layer: 8
+  m_Name: Autopilot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2603859344292933200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603859344292933203}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2603859344292933215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603859344292933203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174983ab0ebcc8f40a5b967165feb290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autopilot: {fileID: 2603859344292933201}
+  autopilotExperimental: {fileID: 2603859344292933212}
+  autopilotInLap:
+  - {fileID: 2603859344292933212}
+  lapTimer: {fileID: 0}
+  lapCount: 0
+--- !u!114 &2603859344292933201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603859344292933203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77378aab0a444c64a87c593007304373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kp: 600000
+  ki: 0
+  kd: 20000
+  maxForceP: 10000
+  maxForceD: 25000
+  startUpThrottleSpeedRatio: 60
+  startUpThrottle: 70
+  startUpBrakeSpeedRatio: 80
+  offsetValue: 0
+  startLine: {fileID: 0}
+  debugGizmo: 1
+  autopilotProvider: {fileID: 2603859344292933214}
+  lostControl: 0
+--- !u!114 &2603859344292933214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603859344292933203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9080681e1b4aa3645b2d07314a691a27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayAsset: {fileID: 11400000, guid: 797fd4bc6193d3d469e4d8adececb16c, type: 2}
+--- !u!114 &2603859344292933212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603859344292933203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa0d9ed4cff0fa41909d27bd652429e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kp: 600000
+  ki: 0
+  kd: 20000
+  recordedLap: {fileID: 11400000, guid: 944e001102a46504bb013b77c65e6ada, type: 2}
+  positionCorrector:
+    kp: 600000
+    ki: 0
+    kd: 20000
+    max: 100000
+    mode: 0
+    correctionAxis: {x: 1, y: 0, z: 0}
+  nearestInterpolatedSample:
+    position: {x: 233.3692, y: 120.32527, z: 2197.3928}
+    rotation: {x: -0.036375806, y: 0.38992146, z: -0.006634424, w: 0.92010546}
+    rawSteer: -209
+    rawThrottle: 4518
+    rawBrake: 6229
+    steeringAngle: -4.18
+    throttle: 0
+    brakePressure: 32.450176
+    automaticGear: 4
+  steerKp: 6000
+  steerKd: 1000
+  mult: -100
+  localForce: {x: 0, y: 0, z: 0}
+  startup:
+    lateralCorrector:
+      kp: 100000
+      ki: 0
+      kd: 10000
+      max: 5000
+      mode: 0
+      correctionAxis: {x: 1, y: 0, z: 0}
+    rotationCorrector:
+      kp: 50000
+      ki: 0
+      kd: 1000
+      max: 10000
+      mode: 0
+    speedPercentage: 0.904
+    throttle: 0.705
+    isStartUp: 1
+--- !u!114 &2603859344292933213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603859344292933203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0a767f5343699c4b9f15fe80c09aa6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recordedLap: {fileID: 11400000, guid: 944e001102a46504bb013b77c65e6ada, type: 2}
+  draw: 0
