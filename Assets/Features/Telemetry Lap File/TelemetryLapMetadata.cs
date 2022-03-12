@@ -1,4 +1,6 @@
-﻿namespace Perrinn424.TelemetryLapSystem
+﻿using UnityEngine;
+
+namespace Perrinn424.TelemetryLapSystem
 {
     [System.Serializable]
     public class TelemetryLapMetadata
@@ -13,10 +15,18 @@
         public float[] sectorsTime;
         public string[] headers;
         public string[] headerUnits;
+        public string [] channels;
+        public float [] channelsFrequency;
         public int count;
         public string csvFile;
         public long timeStamp;
         public bool ideal;
         public string[] idealSectorOrigin;
+
+
+        public TelemetryLapMetadata Copy()
+        {
+            return JsonUtility.FromJson<TelemetryLapMetadata>(JsonUtility.ToJson(this));
+        }
     } 
 }

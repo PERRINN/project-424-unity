@@ -14,7 +14,7 @@ namespace Perrinn424.TelemetryLapSystem
         public string[] Units { get; private set; }
         private float[] unitsMultiplier;
 
-        public float [] Frequencies { get; private set; }
+        public float[] Frequencies { get; private set; }
 
         private int[] channelsIndex;
         private const int channelNotFoundIndex = -1;
@@ -80,7 +80,7 @@ namespace Perrinn424.TelemetryLapSystem
             {
                 return -1.0f;
             }
-            
+
             return vehicle.telemetry.channels[channelIndex].group.actualFrequency;
         }
 
@@ -144,5 +144,5 @@ namespace Perrinn424.TelemetryLapSystem
         {
             channelsIndex[channelIndex] = telemetryChannelIndex;
         }
-    } 
+    }
 }

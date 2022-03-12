@@ -8,5 +8,6 @@ namespace Perrinn424.UI
     {
         public Color textColor;
         public Color backgroundColor;
+        public Sprite backgroundSprite;
     } 
 }

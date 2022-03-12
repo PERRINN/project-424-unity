@@ -60,39 +60,32 @@ namespace Perrinn424.TelemetryLapSystem
             IsRecordingReady = true;
         }
 
-        public void StopRecordingAndSaveFile(TelemetryLapMetadata meta)
+        public void StopRecordingAndSaveFile(bool isCompleted, bool isIdeal, float lapTime)
         {
-            SetFileNames(meta);
+            SetFileNames(isCompleted, isIdeal, lapTime);
             DisposeFileAndRename();
-            Writemetadata(meta);
-
             IsRecordingReady = false;
         }
 
-        private void SetFileNames(TelemetryLapMetadata meta)
+        private void SetFileNames(bool isCompleted, bool isIdeal, float lapTime)
         {
             string dateStr = DateTime.UtcNow.ToString("yyyy-MM-dd HH.mm.ss UTC", invariantCulture);
-            string lapTimeStr = meta.completed ? timeFormatter.ToString(meta.lapTime) : "unfinished";
-            string synthetic = meta.ideal ? " ideal" : string.Empty;
+            string lapTimeStr = isCompleted ? timeFormatter.ToString(lapTime) : "unfinished";
+            string ideal = isIdeal ? " ideal" : string.Empty;
 
-            Filename = $"{dateStr} {lapTimeStr}{synthetic}.csv";
+            Filename = $"{dateStr} {lapTimeStr}{ideal}.csv";
             FullRelativePath = Path.Combine(root, Filename);
             FullPath = Path.Combine(Application.dataPath, FullRelativePath);
         }
+
         private void DisposeFileAndRename()
         {
             fileWriter.Dispose();
             File.Move(TempFullRelativePath, FullRelativePath); // Rename the oldFileName into newFileName
         }
 
-        private void Writemetadata(TelemetryLapMetadata meta)
+        public void WriteMetadata(TelemetryLapMetadata meta)
         {
-            meta.csvFile = Filename;
-            meta.headers = Headers.ToArray();
-            meta.headerUnits = Units.ToArray();
-            meta.count = LineCount;
-            meta.timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-
             string json = JsonUtility.ToJson(meta, true);
             MetadataFullRelativePath = $"{FullRelativePath}.metadata";
             File.WriteAllText(MetadataFullRelativePath, json);

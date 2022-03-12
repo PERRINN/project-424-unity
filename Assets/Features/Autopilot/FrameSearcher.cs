@@ -154,7 +154,7 @@ namespace Perrinn424.AutopilotSystem
             (ClosestFrame1, ClosestFrame2) = GetAsMinMax(ClosestFrame1, ClosestFrame2);
             ClosestDisFrame1 = Distance2D(frames[ClosestFrame1].position, position);
             ClosestDisFrame2 = Distance2D(frames[ClosestFrame2].position, position);
-            UnityEngine.Debug.Log($"Count: {count}");
+            //UnityEngine.Debug.Log($"Count: {count}");
 
         }
 
