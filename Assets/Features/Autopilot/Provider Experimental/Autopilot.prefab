@@ -51,6 +51,7 @@ MonoBehaviour:
   autopilotExperimental: {fileID: 2603859344292933212}
   autopilotInLap:
   - {fileID: 2603859344292933212}
+  - {fileID: 2603859344292933212}
   lapTimer: {fileID: 0}
   lapCount: 0
 --- !u!114 &2603859344292933201
@@ -77,7 +78,6 @@ MonoBehaviour:
   startLine: {fileID: 0}
   debugGizmo: 1
   autopilotProvider: {fileID: 2603859344292933214}
-  lostControl: 0
 --- !u!114 &2603859344292933214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,17 +103,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caa0d9ed4cff0fa41909d27bd652429e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kp: 600000
-  ki: 0
-  kd: 20000
   recordedLap: {fileID: 11400000, guid: 944e001102a46504bb013b77c65e6ada, type: 2}
-  positionCorrector:
+  lateralCorrector:
     kp: 600000
     ki: 0
     kd: 20000
     max: 100000
     mode: 0
     correctionAxis: {x: 1, y: 0, z: 0}
+    localApplicationPosition: {x: 0, y: 0.32, z: 0}
+  forwardCorrector:
+    kp: 600000
+    ki: 0
+    kd: 20000
+    max: 100000
+    mode: 0
+    correctionAxis: {x: 0, y: 0, z: 1}
+    localApplicationPosition: {x: 0, y: 0.32, z: 0}
   nearestInterpolatedSample:
     position: {x: 233.3692, y: 120.32527, z: 2197.3928}
     rotation: {x: -0.036375806, y: 0.38992146, z: -0.006634424, w: 0.92010546}
@@ -124,27 +130,25 @@ MonoBehaviour:
     throttle: 0
     brakePressure: 32.450176
     automaticGear: 4
-  steerKp: 6000
-  steerKd: 1000
-  mult: -100
-  localForce: {x: 0, y: 0, z: 0}
   startup:
     lateralCorrector:
-      kp: 100000
+      kp: 7000
       ki: 0
       kd: 10000
       max: 5000
       mode: 0
       correctionAxis: {x: 1, y: 0, z: 0}
+      localApplicationPosition: {x: 0, y: 0.32, z: 0}
     rotationCorrector:
-      kp: 50000
+      kp: 100
       ki: 0
-      kd: 1000
-      max: 10000
+      kd: 100
+      max: 5000
       mode: 0
     speedPercentage: 0.904
-    throttle: 0.705
+    throttle: 0.577
     isStartUp: 1
+  pathDrawer: {fileID: 2603859344292933213}
 --- !u!114 &2603859344292933213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,4 +162,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recordedLap: {fileID: 11400000, guid: 944e001102a46504bb013b77c65e6ada, type: 2}
-  draw: 0
+  draw: 1
+  drawAll: 0
+  index: 0
+  ahead: 34
+  behind: 12
+  color: {r: 0.21529016, g: 0.31400532, b: 0.5566038, a: 1}
