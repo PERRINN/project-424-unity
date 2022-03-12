@@ -1,21 +1,41 @@
 ﻿using Perrinn424.AutopilotSystem;
-using System.Collections;
-using System.Collections.Generic;
+using Perrinn424.Utilities;
 using UnityEngine;
 
 public class PathDrawer : MonoBehaviour
 {
     public RecordedLap recordedLap;
     public bool draw;
+    public bool drawAll;
+    public int index;
+    public int ahead;
+    public int behind;
+    public Color color;
     private void OnDrawGizmosSelected()
     {
         if (!draw)
             return;
 
-        for (int i = 0; i < recordedLap.Count - 1; i++)
+        Gizmos.color = color;
+        if (drawAll)
         {
-            Vector3 current = recordedLap[i].position;
-            Vector3 next = recordedLap[i+1].position;
+            Draw(0, recordedLap.Count, 0);
+        }
+        else
+        {
+            Draw(index, ahead, behind);
+        }
+    }
+
+    private void Draw(int index, int ahead, int behind)
+    {
+        int count = ahead + behind;
+        CircularIndex circularIndex = new CircularIndex(recordedLap.Count);
+        for (int i = 0; i < count - 1; i++)
+        {
+            circularIndex.Assign(index - behind + i);
+            Vector3 current = recordedLap[circularIndex].position;
+            Vector3 next = recordedLap[circularIndex + 1].position;
 
             Gizmos.DrawLine(current, next);
             Gizmos.DrawSphere(current, 0.1f);

@@ -1,5 +1,5 @@
-﻿using EdyCommonTools;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Serialization;
 using VehiclePhysics;
 using VehiclePhysics.UI;
 
@@ -11,7 +11,11 @@ namespace Perrinn424.AutopilotSystem
 
         private Path path;
         private NearestSegmentSearcher segmentSearcher;
-        public PositionCorrector positionCorrector;
+        
+        [FormerlySerializedAs("positionCorrector")]
+        public PositionCorrector lateralCorrector;
+        
+        public PositionCorrector forwardCorrector;
 
         public Sample nearestInterpolatedSample;
 
@@ -21,19 +25,21 @@ namespace Perrinn424.AutopilotSystem
 
         public AutopilotStartup startup;
 
-        public float Error => positionCorrector.Error;
+        public float Error => lateralCorrector.Error;
 
-        public float P => positionCorrector.PID.proportional;
+        public float P => lateralCorrector.PID.proportional;
 
-        public float I => positionCorrector.PID.integral;
+        public float I => lateralCorrector.PID.integral;
 
-        public float D => positionCorrector.PID.derivative;
+        public float D => lateralCorrector.PID.derivative;
 
-        public float PID => positionCorrector.PID.output;
+        public float PID => lateralCorrector.PID.output;
 
-        public float MaxForceP => positionCorrector.max;
+        public float MaxForceP => lateralCorrector.max;
 
-        public float MaxForceD => positionCorrector.max; //TODO remove MaxForceD
+        public float MaxForceD => lateralCorrector.max; //TODO remove MaxForceD
+
+        public PathDrawer pathDrawer;
 
         public override int GetUpdateOrder()
         {
@@ -45,7 +51,8 @@ namespace Perrinn424.AutopilotSystem
         {
             path = new Path(recordedLap);
             segmentSearcher = new NearestSegmentSearcher(path);
-            positionCorrector.Init(vehicle.cachedRigidbody);
+            lateralCorrector.Init(vehicle.cachedRigidbody);
+            forwardCorrector.Init(vehicle.cachedRigidbody);
 
             startup.Init(vehicle);
         }
@@ -61,6 +68,7 @@ namespace Perrinn424.AutopilotSystem
             float expectedSpeed = segmentSearcher.Segment.magnitude * recordedLap.frequency;
 
             SteeringScreen.bestTime = Mathf.Lerp(segmentSearcher.StartIndex, segmentSearcher.EndIndex, segmentSearcher.Ratio) /recordedLap.frequency;
+            pathDrawer.index = segmentSearcher.StartIndex;
 
             if (startup.IsStartup(expectedSpeed))
             {
@@ -70,9 +78,13 @@ namespace Perrinn424.AutopilotSystem
             }
             else
             {
-                positionCorrector.Correct(segmentSearcher.ProjectedPosition); // why it doesn't work with nearestInterpolatedSample.position
+                lateralCorrector.Correct(segmentSearcher.ProjectedPosition); // why it doesn't work with nearestInterpolatedSample.position
+                forwardCorrector.Correct(segmentSearcher.ProjectedPosition);
                 WriteInput(nearestInterpolatedSample);
             }
+
+            DebugGraph.Log("lateralError", lateralCorrector.Error);
+            DebugGraph.Log("forwardError", forwardCorrector.Error);
         }
 
         private Sample GetInterpolatedNearestSample()
@@ -119,7 +131,7 @@ namespace Perrinn424.AutopilotSystem
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(nearestInterpolatedSample.position, 0.3f);
-            Gizmos.DrawRay(positionCorrector.ApplicationPosition, positionCorrector.Force);
+            Gizmos.DrawRay(lateralCorrector.ApplicationPosition, lateralCorrector.Force);
         }
     }
 }
