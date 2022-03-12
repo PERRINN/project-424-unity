@@ -18,13 +18,13 @@ namespace Perrinn424.AutopilotSystem
             error = MathUtility.ClampAngle(error);
 
             //float angleError = Quaternion.Angle(rb.transform.rotation, targetRotation);
-            pid.input = error;
-            pid.Compute();
+            PID.input = error;
+            PID.Compute();
             //Vector3 localForce = pid.output *Vector3.right;
             //Force = rb.transform.TransformDirection(localForce);
             //rb.AddForceAtPosition(Force, rb.transform.position);
 
-            rb.AddRelativeTorque(0f, pid.output, 0f);
+            rb.AddRelativeTorque(0f, PID.output, 0f);
 
             //DebugGraph.Log("Error", error);
             ////DebugGraph.Log("LocalForce", localForce);

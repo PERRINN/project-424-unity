@@ -13,13 +13,13 @@ namespace Perrinn424.AutopilotSystem
 
             Vector3 dir = targetPosition - rb.position;
             Vector3 localDir = rb.transform.InverseTransformDirection(dir);
-            Vector3 error = Vector3.Project(localDir, correctionAxis);
-            float sign = Mathf.Sign(Vector3.Dot(error, correctionAxis));
-            float errorMagnitude = sign*error.magnitude;
+            Vector3 errorVector = Vector3.Project(localDir, correctionAxis);
+            float sign = Mathf.Sign(Vector3.Dot(errorVector, correctionAxis));
+            Error = sign*errorVector.magnitude;
 
-            pid.input = errorMagnitude;
-            pid.Compute();
-            Vector3 localForce = -correctionAxis * pid.output;
+            PID.input = Error;
+            PID.Compute();
+            Vector3 localForce = -correctionAxis * PID.output;
 
 
             Force = rb.transform.TransformVector(localForce);
@@ -29,9 +29,9 @@ namespace Perrinn424.AutopilotSystem
             rb.AddForce(Force);
 
             //DebugGraph.Log("LocalPosition", localPosition);
-            DebugGraph.Log("Error", error);
+            DebugGraph.Log("Error", errorVector);
             DebugGraph.Log("LocalForce", localForce);
-            DebugGraph.Log("PIDOutput", pid.output);
+            DebugGraph.Log("PIDOutput", PID.output);
         }
 
         //public void Correct(Vector3 targetPosition)

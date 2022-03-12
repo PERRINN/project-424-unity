@@ -5,7 +5,7 @@ using VehiclePhysics.UI;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class AutopilotExperimental : VehicleBehaviour
+    public class AutopilotExperimental : VehicleBehaviour, IPIDInfo
     {
 
         public float kp;
@@ -29,6 +29,20 @@ namespace Perrinn424.AutopilotSystem
         public Vector3 localForce;
 
         public AutopilotStartup startup;
+
+        public float Error => positionCorrector.Error;
+
+        public float P => positionCorrector.PID.proportional;
+
+        public float I => positionCorrector.PID.integral;
+
+        public float D => positionCorrector.PID.derivative;
+
+        public float PID => positionCorrector.PID.output;
+
+        public float MaxForceP => positionCorrector.max;
+
+        public float MaxForceD => positionCorrector.max; //TODO remove MaxForceD
 
         public override int GetUpdateOrder()
         {

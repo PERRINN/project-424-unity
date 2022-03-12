@@ -14,23 +14,24 @@ namespace Perrinn424.AutopilotSystem
         public PidController.ProportionalMode mode;
 
         protected Rigidbody rb;
-        protected PidController pid;
+        public PidController PID { get; private set; }
 
         public Vector3 Force { get; protected set; }
+        public float Error { get; protected set; }
 
         public void Init(Rigidbody rb)
         {
             this.rb = rb;
-            pid = new PidController();
+            PID = new PidController();
         }
 
         protected void UpdatePIDSettings()
         {
-            pid.SetParameters(kp, ki, kd);
-            pid.limitedOutput = true;
-            pid.maxOutput = max;
-            pid.minOutput = -max;
-            pid.proportionalMode = mode;
+            PID.SetParameters(kp, ki, kd);
+            PID.limitedOutput = true;
+            PID.maxOutput = max;
+            PID.minOutput = -max;
+            PID.proportionalMode = mode;
         }
     } 
 }
