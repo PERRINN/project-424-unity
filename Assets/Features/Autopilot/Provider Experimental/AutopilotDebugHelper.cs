@@ -24,6 +24,8 @@ public class AutopilotDebugHelper : MonoBehaviour, IPIDInfo
 
     private void OnEnable()
     {
+        autopilot.enabled = false;
+        autopilotExperimental.enabled = false;
         lapTimer.onBeginLap += LapBeginEventHandler;
         SelectAutopilot();
     }

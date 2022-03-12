@@ -1,5 +1,4 @@
 ﻿using Perrinn424.Utilities;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,14 +14,14 @@ public class BruteForceSegmentSearcher : INearestSegmentSearcher
 
     public int EndIndex { get; private set; }
 
-    public void Search(Transform t)
+    public void Search(Vector3 position)
     {
         float sqrtDistance = Mathf.Infinity;
 
         CircularIndex closestIndex = new CircularIndex(path.Count);
         for (int i = 0; i < path.Count; i++)
         {
-            float tempDistance = (t.position - path[i]).sqrMagnitude;
+            float tempDistance = (position - path[i]).sqrMagnitude;
             if (tempDistance < sqrtDistance)
             {
                 sqrtDistance = tempDistance;
@@ -31,7 +30,7 @@ public class BruteForceSegmentSearcher : INearestSegmentSearcher
         }
 
         Vector3 segmentVector = path[closestIndex + 1] - path[closestIndex];
-        Vector3 pointVector = t.position - path[closestIndex];
+        Vector3 pointVector = position - path[closestIndex];
 
         if(Vector3.Dot(segmentVector, pointVector) < 0)
         {
