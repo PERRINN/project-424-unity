@@ -7,10 +7,6 @@ namespace Perrinn424.AutopilotSystem
 {
     public class AutopilotExperimental : VehicleBehaviour, IPIDInfo
     {
-
-        public float kp;
-        public float ki;
-        public float kd;
         public RecordedLap recordedLap;
 
         private Path path;
@@ -19,14 +15,9 @@ namespace Perrinn424.AutopilotSystem
 
         public Sample nearestInterpolatedSample;
 
-        [Header("startup")]
-        public float steerKp;
-        public float steerKd;
-        public float mult;
 
-        public PidController steerPID;
 
-        public Vector3 localForce;
+
 
         public AutopilotStartup startup;
 
@@ -55,23 +46,11 @@ namespace Perrinn424.AutopilotSystem
             path = new Path(recordedLap);
             segmentSearcher = new NearestSegmentSearcher(path);
             positionCorrector.Init(vehicle.cachedRigidbody);
-            steerPID = new PidController();
 
             startup.Init(vehicle);
-            //vehicle.onBeforeUpdateBlocks += WriteInput;
         }
 
-        //public override void FixedUpdateVehicle()
-        //{
-        //    segmentSearcher.Search(vehicle.transform.position);
-        //    nearestInterpolatedSample = GetInterpolatedNearestSample();
-        //    corrector.SetPIDParameters(kp, ki, kd);
-        //    //print($"{segmentSearcher.ProjectedPosition}  ---   {nearestInterpolatedSample.position}");
-        //    DebugPosition();
-        //    corrector.Correct(segmentSearcher.ProjectedPosition); // why it doesn't work with nearestInterpolatedSample.position
-        //    //corrector.Correct(nearestInterpolatedSample.position); // why it doesn't work with nearestInterpolatedSample.position
-        //    WriteInput();
-        //}
+
 
 
         public override void FixedUpdateVehicle()
@@ -89,41 +68,10 @@ namespace Perrinn424.AutopilotSystem
                 WriteInput(startupSample);
                 print("Startup!");
             }
-
-            //if (vehicle.speed < expectedSpeed * 0.4f)
-            //{
-            //    Vector3 localPos = vehicle.transform.InverseTransformPoint(segmentSearcher.ProjectedPosition);
-            //    steerPID.SetParameters(steerKp, 0f, steerKd);
-            //    steerPID.input = -localPos.x;
-            //    steerPID.Compute();
-            //    //print(steerPID.input);
-
-            //    Sample startupSample = nearestInterpolatedSample;
-            //    startupSample.rawBrake = 0;
-            //    startupSample.rawThrottle = 7000;
-            //    //startupSample.rawSteer = (int)steerPID.output;
-
-            //    float angleDiff = Quaternion.Angle(vehicle.transform.rotation, startupSample.rotation);
-            //    print(angleDiff);
-            //    Vector3 localDiff = vehicle.transform.InverseTransformPoint(segmentSearcher.ProjectedPosition);
-            //    //float localX = Mathf.Clamp(mult*localDiff.x, -10000f, 10000f);
-            //    float localX = Mathf.Clamp(mult* angleDiff, -10000f, 10000f);
-            //    localForce = Vector3.right * localX;
-            //    vehicle.cachedRigidbody.AddForceAtPosition(vehicle.transform.TransformDirection(localForce), vehicle.transform.position);
-            //    DebugGraph.Log("Steer", startupSample.rawSteer);
-            //    DebugGraph.Log("Force", localForce);
-            //    WriteInput(startupSample);
-            //    DebugGraph.Log("startup", false);
-
-            //    //print());
-
-            //}
             else
             {
                 positionCorrector.Correct(segmentSearcher.ProjectedPosition); // why it doesn't work with nearestInterpolatedSample.position
                 WriteInput(nearestInterpolatedSample);
-                DebugGraph.Log("startup", true);
-
             }
         }
 
@@ -171,7 +119,7 @@ namespace Perrinn424.AutopilotSystem
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(nearestInterpolatedSample.position, 0.3f);
-            Gizmos.DrawRay(vehicle.transform.position, vehicle.transform.TransformDirection(localForce));
+            Gizmos.DrawRay(positionCorrector.ApplicationPosition, positionCorrector.Force);
         }
     }
 }
