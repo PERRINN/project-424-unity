@@ -41,6 +41,11 @@ namespace Perrinn424.AutopilotSystem
 
         public PathDrawer pathDrawer;
 
+        public float CalculateDuration()
+        {
+            return recordedLap.Count / recordedLap.frequency;
+        }
+
         public override int GetUpdateOrder()
         {
             return 10;
@@ -79,12 +84,17 @@ namespace Perrinn424.AutopilotSystem
             else
             {
                 lateralCorrector.Correct(segmentSearcher.ProjectedPosition); // why it doesn't work with nearestInterpolatedSample.position
-                forwardCorrector.Correct(segmentSearcher.ProjectedPosition);
+                //forwardCorrector.Correct(segmentSearcher.ProjectedPosition);
                 WriteInput(nearestInterpolatedSample);
             }
 
-            DebugGraph.Log("lateralError", lateralCorrector.Error);
-            DebugGraph.Log("forwardError", forwardCorrector.Error);
+            //DebugGraph.Log("lateralError", lateralCorrector.Error);
+            //DebugGraph.Log("forwardError", forwardCorrector.Error);
+        }
+
+        private Vector3 Pos()
+        {
+            
         }
 
         private Sample GetInterpolatedNearestSample()
@@ -129,8 +139,10 @@ namespace Perrinn424.AutopilotSystem
 
         private void OnDrawGizmos()
         {
+            Gizmos.color = Color.blue;
+            //Gizmos.DrawSphere(nearestInterpolatedSample.position, 0.1f);
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(nearestInterpolatedSample.position, 0.3f);
+            Gizmos.DrawSphere(segmentSearcher.ProjectedPosition, 0.05f);
             Gizmos.DrawRay(lateralCorrector.ApplicationPosition, lateralCorrector.Force);
         }
     }

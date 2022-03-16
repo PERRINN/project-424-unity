@@ -13,7 +13,7 @@ namespace Perrinn424.UI
         private Text text = default;
 
         [SerializeField]
-        private AutopilotProvider autopilotProvider;
+        private AutopilotExperimental autopilotProvider;
 
         private void OnEnable()
         {
