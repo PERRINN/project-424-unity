@@ -9344,6 +9344,51 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
         type: 3}
+      propertyPath: timer
+      value: 
+      objectReference: {fileID: 114863622256485037}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: targetPosition.x
+      value: 2272.8044
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: targetPosition.y
+      value: 11.328716
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: targetPosition.z
+      value: -154.20924
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: timeCorrector.kd
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: timeCorrector.ki
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: timeCorrector.kp
+      value: 100000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: startup.isStartUp
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: timeCorrector.max
+      value: 1000000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
       propertyPath: lateralCorrector.kd
       value: 10000
       objectReference: {fileID: 0}
@@ -9351,6 +9396,81 @@ PrefabInstance:
         type: 3}
       propertyPath: lateralCorrector.kp
       value: 800000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: timeCorrector.axis.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.rawBrake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.rawSteer
+      value: 237
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.throttle
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.position.x
+      value: 2272.8044
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.position.y
+      value: 11.328716
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.position.z
+      value: -154.20924
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.rotation.w
+      value: -0.4660532
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.rotation.x
+      value: -0.040752467
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.rotation.y
+      value: 0.8832993
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.rotation.z
+      value: -0.030266577
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.rawThrottle
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.brakePressure
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: nearestInterpolatedSample.steeringAngle
+      value: 4.76262
+      objectReference: {fileID: 0}
+    - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
+        type: 3}
+      propertyPath: lateralCorrector.localApplicationPosition.y
+      value: 0.32
       objectReference: {fileID: 0}
     - target: {fileID: 2603859344292933212, guid: 74a1654a85a7b8c4fb97bc8f11c8b8c3,
         type: 3}

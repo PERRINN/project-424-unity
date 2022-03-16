@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 using VehiclePhysics;
+using VehiclePhysics.Timing;
 using VehiclePhysics.UI;
 
 namespace Perrinn424.AutopilotSystem
@@ -16,10 +17,11 @@ namespace Perrinn424.AutopilotSystem
         public PositionCorrector lateralCorrector;
         
         public PositionCorrector forwardCorrector;
+        public TimeCorrector timeCorrector;
 
         public Sample nearestInterpolatedSample;
 
-
+        public LapTimer timer;
 
 
 
@@ -41,6 +43,8 @@ namespace Perrinn424.AutopilotSystem
 
         public PathDrawer pathDrawer;
 
+        public Vector3 targetPosition;
+
         public float CalculateDuration()
         {
             return recordedLap.Count / recordedLap.frequency;
@@ -58,6 +62,7 @@ namespace Perrinn424.AutopilotSystem
             segmentSearcher = new NearestSegmentSearcher(path);
             lateralCorrector.Init(vehicle.cachedRigidbody);
             forwardCorrector.Init(vehicle.cachedRigidbody);
+            timeCorrector.Init(vehicle.cachedRigidbody);
 
             startup.Init(vehicle);
         }
@@ -83,7 +88,14 @@ namespace Perrinn424.AutopilotSystem
             }
             else
             {
-                lateralCorrector.Correct(segmentSearcher.ProjectedPosition); // why it doesn't work with nearestInterpolatedSample.position
+                targetPosition = RayProjection();
+                lateralCorrector.Correct(targetPosition); // why it doesn't work with nearestInterpolatedSample.position
+
+                float currentTime = timer.currentLapTime;
+                float sampleIndex = segmentSearcher.StartIndex + segmentSearcher.Ratio;
+                float sampleTime = sampleIndex / recordedLap.frequency;
+                timeCorrector.Correct(currentTime, sampleTime);
+
                 //forwardCorrector.Correct(segmentSearcher.ProjectedPosition);
                 WriteInput(nearestInterpolatedSample);
             }
@@ -92,9 +104,36 @@ namespace Perrinn424.AutopilotSystem
             //DebugGraph.Log("forwardError", forwardCorrector.Error);
         }
 
-        private Vector3 Pos()
+        /// <summary>
+        /// Distance Between Two Lines, defined as rays. Returns a position in ray 1 which is the closest point to ray 2
+        /// </summary>
+        /// <remarks>
+        /// Mathematics for 3D Game Programming and Computer Graphics, Third Edition
+        /// Eric Lengyel
+        /// 5.1.2 Distance Between Two Lines
+        /// </remarks>
+        /// <returns>A point in ray 1 which is the closest position to ray 2</returns>
+        public static Vector3 GetClosestPointInRay1ToRay2(Ray ray1, Ray ray2)
         {
-            
+            Vector3 pq = ray2.origin - ray1.origin;
+            float scalarDir = Vector3.Dot(ray1.direction, ray2.direction);
+            float t1Num = -Vector3.Dot(pq, ray1.direction) + scalarDir * Vector3.Dot(pq, ray2.direction);
+            float t1Den = scalarDir * scalarDir - 1f;
+            float t1 = t1Num / t1Den;
+            return ray1.GetPoint(t1);
+        }
+
+        private Vector3 RayProjection()
+        {
+            Vector3 segment = segmentSearcher.Segment;
+            //segment = b - a;
+            Ray r1 = new Ray(segmentSearcher.Start, segment);
+            //Ray r2 = new Ray(vehicle.transform.position + vehicle.cachedRigidbody.velocity*Time.deltaTime, vehicle.transform.right);
+            Ray r2 = new Ray(vehicle.transform.position, vehicle.transform.right);
+            Vector3 closest = GetClosestPointInRay1ToRay2(r1, r2);
+            return closest;
+
+            //dot = Vector3.Dot(segment, this.transform.position - a);
         }
 
         private Sample GetInterpolatedNearestSample()
@@ -142,7 +181,7 @@ namespace Perrinn424.AutopilotSystem
             Gizmos.color = Color.blue;
             //Gizmos.DrawSphere(nearestInterpolatedSample.position, 0.1f);
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(segmentSearcher.ProjectedPosition, 0.05f);
+            Gizmos.DrawSphere(targetPosition, 0.05f);
             Gizmos.DrawRay(lateralCorrector.ApplicationPosition, lateralCorrector.Force);
         }
     }
