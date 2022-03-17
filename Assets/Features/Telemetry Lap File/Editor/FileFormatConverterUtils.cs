@@ -148,6 +148,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             RecordedLap recordedLap = ScriptableObject.CreateInstance<RecordedLap>();
             TelemetryLapMetadata metadata = telemetryLap.metadata;
             recordedLap.frequency = metadata.frequency;
+            recordedLap.lapTime = metadata.lapTime;
             
             Table table = telemetryLap.table;
             List<Sample> samples = new List<Sample>(table.RowCount);

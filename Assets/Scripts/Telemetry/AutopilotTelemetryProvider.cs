@@ -4,7 +4,7 @@ using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public class AutopilotTelemetryProvider : BaseTelemetryProvider<AutopilotExperimental, AutopilotTelemetryProvider.AutopilotTelemetry>
+    public class AutopilotTelemetryProvider : BaseTelemetryProvider<BaseAutopilot, AutopilotTelemetryProvider.AutopilotTelemetry>
 	{
 		public class AutopilotTelemetry : Telemetry.ChannelGroup
 		{

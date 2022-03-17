@@ -7,7 +7,7 @@ using VehiclePhysics;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class Autopilot : VehicleBehaviour, IPIDInfo
+    public class Autopilot : BaseAutopilot
     {
         // Public component parameters
 
@@ -27,15 +27,15 @@ namespace Perrinn424.AutopilotSystem
 
         // Exposed for Telemetry
 
-        public float Error => height; //[m]
-        public float P => edyPID.proportional; //[N]
-        public float I => edyPID.integral; //[N]
-        public float D => edyPID.derivative; //[N]
-        public float PID => edyPID.output; //[N]
+        public override float Error => height; //[m]
+        public override float P => edyPID.proportional; //[N]
+        public override float I => edyPID.integral; //[N]
+        public override float D => edyPID.derivative; //[N]
+        public override float PID => edyPID.output; //[N]
 
-        public float MaxForceP => maxForceP;
+        public override float MaxForceP => maxForceP;
 
-        public float MaxForceD => maxForceD;
+        public override float MaxForceD => maxForceD;
 
         public AutopilotProvider autopilotProvider;
         readonly PidController edyPID = new PidController();
@@ -50,12 +50,14 @@ namespace Perrinn424.AutopilotSystem
         float m_totalDistance, m_lastTime;
 
         int showSteer, showBrake, showThrottle;
-        bool autopilotON;
+        //bool autopilotON;
         bool lostControl = false;
 
         VPDeviceInput m_deviceInput;
         float m_ffbForceIntensity;
         float m_ffbDamperCoefficient;
+
+        int closestFrame1, closestFrame2;
 
 
         public override int GetUpdateOrder()
@@ -78,7 +80,7 @@ namespace Perrinn424.AutopilotSystem
             }
 
 
-            SteeringScreen.autopilotState = false;
+            //SteeringScreen.autopilotState = false;
             sectionSize = (int)Math.Sqrt(autopilotProvider.Count); // Breakdown recorded replay into even sections
             
             VPReplayAsset replayAsset = autopilotProvider.replayAsset;
@@ -96,32 +98,32 @@ namespace Perrinn424.AutopilotSystem
         }
 
 
-        public override void UpdateVehicle()
-        {
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                if (autopilotON)
-                {
-                    autopilotON = false;
-                    SteeringScreen.autopilotState = false;
-                    if (m_deviceInput != null)
-                    {
-                        m_deviceInput.forceIntensity = m_ffbForceIntensity;
-                        m_deviceInput.damperCoefficient = m_ffbDamperCoefficient;
-                    }
-                }
-                else
-                {
-                    autopilotON = true;
-                    SteeringScreen.autopilotState = true;
-                    if (m_deviceInput != null)
-                    {
-                        m_deviceInput.forceIntensity = 0.0f;
-                        m_deviceInput.damperCoefficient = 0.0f;
-                    }
-                }
-            }
-        }
+        //public override void UpdateVehicle()
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Q))
+        //    {
+        //        if (autopilotON)
+        //        {
+        //            autopilotON = false;
+        //            //SteeringScreen.autopilotState = false;
+        //            if (m_deviceInput != null)
+        //            {
+        //                m_deviceInput.forceIntensity = m_ffbForceIntensity;
+        //                m_deviceInput.damperCoefficient = m_ffbDamperCoefficient;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            autopilotON = true;
+        //            //SteeringScreen.autopilotState = true;
+        //            if (m_deviceInput != null)
+        //            {
+        //                m_deviceInput.forceIntensity = 0.0f;
+        //                m_deviceInput.damperCoefficient = 0.0f;
+        //            }
+        //        }
+        //    }
+        //}
 
 
         public override void FixedUpdateVehicle()
@@ -130,13 +132,13 @@ namespace Perrinn424.AutopilotSystem
             float currentPosX = position.x;
             float currentPosZ = position.z;
 
-            int closestFrame1, closestFrame2;
+            //closestFrame1, closestFrame2;
             float closestDisFrame1, closestDisFrame2;
             CalculateNearestFrame(out closestFrame1, out closestFrame2, out closestDisFrame1, out closestDisFrame2);
-            SteeringScreen.bestTime = FramesToTime(closestFrame1);
+            //SteeringScreen.bestTime = FramesToTime(closestFrame1);
 
 
-            if (!autopilotON)
+            if (!IsOn)
             {
                 return;
             }
@@ -210,12 +212,14 @@ namespace Perrinn424.AutopilotSystem
             if (carAngleErr > 30 && carAngleErr < 90) { lostControl = true; }
             else if (carAngleErr >= 90)
             {
-                autopilotON = false;
-                SteeringScreen.autopilotState = false;
+                SetStatus(false);
+                //autopilotON = false;
+                //SteeringScreen.autopilotState = false;
             }
             else { lostControl = false; }
 
-            if (autopilotON)
+            //if (autopilotON)
+            if (IsOn)
             {
                 vehicle.cachedRigidbody.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
 
@@ -268,6 +272,10 @@ namespace Perrinn424.AutopilotSystem
                 }
             }
         }
+        public override float PlayingTime()
+        {
+            return FramesToTime(closestFrame1);
+        }
 
         private void CalculateNearestFrame(out int closestFrame1, out int closestFrame2, out float closestDisFrame1, out float closestDisFrame2)
         {
@@ -275,7 +283,8 @@ namespace Perrinn424.AutopilotSystem
             // When autopilot is off, we still need to find the closest frame because of the SteeringScreen.bestTime.
             // We use the last framesearcher version, because, altough its buggy and it returns false results, it works well in the majority
             // of the cases and it is fast
-            IFrameSearcher selectedFrameSearcher = autopilotON ? heuristicFrameSearcher : (IFrameSearcher)deprecatedFrameSearcher;
+            //IFrameSearcher selectedFrameSearcher = autopilotON ? heuristicFrameSearcher : (IFrameSearcher)deprecatedFrameSearcher;
+            IFrameSearcher selectedFrameSearcher = IsOn ? heuristicFrameSearcher : (IFrameSearcher)deprecatedFrameSearcher;
             selectedFrameSearcher.Search(vehicle.transform);
 
             closestFrame1 = selectedFrameSearcher.ClosestFrame1;

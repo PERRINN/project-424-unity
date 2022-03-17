@@ -6,7 +6,7 @@ using VehiclePhysics.UI;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class AutopilotExperimental : VehicleBehaviour, IPIDInfo
+    public class AutopilotExperimental : BaseAutopilot
     {
         public RecordedLap recordedLap;
 
@@ -27,19 +27,19 @@ namespace Perrinn424.AutopilotSystem
 
         public AutopilotStartup startup;
 
-        public float Error => lateralCorrector.Error;
+        public override float Error => lateralCorrector.Error;
 
-        public float P => lateralCorrector.PID.proportional;
+        public override float P => lateralCorrector.PID.proportional;
 
-        public float I => lateralCorrector.PID.integral;
+        public override float I => lateralCorrector.PID.integral;
 
-        public float D => lateralCorrector.PID.derivative;
+        public override float D => lateralCorrector.PID.derivative;
 
-        public float PID => lateralCorrector.PID.output;
+        public override float PID => lateralCorrector.PID.output;
 
-        public float MaxForceP => lateralCorrector.max;
+        public override float MaxForceP => lateralCorrector.max;
 
-        public float MaxForceD => lateralCorrector.max; //TODO remove MaxForceD
+        public override float MaxForceD => lateralCorrector.max; //TODO remove MaxForceD
 
         public PathDrawer pathDrawer;
 
@@ -47,7 +47,7 @@ namespace Perrinn424.AutopilotSystem
 
         public float CalculateDuration()
         {
-            return recordedLap.Count / recordedLap.frequency;
+            return recordedLap.lapTime;
         }
 
         public override int GetUpdateOrder()
@@ -69,15 +69,23 @@ namespace Perrinn424.AutopilotSystem
 
 
 
+        public override float PlayingTime()
+        {
+            float sampleIndex = segmentSearcher.StartIndex + segmentSearcher.Ratio;
+            return sampleIndex / recordedLap.frequency;
+        }
 
         public override void FixedUpdateVehicle()
         {
             segmentSearcher.Search(vehicle.transform.position);
             nearestInterpolatedSample = GetInterpolatedNearestSample();
 
+            if (!IsOn)
+                return;
+
             float expectedSpeed = segmentSearcher.Segment.magnitude * recordedLap.frequency;
 
-            SteeringScreen.bestTime = Mathf.Lerp(segmentSearcher.StartIndex, segmentSearcher.EndIndex, segmentSearcher.Ratio) /recordedLap.frequency;
+            //SteeringScreen.bestTime = Mathf.Lerp(segmentSearcher.StartIndex, segmentSearcher.EndIndex, segmentSearcher.Ratio) /recordedLap.frequency;
             pathDrawer.index = segmentSearcher.StartIndex;
 
             if (startup.IsStartup(expectedSpeed))
@@ -92,9 +100,7 @@ namespace Perrinn424.AutopilotSystem
                 lateralCorrector.Correct(targetPosition); // why it doesn't work with nearestInterpolatedSample.position
 
                 float currentTime = timer.currentLapTime;
-                float sampleIndex = segmentSearcher.StartIndex + segmentSearcher.Ratio;
-                float sampleTime = sampleIndex / recordedLap.frequency;
-                timeCorrector.Correct(currentTime, sampleTime);
+                timeCorrector.Correct(currentTime, PlayingTime());
 
                 //forwardCorrector.Correct(segmentSearcher.ProjectedPosition);
                 WriteInput(nearestInterpolatedSample);
@@ -184,5 +190,7 @@ namespace Perrinn424.AutopilotSystem
             Gizmos.DrawSphere(targetPosition, 0.05f);
             Gizmos.DrawRay(lateralCorrector.ApplicationPosition, lateralCorrector.Force);
         }
+
+
     }
 }
