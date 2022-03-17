@@ -1,7 +1,5 @@
-
 using EdyCommonTools;
 using System;
-using VehiclePhysics.UI;
 using UnityEngine;
 using VehiclePhysics;
 
@@ -42,15 +40,12 @@ namespace Perrinn424.AutopilotSystem
         private HeuristicFrameSearcher heuristicFrameSearcher;
         private FrameSearcher deprecatedFrameSearcher;
 
-        int sectionSize;
         float height = 0, previousHeight = 0;
         Vector3 appliedForceV3;
 
-        Vector3 m_lastPosition;
-        float m_totalDistance, m_lastTime;
+
 
         int showSteer, showBrake, showThrottle;
-        //bool autopilotON;
         bool lostControl = false;
 
         VPDeviceInput m_deviceInput;
@@ -69,10 +64,6 @@ namespace Perrinn424.AutopilotSystem
 
         public override void OnEnableVehicle()
         {
-            m_lastPosition = vehicle.transform.position;
-            m_totalDistance = 0;
-            m_lastTime = 0;
-
             if (autopilotProvider == null)
             {
                 enabled = false;
@@ -80,51 +71,13 @@ namespace Perrinn424.AutopilotSystem
             }
 
 
-            //SteeringScreen.autopilotState = false;
-            sectionSize = (int)Math.Sqrt(autopilotProvider.Count); // Breakdown recorded replay into even sections
             
             VPReplayAsset replayAsset = autopilotProvider.replayAsset;
             int lookAroundFramesCount = (int)(5f / replayAsset.timeStep); //seconds to look around
             int lookBehind = (int)(lookAroundFramesCount * 0.05f); //5% behind, just in case
             heuristicFrameSearcher = new HeuristicFrameSearcher(replayAsset.recordedData, 5f, lookBehind, lookAroundFramesCount);
             deprecatedFrameSearcher = new FrameSearcher(replayAsset.recordedData);
-
-            m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
-            if (m_deviceInput != null)
-            {
-                m_ffbForceIntensity = m_deviceInput.forceIntensity;
-                m_ffbDamperCoefficient = m_deviceInput.damperCoefficient;
-            }
         }
-
-
-        //public override void UpdateVehicle()
-        //{
-        //    if (Input.GetKeyDown(KeyCode.Q))
-        //    {
-        //        if (autopilotON)
-        //        {
-        //            autopilotON = false;
-        //            //SteeringScreen.autopilotState = false;
-        //            if (m_deviceInput != null)
-        //            {
-        //                m_deviceInput.forceIntensity = m_ffbForceIntensity;
-        //                m_deviceInput.damperCoefficient = m_ffbDamperCoefficient;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            autopilotON = true;
-        //            //SteeringScreen.autopilotState = true;
-        //            if (m_deviceInput != null)
-        //            {
-        //                m_deviceInput.forceIntensity = 0.0f;
-        //                m_deviceInput.damperCoefficient = 0.0f;
-        //            }
-        //        }
-        //    }
-        //}
-
 
         public override void FixedUpdateVehicle()
         {
@@ -132,10 +85,8 @@ namespace Perrinn424.AutopilotSystem
             float currentPosX = position.x;
             float currentPosZ = position.z;
 
-            //closestFrame1, closestFrame2;
             float closestDisFrame1, closestDisFrame2;
             CalculateNearestFrame(out closestFrame1, out closestFrame2, out closestDisFrame1, out closestDisFrame2);
-            //SteeringScreen.bestTime = FramesToTime(closestFrame1);
 
 
             if (!IsOn)
@@ -213,12 +164,9 @@ namespace Perrinn424.AutopilotSystem
             else if (carAngleErr >= 90)
             {
                 SetStatus(false);
-                //autopilotON = false;
-                //SteeringScreen.autopilotState = false;
             }
             else { lostControl = false; }
 
-            //if (autopilotON)
             if (IsOn)
             {
                 vehicle.cachedRigidbody.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
@@ -240,8 +188,7 @@ namespace Perrinn424.AutopilotSystem
                     float segmentLength = (autopilotProvider[closestFrame2].position - autopilotProvider[closestFrame1].position).magnitude;
                     //float SecondsPerFrame = Time.time - m_lastTime;
                     float SecondsPerFrame = (closestFrame2 - closestFrame1) * autopilotProvider.TimeStep;
-                    m_lastPosition = vehicle.transform.position;
-                    m_totalDistance += segmentLength;
+
 
                     // Brake Control
                     int brakeERR = autopilotProvider[closestFrame2].inputData[InputData.Brake] - autopilotProvider[closestFrame1].inputData[InputData.Brake];
@@ -252,7 +199,6 @@ namespace Perrinn424.AutopilotSystem
                         showBrake = 0;
                     }
                     vehicle.data.Set(Channel.Input, InputData.Brake, showBrake);
-                    m_lastTime += SecondsPerFrame;
 
                     // Throttle
                     int throttleERR = autopilotProvider[closestFrame2].inputData[InputData.Throttle] - autopilotProvider[closestFrame1].inputData[InputData.Throttle];
@@ -340,5 +286,4 @@ namespace Perrinn424.AutopilotSystem
             return (valueA, valueB);
         }
     }
-
 }
