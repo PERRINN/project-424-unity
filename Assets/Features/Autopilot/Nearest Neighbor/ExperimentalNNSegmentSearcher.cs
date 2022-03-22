@@ -1,4 +1,5 @@
 ﻿using Perrinn424.Utilities;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,7 +41,10 @@ public class ExperimentalNNSegmentSearcher
 
         Debug.Log(Start);
         ProjectedPosition = Vector3.Lerp(Start, End, Ratio);
+
+        CalculateExperimentalProjectedPosition(t);
     }
+
 
     public int StartIndex { get; private set; }
     public int EndIndex { get; private set; }
@@ -50,5 +54,37 @@ public class ExperimentalNNSegmentSearcher
     public float Ratio { get; private set; }
 
     public Vector3 ProjectedPosition { get; set; }
+    public Vector3 ExperimentalProjectedPosition { get; set; }
+    public float ExperimentalRatio { get; set; }
+
+
+
+
+
+
+    private void CalculateExperimentalProjectedPosition(Transform t)
+    {
+        ExperimentalProjectedPosition = RayProjection(t.position, t.right);
+
+        ExperimentalRatio = (ExperimentalProjectedPosition - Start).magnitude / Segment.magnitude;
+    }
+
+    public static Vector3 GetClosestPointInRay1ToRay2(Ray ray1, Ray ray2)
+    {
+        Vector3 pq = ray2.origin - ray1.origin;
+        float scalarDir = Vector3.Dot(ray1.direction, ray2.direction);
+        float t1Num = -Vector3.Dot(pq, ray1.direction) + scalarDir * Vector3.Dot(pq, ray2.direction);
+        float t1Den = scalarDir * scalarDir - 1f;
+        float t1 = t1Num / t1Den;
+        return ray1.GetPoint(t1);
+    }
+
+    private Vector3 RayProjection(Vector3 position, Vector3 right)
+    {
+        Ray r1 = new Ray(Start, Segment);
+        Ray r2 = new Ray(position, right);
+        Vector3 closest = GetClosestPointInRay1ToRay2(r1, r2);
+        return closest;
+    }
 
 }

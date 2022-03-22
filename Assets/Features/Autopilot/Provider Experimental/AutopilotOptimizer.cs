@@ -16,6 +16,7 @@ public class AutopilotOptimizer : VehicleBehaviour
         public float kp;
         public float kd;
         public float max;
+        public float offset;
         public string result;
 
         public void Close()
@@ -49,6 +50,7 @@ public class AutopilotOptimizer : VehicleBehaviour
         Time.timeScale = timeScale;
         lapTimer.onLap += OnLapHandler;
         lapTimer.onBeginLap += BeginLapHandler;
+        autopilot.ToggleStatus();
     }
 
     private void BeginLapHandler()
@@ -56,6 +58,7 @@ public class AutopilotOptimizer : VehicleBehaviour
         autopilot.lateralCorrector.kp = CurrentSample.kp;
         autopilot.lateralCorrector.kd = CurrentSample.kd;
         autopilot.lateralCorrector.max = CurrentSample.max;
+        autopilot.offset = CurrentSample.offset;
     }
 
     public override void OnDisableVehicle()
@@ -78,18 +81,6 @@ public class AutopilotOptimizer : VehicleBehaviour
                 EditorApplication.isPaused = true;
             }
         }
-
-        //diff.Add(lapTime - autopilot.CalculateDuration());
-
-        //if (diff.Count == 5)
-        //{
-        //    foreach (float d in diff)
-        //    {
-        //        print(d);
-        //    }
-
-        //    EditorApplication.isPlaying = false;
-        //}
     }
 
 }

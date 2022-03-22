@@ -23,7 +23,7 @@ namespace Perrinn424.AutopilotSystem
             Force = rb.transform.TransformVector(localForce);
 
             rb.AddForce(Force);
-            Debug.Log(Error);
+            DebugGraph.Log("TimeError", Error);
         }
     } 
 }

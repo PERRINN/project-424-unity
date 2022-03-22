@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Serialization;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
@@ -11,8 +12,9 @@ namespace Perrinn424.AutopilotSystem
         public RecordedLap recordedLap;
 
         private Path path;
-        private NearestSegmentSearcher segmentSearcher;
-        
+        //private NearestSegmentSearcher segmentSearcher;
+        private ExperimentalNNSegmentSearcher segmentSearcher;
+
         [FormerlySerializedAs("positionCorrector")]
         public PositionCorrector lateralCorrector;
         
@@ -20,6 +22,7 @@ namespace Perrinn424.AutopilotSystem
         public TimeCorrector timeCorrector;
 
         public Sample nearestInterpolatedSample;
+        public Sample runningSample;
 
         public LapTimer timer;
 
@@ -27,24 +30,11 @@ namespace Perrinn424.AutopilotSystem
 
         public AutopilotStartup startup;
 
-        public override float Error => lateralCorrector.Error;
-
-        public override float P => lateralCorrector.PID.proportional;
-
-        public override float I => lateralCorrector.PID.integral;
-
-        public override float D => lateralCorrector.PID.derivative;
-
-        public override float PID => lateralCorrector.PID.output;
-
-        public override float MaxForceP => lateralCorrector.max;
-
-        public override float MaxForceD => lateralCorrector.max; //TODO remove MaxForceD
-
         public PathDrawer pathDrawer;
 
         public Vector3 targetPosition;
 
+        public float offset = 0.9f;
         public float CalculateDuration()
         {
             return recordedLap.lapTime;
@@ -59,12 +49,25 @@ namespace Perrinn424.AutopilotSystem
         public override void OnEnableVehicle()
         {
             path = new Path(recordedLap);
-            segmentSearcher = new NearestSegmentSearcher(path);
+            //segmentSearcher = new NearestSegmentSearcher(path);
+            segmentSearcher = new ExperimentalNNSegmentSearcher(path);
             lateralCorrector.Init(vehicle.cachedRigidbody);
             forwardCorrector.Init(vehicle.cachedRigidbody);
             timeCorrector.Init(vehicle.cachedRigidbody);
 
             startup.Init(vehicle);
+
+            vehicle.onBeforeUpdateBlocks += WriteInputs;
+        }
+
+        public override void OnDisableVehicle()
+        {
+            vehicle.onBeforeUpdateBlocks -= WriteInputs;
+        }
+
+        public void WriteInputs()
+        {
+            WriteInput(runningSample);
         }
 
 
@@ -72,13 +75,15 @@ namespace Perrinn424.AutopilotSystem
         public override float PlayingTime()
         {
             float sampleIndex = segmentSearcher.StartIndex + segmentSearcher.Ratio;
-            return sampleIndex / recordedLap.frequency;
+            return (sampleIndex / recordedLap.frequency) - (offset/ vehicle.speed);
         }
 
         public override void FixedUpdateVehicle()
         {
-            segmentSearcher.Search(vehicle.transform.position);
+            //segmentSearcher.Search(vehicle.transform.position);
+            segmentSearcher.Search(vehicle.transform);
             nearestInterpolatedSample = GetInterpolatedNearestSample();
+            targetPosition = nearestInterpolatedSample.position;
 
             if (!IsOn)
                 return;
@@ -91,19 +96,22 @@ namespace Perrinn424.AutopilotSystem
             if (startup.IsStartup(expectedSpeed))
             {
                 Sample startupSample = startup.Correct(nearestInterpolatedSample);
-                WriteInput(startupSample);
+                runningSample = startupSample;
+                //WriteInput(startupSample);
                 print("Startup!");
             }
             else
             {
                 targetPosition = RayProjection();
+                targetPosition = segmentSearcher.ProjectedPosition;
+                targetPosition = segmentSearcher.ExperimentalProjectedPosition;
                 lateralCorrector.Correct(targetPosition); // why it doesn't work with nearestInterpolatedSample.position
 
                 float currentTime = timer.currentLapTime;
                 timeCorrector.Correct(currentTime, PlayingTime());
-
+                runningSample = nearestInterpolatedSample;
                 //forwardCorrector.Correct(segmentSearcher.ProjectedPosition);
-                WriteInput(nearestInterpolatedSample);
+                //WriteInput(nearestInterpolatedSample);
             }
 
             //DebugGraph.Log("lateralError", lateralCorrector.Error);
@@ -131,6 +139,8 @@ namespace Perrinn424.AutopilotSystem
 
         private Vector3 RayProjection()
         {
+
+
             Vector3 segment = segmentSearcher.Segment;
             //segment = b - a;
             Ray r1 = new Ray(segmentSearcher.Start, segment);
@@ -146,8 +156,10 @@ namespace Perrinn424.AutopilotSystem
         {
             Sample start = recordedLap[segmentSearcher.StartIndex];
             Sample end = recordedLap[segmentSearcher.EndIndex];
-            float t = segmentSearcher.Ratio;
-            Sample interpolatedSample = Sample.Lerp(start, end, t);
+            //float t = segmentSearcher.Ratio;
+            float t = segmentSearcher.ExperimentalRatio;
+            //Sample interpolatedSample = Sample.Lerp(start, end, t);
+            Sample interpolatedSample = Sample.LerpUncampled(start, end, t);
             
             return interpolatedSample;
         }
@@ -187,10 +199,17 @@ namespace Perrinn424.AutopilotSystem
             Gizmos.color = Color.blue;
             //Gizmos.DrawSphere(nearestInterpolatedSample.position, 0.1f);
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(targetPosition, 0.05f);
+            Gizmos.DrawSphere(targetPosition, 0.05f*10);
             Gizmos.DrawRay(lateralCorrector.ApplicationPosition, lateralCorrector.Force);
         }
 
 
+        public override float Error => lateralCorrector.Error;
+        public override float P => lateralCorrector.PID.proportional;
+        public override float I => lateralCorrector.PID.integral;
+        public override float D => lateralCorrector.PID.derivative;
+        public override float PID => lateralCorrector.PID.output;
+        public override float MaxForceP => lateralCorrector.max;
+        public override float MaxForceD => lateralCorrector.max; //TODO remove MaxForceD
     }
 }
