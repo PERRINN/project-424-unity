@@ -5,7 +5,7 @@ using VehiclePhysics;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class Autopilot : BaseAutopilot
+    public class AutopilotDeprecated : BaseAutopilot
     {
         // Public component parameters
 

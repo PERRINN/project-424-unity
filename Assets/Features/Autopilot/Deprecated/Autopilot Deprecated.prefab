@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5959670061039498073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5959670061039498074}
+  - component: {fileID: 8545514456915074317}
+  - component: {fileID: 5959670061039498075}
+  - component: {fileID: 5959670061039498068}
+  - component: {fileID: 5959670061039498071}
+  m_Layer: 8
+  m_Name: Autopilot Deprecated
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &5959670061039498074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959670061039498073}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8545514456915074317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959670061039498073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f27f919550982f41b4380087f1e5db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autopilot: {fileID: 5959670061039498075}
+--- !u!114 &5959670061039498075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959670061039498073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77378aab0a444c64a87c593007304373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kp: 600000
+  ki: 0
+  kd: 20000
+  maxForceP: 10000
+  maxForceD: 25000
+  startUpThrottleSpeedRatio: 60
+  startUpThrottle: 70
+  startUpBrakeSpeedRatio: 80
+  offsetValue: 0
+  startLine: {fileID: 0}
+  debugGizmo: 1
+  autopilotProvider: {fileID: 5959670061039498068}
+--- !u!114 &5959670061039498068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959670061039498073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9080681e1b4aa3645b2d07314a691a27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayAsset: {fileID: 11400000, guid: 797fd4bc6193d3d469e4d8adececb16c, type: 2}
+--- !u!114 &5959670061039498071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959670061039498073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0a767f5343699c4b9f15fe80c09aa6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recordedLap: {fileID: 11400000, guid: 944e001102a46504bb013b77c65e6ada, type: 2}
+  draw: 1
+  drawAll: 0
+  index: 0
+  ahead: 34
+  behind: 12
+  color: {r: 0.21529016, g: 0.31400532, b: 0.5566038, a: 1}
