@@ -28,7 +28,7 @@ public class AutopilotOptimizer : VehicleBehaviour
     }
 
     public LapTimer lapTimer;
-    public AutopilotExperimental autopilot;
+    public Autopilot autopilot;
     public int lapsPerSample;
     public float timeScale;
 

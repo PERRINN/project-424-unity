@@ -1,13 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Serialization;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
-using VehiclePhysics.UI;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class AutopilotExperimental : BaseAutopilot
+    public class Autopilot : BaseAutopilot
     {
         public RecordedLap recordedLap;
 

@@ -5,7 +5,7 @@ using VehiclePhysics.Timing;
 public class AutopilotDebugHelper : MonoBehaviour, IPIDInfo
 {
     public AutopilotDeprecated autopilot;
-    public AutopilotExperimental autopilotExperimental;
+    public Autopilot autopilotExperimental;
 
     public Behaviour[] autopilotInLap;
 
