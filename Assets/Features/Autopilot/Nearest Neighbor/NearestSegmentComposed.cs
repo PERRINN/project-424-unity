@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class ExperimentalNNSegmentSearcher
+    public class NearestSegmentComposed
     {
 
         private IReadOnlyList<Vector3> path;
         private HeuristicNearestNeighbor nnSearcher;
-        CircularIndex index;
+        private CircularIndex index;
 
-        public ExperimentalNNSegmentSearcher(IReadOnlyList<Vector3> path)
+        public NearestSegmentComposed(IReadOnlyList<Vector3> path)
         {
             this.path = path;
             nnSearcher = new HeuristicNearestNeighbor(path, 100, 100);
@@ -40,10 +40,9 @@ namespace Perrinn424.AutopilotSystem
             Vector3 startLocal = t.transform.InverseTransformPoint(Start);
             Ratio = Mathf.InverseLerp(startLocal.z, endLocal.z, 0f);
 
-            Debug.Log(Start);
             ProjectedPosition = Vector3.Lerp(Start, End, Ratio);
 
-            CalculateExperimentalProjectedPosition(t);
+            //CalculateExperimentalProjectedPosition(t);
         }
 
 
@@ -55,21 +54,25 @@ namespace Perrinn424.AutopilotSystem
         public float Ratio { get; private set; }
 
         public Vector3 ProjectedPosition { get; set; }
-        public Vector3 ExperimentalProjectedPosition { get; set; }
-        public float ExperimentalRatio { get; set; }
 
 
 
+        //private void CalculateExperimentalProjectedPosition(Transform t)
+        //{
+        //    ProjectedPosition = RayProjection(t.position, t.right);
 
+        //    Ratio = (ProjectedPosition - Start).magnitude / Segment.magnitude;
+        //}
 
-
-        private void CalculateExperimentalProjectedPosition(Transform t)
-        {
-            ExperimentalProjectedPosition = RayProjection(t.position, t.right);
-
-            ExperimentalRatio = (ExperimentalProjectedPosition - Start).magnitude / Segment.magnitude;
-        }
-
+        /// <summary>
+        /// Distance Between Two Lines, defined as rays. Returns a position in ray 1 which is the closest point to ray 2
+        /// </summary>
+        /// <remarks>
+        /// Mathematics for 3D Game Programming and Computer Graphics, Third Edition
+        /// Eric Lengyel
+        /// 5.1.2 Distance Between Two Lines
+        /// </remarks>
+        /// <returns>A point in ray 1 which is the closest position to ray 2</returns>
         public static Vector3 GetClosestPointInRay1ToRay2(Ray ray1, Ray ray2)
         {
             Vector3 pq = ray2.origin - ray1.origin;

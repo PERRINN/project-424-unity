@@ -4,7 +4,7 @@ namespace Perrinn424.AutopilotSystem
 {
     public class NearestNeighborDebug : MonoBehaviour
     {
-        ExperimentalNNSegmentSearcher searcher;
+        NearestSegmentComposed searcher;
         public RecordedLap lap;
         public Vector3 projected;
         public float ratio;
@@ -14,7 +14,7 @@ namespace Perrinn424.AutopilotSystem
         void Start()
         {
             Path path = new Path(lap);
-            searcher = new ExperimentalNNSegmentSearcher(path);
+            searcher = new NearestSegmentComposed(path);
         }
 
         // Update is called once per frame
