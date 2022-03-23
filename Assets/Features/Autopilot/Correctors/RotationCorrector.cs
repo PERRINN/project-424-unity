@@ -11,27 +11,15 @@ namespace Perrinn424.AutopilotSystem
         {
             UpdatePIDSettings();
 
-
             float yaw = rb.transform.rotation.eulerAngles.y;
             float targetYaw = targetRotation.eulerAngles.y;
             float error = yaw - targetYaw;
             error = MathUtility.ClampAngle(error);
 
-            //float angleError = Quaternion.Angle(rb.transform.rotation, targetRotation);
             PID.input = error;
             PID.Compute();
-            //Vector3 localForce = pid.output *Vector3.right;
-            //Force = rb.transform.TransformDirection(localForce);
-            //rb.AddForceAtPosition(Force, rb.transform.position);
 
             rb.AddRelativeTorque(0f, PID.output, 0f);
-
-            //DebugGraph.Log("Error", error);
-            ////DebugGraph.Log("LocalForce", localForce);
-            //DebugGraph.Log("PIDOutput", pid.output);
-
-            //Quaternion rotationError = Quaternion.Inverse(targetRotation) * rb.rotation;
-            //rb.AddTorque(rotationError.eulerAngles);
         }
     } 
 }

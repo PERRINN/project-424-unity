@@ -27,7 +27,6 @@ namespace Perrinn424.AutopilotSystem
             PID.Compute();
             Vector3 localForce = -correctionAxis * PID.output;
 
-
             Force = rb.transform.TransformVector(localForce);
 
             rb.AddForceAtPosition(Force, ApplicationPosition);

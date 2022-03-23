@@ -19,7 +19,6 @@ namespace Perrinn424.AutopilotSystem
             PID.Compute();
             Vector3 localForce = axis * PID.output;
 
-
             Force = rb.transform.TransformVector(localForce);
 
             rb.AddForce(Force);

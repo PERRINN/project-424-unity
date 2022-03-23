@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
-public interface INearestSegmentSearcher
+namespace Perrinn424.AutopilotSystem
 {
-    void Search(Vector3 position);
+    public interface INearestSegmentSearcher
+    {
+        void Search(Vector3 position);
 
-    int StartIndex { get;}
-    int EndIndex { get; }
+        int StartIndex { get; }
+        int EndIndex { get; }
+    } 
 }

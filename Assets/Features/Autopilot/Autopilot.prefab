@@ -9,9 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2603859344292933200}
-  - component: {fileID: 2603859344292933215}
-  - component: {fileID: 2603859344292933201}
-  - component: {fileID: 2603859344292933214}
+  - component: {fileID: 1154299143}
   - component: {fileID: 2603859344292933212}
   - component: {fileID: 2603859344292933213}
   m_Layer: 8
@@ -35,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2603859344292933215
+--- !u!114 &1154299143
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,53 +42,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2603859344292933203}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174983ab0ebcc8f40a5b967165feb290, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f27f919550982f41b4380087f1e5db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autopilot: {fileID: 2603859344292933201}
-  autopilotExperimental: {fileID: 2603859344292933212}
-  autopilotInLap:
-  - {fileID: 2603859344292933212}
-  - {fileID: 2603859344292933212}
-  lapTimer: {fileID: 0}
-  lapCount: 0
---- !u!114 &2603859344292933201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2603859344292933203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77378aab0a444c64a87c593007304373, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  kp: 600000
-  ki: 0
-  kd: 20000
-  maxForceP: 10000
-  maxForceD: 25000
-  startUpThrottleSpeedRatio: 60
-  startUpThrottle: 70
-  startUpBrakeSpeedRatio: 80
-  offsetValue: 0
-  startLine: {fileID: 0}
-  debugGizmo: 1
-  autopilotProvider: {fileID: 2603859344292933214}
---- !u!114 &2603859344292933214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2603859344292933203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9080681e1b4aa3645b2d07314a691a27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  replayAsset: {fileID: 11400000, guid: 797fd4bc6193d3d469e4d8adececb16c, type: 2}
+  autopilot: {fileID: 2603859344292933212}
 --- !u!114 &2603859344292933212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,9 +60,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recordedLap: {fileID: 11400000, guid: 944e001102a46504bb013b77c65e6ada, type: 2}
   lateralCorrector:
-    kp: 600000
+    kp: 800000
     ki: 0
-    kd: 20000
+    kd: 10000
     max: 100000
     mode: 0
     correctionAxis: {x: 1, y: 0, z: 0}
@@ -120,6 +75,13 @@ MonoBehaviour:
     mode: 0
     correctionAxis: {x: 0, y: 0, z: 1}
     localApplicationPosition: {x: 0, y: 0.32, z: 0}
+  timeCorrector:
+    kp: 100000
+    ki: 0
+    kd: 10000
+    max: 1000000
+    mode: 0
+    axis: {x: 0, y: 0, z: -1}
   nearestInterpolatedSample:
     position: {x: 233.3692, y: 120.32527, z: 2197.3928}
     rotation: {x: -0.036375806, y: 0.38992146, z: -0.006634424, w: 0.92010546}
@@ -130,6 +92,17 @@ MonoBehaviour:
     throttle: 0
     brakePressure: 32.450176
     automaticGear: 4
+  runningSample:
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 0}
+    rawSteer: 0
+    rawThrottle: 0
+    rawBrake: 0
+    steeringAngle: 0
+    throttle: 0
+    brakePressure: 0
+    automaticGear: 0
+  timer: {fileID: 0}
   startup:
     lateralCorrector:
       kp: 7000
@@ -149,6 +122,8 @@ MonoBehaviour:
     throttle: 0.577
     isStartUp: 1
   pathDrawer: {fileID: 2603859344292933213}
+  targetPosition: {x: 2272.8044, y: 11.328716, z: -154.20924}
+  offset: 0.45
 --- !u!114 &2603859344292933213
 MonoBehaviour:
   m_ObjectHideFlags: 0
