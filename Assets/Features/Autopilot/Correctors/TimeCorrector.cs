@@ -6,18 +6,18 @@ namespace Perrinn424.AutopilotSystem
     [Serializable]
     public class TimeCorrector : Corrector
     {
-        public Vector3 axis;
-        public void Correct(float currentTime, float targetTime)
+        private const float errorThreshold = 10f;
+        public void Correct(float targetTime, float currentTime)
         {
             UpdatePIDSettings();
 
-            Error =  currentTime - targetTime;
-            if (Mathf.Abs(Error) > 10f)
+            Error =  targetTime - currentTime;
+            if (Mathf.Abs(Error) > errorThreshold)
                 return;
 
             PID.input = Error;
             PID.Compute();
-            Vector3 localForce = axis * PID.output;
+            Vector3 localForce = Vector3.forward * PID.output;
 
             Force = rb.transform.TransformVector(localForce);
 

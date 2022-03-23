@@ -106,7 +106,7 @@ namespace Perrinn424.AutopilotSystem
                 lateralCorrector.Correct(targetPosition); // why it doesn't work with nearestInterpolatedSample.position
 
                 float currentTime = timer.currentLapTime;
-                timeCorrector.Correct(currentTime, PlayingTime());
+                timeCorrector.Correct(PlayingTime(), currentTime);
                 runningSample = nearestInterpolatedSample;
                 //forwardCorrector.Correct(segmentSearcher.ProjectedPosition);
                 //WriteInput(nearestInterpolatedSample);

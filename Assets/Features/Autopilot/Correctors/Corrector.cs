@@ -7,6 +7,7 @@ namespace Perrinn424.AutopilotSystem
     [Serializable]
     public abstract class Corrector
     {
+        public bool enabled = true;
         public float kp;
         public float ki;
         public float kd;
@@ -29,8 +30,8 @@ namespace Perrinn424.AutopilotSystem
         {
             PID.SetParameters(kp, ki, kd);
             PID.limitedOutput = true;
-            PID.maxOutput = max;
-            PID.minOutput = -max;
+            PID.maxOutput = enabled ? max : 0;
+            PID.minOutput = enabled ? -max : 0;
             PID.proportionalMode = mode;
         }
     } 

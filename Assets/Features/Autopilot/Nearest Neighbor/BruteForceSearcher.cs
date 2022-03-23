@@ -2,37 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BruteForceSearcher
+namespace Perrinn424.AutopilotSystem
 {
-    private readonly IReadOnlyList<Vector3> path;
-
-    public BruteForceSearcher(IReadOnlyList<Vector3> path)
+    public class BruteForceSearcher
     {
-        this.path = path;
-    }
+        private readonly IReadOnlyList<Vector3> path;
 
-    public (int, float) Search(Vector3 position)
-    {
-        return Search(position, 0, path.Count, 1);
-    }
-
-    public (int, float) Search(Vector3 position, int from, int count, int step)
-    {
-        float sqrtDistance = Mathf.Infinity;
-
-        CircularIndex circularIndex = new CircularIndex(path.Count);
-        int closestIndex = -1;
-        for (int i = 0; i < count; i = i + step)
+        public BruteForceSearcher(IReadOnlyList<Vector3> path)
         {
-            circularIndex.Assign(from + i);
-            float tempDistance = (position - path[circularIndex]).sqrMagnitude;
-            if (tempDistance < sqrtDistance)
-            {
-                sqrtDistance = tempDistance;
-                closestIndex = circularIndex;
-            }
+            this.path = path;
         }
 
-        return (closestIndex, Mathf.Sqrt(sqrtDistance));
-    }
+        public (int, float) Search(Vector3 position)
+        {
+            return Search(position, 0, path.Count, 1);
+        }
+
+        public (int, float) Search(Vector3 position, int from, int count, int step)
+        {
+            float sqrtDistance = Mathf.Infinity;
+
+            CircularIndex circularIndex = new CircularIndex(path.Count);
+            int closestIndex = -1;
+            for (int i = 0; i < count; i = i + step)
+            {
+                circularIndex.Assign(from + i);
+                float tempDistance = (position - path[circularIndex]).sqrMagnitude;
+                if (tempDistance < sqrtDistance)
+                {
+                    sqrtDistance = tempDistance;
+                    closestIndex = circularIndex;
+                }
+            }
+
+            return (closestIndex, Mathf.Sqrt(sqrtDistance));
+        }
+    } 
 }

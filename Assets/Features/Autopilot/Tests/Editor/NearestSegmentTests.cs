@@ -66,7 +66,7 @@ public class NearestSegmentTests
     [Test]
     public void HeuristicNNTest()
     {
-        HeuristicNN heuristic = new HeuristicNN(path, 10, 10);
+        HeuristicNearestNeighbor heuristic = new HeuristicNearestNeighbor(path, 10, 10);
         FullTest(heuristic.Search);
     }
 
