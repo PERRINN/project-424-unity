@@ -31,10 +31,6 @@ namespace Perrinn424.AutopilotSystem
             Force = rb.transform.TransformVector(localForce);
 
             rb.AddForceAtPosition(Force, ApplicationPosition);
-
-            DebugGraph.Log("Error", errorVector);
-            DebugGraph.Log("LocalForce", localForce);
-            DebugGraph.Log("PIDOutput", PID.output);
         }
     } 
 }
