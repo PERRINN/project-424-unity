@@ -59,52 +59,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recordedLap: {fileID: 11400000, guid: 944e001102a46504bb013b77c65e6ada, type: 2}
-  lateralCorrector:
-    kp: 800000
-    ki: 0
-    kd: 10000
-    max: 100000
-    mode: 0
-    correctionAxis: {x: 1, y: 0, z: 0}
-    localApplicationPosition: {x: 0, y: 0.32, z: 0}
-  forwardCorrector:
-    kp: 600000
-    ki: 0
-    kd: 20000
-    max: 100000
-    mode: 0
-    correctionAxis: {x: 0, y: 0, z: 1}
-    localApplicationPosition: {x: 0, y: 0.32, z: 0}
-  timeCorrector:
-    kp: 100000
-    ki: 0
-    kd: 10000
-    max: 1000000
-    mode: 0
-    axis: {x: 0, y: 0, z: -1}
-  nearestInterpolatedSample:
-    position: {x: 233.3692, y: 120.32527, z: 2197.3928}
-    rotation: {x: -0.036375806, y: 0.38992146, z: -0.006634424, w: 0.92010546}
-    rawSteer: -209
-    rawThrottle: 4518
-    rawBrake: 6229
-    steeringAngle: -4.18
-    throttle: 0
-    brakePressure: 32.450176
-    automaticGear: 4
-  runningSample:
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0, w: 0}
-    rawSteer: 0
-    rawThrottle: 0
-    rawBrake: 0
-    steeringAngle: 0
-    throttle: 0
-    brakePressure: 0
-    automaticGear: 0
   timer: {fileID: 0}
+  pathDrawer: {fileID: 2603859344292933213}
   startup:
     lateralCorrector:
+      enabled: 1
       kp: 7000
       ki: 0
       kd: 10000
@@ -113,6 +72,7 @@ MonoBehaviour:
       correctionAxis: {x: 1, y: 0, z: 0}
       localApplicationPosition: {x: 0, y: 0.32, z: 0}
     rotationCorrector:
+      enabled: 1
       kp: 100
       ki: 0
       kd: 100
@@ -121,8 +81,32 @@ MonoBehaviour:
     speedPercentage: 0.904
     throttle: 0.577
     isStartUp: 1
-  pathDrawer: {fileID: 2603859344292933213}
-  targetPosition: {x: 2272.8044, y: 11.328716, z: -154.20924}
+    sample:
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 0}
+      rawSteer: 0
+      rawThrottle: 0
+      rawBrake: 0
+      steeringAngle: 0
+      throttle: 0
+      brakePressure: 0
+      automaticGear: 0
+  lateralCorrector:
+    enabled: 1
+    kp: 800000
+    ki: 0
+    kd: 13000
+    max: 100000
+    mode: 0
+    correctionAxis: {x: 1, y: 0, z: 0}
+    localApplicationPosition: {x: 0, y: 0.32, z: 0.5068393}
+  timeCorrector:
+    enabled: 0
+    kp: 100000
+    ki: 0
+    kd: 10000
+    max: 1000000
+    mode: 0
   offset: 0.45
 --- !u!114 &2603859344292933213
 MonoBehaviour:

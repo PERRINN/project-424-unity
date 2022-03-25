@@ -54,7 +54,7 @@ namespace Perrinn424.AutopilotSystem
 
         int closestFrame1, closestFrame2;
 
-
+        public Vector3 localForce;
         public override int GetUpdateOrder()
         {
             // Execute after input components (0) to override their input
@@ -146,6 +146,8 @@ namespace Perrinn424.AutopilotSystem
             appliedForceV3.x = edyPID.output * cosD * 1.000f;
             appliedForceV3.y = 0;
             appliedForceV3.z = edyPID.output * sinD * 1.000f;
+
+            localForce = transform.InverseTransformVector(appliedForceV3);
 
             //get recorded driver input
             (closestFrame1, closestFrame2) = GetAsMinMax(closestFrame1, closestFrame2);

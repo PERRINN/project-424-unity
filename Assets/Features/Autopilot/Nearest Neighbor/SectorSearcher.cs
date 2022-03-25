@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class SectorSearcher
+    public class SectorSearcher : INearestNeighbourSearcher
     {
         private readonly IReadOnlyList<Vector3> path;
         private BruteForceSearcher bruteForceSearcher;

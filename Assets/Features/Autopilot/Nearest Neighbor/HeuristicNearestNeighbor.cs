@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class HeuristicNearestNeighbor
+    public class HeuristicNearestNeighbor : INearestNeighbourSearcher
     {
         private readonly IReadOnlyList<Vector3> path;
         private int behind;

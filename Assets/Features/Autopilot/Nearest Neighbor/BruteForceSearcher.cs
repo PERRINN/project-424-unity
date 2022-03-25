@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class BruteForceSearcher
+    public class BruteForceSearcher : INearestNeighbourSearcher
     {
         private readonly IReadOnlyList<Vector3> path;
 

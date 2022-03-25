@@ -33,7 +33,7 @@ namespace Perrinn424.AutopilotSystem
 
 
         private Path path;
-        private NearestSegmentComposed segmentSearcher;
+        private NearestSegmentSearcher segmentSearcher;
 
         private Sample interpolatedSample;
         private Sample runningSample;
@@ -53,23 +53,18 @@ namespace Perrinn424.AutopilotSystem
         public override void OnEnableVehicle()
         {
             path = new Path(recordedLap);
-            segmentSearcher = new NearestSegmentComposed(path);
+            segmentSearcher = new NearestSegmentSearcher(path);
             lateralCorrector.Init(vehicle.cachedRigidbody);
             timeCorrector.Init(vehicle.cachedRigidbody);
 
             startup.Init(vehicle);
 
-            vehicle.onBeforeUpdateBlocks += WriteInputs;
+            vehicle.onBeforeUpdateBlocks += UpdateAutopilot;
         }
 
         public override void OnDisableVehicle()
         {
-            vehicle.onBeforeUpdateBlocks -= WriteInputs;
-        }
-
-        public void WriteInputs()
-        {
-            WriteInput(runningSample);
+            vehicle.onBeforeUpdateBlocks -= UpdateAutopilot;
         }
 
         public override float PlayingTime()
@@ -78,9 +73,9 @@ namespace Perrinn424.AutopilotSystem
             return (sampleIndex / recordedLap.frequency) - (offset/ vehicle.speed);
         }
 
-        public override void FixedUpdateVehicle()
+        public void UpdateAutopilot()
         {
-            segmentSearcher.Search(vehicle.transform);
+            segmentSearcher.Search(vehicle.transform.position);
             interpolatedSample = GetInterpolatedNearestSample();
             targetPosition = interpolatedSample.position;
 
@@ -107,6 +102,8 @@ namespace Perrinn424.AutopilotSystem
                 timeCorrector.Correct(PlayingTime(), currentTime);
                 runningSample = interpolatedSample;
             }
+
+            WriteInput(runningSample);
         }
 
         private Sample GetInterpolatedNearestSample()

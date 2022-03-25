@@ -22,7 +22,7 @@ public class AutopilotOptimizer : VehicleBehaviour
         public void Close()
         {
             string diffTimesStr = String.Join(";", diffTimes.Select(d => d.ToString("F4")));
-            result = String.Join(";", diffTimesStr, kp.ToString("F4"), kd.ToString("F4"), max.ToString("F4"));
+            result = $"{diffTimesStr:F4};{kp:F4};{kd:F4};{max:F4};{offset:F4}";
             result = result.Replace('.', ',');
         }
     }
@@ -32,19 +32,11 @@ public class AutopilotOptimizer : VehicleBehaviour
     public int lapsPerSample;
     public float timeScale;
 
-    private List<float> diff = new List<float>();
-
     public Sample[] samples;
     public int currentSampleIndex;
 
     public Sample CurrentSample => samples[currentSampleIndex];
 
-    //private void Awake()
-    //{
-    //    CurrentSample.diffTimes.Add(0.1f);
-    //    CurrentSample.diffTimes.Add(0.2f);
-    //    CurrentSample.Close();
-    //}
     public override void OnEnableVehicle()
     {
         Time.timeScale = timeScale;
@@ -83,4 +75,21 @@ public class AutopilotOptimizer : VehicleBehaviour
         }
     }
 
+    private void Reset()
+    {
+        lapTimer = FindObjectOfType<LapTimer>();
+        autopilot = this.GetComponent<Autopilot>();
+        lapsPerSample = 5;
+        timeScale = 50;
+        Sample s = new Sample
+        {
+            diffTimes = new List<float>(),
+            kp = autopilot.lateralCorrector.kp,
+            kd = autopilot.lateralCorrector.kd,
+            max = autopilot.lateralCorrector.max,
+            offset = autopilot.offset
+        };
+
+        samples = new Sample[] { s };
+    }
 }

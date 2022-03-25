@@ -16,8 +16,20 @@ namespace Perrinn424.AutopilotSystem
 
         public int EndIndex { get; private set; }
 
-        public void Search(Vector3 position)
+        public Vector3 Start => path[StartIndex];
+
+        public Vector3 End => path[EndIndex];
+
+        public Vector3 Segment => End - Start;
+
+        public Vector3 ProjectedPosition => throw new System.NotImplementedException();
+
+        public float Ratio => throw new System.NotImplementedException();
+
+        public void Search(Transform t)
         {
+
+            Vector3 position = t.position;
             float sqrtDistance = Mathf.Infinity;
 
             CircularIndex closestIndex = new CircularIndex(path.Count);

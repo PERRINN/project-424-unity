@@ -13,12 +13,12 @@ namespace Perrinn424.UI
         private Text text = default;
 
         [SerializeField]
-        private Autopilot autopilotProvider;
+        private Autopilot autopilot;
 
         private void OnEnable()
         {
             TimeFormatter timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"m\:ss\.fff", @"m\:ss\.fff");
-            string duration = timeFormatter.ToString(autopilotProvider.CalculateDuration());
+            string duration = timeFormatter.ToString(autopilot.CalculateDuration());
             text.text = $"Ref {duration}";
 
         }
