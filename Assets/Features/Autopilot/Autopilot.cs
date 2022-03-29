@@ -38,10 +38,8 @@ namespace Perrinn424.AutopilotSystem
         private HeuristicNearestNeighbor heuristicNN;
         private SectorSearcherNearestNeighbor sectorNN;
 
-        private Sample interpolatedSample;
-        private Sample runningSample;
-        private Vector3 targetPosition;
 
+        private AutopilotDebugDrawer debugDrawer;
         public float CalculateDuration()
         {
             return recordedLap.lapTime;
@@ -55,19 +53,19 @@ namespace Perrinn424.AutopilotSystem
 
         public override void OnEnableVehicle()
         {
-            path = new Path(recordedLap);
 
             CreateSearchers();
             lateralCorrector.Init(vehicle.cachedRigidbody);
             timeCorrector.Init(vehicle.cachedRigidbody);
-
             startup.Init(vehicle);
+            debugDrawer = new AutopilotDebugDrawer();
 
             vehicle.onBeforeUpdateBlocks += UpdateAutopilot;
         }
 
         private void CreateSearchers()
         {
+            path = new Path(recordedLap);
             sectorNN = new SectorSearcherNearestNeighbor(path, 2, 10);
             int lookBehind = (int)(1f * recordedLap.frequency); //seconds to samples
             int lookAhead = (int)(2f * recordedLap.frequency); //seconds to samples
@@ -97,26 +95,23 @@ namespace Perrinn424.AutopilotSystem
         private void UpdateAutopilotInOnStatus()
         {
             segmentSearcher.Search(vehicle.transform);
-            interpolatedSample = GetInterpolatedNearestSample();
             pathDrawer.index = segmentSearcher.StartIndex;
+            Sample runningSample = GetInterpolatedNearestSample();
+            Vector3 targetPosition = segmentSearcher.ProjectedPosition;
 
             float expectedSpeed = segmentSearcher.Segment.magnitude * recordedLap.frequency;
             if (startup.IsStartup(expectedSpeed)) //startup block
             {
-                targetPosition = interpolatedSample.position;
-                Sample startupSample = startup.Correct(interpolatedSample);
-                runningSample = startupSample;
+                runningSample = startup.Correct(runningSample);
             }
             else //main block
             {
-                targetPosition = segmentSearcher.ProjectedPosition;
                 lateralCorrector.Correct(targetPosition);
-
                 float currentTime = timer.currentLapTime;
                 timeCorrector.Correct(PlayingTime(), currentTime);
-                runningSample = interpolatedSample;
             }
 
+            debugDrawer.Set(targetPosition, lateralCorrector.ApplicationPosition, lateralCorrector.Force);
             WriteInput(runningSample);
         }
 
@@ -164,10 +159,7 @@ namespace Perrinn424.AutopilotSystem
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.blue;
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(targetPosition, 0.05f*10);
-            Gizmos.DrawRay(lateralCorrector.ApplicationPosition, lateralCorrector.Force);
+            debugDrawer.Draw();
         }
 
 
