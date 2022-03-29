@@ -32,24 +32,12 @@ namespace Perrinn424.AutopilotSystem
         public float positionOffset = 0.9f;
 
 
-
         private Path path;
         private INearestSegmentSearcher segmentSearcher;
         private HeuristicNearestNeighbor heuristicNN;
         private SectorSearcherNearestNeighbor sectorNN;
 
-
         private AutopilotDebugDrawer debugDrawer;
-        public float CalculateDuration()
-        {
-            return recordedLap.lapTime;
-        }
-
-        public override int GetUpdateOrder()
-        {
-            return 10;
-        }
-
 
         public override void OnEnableVehicle()
         {
@@ -63,6 +51,11 @@ namespace Perrinn424.AutopilotSystem
             vehicle.onBeforeUpdateBlocks += UpdateAutopilot;
         }
 
+        public override void OnDisableVehicle()
+        {
+            vehicle.onBeforeUpdateBlocks -= UpdateAutopilot;
+        }
+
         private void CreateSearchers()
         {
             path = new Path(recordedLap);
@@ -72,11 +65,6 @@ namespace Perrinn424.AutopilotSystem
             heuristicNN = new HeuristicNearestNeighbor(path, lookBehind, lookAhead, 4);
             IProjector crossProductProjector = new CrossProductProjector();
             segmentSearcher = new NearestSegmentComposed(heuristicNN, crossProductProjector, path);
-        }
-
-        public override void OnDisableVehicle()
-        {
-            vehicle.onBeforeUpdateBlocks -= UpdateAutopilot;
         }
 
         public void UpdateAutopilot()
@@ -126,7 +114,6 @@ namespace Perrinn424.AutopilotSystem
             float playingTimeBySampleIndex = sampleIndex / recordedLap.frequency;
             float offset = vehicle.speed > 10f ? positionOffset / vehicle.speed : 0f;
             return playingTimeBySampleIndex - offset;
-
         }
 
         protected override void SetStatus(bool isOn)
@@ -157,11 +144,15 @@ namespace Perrinn424.AutopilotSystem
             vehicle.data.Set(Channel.Input, InputData.AutomaticGear, s.automaticGear);
         }
 
+        public float CalculateDuration()
+        {
+            return recordedLap.lapTime;
+        }
+
         private void OnDrawGizmos()
         {
             debugDrawer.Draw();
         }
-
 
         public override float Error => lateralCorrector.Error;
         public override float P => lateralCorrector.PID.proportional;
