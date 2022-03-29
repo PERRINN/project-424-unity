@@ -33,6 +33,7 @@ public class WaitForNewError : CustomYieldInstruction
 public class TwiddleEnumerator
 {
     public float[] parameters;
+    public float[] bestParameters;
     public float[] delta;
     public float error;
     public float bestError;
@@ -61,6 +62,7 @@ public class TwiddleEnumerator
                     Debug.Log("Best");
                     Debug.Log(this.ToString());
                     bestError = error;
+                    bestParameters = parameters.ToArray();
                     delta[i] *= 1.1f;
                 }
                 else //there was no improvement
@@ -74,6 +76,7 @@ public class TwiddleEnumerator
                         Debug.Log("Best");
                         Debug.Log(this.ToString());
                         bestError = error;
+                        bestParameters = parameters.ToArray();
                         delta[i] *= 1.05f;
                     }
                     else

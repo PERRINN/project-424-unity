@@ -8,8 +8,8 @@ namespace Perrinn424.AutopilotSystem
         private readonly IReadOnlyList<Vector3> path;
         private int behind;
         private int ahead;
-        private int lastIndex;
-        private float lastDistance;
+        //private int lastIndex;
+        //private float lastDistance;
         private float tolerance = 4;
 
         private BruteForceSearcher bruteForceSearcher;
@@ -23,19 +23,31 @@ namespace Perrinn424.AutopilotSystem
             bruteForceSearcher = new BruteForceSearcher(path);
         }
 
-        public (int, float) Search(Vector3 position)
+        public int Index { get; private set; }
+
+        public float Distance { get; private set; }
+
+        public Vector3 Position { get; private set; }
+
+        public void Search(Vector3 position)
         {
-            (int nn, float distance) = bruteForceSearcher.Search(position, lastIndex - behind, behind + ahead, 1);
+            (int nn, float distance) = bruteForceSearcher.SearchInBoundaries(position, Index - behind, behind + ahead, 1);
 
             if (distance > tolerance)
             {
 
-                (nn, distance) = bruteForceSearcher.Search(position);
+                (nn, distance) = bruteForceSearcher.SearchInBoundaries(position);
             }
 
-            lastIndex = nn;
-            lastDistance = distance;
-            return (nn, distance);
+
+            Index = nn;
+            Distance = distance;
+            Position = path[Index];
+        }
+
+        public void SetHeuristicIndex(int heuristicIndex)
+        {
+            Index = heuristicIndex;
         }
     } 
 }

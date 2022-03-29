@@ -4,7 +4,9 @@ namespace Perrinn424.AutopilotSystem
 {
     public interface INearestNeighbourSearcher
     {
-        (int, float) Search(Vector3 position);
-
+        int Index { get; }
+        float Distance { get; }
+        Vector3 Position { get; }
+        void  Search(Vector3 position);
     }
 }

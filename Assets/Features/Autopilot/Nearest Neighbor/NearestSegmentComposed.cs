@@ -21,10 +21,10 @@ namespace Perrinn424.AutopilotSystem
 
         public void Search(Transform t)
         {
-            (int nn, _) = seacher.Search(t.position);
+            seacher.Search(t.position);
 
-            index.Assign(nn);
-            Vector3 wayPoint = path[nn];
+            index.Assign(seacher.Index);
+            Vector3 wayPoint = seacher.Position;
 
             Vector3 localWaypoint = t.transform.InverseTransformPoint(wayPoint);
 

@@ -27,7 +27,7 @@ namespace Perrinn424.AutopilotSystem
                 nearestSearcher = new NearestSegmentSearcher(this);
             }
 
-            nearestSearcher.Search(this.transform.position);
+            nearestSearcher.Search(this.transform);
             ratio = nearestSearcher.Ratio;
             distance = nearestSearcher.Distance;
             rejectionDistance = nearestSearcher.RejectionDistance;

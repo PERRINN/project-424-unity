@@ -40,7 +40,7 @@ public class AutopilotDebug : MonoBehaviour
     {
         pid.SetParameters(kp, ki, kd);
 
-        segmentSearcher.Search(Position);
+        segmentSearcher.Search(rb.transform);
         Sample sample = Sample.Lerp(lap[segmentSearcher.StartIndex], lap[segmentSearcher.EndIndex], segmentSearcher.Ratio);
         Vector3 distanceError = Position - sample.position;
 

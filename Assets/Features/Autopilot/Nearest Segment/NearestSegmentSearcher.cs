@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class NearestSegmentSearcher
+    public class NearestSegmentSearcher : INearestSegmentSearcher
     {
 
         private readonly IReadOnlyList<Vector3> path;
@@ -29,11 +29,11 @@ namespace Perrinn424.AutopilotSystem
 
         public int Operations { get; private set; }
 
-        public void Search(Vector3 position)
+        public void Search(Transform t)
         {
 
-            SearchNearest(position);
-            UpdateValues(position);
+            SearchNearest(t.position);
+            UpdateValues(t.position);
         }
 
         private void SearchNearest(Vector3 position)

@@ -50,7 +50,7 @@ public class AutopilotOptimizer : VehicleBehaviour
         autopilot.lateralCorrector.kp = CurrentSample.kp;
         autopilot.lateralCorrector.kd = CurrentSample.kd;
         autopilot.lateralCorrector.max = CurrentSample.max;
-        autopilot.offset = CurrentSample.offset;
+        autopilot.positionOffset = CurrentSample.offset;
     }
 
     public override void OnDisableVehicle()
@@ -87,7 +87,7 @@ public class AutopilotOptimizer : VehicleBehaviour
             kp = autopilot.lateralCorrector.kp,
             kd = autopilot.lateralCorrector.kd,
             max = autopilot.lateralCorrector.max,
-            offset = autopilot.offset
+            offset = autopilot.positionOffset
         };
 
         samples = new Sample[] { s };

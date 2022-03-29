@@ -32,7 +32,7 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
         [Test]
         public void SectorSearcherTest()
         {
-            SectorSearcher sectorSearcher = new SectorSearcher(path);
+            SectorSearcherNearestNeighbor sectorSearcher = new SectorSearcherNearestNeighbor(path);
             Debug.Log($"Sector Size: {sectorSearcher.SectorSize}");
             FullTest(sectorSearcher);
             RandomTest(sectorSearcher);
@@ -62,11 +62,11 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
                 float testDistance = Mathf.Min(distPrev, distNext) * 0.4f;
 
                 targetPos = targetPos + Random.insideUnitSphere * testDistance;
-                (int nnIndex, float distance) = searcher.Search(targetPos);
-                string errorMsg = $"The nearest neighbor of {targetPos} is {path[i]} (dist: {Vector3.Distance(targetPos, path[i])}), not {path[nnIndex]} (dist: {distance})";
-                Assert.That(i, Is.EqualTo(nnIndex), errorMsg);
+                searcher.Search(targetPos);
+                string errorMsg = $"The nearest neighbor of {targetPos} is {path[i]} (dist: {Vector3.Distance(targetPos, path[i])}), not {searcher.Position} (dist: {searcher.Distance})";
+                Assert.That(i, Is.EqualTo(searcher.Index), errorMsg);
                 float tolerance = 1.0e-2f;
-                Assert.That(distance, Is.LessThanOrEqualTo(testDistance + tolerance));
+                Assert.That(searcher.Distance, Is.LessThanOrEqualTo(testDistance + tolerance));
             }
         }
 
@@ -78,9 +78,9 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
             for (int i = 0; i < testCount; i++)
             {
                 Vector3 randomPosition = Vector3.Scale(Random.insideUnitSphere, bounds.size * 1.2f) + bounds.center;
-                (int nnBruteForceResult, _) = bruteForce.Search(randomPosition);
-                (int nnSearcherResult, _) = searcher.Search(randomPosition);
-                Assert.That(nnSearcherResult, Is.EqualTo(nnSearcherResult));
+                bruteForce.Search(randomPosition);
+                searcher.Search(randomPosition);
+                Assert.That(searcher.Index, Is.EqualTo(bruteForce.Index));
             }
 
         }

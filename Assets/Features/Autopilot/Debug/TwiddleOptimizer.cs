@@ -15,6 +15,7 @@ public class TwiddleOptimizer : VehicleBehaviour
     public float timeScale;
     public float maxIter = 1;
     public float[] parameters;
+    public float[] bestParameters;
     public float[] delta;
 
     public bool firstLap = true;
@@ -61,7 +62,7 @@ public class TwiddleOptimizer : VehicleBehaviour
         //autopilot.lateralCorrector.kp = twiddleEnumerator.parameters[0];
         //autopilot.lateralCorrector.kd = twiddleEnumerator.parameters[1];
         Vector3 local = autopilot.lateralCorrector.localApplicationPosition;
-        local.z = twiddleEnumerator.parameters[0];
+        local.y = twiddleEnumerator.parameters[0];
         autopilot.lateralCorrector.localApplicationPosition = local;
     }
 }

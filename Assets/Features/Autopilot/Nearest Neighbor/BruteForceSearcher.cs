@@ -13,12 +13,20 @@ namespace Perrinn424.AutopilotSystem
             this.path = path;
         }
 
-        public (int, float) Search(Vector3 position)
+        public void Search(Vector3 position)
         {
-            return Search(position, 0, path.Count, 1);
+            (int index, float distance) = SearchInBoundaries(position);
+            Index = index;
+            Distance = distance;
+            Position = path[Index];
         }
 
-        public (int, float) Search(Vector3 position, int from, int count, int step)
+        public (int, float) SearchInBoundaries(Vector3 position)
+        {
+            return SearchInBoundaries(position, 0, path.Count, 1);
+        }
+
+        public (int, float) SearchInBoundaries(Vector3 position, int from, int count, int step)
         {
             float sqrtDistance = Mathf.Infinity;
 
@@ -37,5 +45,12 @@ namespace Perrinn424.AutopilotSystem
 
             return (closestIndex, Mathf.Sqrt(sqrtDistance));
         }
+
+
+        public int Index { get; private set; }
+
+        public float Distance { get; private set; }
+
+        public Vector3 Position { get; private set; }
     } 
 }

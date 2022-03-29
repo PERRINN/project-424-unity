@@ -26,6 +26,7 @@ namespace Perrinn424.AutopilotSystem
 
         public float Ratio => throw new System.NotImplementedException();
 
+
         public void Search(Transform t)
         {
 
@@ -55,5 +56,9 @@ namespace Perrinn424.AutopilotSystem
             EndIndex = closestIndex + 1;
         }
 
+        public void Search(Vector3 position)
+        {
+            throw new System.NotImplementedException();
+        }
     } 
 }

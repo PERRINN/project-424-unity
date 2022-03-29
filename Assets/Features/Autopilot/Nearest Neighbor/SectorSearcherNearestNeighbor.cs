@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class SectorSearcher : INearestNeighbourSearcher
+    public class SectorSearcherNearestNeighbor : INearestNeighbourSearcher
     {
         private readonly IReadOnlyList<Vector3> path;
         private BruteForceSearcher bruteForceSearcher;
@@ -11,14 +11,14 @@ namespace Perrinn424.AutopilotSystem
 
         public int SectorSize => sectorSize;
 
-        public SectorSearcher(IReadOnlyList<Vector3> path)
+        public SectorSearcherNearestNeighbor(IReadOnlyList<Vector3> path)
         {
             this.path = path;
             bruteForceSearcher = new BruteForceSearcher(path);
             sectorSize = Mathf.CeilToInt(Mathf.Sqrt(path.Count));
         }
 
-        public (int, float) Search(Vector3 position)
+        public void Search(Vector3 position)
         {
             (int nnSector, int searchedSectorSize) = SearchNearestSector(position, sectorSize, 4, 0);
             //(int nnSector, int searchedSectorSize) = SearchNearestSector(position);
@@ -28,7 +28,11 @@ namespace Perrinn424.AutopilotSystem
             int count = sectorSize + 2 * securityMargin * searchedSectorSize; //searchSize/2 to the left, searchSize/2 to the right, and +1 because of the middle point
             int step = 1;
 
-            return bruteForceSearcher.Search(position, from, count, step);
+            (int index, float distance) = bruteForceSearcher.SearchInBoundaries(position, from, count, step);
+
+            Index = index;
+            Distance = distance;
+            Position = path[Index];
         }
 
         //private (int, int) SearchNearestSector(Vector3 position)
@@ -55,18 +59,18 @@ namespace Perrinn424.AutopilotSystem
         private (int, int) SearchNearestSector(Vector3 position)
         {
             int searchSize = sectorSize;
-            (int nearestSector, float distance) = bruteForceSearcher.Search(position, 0, path.Count, searchSize);
+            (int nearestSector, float distance) = bruteForceSearcher.SearchInBoundaries(position, 0, path.Count, searchSize);
 
             if (distance > 4f)
             {
                 searchSize = (searchSize / 2) + 1;
-                (nearestSector, distance) = bruteForceSearcher.Search(position, 0, path.Count, searchSize);
+                (nearestSector, distance) = bruteForceSearcher.SearchInBoundaries(position, 0, path.Count, searchSize);
             }
 
             if (distance > 4f)
             {
                 searchSize = (searchSize / 2) + 1;
-                (nearestSector, distance) = bruteForceSearcher.Search(position, 0, path.Count, searchSize);
+                (nearestSector, distance) = bruteForceSearcher.SearchInBoundaries(position, 0, path.Count, searchSize);
             }
 
             return (nearestSector, searchSize);
@@ -74,7 +78,7 @@ namespace Perrinn424.AutopilotSystem
 
         private (int, int) SearchNearestSector(Vector3 position, int searchSize, float tolerance, int depth)
         {
-            (int nearestSector, float distance) = bruteForceSearcher.Search(position, 0, path.Count, searchSize);
+            (int nearestSector, float distance) = bruteForceSearcher.SearchInBoundaries(position, 0, path.Count, searchSize);
 
             if (distance > tolerance && depth <= 2)
             {
@@ -98,5 +102,11 @@ namespace Perrinn424.AutopilotSystem
             //}
 
         }
+
+        public int Index { get; private set; }
+
+        public float Distance { get; private set; }
+
+        public Vector3 Position { get; private set; }
     } 
 }

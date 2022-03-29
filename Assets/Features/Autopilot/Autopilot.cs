@@ -28,12 +28,15 @@ namespace Perrinn424.AutopilotSystem
         [SerializeField]
         private TimeCorrector timeCorrector;
 
-        public float offset = 0.9f;
+        [FormerlySerializedAs("offset")]
+        public float positionOffset = 0.9f;
 
 
 
         private Path path;
-        private NearestSegmentSearcher segmentSearcher;
+        private INearestSegmentSearcher segmentSearcher;
+        private HeuristicNearestNeighbor heuristicNN;
+        private SectorSearcherNearestNeighbor sectorNN;
 
         private Sample interpolatedSample;
         private Sample runningSample;
@@ -53,7 +56,12 @@ namespace Perrinn424.AutopilotSystem
         public override void OnEnableVehicle()
         {
             path = new Path(recordedLap);
-            segmentSearcher = new NearestSegmentSearcher(path);
+            //segmentSearcher = new NearestSegmentSearcher(path);
+
+            sectorNN = new SectorSearcherNearestNeighbor(path);
+            heuristicNN = new HeuristicNearestNeighbor(path, 10, 10);
+            IProjector crossProductProjector = new CrossProductProjector();
+            segmentSearcher = new NearestSegmentComposed(heuristicNN, crossProductProjector, path);
             lateralCorrector.Init(vehicle.cachedRigidbody);
             timeCorrector.Init(vehicle.cachedRigidbody);
 
@@ -67,33 +75,33 @@ namespace Perrinn424.AutopilotSystem
             vehicle.onBeforeUpdateBlocks -= UpdateAutopilot;
         }
 
-        public override float PlayingTime()
-        {
-            float sampleIndex = segmentSearcher.StartIndex + segmentSearcher.Ratio;
-            return (sampleIndex / recordedLap.frequency) - (offset/ vehicle.speed);
-        }
-
         public void UpdateAutopilot()
         {
-            segmentSearcher.Search(vehicle.transform.position);
-            interpolatedSample = GetInterpolatedNearestSample();
-            targetPosition = interpolatedSample.position;
-
-            if (!IsOn)
+            if (IsOn)
             {
-                return;
+                UpdateAutopilotInOnStatus();
             }
+            else
+            {
+                UpdateAutopilotInOffStatus();
+            }
+        }
 
-            float expectedSpeed = segmentSearcher.Segment.magnitude * recordedLap.frequency;
 
+        private void UpdateAutopilotInOnStatus()
+        {
+            segmentSearcher.Search(vehicle.transform);
+            interpolatedSample = GetInterpolatedNearestSample();
             pathDrawer.index = segmentSearcher.StartIndex;
 
-            if (startup.IsStartup(expectedSpeed))
+            float expectedSpeed = segmentSearcher.Segment.magnitude * recordedLap.frequency;
+            if (startup.IsStartup(expectedSpeed)) //startup block
             {
+                targetPosition = interpolatedSample.position;
                 Sample startupSample = startup.Correct(interpolatedSample);
                 runningSample = startupSample;
             }
-            else
+            else //main block
             {
                 targetPosition = segmentSearcher.ProjectedPosition;
                 lateralCorrector.Correct(targetPosition);
@@ -104,6 +112,30 @@ namespace Perrinn424.AutopilotSystem
             }
 
             WriteInput(runningSample);
+        }
+
+        private void UpdateAutopilotInOffStatus()
+        {
+            sectorNN.Search(this.transform.position);
+        }
+
+        public override float PlayingTime()
+        {
+            float sampleIndex = IsOn ? (segmentSearcher.StartIndex + segmentSearcher.Ratio) : sectorNN.Index;
+            float playingTimeBySampleIndex = sampleIndex / recordedLap.frequency;
+            float offset = vehicle.speed > 10f ? positionOffset / vehicle.speed : 0f;
+            return playingTimeBySampleIndex - offset;
+
+        }
+
+        protected override void SetStatus(bool isOn)
+        {
+            if (isOn)
+            {
+                heuristicNN.SetHeuristicIndex(sectorNN.Index);
+            }
+
+            base.SetStatus(isOn);
         }
 
         private Sample GetInterpolatedNearestSample()

@@ -26,9 +26,9 @@ namespace Perrinn424.AutopilotSystem
             SetStatus(!IsOn);
         }
 
-        protected void SetStatus(bool status)
+        protected virtual void SetStatus(bool isOn)
         {
-            IsOn = status;
+            IsOn = isOn;
             OnStatusChanged?.Invoke(IsOn);
         }
 
