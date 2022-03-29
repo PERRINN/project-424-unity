@@ -14,7 +14,7 @@ namespace Perrinn424.AutopilotSystem
         void Start()
         {
             Path path = new Path(lap);
-            HeuristicNearestNeighbor nnSearcher = new HeuristicNearestNeighbor(path, 100, 100);
+            HeuristicNearestNeighbor nnSearcher = new HeuristicNearestNeighbor(path, 100, 100, 4);
             LocalCoordinatesProjector projector = new LocalCoordinatesProjector();
             searcher = new NearestSegmentComposed(nnSearcher, projector, path);
         }

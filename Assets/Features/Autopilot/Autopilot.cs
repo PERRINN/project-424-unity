@@ -56,18 +56,24 @@ namespace Perrinn424.AutopilotSystem
         public override void OnEnableVehicle()
         {
             path = new Path(recordedLap);
-            //segmentSearcher = new NearestSegmentSearcher(path);
 
-            sectorNN = new SectorSearcherNearestNeighbor(path, 2, 10);
-            heuristicNN = new HeuristicNearestNeighbor(path, 10, 10);
-            IProjector crossProductProjector = new CrossProductProjector();
-            segmentSearcher = new NearestSegmentComposed(heuristicNN, crossProductProjector, path);
+            CreateSearchers();
             lateralCorrector.Init(vehicle.cachedRigidbody);
             timeCorrector.Init(vehicle.cachedRigidbody);
 
             startup.Init(vehicle);
 
             vehicle.onBeforeUpdateBlocks += UpdateAutopilot;
+        }
+
+        private void CreateSearchers()
+        {
+            sectorNN = new SectorSearcherNearestNeighbor(path, 2, 10);
+            int lookBehind = (int)(1f * recordedLap.frequency); //seconds to samples
+            int lookAhead = (int)(2f * recordedLap.frequency); //seconds to samples
+            heuristicNN = new HeuristicNearestNeighbor(path, lookBehind, lookAhead, 4);
+            IProjector crossProductProjector = new CrossProductProjector();
+            segmentSearcher = new NearestSegmentComposed(heuristicNN, crossProductProjector, path);
         }
 
         public override void OnDisableVehicle()

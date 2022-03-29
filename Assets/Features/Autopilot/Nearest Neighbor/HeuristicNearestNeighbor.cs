@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
@@ -8,17 +9,16 @@ namespace Perrinn424.AutopilotSystem
         private readonly IReadOnlyList<Vector3> path;
         private int behind;
         private int ahead;
-        //private int lastIndex;
-        //private float lastDistance;
-        private float tolerance = 4;
+        private readonly float tolerance = 4;
 
         private BruteForceSearcher bruteForceSearcher;
 
-        public HeuristicNearestNeighbor(IReadOnlyList<Vector3> path, int behind, int ahead)
+        public HeuristicNearestNeighbor(IReadOnlyList<Vector3> path, int behind, int ahead, float tolerance)
         {
             this.path = path;
             this.behind = behind;
             this.ahead = ahead;
+            this.tolerance = tolerance;
 
             bruteForceSearcher = new BruteForceSearcher(path);
         }
@@ -35,10 +35,8 @@ namespace Perrinn424.AutopilotSystem
 
             if (distance > tolerance)
             {
-
-                (nn, distance) = bruteForceSearcher.SearchInBoundaries(position);
+                throw new InvalidOperationException($"Waypoint closest to {tolerance} meters not found");
             }
-
 
             Index = nn;
             Distance = distance;

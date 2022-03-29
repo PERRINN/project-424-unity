@@ -42,7 +42,7 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
         [Test]
         public void HeuristicNNTest()
         {
-            HeuristicNearestNeighbor heuristic = new HeuristicNearestNeighbor(path, 10, 10);
+            HeuristicNearestNeighbor heuristic = new HeuristicNearestNeighbor(path, 10, 10, 4);
             FullTest(heuristic);
         }
 
