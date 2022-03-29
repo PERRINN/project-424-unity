@@ -32,7 +32,7 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
         [Test]
         public void SectorSearcherTest()
         {
-            SectorSearcherNearestNeighbor sectorSearcher = new SectorSearcherNearestNeighbor(path);
+            SectorSearcherNearestNeighbor sectorSearcher = new SectorSearcherNearestNeighbor(path, 2, 4);
             Debug.Log($"Sector Size: {sectorSearcher.SectorSize}");
             FullTest(sectorSearcher);
             RandomTest(sectorSearcher);

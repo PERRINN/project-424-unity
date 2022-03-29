@@ -58,7 +58,7 @@ namespace Perrinn424.AutopilotSystem
             path = new Path(recordedLap);
             //segmentSearcher = new NearestSegmentSearcher(path);
 
-            sectorNN = new SectorSearcherNearestNeighbor(path);
+            sectorNN = new SectorSearcherNearestNeighbor(path, 2, 10);
             heuristicNN = new HeuristicNearestNeighbor(path, 10, 10);
             IProjector crossProductProjector = new CrossProductProjector();
             segmentSearcher = new NearestSegmentComposed(heuristicNN, crossProductProjector, path);

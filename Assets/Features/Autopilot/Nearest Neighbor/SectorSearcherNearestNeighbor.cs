@@ -11,17 +11,21 @@ namespace Perrinn424.AutopilotSystem
 
         public int SectorSize => sectorSize;
 
-        public SectorSearcherNearestNeighbor(IReadOnlyList<Vector3> path)
+        private readonly int maxDepth;
+        private readonly float tolerance;
+
+        public SectorSearcherNearestNeighbor(IReadOnlyList<Vector3> path, int maxDepth, float tolerance)
         {
             this.path = path;
             bruteForceSearcher = new BruteForceSearcher(path);
             sectorSize = Mathf.CeilToInt(Mathf.Sqrt(path.Count));
+            this.maxDepth = maxDepth;
+            this.tolerance = tolerance;
         }
 
         public void Search(Vector3 position)
         {
-            (int nnSector, int searchedSectorSize) = SearchNearestSector(position, sectorSize, 4, 0);
-            //(int nnSector, int searchedSectorSize) = SearchNearestSector(position);
+            (int nnSector, int searchedSectorSize) = SearchNearestSector(position, sectorSize, tolerance, 0);
 
             int securityMargin = 3;
             int from = nnSector - Mathf.CeilToInt(searchedSectorSize / 2f) - securityMargin * searchedSectorSize;
@@ -35,72 +39,16 @@ namespace Perrinn424.AutopilotSystem
             Position = path[Index];
         }
 
-        //private (int, int) SearchNearestSector(Vector3 position)
-        //{
-        //    int searchSize = sectorSize;
-
-        //    (int nearestSector, float distance) = bruteForceSearcher.Search(position, 0, path.Count, searchSize);
-
-        //    if (distance > 4f)
-        //    {
-        //        searchSize = (searchSize / 2) + 1;
-        //        (nearestSector, distance) = bruteForceSearcher.Search(position, 0, path.Count, searchSize);
-        //    }
-
-        //    if (distance > 4f)
-        //    {
-        //        searchSize = (searchSize / 2) + 1;
-        //        (nearestSector, distance) = bruteForceSearcher.Search(position, 0, path.Count, searchSize);
-        //    }
-
-        //    return (nearestSector, searchSize);
-        //}
-
-        private (int, int) SearchNearestSector(Vector3 position)
-        {
-            int searchSize = sectorSize;
-            (int nearestSector, float distance) = bruteForceSearcher.SearchInBoundaries(position, 0, path.Count, searchSize);
-
-            if (distance > 4f)
-            {
-                searchSize = (searchSize / 2) + 1;
-                (nearestSector, distance) = bruteForceSearcher.SearchInBoundaries(position, 0, path.Count, searchSize);
-            }
-
-            if (distance > 4f)
-            {
-                searchSize = (searchSize / 2) + 1;
-                (nearestSector, distance) = bruteForceSearcher.SearchInBoundaries(position, 0, path.Count, searchSize);
-            }
-
-            return (nearestSector, searchSize);
-        }
-
         private (int, int) SearchNearestSector(Vector3 position, int searchSize, float tolerance, int depth)
         {
             (int nearestSector, float distance) = bruteForceSearcher.SearchInBoundaries(position, 0, path.Count, searchSize);
 
-            if (distance > tolerance && depth <= 2)
+            if (distance > tolerance && depth <= maxDepth)
             {
                 return SearchNearestSector(position, (searchSize / 2) + 1, tolerance, depth + 1);
             }
 
             return (nearestSector, searchSize);
-
-
-            //if (distance < tolerance)
-            //{
-            //    return (nearestSector, searchSize);
-            //}
-            //else if (depth <= 2) // maxDepth
-            //{
-            //    return SearchNearestSector(position, (searchSize / 2) + 1, tolerance, depth + 1);
-            //}
-            //else
-            //{
-            //    return (nearestSector, searchSize);
-            //}
-
         }
 
         public int Index { get; private set; }
