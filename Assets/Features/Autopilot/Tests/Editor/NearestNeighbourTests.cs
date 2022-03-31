@@ -33,9 +33,8 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
         public void SectorSearcherTest()
         {
             SectorSearcherNearestNeighbor sectorSearcher = new SectorSearcherNearestNeighbor(path, 2, 4);
-            Debug.Log($"Sector Size: {sectorSearcher.SectorSize}");
             FullTest(sectorSearcher);
-            RandomTest(sectorSearcher);
+            RandomTest(new SectorSearcherNearestNeighbor(path, 2, Mathf.Infinity));
         }
 
 
@@ -44,6 +43,13 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
         {
             HeuristicNearestNeighbor heuristic = new HeuristicNearestNeighbor(path, 10, 10, 4);
             FullTest(heuristic);
+        }
+
+        [Test]
+        public void AutopilotOffModeSearcherTest()
+        {
+            AutopilotOffModeSearcher autopilotOffMode = new AutopilotOffModeSearcher(path);
+            FullTest(autopilotOffMode);
         }
 
         private void FullTest(INearestNeighbourSearcher searcher)

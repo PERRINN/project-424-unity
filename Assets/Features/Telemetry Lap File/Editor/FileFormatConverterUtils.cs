@@ -174,6 +174,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                 sample.rawBrake = (int)(table[rowIndex, "RAWBRAKE"]);
                 sample.automaticGear = (int)(table[rowIndex, "AUTOMATICGEAR"]);
 
+                sample.gear = (int)table[rowIndex, "GEAR"];
                 sample.steeringAngle = table[rowIndex, "STEERINGANGLE"];
                 sample.throttle = table[rowIndex, "THROTTLE"];
                 sample.brakePressure = table[rowIndex, "BRAKEPRESSURE"];

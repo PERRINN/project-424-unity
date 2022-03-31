@@ -13,6 +13,7 @@ namespace Perrinn424.AutopilotSystem
         public int rawThrottle;
         public int rawBrake;
 
+        public int gear;
         public float steeringAngle;
         public float throttle;
         public float brakePressure;
@@ -25,13 +26,16 @@ namespace Perrinn424.AutopilotSystem
             {
                 position = Vector3.Lerp(a.position, b.position, t),
                 rotation = Quaternion.Lerp(a.rotation, b.rotation, t),
+                
                 rawSteer = IntLerp(a.rawSteer, b.rawSteer, t),
                 rawThrottle = IntLerp(a.rawThrottle, b.rawThrottle, t),
                 rawBrake = IntLerp(a.rawBrake, b.rawBrake, t),
+                automaticGear = a.automaticGear,
+                
                 steeringAngle = Mathf.Lerp(a.steeringAngle, b.steeringAngle, t),
                 throttle = Mathf.Lerp(a.throttle, b.throttle, t),
                 brakePressure = Mathf.Lerp(a.brakePressure, b.brakePressure, t),
-                automaticGear = a.automaticGear
+                gear = a.gear
             };
         }
 
@@ -41,13 +45,16 @@ namespace Perrinn424.AutopilotSystem
             {
                 position = Vector3.LerpUnclamped(a.position, b.position, t),
                 rotation = Quaternion.LerpUnclamped(a.rotation, b.rotation, t),
+                
                 rawSteer = IntLerpUncampled(a.rawSteer, b.rawSteer, t),
                 rawThrottle = IntLerpUncampled(a.rawThrottle, b.rawThrottle, t),
                 rawBrake = IntLerpUncampled(a.rawBrake, b.rawBrake, t),
+                automaticGear = a.automaticGear,
+                
                 steeringAngle = Mathf.LerpUnclamped(a.steeringAngle, b.steeringAngle, t),
                 throttle = Mathf.LerpUnclamped(a.throttle, b.throttle, t),
                 brakePressure = Mathf.LerpUnclamped(a.brakePressure, b.brakePressure, t),
-                automaticGear = a.automaticGear
+                gear = a.gear
             };
         }
 

@@ -7,9 +7,15 @@ namespace Perrinn424.AutopilotSystem
 {
     public class Autopilot : BaseAutopilot
     {
+        public enum InputType
+        {
+            Raw,
+            Processed
+        }
+
+
         [Header("References")]
-        [SerializeField]
-        private RecordedLap recordedLap;
+        public RecordedLap recordedLap;
 
         [SerializeField]
         private LapTimer timer;
@@ -19,6 +25,8 @@ namespace Perrinn424.AutopilotSystem
 
         [Header("Setup")]
 
+        public InputType inputType;
+        
         [SerializeField]
         private AutopilotStartup startup;
 
@@ -35,7 +43,7 @@ namespace Perrinn424.AutopilotSystem
         private Path path;
         private INearestSegmentSearcher segmentSearcher;
         private HeuristicNearestNeighbor heuristicNN;
-        private SectorSearcherNearestNeighbor sectorNN;
+        private AutopilotOffModeSearcher autopilotOffModeSearcher;
 
         private AutopilotDebugDrawer debugDrawer;
 
@@ -59,12 +67,12 @@ namespace Perrinn424.AutopilotSystem
         private void CreateSearchers()
         {
             path = new Path(recordedLap);
-            sectorNN = new SectorSearcherNearestNeighbor(path, 2, 10);
+            autopilotOffModeSearcher = new AutopilotOffModeSearcher(path);
             int lookBehind = (int)(1f * recordedLap.frequency); //seconds to samples
             int lookAhead = (int)(2f * recordedLap.frequency); //seconds to samples
             heuristicNN = new HeuristicNearestNeighbor(path, lookBehind, lookAhead, 4);
-            IProjector crossProductProjector = new CrossProductProjector();
-            segmentSearcher = new NearestSegmentComposed(heuristicNN, crossProductProjector, path);
+            IProjector projector = new CrossProductProjector();
+            segmentSearcher = new NearestSegmentComposed(heuristicNN, projector, path);
         }
 
         public void UpdateAutopilot()
@@ -105,12 +113,12 @@ namespace Perrinn424.AutopilotSystem
 
         private void UpdateAutopilotInOffStatus()
         {
-            sectorNN.Search(this.transform.position);
+            autopilotOffModeSearcher.Search(this.transform.position);
         }
 
         public override float PlayingTime()
         {
-            float sampleIndex = IsOn ? (segmentSearcher.StartIndex + segmentSearcher.Ratio) : sectorNN.Index;
+            float sampleIndex = IsOn ? (segmentSearcher.StartIndex + segmentSearcher.Ratio) : autopilotOffModeSearcher.Index;
             float playingTimeBySampleIndex = sampleIndex / recordedLap.frequency;
             float offset = vehicle.speed > 10f ? positionOffset / vehicle.speed : 0f;
             return playingTimeBySampleIndex - offset;
@@ -120,7 +128,7 @@ namespace Perrinn424.AutopilotSystem
         {
             if (isOn)
             {
-                heuristicNN.SetHeuristicIndex(sectorNN.Index);
+                heuristicNN.SetHeuristicIndex(autopilotOffModeSearcher.Index);
             }
 
             base.SetStatus(isOn);
@@ -131,17 +139,37 @@ namespace Perrinn424.AutopilotSystem
             Sample start = recordedLap[segmentSearcher.StartIndex];
             Sample end = recordedLap[segmentSearcher.EndIndex];
             float t = segmentSearcher.Ratio;
-            Sample interpolatedSample = Sample.LerpUncampled(start, end, t);
+            Sample interpolatedSample = Sample.Lerp(start, end, t);
             
             return interpolatedSample;
         }
 
+        //private void WriteInput(Sample s)
+        //{
+        //    vehicle.data.Set(Channel.Input, InputData.Steer, s.rawSteer);
+        //    vehicle.data.Set(Channel.Input, InputData.Throttle, s.rawThrottle);
+        //    vehicle.data.Set(Channel.Input, InputData.Brake, s.rawBrake);
+        //    vehicle.data.Set(Channel.Input, InputData.AutomaticGear, s.automaticGear);
+        //}
+
         private void WriteInput(Sample s)
         {
-            vehicle.data.Set(Channel.Input, InputData.Steer, s.rawSteer);
-            vehicle.data.Set(Channel.Input, InputData.Throttle, s.rawThrottle);
-            vehicle.data.Set(Channel.Input, InputData.Brake, s.rawBrake);
-            vehicle.data.Set(Channel.Input, InputData.AutomaticGear, s.automaticGear);
+            if (inputType == InputType.Raw)
+            {
+                vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 0);
+                vehicle.data.Set(Channel.Input, InputData.Steer, s.rawSteer);
+                vehicle.data.Set(Channel.Input, InputData.Throttle, s.rawThrottle);
+                vehicle.data.Set(Channel.Input, InputData.Brake, s.rawBrake);
+                vehicle.data.Set(Channel.Input, InputData.AutomaticGear, s.automaticGear);
+            }
+            else
+            {
+                vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 1);
+                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputSteerAngle, (int)(s.steeringAngle * 10000.0f));
+                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputMguThrottle, (int)(s.throttle * 100.0f));
+                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePressure, (int)(s.brakePressure * 10000.0f));
+                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, 1); //TODO
+            }
         }
 
         public float CalculateDuration()

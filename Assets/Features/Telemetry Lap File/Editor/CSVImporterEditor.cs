@@ -1,6 +1,7 @@
 ﻿using Perrinn424.AutopilotSystem;
 using System;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -46,12 +47,15 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     string recorededLapFilePath = $"Assets/Replays/{recordedLap.name}_autopilot.asset";
                     AssetDatabase.CreateAsset(recordedLap, recorededLapFilePath);
 
-                    if (EditorUtility.DisplayDialog("CSV Importer", $"CSV correctly created at {telemetryLapFilePath}. Do you want to use the replayassset at the autopilot?", "ok", "cancel"))
+                    if (EditorUtility.DisplayDialog("CSV Importer", $"CSV correctly created at {telemetryLapFilePath}. Do you want to use the replay assset at the autopilot?", "ok", "cancel"))
                     {
-                        AutopilotProvider provider = FindObjectOfType<AutopilotProvider>();
+                        Autopilot autopilot = FindObjectInSceneEvenIfIsDisabled<Autopilot>();
+                        autopilot.recordedLap = recordedLap;
+                        AutopilotProvider provider = FindObjectInSceneEvenIfIsDisabled<AutopilotProvider>();
                         provider.replayAsset = replayAsset;
-                        Selection.activeGameObject = provider.gameObject;
-                        Scene scene = provider.gameObject.scene;
+
+                        Selection.activeGameObject = autopilot.gameObject;
+                        Scene scene = autopilot.gameObject.scene;
                         EditorSceneManager.MarkSceneDirty(scene);
                         EditorSceneManager.SaveScene(scene);
                     }
@@ -67,5 +71,13 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                 }
             }
         }
+
+        private static T FindObjectInSceneEvenIfIsDisabled<T>() where T : UnityEngine.Object
+        {
+            T[] objects = Resources.FindObjectsOfTypeAll<T>();
+
+            return objects.First(o => !EditorUtility.IsPersistent(o)); //first object, enabled or disabled that it's on the scene
+        }
+
     } 
 }
