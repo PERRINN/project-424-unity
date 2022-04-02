@@ -1,4 +1,5 @@
 ﻿using Perrinn424.AutopilotSystem;
+using Perrinn424.TelemetryLapSystem;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
@@ -20,8 +21,18 @@ public class TwiddleOptimizer : VehicleBehaviour
 
     public bool firstLap = true;
 
+    public override void OnEnableVehicle()
+    {
+        vehicle.GetComponentInChildren<VPTelemetry>().gameObject.SetActive(false);
+        vehicle.GetComponentInChildren<TelemetryLapWriter>().gameObject.SetActive(false);
+        Time.timeScale = timeScale;
+        lapTimer.onLap += OnLapHandler;
+    }
+
     private IEnumerator Start()
     {
+        yield return null;
+        autopilot.ToggleStatus();
         waitForNewError = new WaitForNewError();
         twiddleEnumerator = new TwiddleEnumerator();
         twiddleEnumerator.parameters = parameters;
@@ -35,12 +46,9 @@ public class TwiddleOptimizer : VehicleBehaviour
 
     }
 
-    public override void OnEnableVehicle()
-    {
-        Time.timeScale = timeScale;
-        lapTimer.onLap += OnLapHandler;
-        autopilot.ToggleStatus();
-    }
+    
+
+
 
     private void OnLapHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
     {
@@ -61,8 +69,10 @@ public class TwiddleOptimizer : VehicleBehaviour
     {
         //autopilot.lateralCorrector.kp = twiddleEnumerator.parameters[0];
         //autopilot.lateralCorrector.kd = twiddleEnumerator.parameters[1];
+
+
         Vector3 local = autopilot.lateralCorrector.localApplicationPosition;
-        local.y = twiddleEnumerator.parameters[0];
+        local.z = twiddleEnumerator.parameters[0];
         autopilot.lateralCorrector.localApplicationPosition = local;
     }
 }

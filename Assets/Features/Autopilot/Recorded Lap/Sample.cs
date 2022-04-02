@@ -9,6 +9,7 @@ namespace Perrinn424.AutopilotSystem
         public Vector3 position;
         public Quaternion rotation;
 
+        public int automaticGear;
         public int rawSteer;
         public int rawThrottle;
         public int rawBrake;
@@ -18,7 +19,6 @@ namespace Perrinn424.AutopilotSystem
         public float throttle;
         public float brakePressure;
 
-        public int automaticGear;
 
         public static Sample Lerp(Sample a, Sample b, float t)
         {

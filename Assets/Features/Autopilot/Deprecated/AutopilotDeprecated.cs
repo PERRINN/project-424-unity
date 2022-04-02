@@ -19,6 +19,7 @@ namespace Perrinn424.AutopilotSystem
         public int startUpBrakeSpeedRatio = 80;
 
         public float offsetValue = 0.0f;
+        public bool removeLongitudinalForce;
         public BoxCollider startLine;
 
         public bool debugGizmo = false;
@@ -171,6 +172,12 @@ namespace Perrinn424.AutopilotSystem
 
             if (IsOn)
             {
+
+                if (removeLongitudinalForce)
+                {
+                    appliedForceV3 = RemoveLongitudinalForce(appliedForceV3);
+                }
+
                 vehicle.cachedRigidbody.AddForceAtPosition(appliedForceV3, offsetFromCurrentVehiclePos); // transform.position rigidBody424.centerOfMass
 
                 if (debugGizmo)
@@ -286,6 +293,15 @@ namespace Perrinn424.AutopilotSystem
             }
 
             return (valueA, valueB);
+        }
+
+        private Vector3 RemoveLongitudinalForce(Vector3 force)
+        {
+            Vector3 localForce = vehicle.transform.InverseTransformVector(force);
+            localForce.z = 0f;
+            localForce.y = 0f;
+
+            return vehicle.transform.TransformVector(localForce);
         }
     }
 }

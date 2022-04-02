@@ -13,7 +13,7 @@ public class PathDrawer : MonoBehaviour
     public Color color;
     private void OnDrawGizmosSelected()
     {
-        if (!draw)
+        if (!draw || recordedLap == null)
             return;
 
         Gizmos.color = color;

@@ -143,13 +143,48 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             return replayAsset;
         }
 
+        public static RecordedLap ReplayAssetToRecordedLap(VPReplayAsset replayAsset)
+        {
+            RecordedLap recordedLap = ScriptableObject.CreateInstance<RecordedLap>();
+            recordedLap.lapTime = replayAsset.recordedData.Count * replayAsset.timeStep;
+            recordedLap.frequency = 1f/replayAsset.timeStep;
+
+            var replayFrames = replayAsset.recordedData;
+            List<Sample> samples = new List<Sample>(replayFrames.Count);
+
+            for (int i = 0; i < replayFrames.Count; i++)
+            {
+                VPReplay.Frame replayFrame = replayFrames[i];
+                Sample sample = new Sample()
+                {
+                    position = replayFrame.position,
+                    rotation = replayFrame.rotation,
+                    rawSteer = replayFrame.inputData[InputData.Steer],
+                    rawThrottle = replayFrame.inputData[InputData.Throttle],
+                    rawBrake = replayFrame.inputData[InputData.Brake],
+                    automaticGear = replayFrame.inputData[InputData.AutomaticGear],
+                    gear = 0,
+                    steeringAngle = float.NaN,
+                    throttle = float.NaN,
+                    brakePressure = float.NaN
+
+                };
+
+                samples.Add(sample);
+            }
+
+            recordedLap.name = replayAsset.name;
+            recordedLap.samples = samples;
+            return recordedLap;
+        }
+
         public static RecordedLap TelemetryLapToRecordedLap(TelemetryLapAsset telemetryLap)
         {
             RecordedLap recordedLap = ScriptableObject.CreateInstance<RecordedLap>();
             TelemetryLapMetadata metadata = telemetryLap.metadata;
             recordedLap.frequency = metadata.frequency;
             recordedLap.lapTime = metadata.lapTime;
-            
+
             Table table = telemetryLap.table;
             List<Sample> samples = new List<Sample>(table.RowCount);
 

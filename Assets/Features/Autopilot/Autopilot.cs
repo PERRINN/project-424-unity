@@ -55,6 +55,7 @@ namespace Perrinn424.AutopilotSystem
             timeCorrector.Init(vehicle.cachedRigidbody);
             startup.Init(vehicle);
             debugDrawer = new AutopilotDebugDrawer();
+            pathDrawer.recordedLap = recordedLap;
 
             vehicle.onBeforeUpdateBlocks += UpdateAutopilot;
         }
@@ -144,14 +145,6 @@ namespace Perrinn424.AutopilotSystem
             return interpolatedSample;
         }
 
-        //private void WriteInput(Sample s)
-        //{
-        //    vehicle.data.Set(Channel.Input, InputData.Steer, s.rawSteer);
-        //    vehicle.data.Set(Channel.Input, InputData.Throttle, s.rawThrottle);
-        //    vehicle.data.Set(Channel.Input, InputData.Brake, s.rawBrake);
-        //    vehicle.data.Set(Channel.Input, InputData.AutomaticGear, s.automaticGear);
-        //}
-
         private void WriteInput(Sample s)
         {
             if (inputType == InputType.Raw)
@@ -179,7 +172,8 @@ namespace Perrinn424.AutopilotSystem
 
         private void OnDrawGizmos()
         {
-            debugDrawer.Draw();
+            if(debugDrawer != null)
+                debugDrawer.Draw();
         }
 
         public override float Error => lateralCorrector.Error;

@@ -18,15 +18,6 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             Import();
         }
 
-        void OnGUI()
-        {
-            if (GUILayout.Button("Import"))
-            {
-                Import();
-            }
-        }
-
-        
         private static void Import()
         {
             string path = EditorUtility.OpenFilePanel("CSV Importer", "./Telemetry", "metadata");
@@ -77,6 +68,22 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             T[] objects = Resources.FindObjectsOfTypeAll<T>();
 
             return objects.First(o => !EditorUtility.IsPersistent(o)); //first object, enabled or disabled that it's on the scene
+        }
+
+
+        [MenuItem("Assets/Create Autopilot file from Replay")]
+        static void CreateAutopilotFileFromReplay()
+        {
+            RecordedLap recordedLap = FileFormatConverterUtils.ReplayAssetToRecordedLap(Selection.activeObject as VPReplayAsset);
+            string recorededLapFilePath = $"Assets/Replays/{recordedLap.name}_autopilot.asset";
+            AssetDatabase.CreateAsset(recordedLap, recorededLapFilePath);
+        }
+
+        [MenuItem("Assets/Create Autopilot file from Replay", true)]
+        static bool ValidateCreateAutopilotFileFromReplay()
+        {
+            // Return false if no transform is selected.
+            return Selection.activeObject is VPReplayAsset;
         }
 
     } 
