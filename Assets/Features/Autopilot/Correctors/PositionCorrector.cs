@@ -7,12 +7,15 @@ namespace Perrinn424.AutopilotSystem
     public class PositionCorrector : Corrector
     {
         public Vector3 correctionAxis = Vector3.right;
-        public Vector3 localApplicationPosition;
+        public float maxForceP;
+        public float maxForceD;
 
+        public Vector3 localApplicationPosition;
         public Vector3 ApplicationPosition { get; private set; }
+
+        private float previousUnsignedError;
         public void Correct(Vector3 targetPosition)
         {
-            UpdatePIDSettings();
 
             ApplicationPosition = rb.transform.TransformPoint(localApplicationPosition);
 
@@ -21,7 +24,10 @@ namespace Perrinn424.AutopilotSystem
             Vector3 localDir = rb.transform.InverseTransformDirection(dir);
             Vector3 errorVector = Vector3.Project(localDir, correctionAxis);
             float sign = Mathf.Sign(Vector3.Dot(errorVector, correctionAxis));
-            Error = sign*errorVector.magnitude;
+            float unsignedError = errorVector.magnitude;
+            Error = sign*unsignedError;
+
+            UpdatePID(unsignedError);
 
             PID.input = Error;
             PID.Compute();
@@ -30,6 +36,16 @@ namespace Perrinn424.AutopilotSystem
             Force = rb.transform.TransformVector(localForce);
 
             rb.AddForceAtPosition(Force, ApplicationPosition);
+
+            previousUnsignedError = unsignedError;
+        }
+
+        private void UpdatePID(float unsignedError)
+        {
+            float kpTemp = Error == 0 ? kp : Mathf.Min(kp, maxForceP / unsignedError);
+            float kdTemp = Mathf.Min(kd, maxForceD * Time.deltaTime / Mathf.Abs(unsignedError - previousUnsignedError));
+
+            UpdatePIDSettings(kpTemp, ki, kdTemp);
         }
     } 
 }

@@ -1,7 +1,6 @@
 ﻿using Perrinn424.AutopilotSystem;
 using Perrinn424.TelemetryLapSystem;
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
@@ -42,8 +41,10 @@ public class TwiddleOptimizer : VehicleBehaviour
         twiddleEnumerator.waitForNewError = waitForNewError;
         twiddleEnumerator.maxIterations = maxIter;
         yield return StartCoroutine(twiddleEnumerator.Optimize());
-        EditorApplication.isPaused = true;
 
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPaused = true;
+#endif
     }
 
     

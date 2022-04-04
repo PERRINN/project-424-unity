@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
@@ -70,7 +69,9 @@ public class AutopilotOptimizer : VehicleBehaviour
 
             if (currentSampleIndex >= samples.Length)
             {
-                EditorApplication.isPaused = true;
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPaused = true;
+#endif
             }
         }
     }

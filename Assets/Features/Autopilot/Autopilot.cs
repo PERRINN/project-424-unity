@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Perrinn424.Utilities;
+using UnityEngine;
 using UnityEngine.Serialization;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
@@ -88,7 +89,6 @@ namespace Perrinn424.AutopilotSystem
             }
         }
 
-
         private void UpdateAutopilotInOnStatus()
         {
             segmentSearcher.Search(vehicle.transform);
@@ -96,7 +96,7 @@ namespace Perrinn424.AutopilotSystem
             Sample runningSample = GetInterpolatedNearestSample();
             Vector3 targetPosition = segmentSearcher.ProjectedPosition;
 
-            float expectedSpeed = segmentSearcher.Segment.magnitude * recordedLap.frequency;
+            float expectedSpeed = CalculateExpectedSpeed(segmentSearcher.Segment);
             if (startup.IsStartup(expectedSpeed)) //startup block
             {
                 runningSample = startup.Correct(runningSample);
@@ -129,10 +129,36 @@ namespace Perrinn424.AutopilotSystem
         {
             if (isOn)
             {
+                if (!CanOperate())
+                {
+                    Debug.LogWarning("Autopilot can't operate from these conditions");
+                    return;
+                }
+
+
                 heuristicNN.SetHeuristicIndex(autopilotOffModeSearcher.Index);
             }
 
             base.SetStatus(isOn);
+        }
+
+        private bool CanOperate()
+        {
+
+            CircularIndex index = new CircularIndex(autopilotOffModeSearcher.Index, recordedLap.Count);
+            Vector3 segment = path[index + 1] - path[index];
+
+            float expectedSpeed = CalculateExpectedSpeed(segment);
+            Quaternion pathRotation = recordedLap.samples[index].rotation;
+            float yawError = RotationCorrector.YawError(vehicle.transform.rotation, pathRotation);
+            float distance = heuristicNN.Distance;
+
+            if (!startup.isStartUp && (Mathf.Abs(yawError) > 10f || distance > 2f || vehicle.speed < expectedSpeed*0.9f))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private Sample GetInterpolatedNearestSample()
@@ -168,6 +194,11 @@ namespace Perrinn424.AutopilotSystem
         public float CalculateDuration()
         {
             return recordedLap.lapTime;
+        }
+
+        private float CalculateExpectedSpeed(Vector3 segment)
+        {
+            return segment.magnitude * recordedLap.frequency;
         }
 
         private void OnDrawGizmos()

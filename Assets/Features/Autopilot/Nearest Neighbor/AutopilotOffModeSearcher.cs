@@ -12,7 +12,7 @@ namespace Perrinn424.AutopilotSystem
         public AutopilotOffModeSearcher(IReadOnlyList<Vector3> path)
         {
             this.heuristicSearcher = new HeuristicNearestNeighbor(path, 50, 100, 4);
-            this.sectorSearcher = new SectorSearcherNearestNeighbor(path, 2, 4);
+            this.sectorSearcher = new SectorSearcherNearestNeighbor(path, 2, float.PositiveInfinity);
         }
 
         public int Index { get; private set; }

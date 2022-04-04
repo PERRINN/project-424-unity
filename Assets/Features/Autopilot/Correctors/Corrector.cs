@@ -25,8 +25,12 @@ namespace Perrinn424.AutopilotSystem
             this.rb = rb;
             PID = new PidController();
         }
-
         protected void UpdatePIDSettings()
+        {
+            UpdatePIDSettings(kp, ki, kd);
+        }
+
+        protected void UpdatePIDSettings(float kp, float ki, float kd)
         {
             PID.SetParameters(kp, ki, kd);
             PID.limitedOutput = true;
