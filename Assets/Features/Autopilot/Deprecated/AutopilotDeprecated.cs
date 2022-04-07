@@ -303,5 +303,10 @@ namespace Perrinn424.AutopilotSystem
 
             return vehicle.transform.TransformVector(localForce);
         }
+
+        public override float CalculateDuration()
+        {
+            return autopilotProvider.Count * autopilotProvider.replayAsset.timeStep;
+        }
     }
 }

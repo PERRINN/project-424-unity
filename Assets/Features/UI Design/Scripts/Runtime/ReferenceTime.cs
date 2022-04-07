@@ -1,7 +1,5 @@
 ﻿using Perrinn424.AutopilotSystem;
 using Perrinn424.Utilities;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,10 +11,12 @@ namespace Perrinn424.UI
         private Text text = default;
 
         [SerializeField]
-        private Autopilot autopilot;
+        private BaseAutopilot autopilot;
 
         private void OnEnable()
         {
+
+
             TimeFormatter timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"m\:ss\.fff", @"m\:ss\.fff");
             string duration = timeFormatter.ToString(autopilot.CalculateDuration());
             text.text = $"Ref {duration}";

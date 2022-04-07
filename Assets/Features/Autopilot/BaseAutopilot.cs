@@ -33,5 +33,7 @@ namespace Perrinn424.AutopilotSystem
         }
 
         public abstract float PlayingTime();
+
+        public abstract float CalculateDuration();
     } 
 }

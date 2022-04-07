@@ -1,4 +1,5 @@
 ﻿using Perrinn424.Utilities;
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using VehiclePhysics;
@@ -91,13 +92,21 @@ namespace Perrinn424.AutopilotSystem
 
         private void UpdateAutopilotInOnStatus()
         {
-            segmentSearcher.Search(vehicle.transform);
+            float expectedSpeed = CalculateExpectedSpeed(segmentSearcher.Segment);
+            bool isStartup = startup.IsStartup(expectedSpeed);
+
+            try
+            {
+                segmentSearcher.Search(vehicle.transform);
+            }
+            catch (InvalidOperationException) when (isStartup){} // we can safely ignore a search exception in startup stage
+
+
             pathDrawer.index = segmentSearcher.StartIndex;
             Sample runningSample = GetInterpolatedNearestSample();
             Vector3 targetPosition = segmentSearcher.ProjectedPosition;
 
-            float expectedSpeed = CalculateExpectedSpeed(segmentSearcher.Segment);
-            if (startup.IsStartup(expectedSpeed)) //startup block
+            if (isStartup) //startup block
             {
                 runningSample = startup.Correct(runningSample);
             }
@@ -153,7 +162,8 @@ namespace Perrinn424.AutopilotSystem
             float yawError = RotationCorrector.YawError(vehicle.transform.rotation, pathRotation);
             float distance = heuristicNN.Distance;
 
-            if (!startup.isStartUp && (Mathf.Abs(yawError) > 10f || distance > 2f || vehicle.speed < expectedSpeed*0.9f))
+            //if (!startup.isStartUp && (Mathf.Abs(yawError) > 10f || distance > 2f || vehicle.speed < expectedSpeed*0.9f))
+            if (Mathf.Abs(yawError) > 30f)
             {
                 return false;
             }
@@ -191,7 +201,7 @@ namespace Perrinn424.AutopilotSystem
             }
         }
 
-        public float CalculateDuration()
+        public override float CalculateDuration()
         {
             return recordedLap.lapTime;
         }

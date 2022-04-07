@@ -43,14 +43,14 @@ namespace Perrinn424.AutopilotSystem
 
             (int nn, float distance) = bruteForceSearcher.SearchInBoundaries(position, Index - behind, behind + ahead, 1);
 
+            Index = nn;
+            Distance = distance;
+            Position = path[Index];
+
             if (distance > tolerance)
             {
                 throw new InvalidOperationException($"Waypoint closest to {tolerance} meters not found");
             }
-
-            Index = nn;
-            Distance = distance;
-            Position = path[Index];
         }
 
         public void SetHeuristicIndex(int heuristicIndex)

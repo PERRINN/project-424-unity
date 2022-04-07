@@ -27,7 +27,7 @@ namespace Perrinn424.AutopilotSystem
 
         public bool IsStartup(float expectedSpeed)
         {
-            if (isStartUp)
+            //if (isStartUp)
             {
                 isStartUp = vehicle.speed < expectedSpeed * speedPercentage;
             }
