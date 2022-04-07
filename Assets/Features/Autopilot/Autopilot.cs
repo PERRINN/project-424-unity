@@ -48,6 +48,7 @@ namespace Perrinn424.AutopilotSystem
 
         int showSteer, showBrake, showThrottle;
         bool autopilotON;
+        public bool AutopilotOn => autopilotON;
         bool lostControl = false;
 
         VPDeviceInput m_deviceInput;
