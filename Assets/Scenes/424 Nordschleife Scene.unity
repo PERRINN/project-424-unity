@@ -7028,6 +7028,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1585479230534929968, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
+      propertyPath: autopilot
+      value: 
+      objectReference: {fileID: 1070817991}
+    - target: {fileID: 1585479230534929968, guid: 8368094040e50bc48a2a58a0a8db460a,
+        type: 3}
       propertyPath: autopilotProvider
       value: 
       objectReference: {fileID: 1070817992}
@@ -8481,6 +8486,31 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6586313225511490701, guid: 8368094040e50bc48a2a58a0a8db460a,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6586313225511490701, guid: 8368094040e50bc48a2a58a0a8db460a,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6586313225511490701, guid: 8368094040e50bc48a2a58a0a8db460a,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6586313225511490701, guid: 8368094040e50bc48a2a58a0a8db460a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6586313225511490701, guid: 8368094040e50bc48a2a58a0a8db460a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6737167617789208670, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -9577,6 +9607,7 @@ GameObject:
   - component: {fileID: 1070817990}
   - component: {fileID: 1070817991}
   - component: {fileID: 1070817992}
+  - component: {fileID: 1070817993}
   m_Layer: 8
   m_Name: Autopilot
   m_TagString: Untagged
@@ -9619,9 +9650,11 @@ MonoBehaviour:
   startUpThrottle: 70
   startUpBrakeSpeedRatio: 80
   offsetValue: 0
+  removeLongitudinalForce: 0
   startLine: {fileID: 2128301406}
   debugGizmo: 1
   autopilotProvider: {fileID: 1070817992}
+  localForce: {x: 0, y: 0, z: 0}
 --- !u!114 &1070817992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9635,6 +9668,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayAsset: {fileID: 11400000, guid: 1fa2eaf71a5424a43b2ee313ff6473b5, type: 2}
+--- !u!114 &1070817993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1070817989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f27f919550982f41b4380087f1e5db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autopilot: {fileID: 1070817991}
 --- !u!223 &1088376467 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 4251215812570826028, guid: 8368094040e50bc48a2a58a0a8db460a,

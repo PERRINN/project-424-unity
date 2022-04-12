@@ -37,14 +37,14 @@ namespace Perrinn424.UI
         LapTimer m_lapTimer = null;
 
 
-        private Autopilot autopilot;
+        private BaseAutopilot autopilot;
 
         [SerializeField]
         private RefreshHelper refreshHelper;
 
         public void OnEnable()
         {
-            autopilot = vehicle.GetComponentInChildren<Autopilot>();
+            autopilot = vehicle.GetComponentInChildren<BaseAutopilot>();
         }
 
         public void Update()
@@ -62,7 +62,7 @@ namespace Perrinn424.UI
 
         private void WriteAutopilot()
         {
-            string autopilotFlag = autopilot.AutopilotOn ? "ON" : "OFF";
+            string autopilotFlag = autopilot.IsOn ? "ON" : "OFF";
             autopilotText.text = $"AUTOPILOT {autopilotFlag}";
         }
 
@@ -112,9 +112,8 @@ namespace Perrinn424.UI
 
         private void WriteDiffs()
         {
-            //TODO. This is already refactored in the autopilot branch. Change when marge
-            float compare = m_lapTimer.currentLapTime - SteeringScreen.bestTime;
-            string diff = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-0.00") : compare.ToString("+0.00");
+            float compare = m_lapTimer.currentLapTime - autopilot.PlayingTime();
+            string diff = compare.ToString("+0.00;-0.00");
             referenceDiffText.text = $"{diff} SEC";
         }
 
