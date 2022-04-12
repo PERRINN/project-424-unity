@@ -9054,7 +9054,7 @@ PrefabInstance:
     - target: {fileID: 2476090976614632314, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
       propertyPath: brakeRangeMax
-      value: 0.9999999
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2476090976614632314, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
@@ -9070,6 +9070,11 @@ PrefabInstance:
         type: 3}
       propertyPath: configuredWheelRange
       value: 850
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: frontFlapStaticAngle
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5604649752922501110, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
@@ -9283,7 +9288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9080681e1b4aa3645b2d07314a691a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  replayAsset: {fileID: 11400000, guid: 67f7db4c3205d644d8e020e9ec17ae65, type: 2}
+  replayAsset: {fileID: 11400000, guid: 1fa2eaf71a5424a43b2ee313ff6473b5, type: 2}
 --- !u!223 &1088376467 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 4251215812570826028, guid: 8368094040e50bc48a2a58a0a8db460a,
@@ -10318,6 +10323,11 @@ PrefabInstance:
         type: 3}
       propertyPath: lookAt.nearPlaneAtMinFov
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905166633231988490, guid: f67f11fd176aacd40b543b5bef4279c3,
+        type: 3}
+      propertyPath: far clip plane
+      value: 4000
       objectReference: {fileID: 0}
     - target: {fileID: 6905166633232293746, guid: f67f11fd176aacd40b543b5bef4279c3,
         type: 3}
