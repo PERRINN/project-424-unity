@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 180212503}
   - component: {fileID: 180212504}
   m_Layer: 0
-  m_Name: Driver Height Controller
+  m_Name: Driver Camera Adjustments
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -166,9 +166,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   increaseHeight: 56
   decreaseHeight: 55
-  firstPersonCamera: {fileID: 295459827}
-  step: 0.025
-  max: 0.05
+  firstPersonCameraTarget: {fileID: 295459827}
+  heightStep: 0.025
+  heightMax: 0.05
+  increaseFOV: 43
+  decreaseFOV: 45
+  firstPersonCamera: {fileID: 1672645018}
+  fovStep: 5
+  fovMin: 25
+  fovMax: 45
 --- !u!1001 &190246643
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10032,6 +10038,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a591ef50cd56bd4a88693c1323a91eb, type: 3}
+--- !u!114 &1672645018 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6905166633222581524, guid: f67f11fd176aacd40b543b5bef4279c3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6905166632518109074}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1403093141, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1853323986 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7116994524547747782, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
