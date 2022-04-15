@@ -37,7 +37,7 @@ public class Perrinn424CarControllerInspector : VPInspector
 
 		DrawHeader("Powertrain and dynamics");
 
-		DrawProperty("input");
+		DrawProperty("pedals");
 		DrawProperty("frontMgu");
 		DrawProperty("rearMgu");
 		Space();
