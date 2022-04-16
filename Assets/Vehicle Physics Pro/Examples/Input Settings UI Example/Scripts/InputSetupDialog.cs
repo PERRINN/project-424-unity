@@ -89,15 +89,12 @@ public class InputSetupDialog : MonoBehaviour
 
 	void OnDisable ()
 		{
-		// Save customizable mapping and settings to the input manager
+		// Save customizable mapping to the input manager
 
 		InputMapping inputMapping = new InputMapping();
 		inputMapping.FromUser(m_inputUser);
 		InputManager.instance.customizableMapping = inputMapping;
 		InputManager.instance.ResetAllMappings();
-
-		int wheelRange = InputManager.instance.settings.physicalWheelRange;
-		InputManager.instance.settings.physicalWheelRange = Mathf.RoundToInt(UITools.GetValue(steeringRangeSetup, defaultValue: wheelRange/10) * 10);
 
 		// Finalize
 
@@ -122,6 +119,11 @@ public class InputSetupDialog : MonoBehaviour
 		// Update control labels (control name, color when active)
 
 		UpdateControlLabels();
+
+		// Apply settings so effects may be observed lively
+
+		int wheelRange = InputManager.instance.settings.physicalWheelRange;
+		InputManager.instance.settings.physicalWheelRange = Mathf.RoundToInt(UITools.GetValue(steeringRangeSetup, defaultValue: wheelRange/10) * 10);
 
 		// Detect Esc
 
