@@ -9,9 +9,10 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using VehiclePhysics.InputManagement;
 using EdyCommonTools;
-using System.Collections;
+using Perrinn424;
 
 
 namespace VehiclePhysics.UI
@@ -51,21 +52,7 @@ public class InputSetupDialog : MonoBehaviour
 	public ButtonDetectDialog buttonDetectDialog;
 
 
-	// Internal class to monitor currently assigned vehicle inputs
-
-	class InputSetupDialogUser : InputUser
-		{
-		public InputSetupDialogUser (string idName) : base(idName) { }
-
-		public InputAxis steer 			= new InputAxis("Steer");
-		public InputSlider throttle		= new InputSlider("Throttle");
-		public InputSlider brake 		= new InputSlider("Brake");
-		public InputButton gearUp		= new InputButton("GearShiftUp");
-		public InputButton gearDown		= new InputButton("GearShiftDown");
-		public InputButton drsEnable	= new InputButton("DrsEnable");
-		}
-
-	InputSetupDialogUser m_inputUser;
+	Perrinn424InputUser m_inputUser;
 	GraphicRaycaster m_raycaster;
 
 
@@ -73,7 +60,7 @@ public class InputSetupDialog : MonoBehaviour
 		{
 		// Initialize internal elements
 
-		m_inputUser = new InputSetupDialogUser(carInputUser);
+		m_inputUser = new Perrinn424InputUser(carInputUser);
 		InputManager.instance.RegisterUser(m_inputUser);
 		UITools.SetValue(steeringRangeSetup, InputManager.instance.settings.physicalWheelRange / 10);
 

@@ -10130,6 +10130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unityStandardInput: 1
   directInput: 1
+  updateDevicesAt: 1
   standardInputSettings:
     enableMouseButtons: 0
     enableMouseScroll: 0
@@ -10412,6 +10413,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2476090976614632314, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476090976614632314, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
       propertyPath: brakeRangeMax
       value: 1
       objectReference: {fileID: 0}
@@ -10429,6 +10435,11 @@ PrefabInstance:
         type: 3}
       propertyPath: configuredWheelRange
       value: 850
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476090976614632315, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
@@ -10923,6 +10934,25 @@ MonoBehaviour:
   - {fileID: 1536732955}
   fullScreen:
   - {fileID: 361772926}
+--- !u!1 &1313079627 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2476090976614632198, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+    type: 3}
+  m_PrefabInstance: {fileID: 773184381}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1313079632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313079627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faef65e9e7c17c445ad5b5e25e433df2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputUserName: Perrinn424
 --- !u!114 &1314687603 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2476090976540968591, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
