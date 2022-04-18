@@ -36,6 +36,9 @@ namespace Perrinn424.AutopilotSystem
 
         public override float MaxForceD => maxForceD;
 
+        private bool isStartup;
+        public override bool IsStartup => isStartup;
+
         public AutopilotProvider autopilotProvider;
         readonly PidController edyPID = new PidController();
         private HeuristicFrameSearcher heuristicFrameSearcher;
@@ -216,10 +219,13 @@ namespace Perrinn424.AutopilotSystem
                     if (CheckStartupSpeed(segmentLength, SecondsPerFrame, startUpThrottleSpeedRatio))   //startup
                     {
                         vehicle.data.Set(Channel.Input, InputData.Throttle, startUpThrottle * 100);
+                        isStartup = true;
                     }
                     else
                     {
                         vehicle.data.Set(Channel.Input, InputData.Throttle, showThrottle);
+                        isStartup = false;
+
                     }
 
                     // AutomaticGear

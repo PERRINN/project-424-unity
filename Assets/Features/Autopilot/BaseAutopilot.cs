@@ -8,6 +8,8 @@ namespace Perrinn424.AutopilotSystem
         public bool IsOn { get; private set; }
         public event Action<bool> OnStatusChanged;
 
+        public abstract bool IsStartup { get; }
+
         public abstract float Error { get; }
 
         public abstract float P { get; }
