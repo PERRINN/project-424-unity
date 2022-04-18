@@ -56,6 +56,14 @@ public class InputSetupDialog : MonoBehaviour
 	GraphicRaycaster m_raycaster;
 
 
+	void Awake ()
+		{
+		// Ensure the modal dialogs are hidden even if this one hasn't been enabled
+
+		DisableModalDialogs();
+		}
+
+
 	void OnEnable ()
 		{
 		// Initialize internal elements
@@ -77,11 +85,7 @@ public class InputSetupDialog : MonoBehaviour
 		UITools.AddListener(gearDownSetup, OnDetectGearDown);
 		UITools.AddListener(drsSetup, OnDetectDrs);
 
-		UITools.Disable(wheelDetectDialog);
-		UITools.Disable(pedalDetectDialog);
-		UITools.Disable(buttonDetectDialog);
-
-		// Ensure the dialog can be interacted
+		// Ensure this dialog can be interacted with
 
 		UITools.EnableRaycaster(this.gameObject);
 		}
@@ -95,6 +99,10 @@ public class InputSetupDialog : MonoBehaviour
 		inputMapping.FromUser(m_inputUser);
 		InputManager.instance.customizableMapping = inputMapping;
 		InputManager.instance.ResetAllMappings();
+
+		// Ensure to hide the other dialogs (i.e. if this one is disabled while other is open)
+
+		DisableModalDialogs();
 
 		// Finalize
 
@@ -230,6 +238,14 @@ public class InputSetupDialog : MonoBehaviour
 			{
 			group.label.color = defaultControlColor;
 			}
+		}
+
+
+	void DisableModalDialogs ()
+		{
+		UITools.Disable(wheelDetectDialog);
+		UITools.Disable(pedalDetectDialog);
+		UITools.Disable(buttonDetectDialog);
 		}
 
 
