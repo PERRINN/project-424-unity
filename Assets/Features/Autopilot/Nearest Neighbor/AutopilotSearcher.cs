@@ -39,7 +39,14 @@ namespace Perrinn424.AutopilotSystem
             //    RefreshHeuristicIndex();
             //}
 
+            INearestSegmentSearcher previousSearcher = currentSearcher;
             currentSearcher = SelectSearcher();
+
+            if (previousSearcher != currentSearcher)
+            {
+                RefreshHeuristicIndex();
+            }
+
             currentSearcher.Search(t);
 
             //wasStartup = autopilot.IsStartup;
@@ -61,13 +68,13 @@ namespace Perrinn424.AutopilotSystem
             }
         }
 
-        public void RefreshHeuristicIndex()
+        private void RefreshHeuristicIndex()
         {
             heuristicNN.SetHeuristicIndex(autopilotOffModeSearcher.Index);
         }
 
         public int StartIndex => currentSearcher.StartIndex;
-        public int EndIndex => currentSearcher.StartIndex;
+        public int EndIndex => currentSearcher.EndIndex;
         public Vector3 Start => currentSearcher.Start;
         public Vector3 End => currentSearcher.End;
         public Vector3 Segment => currentSearcher.Segment;

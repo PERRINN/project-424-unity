@@ -41,18 +41,12 @@ namespace Perrinn424.AutopilotSystem
         [FormerlySerializedAs("offset")]
         public float positionOffset = 0.9f;
 
-
-        private Path path;
-        private INearestSegmentSearcher segmentSearcher;
-        private HeuristicNearestNeighbor heuristicNN;
-        private AutopilotOffModeSearcher autopilotOffModeSearcher;
-
+        private AutopilotSearcher autopilotSearcher;
         private AutopilotDebugDrawer debugDrawer;
 
         public override void OnEnableVehicle()
         {
-
-            CreateSearchers();
+            autopilotSearcher = new AutopilotSearcher(this, recordedLap);
             lateralCorrector.Init(vehicle.cachedRigidbody);
             timeCorrector.Init(vehicle.cachedRigidbody);
             startup.Init(vehicle);
@@ -67,46 +61,25 @@ namespace Perrinn424.AutopilotSystem
             vehicle.onBeforeUpdateBlocks -= UpdateAutopilot;
         }
 
-        private void CreateSearchers()
-        {
-            path = new Path(recordedLap);
-            autopilotOffModeSearcher = new AutopilotOffModeSearcher(path);
-            int lookBehind = (int)(1f * recordedLap.frequency); //seconds to samples
-            int lookAhead = (int)(2f * recordedLap.frequency); //seconds to samples
-            heuristicNN = new HeuristicNearestNeighbor(path, lookBehind, lookAhead, 4);
-            IProjector projector = new CrossProductProjector();
-            segmentSearcher = new NearestSegmentComposed(heuristicNN, projector, path);
-        }
-
         public void UpdateAutopilot()
         {
+            autopilotSearcher.Search(vehicle.transform);
+            pathDrawer.index = autopilotSearcher.StartIndex;
+
             if (IsOn)
             {
                 UpdateAutopilotInOnStatus();
-            }
-            else
-            {
-                UpdateAutopilotInOffStatus();
             }
         }
 
         private void UpdateAutopilotInOnStatus()
         {
-            float expectedSpeed = CalculateExpectedSpeed(segmentSearcher.Segment);
-            bool isStartup = startup.IsStartup(expectedSpeed);
-
-            try
-            {
-                segmentSearcher.Search(vehicle.transform);
-            }
-            catch (InvalidOperationException) when (isStartup){} // we can safely ignore a search exception in startup stage
-
-
-            pathDrawer.index = segmentSearcher.StartIndex;
+            float expectedSpeed = CalculateExpectedSpeed(autopilotSearcher.Segment);
+            startup.IsStartup(expectedSpeed);
             Sample runningSample = GetInterpolatedNearestSample();
-            Vector3 targetPosition = segmentSearcher.ProjectedPosition;
+            Vector3 targetPosition = autopilotSearcher.ProjectedPosition;
 
-            if (isStartup) //startup block
+            if (IsStartup) //startup block
             {
                 runningSample = startup.Correct(runningSample);
             }
@@ -119,16 +92,13 @@ namespace Perrinn424.AutopilotSystem
 
             debugDrawer.Set(targetPosition, lateralCorrector.ApplicationPosition, lateralCorrector.Force);
             WriteInput(runningSample);
-        }
 
-        private void UpdateAutopilotInOffStatus()
-        {
-            autopilotOffModeSearcher.Search(this.transform.position);
+            print(IsStartup);
         }
 
         public override float PlayingTime()
         {
-            float sampleIndex = IsOn ? (segmentSearcher.StartIndex + segmentSearcher.Ratio) : autopilotOffModeSearcher.Index;
+            float sampleIndex = (autopilotSearcher.StartIndex + autopilotSearcher.Ratio);
             float playingTimeBySampleIndex = sampleIndex / recordedLap.frequency;
             float offset = vehicle.speed > 10f ? positionOffset / vehicle.speed : 0f;
             return playingTimeBySampleIndex - offset;
@@ -144,8 +114,7 @@ namespace Perrinn424.AutopilotSystem
                     return;
                 }
 
-
-                heuristicNN.SetHeuristicIndex(autopilotOffModeSearcher.Index);
+                //autopilotSearcher.RefreshHeuristicIndex();
             }
 
             base.SetStatus(isOn);
@@ -153,29 +122,30 @@ namespace Perrinn424.AutopilotSystem
 
         private bool CanOperate()
         {
-
-            CircularIndex index = new CircularIndex(autopilotOffModeSearcher.Index, recordedLap.Count);
-            Vector3 segment = path[index + 1] - path[index];
-
-            float expectedSpeed = CalculateExpectedSpeed(segment);
-            Quaternion pathRotation = recordedLap.samples[index].rotation;
-            float yawError = RotationCorrector.YawError(vehicle.transform.rotation, pathRotation);
-            float distance = heuristicNN.Distance;
-
-            //if (!startup.isStartUp && (Mathf.Abs(yawError) > 10f || distance > 2f || vehicle.speed < expectedSpeed*0.9f))
-            if (Mathf.Abs(yawError) > 30f)
-            {
-                return false;
-            }
-
             return true;
+
+            //CircularIndex index = new CircularIndex(autopilotOffModeSearcher.Index, recordedLap.Count);
+            //Vector3 segment = path[index + 1] - path[index];
+
+            //float expectedSpeed = CalculateExpectedSpeed(segment);
+            //Quaternion pathRotation = recordedLap.samples[index].rotation;
+            //float yawError = RotationCorrector.YawError(vehicle.transform.rotation, pathRotation);
+            //float distance = heuristicNN.Distance;
+
+            ////if (!startup.isStartUp && (Mathf.Abs(yawError) > 10f || distance > 2f || vehicle.speed < expectedSpeed*0.9f))
+            //if (Mathf.Abs(yawError) > 30f)
+            //{
+            //    return false;
+            //}
+
+            //return true;
         }
 
         private Sample GetInterpolatedNearestSample()
         {
-            Sample start = recordedLap[segmentSearcher.StartIndex];
-            Sample end = recordedLap[segmentSearcher.EndIndex];
-            float t = segmentSearcher.Ratio;
+            Sample start = recordedLap[autopilotSearcher.StartIndex];
+            Sample end = recordedLap[autopilotSearcher.EndIndex];
+            float t = autopilotSearcher.Ratio;
             Sample interpolatedSample = Sample.Lerp(start, end, t);
             
             return interpolatedSample;
@@ -224,5 +194,7 @@ namespace Perrinn424.AutopilotSystem
         public override float PID => lateralCorrector.PID.output;
         public override float MaxForceP => lateralCorrector.max;
         public override float MaxForceD => lateralCorrector.max; //TODO remove MaxForceD
+
+        public override bool IsStartup => startup.isStartUp;
     }
 }
