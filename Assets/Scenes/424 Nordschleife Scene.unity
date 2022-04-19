@@ -8287,7 +8287,7 @@ PrefabInstance:
     - target: {fileID: 2871200712215333718, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 2973885201336558946, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
@@ -10128,9 +10128,13 @@ MonoBehaviour:
   m_Script: {fileID: 719988202, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDevicesAt: 1
+  settings:
+    physicalWheelRange: 300
+    autoForwardAndReverse: 0
+  fixedMappings: []
   unityStandardInput: 1
   directInput: 1
-  updateDevicesAt: 1
   standardInputSettings:
     enableMouseButtons: 0
     enableMouseScroll: 0
@@ -10142,10 +10146,12 @@ MonoBehaviour:
     - Vertical
     - Mouse X
     - Mouse Y
-  settings:
-    physicalWheelRange: 300
-    autoForwardAndReverse: 0
-  fixedMappings: []
+  directInputDeviceSettings:
+    maxFFForceFreq: 100
+    maxFFDamperFreq: 50
+    maxFFRumbleFreq: 50
+  directInputProviderSettings:
+    refreshDevicesDelay: 1
   showConsole: 0
   consoleMode: 1
   showInactiveBindings: 1
@@ -10934,25 +10940,6 @@ MonoBehaviour:
   - {fileID: 1536732955}
   fullScreen:
   - {fileID: 361772926}
---- !u!1 &1313079627 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2476090976614632198, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
-    type: 3}
-  m_PrefabInstance: {fileID: 773184381}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1313079632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1313079627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: faef65e9e7c17c445ad5b5e25e433df2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputUserName: Perrinn424
 --- !u!114 &1314687603 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2476090976540968591, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
