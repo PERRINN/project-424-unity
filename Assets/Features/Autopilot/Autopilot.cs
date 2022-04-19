@@ -94,8 +94,6 @@ namespace Perrinn424.AutopilotSystem
 
             debugDrawer.Set(targetPosition, lateralCorrector.ApplicationPosition, lateralCorrector.Force);
             WriteInput(runningSample);
-
-            print(IsStartup);
         }
 
         public override float PlayingTime()
