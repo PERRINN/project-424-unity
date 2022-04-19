@@ -48,7 +48,7 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
         [Test]
         public void AutopilotOffModeSearcherTest()
         {
-            AutopilotOffModeSearcher autopilotOffMode = new AutopilotOffModeSearcher(path);
+            AutopilotNearestNeighbourSearcher autopilotOffMode = new AutopilotNearestNeighbourSearcher(path);
             FullTest(autopilotOffMode);
         }
 

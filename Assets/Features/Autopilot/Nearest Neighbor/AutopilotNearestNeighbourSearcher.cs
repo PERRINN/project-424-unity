@@ -4,15 +4,21 @@ using UnityEngine;
 
 namespace Perrinn424.AutopilotSystem
 {
-    public class AutopilotOffModeSearcher : INearestNeighbourSearcher
+    public class AutopilotNearestNeighbourSearcher : INearestNeighbourSearcher
     {
         private HeuristicNearestNeighbor heuristicSearcher;
         private SectorSearcherNearestNeighbor sectorSearcher;
 
-        public AutopilotOffModeSearcher(IReadOnlyList<Vector3> path)
+        public AutopilotNearestNeighbourSearcher(IReadOnlyList<Vector3> path)
         {
             this.heuristicSearcher = new HeuristicNearestNeighbor(path, 50, 100, 4);
             this.sectorSearcher = new SectorSearcherNearestNeighbor(path, 2, float.PositiveInfinity);
+        }
+
+        public AutopilotNearestNeighbourSearcher(HeuristicNearestNeighbor heuristicSearcher, SectorSearcherNearestNeighbor sectorSearcher)
+        {
+            this.heuristicSearcher = heuristicSearcher;
+            this.sectorSearcher = sectorSearcher;
         }
 
         public int Index { get; private set; }
