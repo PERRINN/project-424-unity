@@ -61,6 +61,7 @@ MonoBehaviour:
   recordedLap: {fileID: 11400000, guid: 944e001102a46504bb013b77c65e6ada, type: 2}
   timer: {fileID: 0}
   pathDrawer: {fileID: 2603859344292933213}
+  respawnController: {fileID: 0}
   inputType: 0
   startup:
     lateralCorrector:
@@ -71,6 +72,8 @@ MonoBehaviour:
       max: 10000
       mode: 0
       correctionAxis: {x: 1, y: 0, z: 0}
+      maxForceP: 0
+      maxForceD: 0
       localApplicationPosition: {x: 0, y: 0.32, z: 0}
     rotationCorrector:
       enabled: 1
@@ -79,18 +82,20 @@ MonoBehaviour:
       kd: 100
       max: 5000
       mode: 0
-    speedPercentage: 0.904
-    throttle: 0.577
+    speedPercentage: 0.7
+    throttle: 0.7
     isStartUp: 1
   lateralCorrector:
     enabled: 1
-    kp: 800000
+    kp: 600000
     ki: 0
-    kd: 13000
+    kd: 20000
     max: 100000
     mode: 0
     correctionAxis: {x: 1, y: 0, z: 0}
-    localApplicationPosition: {x: 0, y: 0.32, z: 0.5068393}
+    maxForceP: 0
+    maxForceD: 0
+    localApplicationPosition: {x: 0, y: 0.32, z: 0}
   timeCorrector:
     enabled: 0
     kp: 100000
