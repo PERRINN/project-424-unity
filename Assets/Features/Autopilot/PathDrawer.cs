@@ -41,6 +41,9 @@ public class PathDrawer : MonoBehaviour
             Gizmos.DrawSphere(current, 0.1f);
             Gizmos.DrawSphere(next, 0.1f);
         }
+
+        Gizmos.DrawSphere(recordedLap[index].position, 0.25f);
+
     }
 
 }
