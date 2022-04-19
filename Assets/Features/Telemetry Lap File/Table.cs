@@ -126,6 +126,22 @@ namespace Perrinn424.TelemetryLapSystem
 
         public float this[int rowIndex, string header] => this[rowIndex, headerIndex[header]];
 
+        public float GetValue(int rowIndex, string header)
+        {
+            return this[rowIndex, headerIndex[header]];
+        }
+
+        public bool TryGetValue(int rowIndex, string header, out float value)
+        {
+            if (headerIndex.HasHeader(header))
+            {
+                value = this[rowIndex, headerIndex[header]];
+                return true;
+            }
+
+            value = float.NaN;
+            return false;
+        }
 
         public IEnumerable<float> this[string header]
         {

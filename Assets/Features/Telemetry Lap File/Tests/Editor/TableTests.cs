@@ -95,6 +95,30 @@ m,,s
             Assert.That(table[3,0], Is.EqualTo(10.0f));
             Assert.That(table[3,2], Is.EqualTo(12.0f));
 
+            Assert.That(table[0, "H1"], Is.EqualTo(1.1f));
+            Assert.That(table[1, "H3"], Is.EqualTo(-6f));
+            Assert.That(table[3, "H1"], Is.EqualTo(10.0f));
+            Assert.That(table[3, "H3"], Is.EqualTo(12.0f));
+
+            Assert.That(table.GetValue(0, "H1"), Is.EqualTo(1.1f));
+            Assert.That(table.GetValue(1, "H3"), Is.EqualTo(-6f));
+            Assert.That(table.GetValue(3, "H1"), Is.EqualTo(10.0f));
+            Assert.That(table.GetValue(3, "H3"), Is.EqualTo(12.0f));
+        }
+
+        [Test]
+        public void TryGetValueTest()
+        {
+
+            float value = 0;
+            bool success = table.TryGetValue(0, "H1", out value);
+            Assert.That(success, Is.True);
+            Assert.That(value, Is.EqualTo(1.1f));
+
+            success = table.TryGetValue(0, "HFAIL", out value);
+            Assert.That(success, Is.False);
+            Assert.That(value, Is.EqualTo(float.NaN));
+
         }
     } 
 }
