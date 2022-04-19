@@ -1,5 +1,4 @@
 ﻿using Perrinn424.Utilities;
-using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using VehiclePhysics;
@@ -24,6 +23,9 @@ namespace Perrinn424.AutopilotSystem
 
         [SerializeField]
         private PathDrawer pathDrawer;
+
+        [SerializeField]
+        private RespawnController respawnController;
 
         [Header("Setup")]
 
@@ -111,10 +113,11 @@ namespace Perrinn424.AutopilotSystem
                 if (!CanOperate())
                 {
                     Debug.LogWarning("Autopilot can't operate from these conditions");
+
+                    Sample s = recordedLap[autopilotSearcher.StartIndex];
+                    respawnController.Respawn(s.position, s.rotation);
                     return;
                 }
-
-                //autopilotSearcher.RefreshHeuristicIndex();
             }
 
             base.SetStatus(isOn);
@@ -122,23 +125,16 @@ namespace Perrinn424.AutopilotSystem
 
         private bool CanOperate()
         {
+
+            Quaternion pathRotation = recordedLap.samples[autopilotSearcher.StartIndex].rotation;
+            float yawError = RotationCorrector.YawError(vehicle.transform.rotation, pathRotation);
+
+            if (Mathf.Abs(yawError) > 30f)
+            {
+                return false;
+            }
+
             return true;
-
-            //CircularIndex index = new CircularIndex(autopilotOffModeSearcher.Index, recordedLap.Count);
-            //Vector3 segment = path[index + 1] - path[index];
-
-            //float expectedSpeed = CalculateExpectedSpeed(segment);
-            //Quaternion pathRotation = recordedLap.samples[index].rotation;
-            //float yawError = RotationCorrector.YawError(vehicle.transform.rotation, pathRotation);
-            //float distance = heuristicNN.Distance;
-
-            ////if (!startup.isStartUp && (Mathf.Abs(yawError) > 10f || distance > 2f || vehicle.speed < expectedSpeed*0.9f))
-            //if (Mathf.Abs(yawError) > 30f)
-            //{
-            //    return false;
-            //}
-
-            //return true;
         }
 
         private Sample GetInterpolatedNearestSample()

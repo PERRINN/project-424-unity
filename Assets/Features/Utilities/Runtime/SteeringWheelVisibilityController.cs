@@ -1,8 +1,8 @@
-﻿namespace Perrinn424.Utilities
-{
-    using Perrinn424.UI;
-    using UnityEngine;
+﻿using Perrinn424.UI;
+using UnityEngine;
 
+namespace Perrinn424.Utilities
+{
     public class SteeringWheelVisibilityController : MonoBehaviour
     {
         public KeyCode nextOptionKey;
