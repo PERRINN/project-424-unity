@@ -43,7 +43,7 @@ namespace Perrinn424.AutopilotSystem
         private AutopilotDebugDrawer debugDrawer;
         private IPIDInfo pidInfo;
 
-        private void Awake()
+        public override void OnEnableComponent()
         {
             pidInfo = lateralCorrector;
         }
