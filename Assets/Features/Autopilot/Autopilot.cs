@@ -24,9 +24,6 @@ namespace Perrinn424.AutopilotSystem
         [SerializeField]
         private PathDrawer pathDrawer;
 
-        [SerializeField]
-        private RespawnController respawnController;
-
         [Header("Setup")]
 
         public InputType inputType;
@@ -111,9 +108,6 @@ namespace Perrinn424.AutopilotSystem
                 if (!CanOperate())
                 {
                     Debug.LogWarning("Autopilot can't operate from these conditions");
-
-                    Sample s = recordedLap[autopilotSearcher.StartIndex];
-                    respawnController.Respawn(s.position, s.rotation);
                     return;
                 }
             }
