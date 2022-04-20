@@ -13,10 +13,10 @@ namespace Perrinn424.AutopilotSystem
 
             float error = YawError(rb.transform.rotation, targetRotation);
 
-            PID.input = error;
-            PID.Compute();
+            PIDController.input = error;
+            PIDController.Compute();
 
-            rb.AddRelativeTorque(0f, PID.output, 0f);
+            rb.AddRelativeTorque(0f, PIDController.output, 0f);
         }
 
         public static float YawError(Quaternion rotation, Quaternion targetRotation)

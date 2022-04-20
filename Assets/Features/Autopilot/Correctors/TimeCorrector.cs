@@ -15,9 +15,9 @@ namespace Perrinn424.AutopilotSystem
             if (Mathf.Abs(Error) > errorThreshold)
                 return;
 
-            PID.input = Error;
-            PID.Compute();
-            Vector3 localForce = Vector3.forward * PID.output;
+            PIDController.input = Error;
+            PIDController.Compute();
+            Vector3 localForce = Vector3.forward * PIDController.output;
 
             Force = rb.transform.TransformVector(localForce);
 

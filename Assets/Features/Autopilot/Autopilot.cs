@@ -1,5 +1,4 @@
-﻿using Perrinn424.Utilities;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Serialization;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
@@ -42,6 +41,12 @@ namespace Perrinn424.AutopilotSystem
 
         private AutopilotSearcher autopilotSearcher;
         private AutopilotDebugDrawer debugDrawer;
+        private IPIDInfo pidInfo;
+
+        private void Awake()
+        {
+            pidInfo = lateralCorrector;
+        }
 
         public override void OnEnableVehicle()
         {
@@ -51,6 +56,7 @@ namespace Perrinn424.AutopilotSystem
             startup.Init(vehicle);
             debugDrawer = new AutopilotDebugDrawer();
             pathDrawer.recordedLap = recordedLap;
+            pidInfo = lateralCorrector;
 
             vehicle.onBeforeUpdateBlocks += UpdateAutopilot;
         }
@@ -81,10 +87,13 @@ namespace Perrinn424.AutopilotSystem
             if (IsStartup) //startup block
             {
                 runningSample = startup.Correct(runningSample);
+                pidInfo = startup.lateralCorrector;
             }
             else //main block
             {
                 lateralCorrector.Correct(targetPosition);
+                pidInfo = lateralCorrector;
+
                 float currentTime = timer.currentLapTime;
                 timeCorrector.Correct(PlayingTime(), currentTime);
             }
@@ -175,13 +184,13 @@ namespace Perrinn424.AutopilotSystem
                 debugDrawer.Draw();
         }
 
-        public override float Error => lateralCorrector.Error;
-        public override float P => lateralCorrector.PID.proportional;
-        public override float I => lateralCorrector.PID.integral;
-        public override float D => lateralCorrector.PID.derivative;
-        public override float PID => lateralCorrector.PID.output;
-        public override float MaxForceP => lateralCorrector.max;
-        public override float MaxForceD => lateralCorrector.max; //TODO remove MaxForceD
+        public override float Error => pidInfo.Error;
+        public override float P => pidInfo.P;
+        public override float I => pidInfo.I;
+        public override float D => pidInfo.D;
+        public override float PID => pidInfo.PID;
+        public override float MaxForceP => pidInfo.MaxForceP;
+        public override float MaxForceD => pidInfo.MaxForceD; //TODO remove MaxForceD
 
         public override bool IsStartup => startup.isStartUp;
     }

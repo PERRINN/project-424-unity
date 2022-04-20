@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Perrinn424.AutopilotSystem
 {
     [Serializable]
-    public abstract class Corrector
+    public abstract class Corrector : IPIDInfo
     {
         public bool enabled = true;
         public float kp;
@@ -15,15 +15,27 @@ namespace Perrinn424.AutopilotSystem
         public PidController.ProportionalMode mode;
 
         protected Rigidbody rb;
-        public PidController PID { get; private set; }
+        protected PidController PIDController { get; private set; }
 
         public Vector3 Force { get; protected set; }
         public float Error { get; protected set; }
 
+        public float P => PIDController.proportional;
+
+        public float I => PIDController.integral;
+
+        public float D => PIDController.derivative;
+
+        public virtual float MaxForceP => throw new NotImplementedException();
+
+        public virtual float MaxForceD => throw new NotImplementedException();
+
+        public float PID => PIDController.output;
+
         public void Init(Rigidbody rb)
         {
             this.rb = rb;
-            PID = new PidController();
+            PIDController = new PidController();
         }
         protected void UpdatePIDSettings()
         {
@@ -32,11 +44,11 @@ namespace Perrinn424.AutopilotSystem
 
         protected void UpdatePIDSettings(float kp, float ki, float kd)
         {
-            PID.SetParameters(kp, ki, kd);
-            PID.limitedOutput = true;
-            PID.maxOutput = enabled ? max : 0;
-            PID.minOutput = enabled ? -max : 0;
-            PID.proportionalMode = mode;
+            PIDController.SetParameters(kp, ki, kd);
+            PIDController.limitedOutput = true;
+            PIDController.maxOutput = enabled ? max : 0;
+            PIDController.minOutput = enabled ? -max : 0;
+            PIDController.proportionalMode = mode;
         }
     } 
 }

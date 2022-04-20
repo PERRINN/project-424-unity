@@ -10,8 +10,14 @@ namespace Perrinn424.AutopilotSystem
         public float maxForceP;
         public float maxForceD;
 
+
+
         public Vector3 localApplicationPosition;
         public Vector3 ApplicationPosition { get; private set; }
+
+        public override float MaxForceP => maxForceP;
+
+        public override float MaxForceD => maxForceD;
 
         private float previousUnsignedError;
         public void Correct(Vector3 targetPosition)
@@ -29,9 +35,9 @@ namespace Perrinn424.AutopilotSystem
 
             UpdatePID(unsignedError);
 
-            PID.input = Error;
-            PID.Compute();
-            Vector3 localForce = -correctionAxis * PID.output;
+            PIDController.input = Error;
+            PIDController.Compute();
+            Vector3 localForce = -correctionAxis * PIDController.output;
 
             Force = rb.transform.TransformVector(localForce);
 
