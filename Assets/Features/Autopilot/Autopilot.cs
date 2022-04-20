@@ -84,6 +84,18 @@ namespace Perrinn424.AutopilotSystem
             Sample runningSample = GetInterpolatedNearestSample();
             Vector3 targetPosition = autopilotSearcher.ProjectedPosition;
 
+            float yawError = RotationCorrector.YawError(vehicle.transform.rotation, runningSample.rotation);
+
+            if (yawError > 90f)
+            {
+                SetStatus(false);
+            }
+            else if (yawError > 30)
+            {
+                return;
+            }
+
+
             if (IsStartup) //startup block
             {
                 runningSample = startup.Correct(runningSample);
@@ -137,6 +149,7 @@ namespace Perrinn424.AutopilotSystem
 
             return true;
         }
+
 
         private Sample GetInterpolatedNearestSample()
         {
