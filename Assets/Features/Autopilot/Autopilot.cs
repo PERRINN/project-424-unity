@@ -89,12 +89,8 @@ namespace Perrinn424.AutopilotSystem
             if (yawError > 90f)
             {
                 SetStatus(false);
-            }
-            else if (yawError > 30)
-            {
                 return;
             }
-
 
             if (IsStartup) //startup block
             {
