@@ -19,6 +19,8 @@ namespace Perrinn424.AutopilotSystem
         public float throttle;
         public float brakePressure;
 
+        public float drsPosition;
+
 
         public static Sample Lerp(Sample a, Sample b, float t)
         {
@@ -35,7 +37,9 @@ namespace Perrinn424.AutopilotSystem
                 steeringAngle = Mathf.Lerp(a.steeringAngle, b.steeringAngle, t),
                 throttle = Mathf.Lerp(a.throttle, b.throttle, t),
                 brakePressure = Mathf.Lerp(a.brakePressure, b.brakePressure, t),
-                gear = a.gear
+                gear = a.gear,
+
+                drsPosition = Mathf.Lerp(a.drsPosition, b.drsPosition, t),
             };
         }
 
@@ -54,7 +58,9 @@ namespace Perrinn424.AutopilotSystem
                 steeringAngle = Mathf.LerpUnclamped(a.steeringAngle, b.steeringAngle, t),
                 throttle = Mathf.LerpUnclamped(a.throttle, b.throttle, t),
                 brakePressure = Mathf.LerpUnclamped(a.brakePressure, b.brakePressure, t),
-                gear = a.gear
+                gear = a.gear,
+                
+                drsPosition = Mathf.LerpUnclamped(a.drsPosition, b.drsPosition, t),
             };
         }
 

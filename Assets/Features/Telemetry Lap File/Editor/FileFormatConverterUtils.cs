@@ -214,6 +214,8 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                 sample.throttle = table[rowIndex, "THROTTLE"];
                 sample.brakePressure = table[rowIndex, "BRAKEPRESSURE"];
 
+                table.TryGetValue(rowIndex, "AERODRSPOSITION", out sample.drsPosition);
+
                 samples.Add(sample);
             }
 

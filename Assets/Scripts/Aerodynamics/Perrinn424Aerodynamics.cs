@@ -101,7 +101,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		fRH_mm = Mathf.Clamp(fRH_mm, 0, 100);
 		rRH_mm = Mathf.Clamp(rRH_mm, 0, 100);
 		DRSpos = Mathf.Clamp(DRSpos, 0, 1);
-		flapAngle_deg = Mathf.Clamp(flapAngle_deg, -5, 5);
+		flapAngle_deg = Mathf.Clamp(flapAngle_deg, -15, 5);
 		yawAngle_deg = Mathf.Clamp(Math.Abs(yawAngle_deg), 0, 10);
 		steerAngle_deg = Mathf.Clamp(Math.Abs(steerAngle_deg), 0, 20);
 		rollAngle_deg = Mathf.Clamp(Math.Abs(rollAngle_deg), 0, 3);
@@ -148,7 +148,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			DRSpos -= Time.deltaTime * (1 / dRSActivationTime);
 			DRStime = dRSActivationDelay;
 		}
-		DRSpos = Mathf.Clamp(DRSpos, 0, 1);
+		DRSpos = Mathf.Clamp(DRSpos, 0, 0.5f);
 		return DRSpos;
 	}
 
@@ -180,7 +180,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Calculating front flap deflection due to aeroelasticity
 		flapAngle = frontFlapStaticAngle + downforceFront * frontFlapFlexDeltaAngle / frontFlapFlexMaxDownforce;
-		flapAngle = Mathf.Clamp(flapAngle, -5, 5);
+		flapAngle = Mathf.Clamp(flapAngle, -15, 5);
 
 		// Calculating aero forces
 		if (front.applicationPoint != null)
