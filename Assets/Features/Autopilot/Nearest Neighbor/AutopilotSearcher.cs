@@ -16,7 +16,6 @@ namespace Perrinn424.AutopilotSystem
             this.autopilot = autopilot;
 
             Path path = new Path(recordedLap);
-            IProjector projector = new CrossProductProjector();
             
             int lookBehind = (int)(1f * recordedLap.frequency); //seconds to samples
             int lookAhead = (int)(2f * recordedLap.frequency); //seconds to samples
@@ -24,6 +23,7 @@ namespace Perrinn424.AutopilotSystem
             SectorSearcherNearestNeighbor sectorSearcher = new SectorSearcherNearestNeighbor(path, 2, float.PositiveInfinity);
             AutopilotNearestNeighbourSearcher nearestNeighbourSearcher = new AutopilotNearestNeighbourSearcher(heuristicNN, sectorSearcher);
 
+            IProjector projector = new CrossProductProjector();
             segmentSearcher = new NearestSegmentComposed(nearestNeighbourSearcher, projector, path);
         }
 

@@ -24,6 +24,12 @@ namespace Perrinn424.AutopilotSystem.Editor.Tests
             TestProjector(new CrossProductProjector());
         }
 
+        [Test]
+        public void AreaProjectorTest()
+        {
+            TestProjector(new AreaProjector());
+        }
+
         private void TestProjector(IProjector projector)
         {
             GameObject go = new GameObject("test");
