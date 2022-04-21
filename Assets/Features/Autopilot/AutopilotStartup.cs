@@ -27,9 +27,15 @@ namespace Perrinn424.AutopilotSystem
 
         public bool IsStartup(float expectedSpeed)
         {
-            //if (isStartUp)
+            float threshold = 0.20f;
+            float speed = vehicle.speed;
+            if (isStartUp && speed > expectedSpeed * (speedPercentage + threshold))
             {
-                isStartUp = vehicle.speed < expectedSpeed * speedPercentage;
+                isStartUp = false;
+            }
+            else if (!isStartUp && speed < expectedSpeed * (speedPercentage))
+            {
+                isStartUp = true;
             }
 
             return isStartUp;
