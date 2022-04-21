@@ -70,7 +70,8 @@ public class Perrinn424CarController : VehicleBase
 
 	// Powertrain and dynamics
 
-	public InputSettings input = new InputSettings();
+	[UnityEngine.Serialization.FormerlySerializedAs("input")]
+	public PedalSetup pedals = new PedalSetup();
 	public MotorGeneratorUnit.Settings frontMgu = new MotorGeneratorUnit.Settings();
 	public MotorGeneratorUnit.Settings rearMgu = new MotorGeneratorUnit.Settings();
 
@@ -454,8 +455,8 @@ public class Perrinn424CarController : VehicleBase
 			// Being in a separate class allows all intermediate steps to be traced separately
 			// (pedal > mgu throttle > electrical torque > mechanical torque > wheel torque)
 
-			m_throttleInput = input.GetThrottleInput(throttlePosition);
-			m_brakePressure = input.GetBrakePressure(brakePosition);
+			m_throttleInput = pedals.GetThrottleInput(throttlePosition);
+			m_brakePressure = pedals.GetBrakePressure(brakePosition);
 
 			// Process steering
 
