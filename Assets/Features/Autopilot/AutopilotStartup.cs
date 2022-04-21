@@ -7,7 +7,6 @@ namespace Perrinn424.AutopilotSystem
     [Serializable]
     public class AutopilotStartup
     {
-        public PositionCorrector lateralCorrector;
         public RotationCorrector rotationCorrector;
 
         [Range(0.1f, 1f)]
@@ -21,7 +20,6 @@ namespace Perrinn424.AutopilotSystem
         public void Init(VehicleBase vehicle)
         {
             this.vehicle = vehicle;
-            lateralCorrector.Init(vehicle.cachedRigidbody);
             rotationCorrector.Init(vehicle.cachedRigidbody);
         }
 
@@ -43,7 +41,6 @@ namespace Perrinn424.AutopilotSystem
         public Sample Correct(Sample sample)
         {
 
-            lateralCorrector.Correct(sample.position);
             rotationCorrector.Correct(sample.rotation);
 
             Sample startupSample = sample;

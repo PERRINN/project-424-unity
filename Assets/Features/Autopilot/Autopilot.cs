@@ -94,20 +94,19 @@ namespace Perrinn424.AutopilotSystem
 
             if (IsStartup) //startup block
             {
+                lateralCorrector.Correct(targetPosition);
                 runningSample = startup.Correct(runningSample);
-                pidInfo = startup.lateralCorrector;
             }
             else //main block
             {
                 lateralCorrector.Correct(targetPosition);
-                pidInfo = lateralCorrector;
-
                 float currentTime = timer.currentLapTime;
                 timeCorrector.Correct(PlayingTime(), currentTime);
             }
 
             debugDrawer.Set(targetPosition, lateralCorrector.ApplicationPosition, lateralCorrector.Force);
             WriteInput(runningSample);
+
         }
 
         public override float PlayingTime()
