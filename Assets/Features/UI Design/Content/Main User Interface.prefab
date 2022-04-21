@@ -1349,6 +1349,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 6482964570999943830}
+  - {fileID: 5154086124470813036}
+  - {fileID: 1314388970706506829}
+  - {fileID: 4235682229337021583}
   - {fileID: 5051530347851718636}
   - {fileID: 1428239417408451103}
   - {fileID: 5568984689735581114}
@@ -1357,10 +1361,6 @@ RectTransform:
   - {fileID: 6086259146194057866}
   - {fileID: 8652655781797358605}
   - {fileID: 4655962484615186600}
-  - {fileID: 6482964570999943830}
-  - {fileID: 5154086124470813036}
-  - {fileID: 1314388970706506829}
-  - {fileID: 4235682229337021583}
   - {fileID: 9156976752330996244}
   - {fileID: 1530254560282725494}
   - {fileID: 6196470581538760501}
@@ -4696,7 +4696,7 @@ PrefabInstance:
     - target: {fileID: 7892802199387513913, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7892802199648162489, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
@@ -4830,7 +4830,7 @@ PrefabInstance:
     - target: {fileID: 1862744975944216236, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Text
-      value: Steering Pedals
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1862744975944216236, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -4850,7 +4850,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -4940,11 +4940,16 @@ PrefabInstance:
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Text
-      value: Arrows
+      value: '- Drive!'
       objectReference: {fileID: 0}
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_FontData.m_MinSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
+        type: 3}
+      propertyPath: m_FontData.m_HorizontalOverflow
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4257878205998080943, guid: db55f80ad4849d84fb9b6dea78d742ca,
@@ -4960,7 +4965,7 @@ PrefabInstance:
     - target: {fileID: 6562364661668434859, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Name
-      value: Steering Pedals
+      value: Driving 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db55f80ad4849d84fb9b6dea78d742ca, type: 3}
@@ -5000,7 +5005,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -5150,7 +5155,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -5280,7 +5285,9 @@ PrefabInstance:
     - target: {fileID: 1862744975944216236, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Text
-      value: Reverse
+      value: '
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 1862744975944216236, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -5300,7 +5307,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -5390,11 +5397,16 @@ PrefabInstance:
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Text
-      value: R
+      value: '- Press Gear Up to engage D mode'
       objectReference: {fileID: 0}
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_FontData.m_MinSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
+        type: 3}
+      propertyPath: m_FontData.m_HorizontalOverflow
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4257878205998080943, guid: db55f80ad4849d84fb9b6dea78d742ca,
@@ -5410,7 +5422,7 @@ PrefabInstance:
     - target: {fileID: 6562364661668434859, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Name
-      value: Reverse
+      value: Driving 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db55f80ad4849d84fb9b6dea78d742ca, type: 3}
@@ -5455,7 +5467,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -6228,7 +6240,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -6539,7 +6551,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -6695,7 +6707,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -6836,7 +6848,7 @@ PrefabInstance:
     - target: {fileID: 1862744975944216236, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Text
-      value: Drive
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1862744975944216236, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -6856,7 +6868,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -6946,11 +6958,16 @@ PrefabInstance:
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Text
-      value: 1
+      value: '- Press I to see and configure controls'
       objectReference: {fileID: 0}
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_FontData.m_MinSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
+        type: 3}
+      propertyPath: m_FontData.m_HorizontalOverflow
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4257878205998080943, guid: db55f80ad4849d84fb9b6dea78d742ca,
@@ -6966,7 +6983,7 @@ PrefabInstance:
     - target: {fileID: 6562364661668434859, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Name
-      value: Drive
+      value: Driving 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db55f80ad4849d84fb9b6dea78d742ca, type: 3}
@@ -7557,7 +7574,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -7707,7 +7724,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -8157,7 +8174,7 @@ PrefabInstance:
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2511935873057568164, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
@@ -8247,7 +8264,7 @@ PrefabInstance:
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
       propertyPath: m_Text
-      value: Driving 424
+      value: Driving the 424
       objectReference: {fileID: 0}
     - target: {fileID: 3345080401972906057, guid: db55f80ad4849d84fb9b6dea78d742ca,
         type: 3}
