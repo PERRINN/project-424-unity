@@ -31,14 +31,14 @@ namespace Perrinn424.AutopilotSystem
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 autopilot.ToggleStatus();
-                if (autopilot.IsOn)
+                if (m_deviceInput != null)
                 {
-                    m_deviceInput.forceIntensity = 0.0f;
-                    m_deviceInput.damperCoefficient = 0.0f;
-                }
-                else
-                {
-                    if (m_deviceInput != null)
+                    if (autopilot.IsOn)
+                    {
+                        m_deviceInput.forceIntensity = 0.0f;
+                        m_deviceInput.damperCoefficient = 0.0f;
+                    }
+                    else
                     {
                         m_deviceInput.forceIntensity = m_ffbForceIntensity;
                         m_deviceInput.damperCoefficient = m_ffbDamperCoefficient;
@@ -75,5 +75,5 @@ namespace Perrinn424.AutopilotSystem
                 autopilot = this.GetComponent<BaseAutopilot>();
             }
         }
-    } 
+    }
 }
