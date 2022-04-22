@@ -1102,9 +1102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2483877715271342902}
-  - component: {fileID: 2483877715271342922}
-  - component: {fileID: 2483877715271342923}
-  - component: {fileID: 2483877715271342901}
+  - component: {fileID: 7806771898872592265}
   m_Layer: 8
   m_Name: Input
   m_TagString: Untagged
@@ -1126,7 +1124,7 @@ Transform:
   m_Father: {fileID: 2483877716221292743}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2483877715271342922
+--- !u!114 &7806771898872592265
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1135,125 +1133,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877715271342903}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 541707468, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 11500000, guid: faef65e9e7c17c445ad5b5e25e433df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throttleAndBrakeMode: 0
-  brakeOnThrottleBackwards: 0
-  applyClutchOnHandbrake: 1
-  unlockDrivelineOnHandbrake: 1
-  progressiveSteerMode: 0
-  movementRate: 0.25
-  autoCenterRate: 0.01
-  ignitionKey: 107
-  steerAxis: Horizontal
-  throttleAndBrakeAxis: Vertical
-  handbrakeAxis: Jump
-  clutchAxis: Fire1
-  gearShiftButton: Fire2
-  gearModeSelectButton: Fire3
-  keyboardNumbersSelectGears: 1
-  neutralGear: 110
-  reverseGear: 114
-  externalThrottle: 0
-  reverse: 0
-  externalBrake: 0
-  externalHandbrake: 0
-  externalSteer: 0
-  externalClutch: 0
-  externalIgnition: 1
-  lockBrakesOnEnable: 0
---- !u!114 &2483877715271342923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2483877715271342903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679343879, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedDevice: 1
-  deviceModel: 2
-  configuredWheelRange: 850
-  steeringNonLinearBias: 0.5
-  digitalHandbrakeRate: 2
-  unlockDrivelineOnHandbrake: 0
-  disableClutchInput: 0
-  fallbackToStandardInput: 1
-  disableVehicleSteeringAids: 0
-  throttleRangeMin: 0
-  throttleRangeMax: 1
-  brakeRangeMin: 0.40317813
-  brakeRangeMax: 1
-  clutchRangeMin: 0
-  clutchRangeMax: 0.6
-  ignitionKeyPosition: 0
-  automaticGearPosition: 3
-  manualGearPosition: 0
-  handbrakeLocked: 0
-  logicalTireWidth: 0.3
-  forceIntensity: 0.5
-  weightIntensity: 1.5
-  nonLinearBias: 0.7
-  damperCoefficient: 0.25
-  showForceFeedbackUI: 0
-  forceFeedbackUI: {fileID: 0}
-  gearShiftUp: 4
-  gearShiftDown: 5
-  automaticGearNext: 15
-  automaticGearPrev: 17
-  ignitionKeyOn: 102
-  ignitionKeyOff: 103
-  handbrake: 105
-  brakeLockToggle: 100
-  retarderShiftUp: 18
-  retarderShiftDown: 16
-  g29GearShiftUp: 4
-  g29GearShiftDown: 5
-  g29AutomaticGearNext: 5
-  g29AutomaticGearPrev: 4
-  g29IgnitionKeyOn: 102
-  g29IgnitionKeyOff: 103
-  g29Handbrake: 105
-  g29BrakeLockToggle: 100
-  g29RetarderShiftUp: 10
-  g29RetarderShiftDown: 11
-  forceFeedbackGui: 0
-  positionX: -8
-  positionY: 8
-  font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
-  enableTestEffects: 0
-  enableForce: 0
-  force: 0
-  enableSpring: 0
-  springCenter: 0
-  springSaturation: 0
-  springSlope: 0
-  enableDamper: 0
-  damperSlope: 0
-  enableFriction: 0
-  frictionSaturation: 0
-  frictionCoefficient: 0
-  debugGizmos: 0
-  debugInfo: 0
---- !u!114 &2483877715271342901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2483877715271342903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1334591726, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resetVehicleKey: 13
-  heightIncrement: 1.6
-  resetState: 0
+  inputUserName: Perrinn424
+  forceFeedbackEnabled: 1
+  rumbleEnabled: 0
+  forceFeedbackSettings:
+    forceGain: 0.75
+    steeringSensitivity: 0.3
+    nonLinearBias: 0.55
+    damperEffect: 0.5
+    frictionEffect: 0.05
+    frictionMaxSpeed: 2
+  rumbleSettings:
+    idleIntensity: 0.2
+    minIntensity: 0.1
+    maxIntensity: 0.7
+    minFrequency: 15
+    maxFrequency: 100
+    maxVehicleSpeed: 20
+    suspensionGain: 0.2
+    suspensionCutSpeed: 0.5
+    suspensionMaxSpeed: 5
 --- !u!1 &2483877715507374421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1816,7 +1718,7 @@ MonoBehaviour:
   rearTires: {fileID: 11400000, guid: 090ba72abe8af4e0d9ad3ca0fbdb21e0, type: 2}
   frontAxleReference: {fileID: 2483877716415502929}
   rearAxleReference: {fileID: 2483877716124499243}
-  input:
+  pedals:
     throttleShape: 1.6
     brakeShape: 2
     brakePedalGain: 0.9
@@ -5146,15 +5048,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 900d97410ebe6a2498cb8dc92ac53e64, type: 3}
---- !u!1 &4187773816611061094 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1757942647432846808, guid: 900d97410ebe6a2498cb8dc92ac53e64,
-    type: 3}
-  m_PrefabInstance: {fileID: 2483877715090219198}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4186009792909703032 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1760678915967702982, guid: 900d97410ebe6a2498cb8dc92ac53e64,
+    type: 3}
+  m_PrefabInstance: {fileID: 2483877715090219198}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4187773816611061094 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1757942647432846808, guid: 900d97410ebe6a2498cb8dc92ac53e64,
     type: 3}
   m_PrefabInstance: {fileID: 2483877715090219198}
   m_PrefabAsset: {fileID: 0}
@@ -6592,54 +6494,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a2514ec946e6ba40a1d701bdc2a7b68, type: 3}
---- !u!4 &8510214184042845374 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6342554337050816458, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &8481584648128768785 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6605577145446338661, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &839708947037456060 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2717961889626275272, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &6447244425743666043 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -619760053346750449, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &3609935057921437074 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -7204055256408697114, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &5044577816045206950 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7502695633320085202, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2996481841330314399 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1476911621587741050 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4206386712990552590, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &596898712701969201 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6460553226807240635, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
@@ -6658,15 +6512,57 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3323407102002314100}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2354110884584777178 stripped
+--- !u!4 &2996481841330314399 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8163787770136502610, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
     type: 3}
   m_PrefabInstance: {fileID: 3323407102002314100}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &8651147804206917358 stripped
+--- !u!4 &5044577816045206950 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 6201474490467933594, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+  m_CorrespondingSourceObject: {fileID: 7502695633320085202, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8481584648128768785 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6605577145446338661, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3609935057921437074 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7204055256408697114, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6447244425743666043 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -619760053346750449, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &839708947037456060 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2717961889626275272, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2320217314954261754 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1021204944190214030, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8510214184042845374 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6342554337050816458, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2354110884584777178 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8163787770136502610, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
     type: 3}
   m_PrefabInstance: {fileID: 3323407102002314100}
   m_PrefabAsset: {fileID: 0}
@@ -6676,9 +6572,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3323407102002314100}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2320217314954261754 stripped
+--- !u!4 &8651147804206917358 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1021204944190214030, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+  m_CorrespondingSourceObject: {fileID: 6201474490467933594, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1476911621587741050 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4206386712990552590, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
     type: 3}
   m_PrefabInstance: {fileID: 3323407102002314100}
   m_PrefabAsset: {fileID: 0}
