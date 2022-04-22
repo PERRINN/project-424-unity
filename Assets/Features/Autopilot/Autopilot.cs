@@ -41,12 +41,7 @@ namespace Perrinn424.AutopilotSystem
 
         private AutopilotSearcher autopilotSearcher;
         private AutopilotDebugDrawer debugDrawer;
-        private IPIDInfo pidInfo;
-
-        public override void OnEnableComponent()
-        {
-            pidInfo = lateralCorrector;
-        }
+        private IPIDInfo PIDInfo => lateralCorrector;
 
         public override void OnEnableVehicle()
         {
@@ -56,7 +51,6 @@ namespace Perrinn424.AutopilotSystem
             startup.Init(vehicle);
             debugDrawer = new AutopilotDebugDrawer();
             pathDrawer.recordedLap = recordedLap;
-            pidInfo = lateralCorrector;
 
             vehicle.onBeforeUpdateBlocks += UpdateAutopilot;
         }
@@ -192,13 +186,13 @@ namespace Perrinn424.AutopilotSystem
                 debugDrawer.Draw();
         }
 
-        public override float Error => pidInfo.Error;
-        public override float P => pidInfo.P;
-        public override float I => pidInfo.I;
-        public override float D => pidInfo.D;
-        public override float PID => pidInfo.PID;
-        public override float MaxForceP => pidInfo.MaxForceP;
-        public override float MaxForceD => pidInfo.MaxForceD; //TODO remove MaxForceD
+        public override float Error => PIDInfo.Error;
+        public override float P => PIDInfo.P;
+        public override float I => PIDInfo.I;
+        public override float D => PIDInfo.D;
+        public override float PID => PIDInfo.PID;
+        public override float MaxForceP => PIDInfo.MaxForceP;
+        public override float MaxForceD => PIDInfo.MaxForceD; //TODO remove MaxForceD
 
         public override bool IsStartup => startup.isStartUp;
     }
