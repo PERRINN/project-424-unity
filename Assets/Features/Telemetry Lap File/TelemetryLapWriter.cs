@@ -17,6 +17,9 @@ namespace Perrinn424.TelemetryLapSystem
         private LapTimer lapTimer;
 
         [SerializeField]
+        private bool disableOnBuilds = true;
+
+        [SerializeField]
         private Frequency frequency;
 
         private DataRow dataRow;
@@ -31,9 +34,16 @@ namespace Perrinn424.TelemetryLapSystem
 
         public override void OnEnableVehicle()
         {
+            if (disableOnBuilds && !Application.isEditor)
+                {
+                // OnDisableVehicle won't be called if the component is disabled here
+                enabled = false;
+                return;
+                }
+
             lapTimer.onBeginLap += LapBeginEventHandler;
             lapTimer.onLap += LapCompletedEventHandler;
-            
+
             frequency.Reset();
             channels.Reset(vehicle);
 
@@ -58,7 +68,7 @@ namespace Perrinn424.TelemetryLapSystem
             var dataRowCount = DataRow.ParamCount;
             var channelsCount = channels.Length;
             int width = dataRowCount + channelsCount;
-            
+
             rowCache = new float[width];
 
             headers.AddRange(DataRow.Headers);
@@ -84,7 +94,7 @@ namespace Perrinn424.TelemetryLapSystem
         {
             if (frequency.Update(Time.deltaTime)  && file.IsRecordingReady)
             {
-                channels.RefreshIfNeeded(); 
+                channels.RefreshIfNeeded();
                 WriteLine();
             }
         }
