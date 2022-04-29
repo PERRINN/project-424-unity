@@ -640,7 +640,7 @@ MonoBehaviour:
   mass: 25
   radius: 0.34
   center: {x: 0, y: 0, z: 0}
-  suspensionDistance: 0.06
+  suspensionDistance: 0.065
   suspensionAnchor: 0
   springRate: 170000
   damperRate: 3000
@@ -698,7 +698,7 @@ MonoBehaviour:
   mass: 25
   radius: 0.34
   center: {x: 0, y: 0, z: 0}
-  suspensionDistance: 0.07
+  suspensionDistance: 0.09
   suspensionAnchor: 0
   springRate: 170000
   damperRate: 3000
@@ -853,6 +853,7 @@ GameObject:
   - component: {fileID: 5326984190949575772}
   - component: {fileID: 2623578543911979919}
   - component: {fileID: 2218053485607648859}
+  - component: {fileID: 1193015119273251600}
   m_Layer: 8
   m_Name: Dynamics
   m_TagString: Untagged
@@ -1093,6 +1094,25 @@ MonoBehaviour:
     fontColor: {r: 1, g: 1, b: 1, a: 1}
     scrollLines: 0
   defaultFont: {fileID: 0}
+--- !u!114 &1193015119273251600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483877715235533906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -751844543, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axle: 1
+  wheel: 2
+  minCompression: 0.9
+  maxSpringRateOffset: 400000
+  adjustDamper: 0
+  maxDamperRateOffset: 500
+  linearityFactor: 0.5
 --- !u!1 &2483877715271342903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,7 +1370,7 @@ MonoBehaviour:
   mass: 25
   radius: 0.34
   center: {x: 0, y: 0, z: 0}
-  suspensionDistance: 0.06
+  suspensionDistance: 0.065
   suspensionAnchor: 0
   springRate: 170000
   damperRate: 3000
@@ -1408,7 +1428,7 @@ MonoBehaviour:
   mass: 25
   radius: 0.34
   center: {x: 0, y: 0, z: 0}
-  suspensionDistance: 0.07
+  suspensionDistance: 0.09
   suspensionAnchor: 0
   springRate: 170000
   damperRate: 3000
@@ -5048,15 +5068,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 900d97410ebe6a2498cb8dc92ac53e64, type: 3}
---- !u!4 &4186009792909703032 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1760678915967702982, guid: 900d97410ebe6a2498cb8dc92ac53e64,
-    type: 3}
-  m_PrefabInstance: {fileID: 2483877715090219198}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4187773816611061094 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1757942647432846808, guid: 900d97410ebe6a2498cb8dc92ac53e64,
+    type: 3}
+  m_PrefabInstance: {fileID: 2483877715090219198}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4186009792909703032 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1760678915967702982, guid: 900d97410ebe6a2498cb8dc92ac53e64,
     type: 3}
   m_PrefabInstance: {fileID: 2483877715090219198}
   m_PrefabAsset: {fileID: 0}
