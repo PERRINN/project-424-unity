@@ -6,7 +6,7 @@ using Perrinn424.AerodynamicsSystem;
 
 public class Perrinn424Aerodynamics : VehicleBehaviour
 {
-    public AltitudeConverter altitudeConverter;
+	public AltitudeConverter altitudeConverter;
 
 	[Space(5)]
 	public float deltaISA                  = 0.0f;
@@ -159,13 +159,13 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Getting driver's input
 		int[] input            = vehicle.data.Get(Channel.Input);
-        int[] raceInput        = vehicle.data.Get(Channel.RaceInput);
+		int[] raceInput        = vehicle.data.Get(Channel.RaceInput);
 		float throttlePosition = input[InputData.Throttle] / 10000.0f;
 		float brakePosition    = input[InputData.Brake] / 10000.0f;
-        bool drsPressed        = raceInput[RaceInputData.Drs] != 0;
-        raceInput[RaceInputData.Drs] = 0;
+		bool drsPressed        = raceInput[RaceInputData.Drs] != 0;
+		raceInput[RaceInputData.Drs] = 0;
 
-        float dynamicPressure = CalculateDynamicPressure();
+		float dynamicPressure = CalculateDynamicPressure();
 		rho = (float)atmosphere.Density;
 
 		// Setting vehicle parameters for the aero model
@@ -218,29 +218,29 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	{
 		if (drsFlap != null)
 		{
-	        float drsAngle = Mathf.Lerp(drsClosedAngle, drsOpenAngle, DRS);
-	        drsFlap.localRotation = Quaternion.Euler(drsAngle, 0.0f, 0.0f);
+			float drsAngle = Mathf.Lerp(drsClosedAngle, drsOpenAngle, DRS);
+			drsFlap.localRotation = Quaternion.Euler(drsAngle, 0.0f, 0.0f);
 		}
 
 		if (frontFlap != null)
 		{
-        	float flapNorm  = (flapAngle - frontFlapStaticAngle) / ((frontFlapStaticAngle + frontFlapFlexDeltaAngle) - frontFlapStaticAngle);
-        	float visualFlapAngle = Mathf.Lerp(frontFlapStaticAngle, frontFlapStaticAngle + frontFlapFlexDeltaAngle, flapNorm);
-        	frontFlap.localRotation = Quaternion.Euler(visualFlapAngle + frontFlapRestAngle, 0.0f, 0.0f);
+			float flapNorm  = (flapAngle - frontFlapStaticAngle) / ((frontFlapStaticAngle + frontFlapFlexDeltaAngle) - frontFlapStaticAngle);
+			float visualFlapAngle = Mathf.Lerp(frontFlapStaticAngle, frontFlapStaticAngle + frontFlapFlexDeltaAngle, flapNorm);
+			frontFlap.localRotation = Quaternion.Euler(visualFlapAngle + frontFlapRestAngle, 0.0f, 0.0f);
 		}
 	}
 
 
-    private float CalculateDynamicPressure()
-    {
-        Rigidbody rb = vehicle.cachedRigidbody;
-        float vSquared = rb.velocity.sqrMagnitude;
-        float y = rb.worldCenterOfMass.y;
-        float altitude = altitudeConverter.ToAltitude(y);
-        atmosphere.UpdateAtmosphere(altitude, deltaISA);
-        float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
-        return dynamicPressure;
-    }
+	private float CalculateDynamicPressure()
+	{
+		Rigidbody rb = vehicle.cachedRigidbody;
+		float vSquared = rb.velocity.sqrMagnitude;
+		float y = rb.worldCenterOfMass.y;
+		float altitude = altitudeConverter.ToAltitude(y);
+		atmosphere.UpdateAtmosphere(altitude, deltaISA);
+		float dynamicPressure = (float)(atmosphere.Density * vSquared / 2.0);
+		return dynamicPressure;
+	}
 
 
 	// Telemetry
