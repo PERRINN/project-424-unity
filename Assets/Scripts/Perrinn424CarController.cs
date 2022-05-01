@@ -314,6 +314,7 @@ public class Perrinn424CarController : VehicleBase
 
 		// Initialize internal data
 
+		forceRaycastIgnoreColliders = true;
 		m_gearMode = (int)Gearbox.AutomaticGear.N;
 		m_prevGearMode = (int)Gearbox.AutomaticGear.N;
 		data.Set(Channel.Input, InputData.AutomaticGear, m_gearMode);
