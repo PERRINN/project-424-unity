@@ -75,6 +75,7 @@ public class Perrinn424Input : VehicleBehaviour
 	public override void FixedUpdateVehicle ()
 		{
 		int[] inputData = vehicle.data.Get(Channel.Input);
+		int[] raceInputData = vehicle.data.Get(Channel.RaceInput);
 
 		// Throttle, brake
 
@@ -96,7 +97,9 @@ public class Perrinn424Input : VehicleBehaviour
 		if (m_input.gearUp.PressedThisFrame()) inputData[InputData.AutomaticGear]++;
 		if (m_input.gearDown.PressedThisFrame()) inputData[InputData.AutomaticGear]--;
 
-		// TODO DRS
+		// DRS
+
+		if (m_input.drsEnable.PressedThisFrame()) raceInputData[RaceInputData.Drs] = 1;
 
 		// Process force feedback if available
 

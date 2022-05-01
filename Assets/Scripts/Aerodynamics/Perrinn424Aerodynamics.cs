@@ -159,8 +159,11 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Getting driver's input
 		int[] input            = vehicle.data.Get(Channel.Input);
+        int[] raceInput        = vehicle.data.Get(Channel.RaceInput);
 		float throttlePosition = input[InputData.Throttle] / 10000.0f;
 		float brakePosition    = input[InputData.Brake] / 10000.0f;
+        bool drsPressed        = raceInput[RaceInputData.Drs] != 0;
+        raceInput[RaceInputData.Drs] = 0;
 
         float dynamicPressure = CalculateDynamicPressure();
 		rho = (float)atmosphere.Density;
