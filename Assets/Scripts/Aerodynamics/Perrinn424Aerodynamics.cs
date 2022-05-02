@@ -160,7 +160,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			DRSpos -= Time.deltaTime * (1 / dRSActivationTime);
 			DRStime = dRSActivationDelay;
 		}
-		DRSpos = Mathf.Clamp(DRSpos, 0, 0.7f);
+		DRSpos = Mathf.Clamp(DRSpos, 0, 1.0f);
 		
 		if (DRSpos == 1)
 			DRSopenButton = false;
