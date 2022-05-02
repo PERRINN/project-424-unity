@@ -147,7 +147,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 				DRStime -= Time.deltaTime;
 				if (DRStime <= 0.0f)
 					DRSpos += Time.deltaTime * (1 / dRSActivationTime);
-			}			
+			}
 		}
 		else
 		{
@@ -161,10 +161,10 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			DRStime = dRSActivationDelay;
 		}
 		DRSpos = Mathf.Clamp(DRSpos, 0, 1.0f);
-		
+
 		if (DRSpos == 1)
 			DRSopenButton = false;
-		
+
 		return DRSpos;
 	}
 
@@ -185,7 +185,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		rho = (float)atmosphere.Density;
 
 		// Setting vehicle parameters for the aero model
-		yawAngle        = vehicle.speed > 1.0f? vehicle.speedAngle : 0.0f;
+		yawAngle        = vehicle.speed > 1.0f ? vehicle.speedAngle : 0.0f;
 		steerAngle      = (vehicle.wheelState[0].steerAngle + vehicle.wheelState[1].steerAngle) / 2;
 		fronRollAngle   = vehicle.data.Get(Channel.Custom, Perrinn424Data.FrontRollAngle) / 1000.0f;
 		rearRollAngle   = vehicle.data.Get(Channel.Custom, Perrinn424Data.RearRollAngle) / 1000.0f;
