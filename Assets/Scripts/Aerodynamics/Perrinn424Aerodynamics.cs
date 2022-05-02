@@ -55,6 +55,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 	[HideInInspector] public float flapAngle   = 1.0f;
 	[HideInInspector] public bool  DRSclosing  = false;
+	[HideInInspector] public bool  DRSopenButton  = false;
 	[HideInInspector] public float DRS      = 0;
 	[HideInInspector] public float SCzFront = 0;
 	[HideInInspector] public float SCzRear  = 0;
@@ -130,16 +131,27 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//
 	//	 [OUT]	DRSpos:      0 to 1 [-]
 
-	float CalcDRSPosition(float throttlePos, float brakePos, float DRSpos)
+	float CalcDRSPosition(float throttlePos, float brakePos, float DRSpos, bool DRSbutton)
 	{
 		if (throttlePos == 1 && brakePos == 0 && !DRSclosing)
 		{
-			DRStime -= Time.deltaTime;
-			if (DRStime <= 0.0f)
+			if (DRSbutton == true)
+				DRSopenButton = true;
+
+			if (DRSopenButton)
+            {
 				DRSpos += Time.deltaTime * (1 / dRSActivationTime);
+			}
+            else
+            {
+				DRStime -= Time.deltaTime;
+				if (DRStime <= 0.0f)
+					DRSpos += Time.deltaTime * (1 / dRSActivationTime);
+			}			
 		}
 		else
 		{
+			DRSopenButton = false;
 			DRSclosing = true;
 			if (DRSpos == 0)
 			{
@@ -148,7 +160,11 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			DRSpos -= Time.deltaTime * (1 / dRSActivationTime);
 			DRStime = dRSActivationDelay;
 		}
-		DRSpos = Mathf.Clamp(DRSpos, 0, 1);
+		DRSpos = Mathf.Clamp(DRSpos, 0, 1.0f);
+		
+		if (DRSpos == 1)
+			DRSopenButton = false;
+		
 		return DRSpos;
 	}
 
@@ -178,7 +194,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		rearRideHeight  = vehicle.data.Get(Channel.Custom, Perrinn424Data.RearRideHeight);
 
 		// Calculating DRS position and feeding to the car data bus
-		DRS = CalcDRSPosition(throttlePosition, brakePosition, DRS);
+		DRS = CalcDRSPosition(throttlePosition, brakePosition, DRS, drsPressed);
 		vehicle.data.Set(Channel.Custom, Perrinn424Data.DrsPosition, Mathf.RoundToInt(DRS * 1000));
 
 		// Calculating front flap deflection due to aeroelasticity
