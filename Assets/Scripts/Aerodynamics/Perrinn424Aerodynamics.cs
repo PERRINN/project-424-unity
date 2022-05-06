@@ -175,28 +175,23 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Getting driver's input
 
-		float throttleInput = 0.0f;
-		float brakePressure = 0.0f;
-
 		int[] customData = vehicle.data.Get(Channel.Custom);
 		bool processedInputs = customData[Perrinn424Data.EnableProcessedInput] != 0;
 		if (processedInputs)
 			{
-			// Processed inputs from the 424 data
-			throttleInput = Mathf.Clamp01(customData[Perrinn424Data.InputMguThrottle] / 10000.0f);
-			brakePressure = customData[Perrinn424Data.InputBrakePressure] / 10000.0f;
+			// Processed DRS position from the 424 data
 			DRS = customData[Perrinn424Data.InputDrsPosition] / 1000.0f;
 			}
 		else
 			{
-			// Raw inputs from the 424 data
-			throttleInput = customData[Perrinn424Data.ThrottleInput] / 1000.0f;
-			brakePressure = customData[Perrinn424Data.BrakePressure] / 1000.0f;
-
 			// Detecting DRS button pressed and acknowledge
 			int[] raceInput = vehicle.data.Get(Channel.RaceInput);
 			bool drsPressed = raceInput[RaceInputData.Drs] != 0;
 			raceInput[RaceInputData.Drs] = 0;
+
+			// Raw inputs from the 424 data
+			float throttleInput = customData[Perrinn424Data.ThrottleInput] / 1000.0f;
+			float brakePressure = customData[Perrinn424Data.BrakePressure] / 1000.0f;
 
 			// Calculating DRS position
 			DRS = CalcDRSPosition(throttleInput, brakePressure, DRS, drsPressed);
