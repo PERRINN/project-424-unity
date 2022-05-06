@@ -50,6 +50,7 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	public const int InputBrakePressure			= 42;		// Brake pressure in the circuit		bar			10000			305000 = 30.5 bar
 	public const int InputSteerAngle			= 43;		// Steer angle for the steering column	deg			10000			155000 = 15.5 degrees
 	public const int InputGear					= 44;		// Gear (forward / neutral / reverse)				0 = Neutral, 1 = Forward, -1 = Reverse
+	public const int InputDrsPosition			= 45;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
 	}
 
 

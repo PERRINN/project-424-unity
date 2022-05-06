@@ -126,14 +126,14 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//  This function calculates the DRS position
 	//
 	//	 [IN]	throttlePos: 0 to 1 [-]
-	//	 [IN]	brakePos:    0 to 1 [-]
+	//	 [IN]	brakePressure: [bar]
 	//	 [IN]	DRSpos:      0 to 1 [-]
 	//
 	//	 [OUT]	DRSpos:      0 to 1 [-]
 
-	float CalcDRSPosition(float throttlePos, float brakePos, float DRSpos, bool DRSbutton)
+	float CalcDRSPosition(float throttlePos, float brakePressure, float DRSpos, bool DRSbutton)
 	{
-		if (throttlePos == 1 && brakePos == 0 && !DRSclosing)
+		if (throttlePos == 1 && brakePressure < 1 && !DRSclosing)
 		{
 			if (DRSbutton == true)
 				DRSopenButton = true;
@@ -174,12 +174,36 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		Rigidbody rb = vehicle.cachedRigidbody;
 
 		// Getting driver's input
-		int[] input            = vehicle.data.Get(Channel.Input);
-		int[] raceInput        = vehicle.data.Get(Channel.RaceInput);
-		float throttlePosition = input[InputData.Throttle] / 10000.0f;
-		float brakePosition    = input[InputData.Brake] / 10000.0f;
-		bool drsPressed        = raceInput[RaceInputData.Drs] != 0;
-		raceInput[RaceInputData.Drs] = 0;
+
+		float throttleInput = 0.0f;
+		float brakePressure = 0.0f;
+
+		int[] customData = vehicle.data.Get(Channel.Custom);
+		bool processedInputs = customData[Perrinn424Data.EnableProcessedInput] != 0;
+		if (processedInputs)
+			{
+			// Processed inputs from the 424 data
+			throttleInput = Mathf.Clamp01(customData[Perrinn424Data.InputMguThrottle] / 10000.0f);
+			brakePressure = customData[Perrinn424Data.InputBrakePressure] / 10000.0f;
+			DRS = customData[Perrinn424Data.InputDrsPosition] / 1000.0f;
+			}
+		else
+			{
+			// Raw inputs from the 424 data
+			throttleInput = customData[Perrinn424Data.ThrottleInput] / 1000.0f;
+			brakePressure = customData[Perrinn424Data.BrakePressure] / 1000.0f;
+
+			// Detecting DRS button pressed and acknowledge
+			int[] raceInput = vehicle.data.Get(Channel.RaceInput);
+			bool drsPressed = raceInput[RaceInputData.Drs] != 0;
+			raceInput[RaceInputData.Drs] = 0;
+
+			// Calculating DRS position
+			DRS = CalcDRSPosition(throttleInput, brakePressure, DRS, drsPressed);
+			}
+
+		// Feeding DRS position to the car data bus
+		customData[Perrinn424Data.DrsPosition] = Mathf.RoundToInt(DRS * 1000);
 
 		float dynamicPressure = CalculateDynamicPressure();
 		rho = (float)atmosphere.Density;
@@ -187,15 +211,11 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		// Setting vehicle parameters for the aero model
 		yawAngle        = vehicle.speed > 1.0f ? vehicle.speedAngle : 0.0f;
 		steerAngle      = (vehicle.wheelState[0].steerAngle + vehicle.wheelState[1].steerAngle) / 2;
-		fronRollAngle   = vehicle.data.Get(Channel.Custom, Perrinn424Data.FrontRollAngle) / 1000.0f;
-		rearRollAngle   = vehicle.data.Get(Channel.Custom, Perrinn424Data.RearRollAngle) / 1000.0f;
+		fronRollAngle   = customData[Perrinn424Data.FrontRollAngle] / 1000.0f;
+		rearRollAngle   = customData[Perrinn424Data.RearRollAngle] / 1000.0f;
 		rollAngle       = (fronRollAngle + rearRollAngle) / 2;
-		frontRideHeight = vehicle.data.Get(Channel.Custom, Perrinn424Data.FrontRideHeight);
-		rearRideHeight  = vehicle.data.Get(Channel.Custom, Perrinn424Data.RearRideHeight);
-
-		// Calculating DRS position and feeding to the car data bus
-		DRS = CalcDRSPosition(throttlePosition, brakePosition, DRS, drsPressed);
-		vehicle.data.Set(Channel.Custom, Perrinn424Data.DrsPosition, Mathf.RoundToInt(DRS * 1000));
+		frontRideHeight = customData[Perrinn424Data.FrontRideHeight];
+		rearRideHeight  = customData[Perrinn424Data.RearRideHeight];
 
 		// Calculating front flap deflection due to aeroelasticity
 		flapAngle = frontFlapStaticAngle + downforceFront * frontFlapFlexDeltaAngle / frontFlapFlexMaxDownforce;
