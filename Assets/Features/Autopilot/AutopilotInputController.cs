@@ -12,6 +12,12 @@ namespace Perrinn424.AutopilotSystem
         private BaseAutopilot autopilot;
 
 
+        void OnEnable ()
+        {
+            InputManager.instance.runtime.disableForceFeedback = autopilot.IsOn;
+        }
+
+
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.Q))
