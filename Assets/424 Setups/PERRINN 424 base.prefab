@@ -954,44 +954,44 @@ MonoBehaviour:
   deltaISA: 0
   dRSActivationDelay: 2
   dRSActivationTime: 0.25
-  frontFlapStaticAngle: 0
+  frontFlapStaticAngle: 5
   frontFlapFlexDeltaAngle: -4
   frontFlapFlexMaxDownforce: 10000
   front:
     applicationPoint: {fileID: 2483877716415502929}
-    constant: 3.72
-    frontRideHeightCoefficient: -0.023
-    frontRideHeight2Coefficient: -0.0004
-    rearRideHeightCoefficient: 0.018
-    rearRideHeight2Coefficient: 0
+    constant: 2.87
+    frontRideHeightCoefficient: -0.0141
+    frontRideHeight2Coefficient: -0.000387
+    rearRideHeightCoefficient: 0.0258
+    rearRideHeight2Coefficient: -0.000113
     absoluteYawCoefficient: -0.02
     absoluteSteerCoefficient: -0.01
     absoluteRollCoefficient: -0.08
-    dRS_Coefficient: 0.05
-    frontFlapCoefficient: 0.075
+    dRS_Coefficient: 0.15
+    frontFlapCoefficient: 0.05
   rear:
     applicationPoint: {fileID: 2483877716124499243}
-    constant: 3.24
-    frontRideHeightCoefficient: 0.003
-    frontRideHeight2Coefficient: 0
-    rearRideHeightCoefficient: 0.01
-    rearRideHeight2Coefficient: 0
+    constant: 2.77
+    frontRideHeightCoefficient: 0.0089
+    frontRideHeight2Coefficient: -0.0000444
+    rearRideHeightCoefficient: 0.0385
+    rearRideHeight2Coefficient: -0.000355
     absoluteYawCoefficient: -0.03
     absoluteSteerCoefficient: -0.01
     absoluteRollCoefficient: -0.09
-    dRS_Coefficient: -1.37
-    frontFlapCoefficient: -0.041
+    dRS_Coefficient: -1.38
+    frontFlapCoefficient: -0.05
   drag:
     applicationPoint: {fileID: 2483877716124499243}
-    constant: 1.16
-    frontRideHeightCoefficient: 0
-    frontRideHeight2Coefficient: 0
-    rearRideHeightCoefficient: 0.003
-    rearRideHeight2Coefficient: 0
+    constant: 0.98
+    frontRideHeightCoefficient: 0.0085
+    frontRideHeight2Coefficient: -0.0000978
+    rearRideHeightCoefficient: 0.0041
+    rearRideHeight2Coefficient: -0.0000168
     absoluteYawCoefficient: 0
     absoluteSteerCoefficient: 0
     absoluteRollCoefficient: 0
-    dRS_Coefficient: -0.326
+    dRS_Coefficient: -0.343
     frontFlapCoefficient: 0
   emitTelemetry: 0
   drsFlap: {fileID: 3609935057921437074}
@@ -1001,6 +1001,7 @@ MonoBehaviour:
   frontFlapRestAngle: 0
   flapAngle: 0
   DRSclosing: 0
+  DRSopenButton: 0
   DRS: 0
   SCzFront: 0
   SCzRear: 0
@@ -1708,6 +1709,7 @@ MonoBehaviour:
   dontAdjustSuspensionForcePoint: 0
   disableSteerAngleFix: 0
   disableWheelReferenceFrameFix: 0
+  forceRaycastIgnoreColliders: 0
   scaleFactor: 1
   vehicleSleepCriteria: 0
   showContactGizmos: 1
@@ -1741,7 +1743,7 @@ MonoBehaviour:
   pedals:
     throttleShape: 1.6
     brakeShape: 2
-    brakePedalGain: 0.9
+    brakePedalGain: 1
   frontMgu:
     torqueMap: {fileID: 11400000, guid: 05ff9bb249be3ec4caa5acdf502661fc, type: 2}
     inertia: 0.008
