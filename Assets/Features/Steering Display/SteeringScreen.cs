@@ -201,7 +201,7 @@ namespace VehiclePhysics.UI
                 // Time Difference with the Best Lap
                 if (timeDifference != null && m_lapTimer != null && autopilot != null)
                 {
-                    float compare = m_lapTimer.currentLapTime - autopilot.PlayingTime();
+                    float compare = m_lapTimer.currentLapTime - autopilot.CalculatePlayingTime();
 
                     timeDifference.text = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-0.00") : compare.ToString("+0.00");
                 }

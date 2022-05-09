@@ -34,7 +34,7 @@ namespace Perrinn424.AutopilotSystem
             OnStatusChanged?.Invoke(IsOn);
         }
 
-        public abstract float PlayingTime();
+        public abstract float CalculatePlayingTime();
 
         public abstract float CalculateDuration();
     } 

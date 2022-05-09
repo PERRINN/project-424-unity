@@ -233,7 +233,7 @@ namespace Perrinn424.AutopilotSystem
                 }
             }
         }
-        public override float PlayingTime()
+        public override float CalculatePlayingTime()
         {
             return FramesToTime(closestFrame1);
         }

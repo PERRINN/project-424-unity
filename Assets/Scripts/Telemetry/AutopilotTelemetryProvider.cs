@@ -4,19 +4,21 @@ using VehiclePhysics;
 
 namespace Perrinn424
 {
-    public class AutopilotTelemetryProvider : BaseTelemetryProvider<BaseAutopilot, AutopilotTelemetryProvider.AutopilotTelemetry>
+    public class AutopilotTelemetryProvider : BaseTelemetryProvider<Autopilot, AutopilotTelemetryProvider.AutopilotTelemetry>
 	{
 		public class AutopilotTelemetry : Telemetry.ChannelGroup
 		{
+			private Autopilot autopilot;
 			private IPIDInfo pid;
 
 			public override int GetChannelCount()
 			{
-                return 5;
+                return 12;
             }
 
             public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
             {
+				autopilot = (Autopilot)instance;
 				pid = (IPIDInfo)instance;
 
 				Telemetry.SemanticInfo errorSemantic = new Telemetry.SemanticInfo();
@@ -26,12 +28,32 @@ namespace Perrinn424
 				Telemetry.SemanticInfo pidSemantic = new Telemetry.SemanticInfo();
 				pidSemantic.SetRangeAndFormat(-range, range, "0", " N");
 
+				//PID info
 				channelInfo[0].SetNameAndSemantic("AutopilotDistanceError", Telemetry.Semantic.Custom, errorSemantic);
 				channelInfo[1].SetNameAndSemantic("AutopilotPID_P", Telemetry.Semantic.Custom, pidSemantic);
 				channelInfo[2].SetNameAndSemantic("AutopilotPID_I", Telemetry.Semantic.Custom, pidSemantic);
 				channelInfo[3].SetNameAndSemantic("AutopilotPID_D", Telemetry.Semantic.Custom, pidSemantic);
 				channelInfo[4].SetNameAndSemantic("AutopilotPID_PID", Telemetry.Semantic.Custom, pidSemantic);
-			}
+
+				//Reference Info
+				channelInfo[5].SetNameAndSemantic("Autopilot_Reference_Speed", Telemetry.Semantic.Speed);
+
+				var timeSemantic = new Telemetry.SemanticInfo();
+				timeSemantic.SetRangeAndFormat(-10, 10, "0.000", " s");
+				channelInfo[6].SetNameAndSemantic("Autopilot_Delta_Time", Telemetry.Semantic.Custom, timeSemantic);
+
+				channelInfo[7].SetNameAndSemantic("Autopilot_Reference_Throttle", Telemetry.Semantic.Ratio);
+				channelInfo[8].SetNameAndSemantic("Autopilot_Reference_BrakePressure", Telemetry.Semantic.BrakePressure);
+				channelInfo[9].SetNameAndSemantic("Autopilot_Reference_SteeringAngle", Telemetry.Semantic.SteeringWheelAngle);
+
+				//Status Info
+				var flagSemantic = new Telemetry.SemanticInfo();
+				timeSemantic.SetRangeAndFormat(0, 1, "0", "");
+                channelInfo[10].SetNameAndSemantic("Autopilot_IsOn", Telemetry.Semantic.Custom, flagSemantic);
+                channelInfo[11].SetNameAndSemantic("Autopilot_IsStartup", Telemetry.Semantic.Custom, flagSemantic);
+
+
+            }
 
 			public override Telemetry.PollFrequency GetPollFrequency()
 			{
@@ -40,12 +62,25 @@ namespace Perrinn424
 
             public override void PollValues(float[] values, int index, Object instance)
             {
+				//PID info
 				values[index + 0] = pid.Error;
 				values[index + 1] = pid.P;
 				values[index + 2] = pid.I;
 				values[index + 3] = pid.D;
 				values[index + 4] = pid.PID;
-            }
-        }
+
+				//Reference Info
+				values[index + 5] = autopilot.ReferenceSpeed;
+				values[index + 6] = autopilot.DeltaTime;
+				values[index + 7] = autopilot.ReferenceSample.throttle/100f;
+				values[index + 8] = autopilot.ReferenceSample.brakePressure;
+				values[index + 9] = autopilot.ReferenceSample.steeringAngle;
+
+				//Status Info
+				values[index + 10] = autopilot.IsOn ? 1f : 0f;
+				values[index + 11] = autopilot.IsStartup ? 1f : 0f;
+
+			}
+		}
 	}
 }

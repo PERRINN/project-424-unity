@@ -112,7 +112,7 @@ namespace Perrinn424.UI
 
         private void WriteDiffs()
         {
-            float compare = m_lapTimer.currentLapTime - autopilot.PlayingTime();
+            float compare = m_lapTimer.currentLapTime - autopilot.CalculatePlayingTime();
             string diff = compare.ToString("+0.00;-0.00");
             referenceDiffText.text = $"{diff} SEC";
         }
