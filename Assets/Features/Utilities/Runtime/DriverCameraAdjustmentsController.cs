@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using VehiclePhysics;
 
 namespace Perrinn424.Utilities
@@ -32,6 +33,10 @@ namespace Perrinn424.Utilities
         public float fovMax = 45f;
 
 
+        public event Action onAdjustmentsChanged;
+
+        public float Height => firstPersonCameraTarget.localPosition.y;
+        public float FOV => firstPersonCamera.driverCameraFov;
 
         private void Update()
         {
@@ -59,11 +64,15 @@ namespace Perrinn424.Utilities
             Vector3 pos = firstPersonCameraTarget.localPosition;
             pos.y = Mathf.Clamp(pos.y + delta, -heightMax, heightMax);
             firstPersonCameraTarget.localPosition = pos;
+            
+            onAdjustmentsChanged?.Invoke();
         }
 
         private void ChangeCameraFov(float delta)
         {
             firstPersonCamera.driverCameraFov = Mathf.Clamp(firstPersonCamera.driverCameraFov + delta, fovMin, fovMax);
+            
+            onAdjustmentsChanged?.Invoke();
         }
     } 
 }
