@@ -39,16 +39,16 @@ namespace Perrinn424
 				channelInfo[5].SetNameAndSemantic("Autopilot_Reference_Speed", Telemetry.Semantic.Speed);
 
 				var timeSemantic = new Telemetry.SemanticInfo();
-				timeSemantic.SetRangeAndFormat(-10, 10, "0.000", " s");
-				channelInfo[6].SetNameAndSemantic("Autopilot_Delta_Time", Telemetry.Semantic.Custom, timeSemantic);
+                timeSemantic.SetRangeAndFormat(-10, 10, "0.000", " s");
+                channelInfo[6].SetNameAndSemantic("Autopilot_Delta_Time", Telemetry.Semantic.Custom, timeSemantic);
 
-				channelInfo[7].SetNameAndSemantic("Autopilot_Reference_Throttle", Telemetry.Semantic.Ratio);
+                channelInfo[7].SetNameAndSemantic("Autopilot_Reference_Throttle", Telemetry.Semantic.Ratio);
 				channelInfo[8].SetNameAndSemantic("Autopilot_Reference_BrakePressure", Telemetry.Semantic.BrakePressure);
 				channelInfo[9].SetNameAndSemantic("Autopilot_Reference_SteeringAngle", Telemetry.Semantic.SteeringWheelAngle);
 
 				//Status Info
 				var flagSemantic = new Telemetry.SemanticInfo();
-				timeSemantic.SetRangeAndFormat(0, 1, "0", "");
+				flagSemantic.SetRangeAndFormat(-1, 1, "True;False", "");
                 channelInfo[10].SetNameAndSemantic("Autopilot_IsOn", Telemetry.Semantic.Custom, flagSemantic);
                 channelInfo[11].SetNameAndSemantic("Autopilot_IsStartup", Telemetry.Semantic.Custom, flagSemantic);
 
@@ -77,8 +77,10 @@ namespace Perrinn424
 				values[index + 9] = autopilot.ReferenceSample.steeringAngle;
 
 				//Status Info
-				values[index + 10] = autopilot.IsOn ? 1f : 0f;
-				values[index + 11] = autopilot.IsStartup ? 1f : 0f;
+				//we insert 1,-1 instead of 1,0 to be able to use conditional format
+				//https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings
+				values[index + 10] = autopilot.IsOn ? 1f : -1f;
+				values[index + 11] = autopilot.IsStartup ? 1f : -1f;
 
 			}
 		}
