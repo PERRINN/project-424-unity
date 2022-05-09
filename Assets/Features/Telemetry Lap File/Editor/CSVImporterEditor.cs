@@ -42,6 +42,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     {
                         Autopilot autopilot = FindObjectInSceneEvenIfIsDisabled<Autopilot>();
                         autopilot.recordedLap = recordedLap;
+                        PrefabUtility.RecordPrefabInstancePropertyModifications(autopilot);
                         AutopilotProvider provider = FindObjectInSceneEvenIfIsDisabled<AutopilotProvider>();
                         provider.replayAsset = replayAsset;
 
