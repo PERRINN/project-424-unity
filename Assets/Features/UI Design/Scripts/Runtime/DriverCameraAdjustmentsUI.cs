@@ -38,7 +38,7 @@ namespace Perrinn424.UI
         private void UpdateLabels()
         {
             heightText.text = string.Format("Height {0:+0.000;-0.000}", adjustmentsController.Height);
-            fovText.text = $"FOV: {adjustmentsController.FOV}°";
+            fovText.text = $"vFOV: {adjustmentsController.FOV}°";
         }
     } 
 }

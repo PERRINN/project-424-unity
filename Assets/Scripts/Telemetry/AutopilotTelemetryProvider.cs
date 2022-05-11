@@ -13,7 +13,7 @@ namespace Perrinn424
 
 			public override int GetChannelCount()
 			{
-                return 12;
+                return 13;
             }
 
             public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
@@ -45,12 +45,13 @@ namespace Perrinn424
                 channelInfo[7].SetNameAndSemantic("Autopilot_Reference_Throttle", Telemetry.Semantic.Ratio);
 				channelInfo[8].SetNameAndSemantic("Autopilot_Reference_BrakePressure", Telemetry.Semantic.BrakePressure);
 				channelInfo[9].SetNameAndSemantic("Autopilot_Reference_SteeringAngle", Telemetry.Semantic.SteeringWheelAngle);
+				channelInfo[10].SetNameAndSemantic("Autopilot_Reference_DRS", Telemetry.Semantic.Ratio);
 
 				//Status Info
 				var flagSemantic = new Telemetry.SemanticInfo();
 				flagSemantic.SetRangeAndFormat(-1, 1, "True;False", "");
-                channelInfo[10].SetNameAndSemantic("Autopilot_IsOn", Telemetry.Semantic.Custom, flagSemantic);
-                channelInfo[11].SetNameAndSemantic("Autopilot_IsStartup", Telemetry.Semantic.Custom, flagSemantic);
+                channelInfo[11].SetNameAndSemantic("Autopilot_IsOn", Telemetry.Semantic.Custom, flagSemantic);
+                channelInfo[12].SetNameAndSemantic("Autopilot_IsStartup", Telemetry.Semantic.Custom, flagSemantic);
 
 
             }
@@ -75,12 +76,13 @@ namespace Perrinn424
 				values[index + 7] = autopilot.ReferenceSample.throttle/100f;
 				values[index + 8] = autopilot.ReferenceSample.brakePressure;
 				values[index + 9] = autopilot.ReferenceSample.steeringAngle;
+				values[index + 10] = autopilot.ReferenceSample.drsPosition/100;
 
 				//Status Info
 				//we insert 1,-1 instead of 1,0 to be able to use conditional format
 				//https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings
-				values[index + 10] = autopilot.IsOn ? 1f : -1f;
-				values[index + 11] = autopilot.IsStartup ? 1f : -1f;
+				values[index + 11] = autopilot.IsOn ? 1f : -1f;
+				values[index + 12] = autopilot.IsStartup ? 1f : -1f;
 
 			}
 		}

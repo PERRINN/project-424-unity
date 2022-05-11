@@ -131,6 +131,10 @@ namespace Perrinn424.AutopilotSystem
                     return;
                 }
             }
+            else
+            {
+                vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 0);
+            }
 
             base.SetStatus(isOn);
         }
