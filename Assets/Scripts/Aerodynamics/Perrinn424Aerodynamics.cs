@@ -12,9 +12,16 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public float deltaISA                  = 0.0f;
 	public float dRSActivationDelay        = 0.0f;
 	public float dRSActivationTime         = 0.0f;
-	public float frontFlapStaticAngle      = 0.0f;
-	public float frontFlapFlexDeltaAngle   = 0.0f;
-	public float frontFlapFlexMaxDownforce = 0.0f;
+	
+	public float frontFlapStaticAngle         = 5.0f;
+	public float frontFlapDRSAngle            = -15.0f;
+	public float frontFlapSCz0				  = 0.34f;
+	public float frontFlapSCz_perDeg          = 0.03f;
+	
+	public float frontFlapFlexMaxDownforce    = 10000.0f;
+	public float frontFlapDeflectionPreload   = 470.0f;
+	public float frontFlapDeflectionStiffness = -0.006f;
+	public float frontFlapDeflectionMax       = -5.0f;
 
 	[Serializable]
 	public class AeroSettings
@@ -53,7 +60,10 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 	// Exposed state
 
-	[HideInInspector] public float flapAngle   = 1.0f;
+	[HideInInspector] public float flapAngle   = 0.0f;
+	[HideInInspector] public float flapDeflection = 0.0f;
+	[HideInInspector] public float flapForce = 0.0f;
+	[HideInInspector] public float frontFlapFlexDeltaAngle = -4.0f;
 	[HideInInspector] public bool  DRSclosing  = false;
 	[HideInInspector] public bool  DRSopenButton  = false;
 	[HideInInspector] public float DRS      = 0;
@@ -77,6 +87,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 	Atmosphere atmosphere = new Atmosphere();
 	float DRStime = 0;
+	float oldFlapAngle = -5.0f;
 
 
 	// Function Name: CalcAeroCoeff
@@ -213,8 +224,16 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		rearRideHeight  = customData[Perrinn424Data.RearRideHeight];
 
 		// Calculating front flap deflection due to aeroelasticity
-		flapAngle = frontFlapStaticAngle + downforceFront * frontFlapFlexDeltaAngle / frontFlapFlexMaxDownforce;
-		flapAngle = Mathf.Clamp(flapAngle, -15, 15);
+		//		flapAngle = frontFlapStaticAngle + downforceFront * frontFlapFlexDeltaAngle / frontFlapFlexMaxDownforce;
+		//		flapAngle = Mathf.Clamp(flapAngle, -15, 15);
+
+		flapForce = (frontFlapSCz0 + frontFlapSCz_perDeg * oldFlapAngle) * dynamicPressure;
+		flapDeflection = Mathf.Max(frontFlapDeflectionMax, Mathf.Max(0, flapForce - frontFlapDeflectionPreload) * frontFlapDeflectionStiffness);
+		frontFlapFlexDeltaAngle = flapDeflection + DRS * frontFlapDRSAngle;
+		flapAngle = frontFlapStaticAngle + frontFlapFlexDeltaAngle;
+		Mathf.Clamp(flapAngle, -15, 15);
+		oldFlapAngle = flapAngle;
+		//Debug.Log(oldFlapAngle);
 
 		// Calculating aero forces
 		if (front.applicationPoint != null)
@@ -255,8 +274,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		if (frontFlap != null)
 		{
-			float flapNorm  = (flapAngle - frontFlapStaticAngle) / ((frontFlapStaticAngle + frontFlapFlexDeltaAngle) - frontFlapStaticAngle);
-			float visualFlapAngle = Mathf.Lerp(frontFlapStaticAngle, frontFlapStaticAngle + frontFlapFlexDeltaAngle, flapNorm);
+			float flapNorm  = (flapAngle - 15.0f) / (-30.0f);
+			float visualFlapAngle = Mathf.Lerp(15.0f, -15.0f, flapNorm);
+			
 			frontFlap.localRotation = Quaternion.Euler(visualFlapAngle + frontFlapRestAngle, 0.0f, 0.0f);
 		}
 	}
