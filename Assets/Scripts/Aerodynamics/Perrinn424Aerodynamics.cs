@@ -18,7 +18,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public float frontFlapSCz0				  = 0.34f;
 	public float frontFlapSCz_perDeg          = 0.03f;
 	
-	public float frontFlapFlexMaxDownforce    = 10000.0f;
+	//public float frontFlapFlexMaxDownforce    = 10000.0f;
 	public float frontFlapDeflectionPreload   = 470.0f;
 	public float frontFlapDeflectionStiffness = -0.006f;
 	public float frontFlapDeflectionMax       = -5.0f;
