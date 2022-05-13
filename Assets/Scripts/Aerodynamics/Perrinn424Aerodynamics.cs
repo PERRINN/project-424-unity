@@ -63,7 +63,6 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float flapAngle   = 0.0f;
 	[HideInInspector] public float flapDeflection = 0.0f;
 	[HideInInspector] public float flapForce = 0.0f;
-	[HideInInspector] public float frontFlapFlexDeltaAngle = -4.0f;
 	[HideInInspector] public bool  DRSclosing  = false;
 	[HideInInspector] public bool  DRSopenButton  = false;
 	[HideInInspector] public float DRS      = 0;
@@ -87,8 +86,6 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 	Atmosphere atmosphere = new Atmosphere();
 	float DRStime = 0;
-	float oldFlapAngle = -5.0f;
-
 
 	// Function Name: CalcAeroCoeff
 	// This function calculates a given aerodynamic coefficient based on:
@@ -180,6 +177,11 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	}
 
 
+	public override void OnEnableVehicle() {
+		flapAngle = frontFlapStaticAngle;
+	}
+	
+	
 	public override void FixedUpdateVehicle()
 	{
 		Rigidbody rb = vehicle.cachedRigidbody;
@@ -224,16 +226,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		rearRideHeight  = customData[Perrinn424Data.RearRideHeight];
 
 		// Calculating front flap deflection due to aeroelasticity
-		//		flapAngle = frontFlapStaticAngle + downforceFront * frontFlapFlexDeltaAngle / frontFlapFlexMaxDownforce;
-		//		flapAngle = Mathf.Clamp(flapAngle, -15, 15);
-
-		flapForce = (frontFlapSCz0 + frontFlapSCz_perDeg * oldFlapAngle) * dynamicPressure;
+		flapForce = (frontFlapSCz0 + frontFlapSCz_perDeg * flapAngle) * dynamicPressure;
 		flapDeflection = Mathf.Max(frontFlapDeflectionMax, Mathf.Max(0, flapForce - frontFlapDeflectionPreload) * frontFlapDeflectionStiffness);
-		frontFlapFlexDeltaAngle = flapDeflection + DRS * frontFlapDRSAngle;
-		flapAngle = frontFlapStaticAngle + frontFlapFlexDeltaAngle;
-		Mathf.Clamp(flapAngle, -15, 15);
-		oldFlapAngle = flapAngle;
-		//Debug.Log(oldFlapAngle);
+		flapAngle = Mathf.Clamp(frontFlapStaticAngle + flapDeflection + DRS * frontFlapDRSAngle, -15, 15);
 
 		// Calculating aero forces
 		if (front.applicationPoint != null)
