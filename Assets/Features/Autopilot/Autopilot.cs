@@ -192,6 +192,7 @@ namespace Perrinn424.AutopilotSystem
 
         private float CalculateReferenceSpeed(Vector3 segment)
         {
+            //TODO add speed to recorded lap
             return segment.magnitude * recordedLap.frequency;
         }
 
