@@ -952,11 +952,15 @@ MonoBehaviour:
     altitudeReference: 0
     unityReference: 0
   deltaISA: 0
-  dRSActivationDelay: 2
+  dRSActivationDelay: 0.5
   dRSActivationTime: 0.25
   frontFlapStaticAngle: 5
-  frontFlapFlexDeltaAngle: -4
-  frontFlapFlexMaxDownforce: 10000
+  frontFlapDRSAngle: -15
+  frontFlapSCz0: 0.34
+  frontFlapSCz_perDeg: 0.03
+  frontFlapDeflectionPreload: 470
+  frontFlapDeflectionStiffness: -0.006
+  frontFlapDeflectionMax: -5
   front:
     applicationPoint: {fileID: 2483877716415502929}
     constant: 2.87
@@ -1000,6 +1004,8 @@ MonoBehaviour:
   frontFlap: {fileID: 5044577816045206950}
   frontFlapRestAngle: 0
   flapAngle: 0
+  flapDeflection: 0
+  flapForce: 0
   DRSclosing: 0
   DRSopenButton: 0
   DRS: 0

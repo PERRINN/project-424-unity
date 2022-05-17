@@ -18,13 +18,12 @@ All other features work normally: telemetry, cameras, time scale...
 
 ## How to drive the 424
 
-Requires a steering wheel device: Logitech G27/G29, Thrustmaster, Fanatec Podium.
-
 1. Clone the repository to your computer and open it in Unity.
-2. Open one of the scenes at the Scenes folder.
-3. In the Hierarchy window select the car (**PERRINN 424 Nordschleife**), then select the **Input** GameObject in it.
-4. In the **Device Input** component choose your wheel model, select the device number (normally 0), and enter the degrees of rotation currently configured in your wheel.
-5. Play the scene.
+2. Open one of the scenes in the Scenes folder and Play it.
+3. Press **I** to open the input settings. The first time it shows the default keyboard mappings.
+4. Click the inputs and follow the instructions to map the inputs to your device. Currently keyboard and DirectInput devices (with or without force feedback) are supported. Your settings will be saved and remembered.
+5. Press the **Gear Up** input to engage the **D** (drive) mode.
+6. Drive!
 
 ## Development guidelines
 
@@ -39,8 +38,7 @@ Code should follow the conventions of the Unity API:
 
 #### Components
 
-Components should support the same operations supported by standard Unity components without errors,
-including:
+Components must support the same operations supported by built-in Unity components without errors, including:
 
 - Enable / disable in runtime.
 - Instance / destroy in runtime.
