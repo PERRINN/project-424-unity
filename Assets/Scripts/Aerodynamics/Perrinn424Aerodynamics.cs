@@ -12,12 +12,12 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public float deltaISA                  = 0.0f;
 	public float dRSActivationDelay        = 0.0f;
 	public float dRSActivationTime         = 0.0f;
-	
+
 	public float frontFlapStaticAngle         = 5.0f;
 	public float frontFlapDRSAngle            = -15.0f;
 	public float frontFlapSCz0				  = 0.34f;
 	public float frontFlapSCz_perDeg          = 0.03f;
-	
+
 	//public float frontFlapFlexMaxDownforce    = 10000.0f;
 	public float frontFlapDeflectionPreload   = 470.0f;
 	public float frontFlapDeflectionStiffness = -0.006f;
@@ -107,8 +107,8 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		float SCn;
 
 		// Checking limits before calculating forces
-		fRH_mm = Mathf.Clamp(fRH_mm, 0, 100);
-		rRH_mm = Mathf.Clamp(rRH_mm, 0, 100);
+		fRH_mm = Mathf.Clamp(fRH_mm, 0, 1000);
+		rRH_mm = Mathf.Clamp(rRH_mm, 0, 1000);
 		DRSpos = Mathf.Clamp(DRSpos, 0, 1);
 		flapAngle_deg = Mathf.Clamp(flapAngle_deg, -15, 15);
 		yawAngle_deg = Mathf.Clamp(Math.Abs(yawAngle_deg), 0, 10);
@@ -180,8 +180,8 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public override void OnEnableVehicle() {
 		flapAngle = frontFlapStaticAngle;
 	}
-	
-	
+
+
 	public override void FixedUpdateVehicle()
 	{
 		Rigidbody rb = vehicle.cachedRigidbody;
@@ -271,7 +271,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		{
 			float flapNorm  = (flapAngle - 15.0f) / (-30.0f);
 			float visualFlapAngle = Mathf.Lerp(15.0f, -15.0f, flapNorm);
-			
+
 			frontFlap.localRotation = Quaternion.Euler(visualFlapAngle + frontFlapRestAngle, 0.0f, 0.0f);
 		}
 	}
