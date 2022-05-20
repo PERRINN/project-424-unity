@@ -107,8 +107,8 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		float SCn;
 
 		// Checking limits before calculating forces
-		fRH_mm = Mathf.Clamp(fRH_mm, 0, 1000);
-		rRH_mm = Mathf.Clamp(rRH_mm, 0, 1000);
+		fRH_mm = Mathf.Clamp(fRH_mm, 0, 250);
+		rRH_mm = Mathf.Clamp(rRH_mm, 0, 250);
 		DRSpos = Mathf.Clamp(DRSpos, 0, 1);
 		flapAngle_deg = Mathf.Clamp(flapAngle_deg, -15, 15);
 		yawAngle_deg = Mathf.Clamp(Math.Abs(yawAngle_deg), 0, 10);
