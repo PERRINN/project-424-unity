@@ -954,13 +954,13 @@ MonoBehaviour:
   deltaISA: 0
   dRSActivationDelay: 0.5
   dRSActivationTime: 0.25
-  frontFlapStaticAngle: 5
-  frontFlapDRSAngle: -15
-  frontFlapSCz0: 0.34
-  frontFlapSCz_perDeg: 0.03
-  frontFlapDeflectionPreload: 470
-  frontFlapDeflectionStiffness: -0.006
-  frontFlapDeflectionMax: -5
+  frontFlapStaticAngle: 4
+  frontFlapDRSAngle: -13
+  frontFlapSCz0: 0.33
+  frontFlapSCz_perDeg: 0.037
+  frontFlapDeflectionPreload: 490
+  frontFlapDeflectionStiffness: -0.0055
+  frontFlapDeflectionMax: -4
   front:
     applicationPoint: {fileID: 2483877716415502929}
     constant: 2.87
@@ -972,7 +972,7 @@ MonoBehaviour:
     absoluteSteerCoefficient: -0.01
     absoluteRollCoefficient: -0.08
     dRS_Coefficient: 0.15
-    frontFlapCoefficient: 0.05
+    frontFlapCoefficient: 0.091
   rear:
     applicationPoint: {fileID: 2483877716124499243}
     constant: 2.77
@@ -984,7 +984,7 @@ MonoBehaviour:
     absoluteSteerCoefficient: -0.01
     absoluteRollCoefficient: -0.09
     dRS_Coefficient: -1.38
-    frontFlapCoefficient: -0.05
+    frontFlapCoefficient: -0.027
   drag:
     applicationPoint: {fileID: 2483877716124499243}
     constant: 0.98
