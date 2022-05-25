@@ -26,6 +26,9 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	public const int RearRideHeight				= 6;		// Rear ride height						m			1000			230 = 0.23 m = 230 mm
 	public const int RearRollAngle				= 7;		// Rear roll angle (signed)				deg			1000			2334 = 2.345 degrees
 
+	public const int FrontDiffFriction			= 8;		// Front differential friction			Nm			1000			50000 = 50 Nm
+	public const int RearDiffFriction			= 9;		// Rear differential friction			Nm			1000			50000 = 50 Nm
+
 	// MGU data. Combine base ID with values.
 
 	public const int FrontMguBase				= 10;		// Base ID for front MGU data
@@ -586,6 +589,8 @@ public class Perrinn424CarController : VehicleBase
 		customData[Perrinn424Data.ThrottleInput] = (int)(m_throttleInput * 1000.0f);
 		customData[Perrinn424Data.BrakePressure] = (int)(m_brakePressure * 1000.0f);
 		customData[Perrinn424Data.SteeringWheelAngle] = (int)(m_steerAngle * 1000.0f);
+		customData[Perrinn424Data.FrontDiffFriction] = (int)(m_frontPowertrain.differential.frictionTorque * 1000.0f);
+		customData[Perrinn424Data.RearDiffFriction] = (int)(m_rearPowertrain.differential.frictionTorque * 1000.0f);
 
 		m_frontPowertrain.FillDataBus(customData, Perrinn424Data.FrontMguBase);
 		m_rearPowertrain.FillDataBus(customData, Perrinn424Data.RearMguBase);

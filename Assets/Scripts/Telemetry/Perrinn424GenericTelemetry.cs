@@ -131,6 +131,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 	public class Perrinn424Differential : Telemetry.ChannelGroup
 		{
+		VehicleBase m_vehicle;
 		VehicleBase.WheelState m_wheelFL;
 		VehicleBase.WheelState m_wheelFR;
 		VehicleBase.WheelState m_wheelRL;
@@ -139,7 +140,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		public override int GetChannelCount ()
 			{
-			return 4;
+			return 6;
 			}
 
 
@@ -151,15 +152,15 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
 			{
-			VehicleBase vehicle = instance as VehicleBase;
+			m_vehicle = instance as VehicleBase;
 
 			// Retrieve states for the four monitored wheels
 
-			m_wheelFL = vehicle.wheelState[vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Left)];
-			m_wheelFR = vehicle.wheelState[vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Right)];
-			int rearAxle = vehicle.GetAxleCount() - 1;
-			m_wheelRL = vehicle.wheelState[vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Left)];
-			m_wheelRR = vehicle.wheelState[vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Right)];
+			m_wheelFL = m_vehicle.wheelState[m_vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Left)];
+			m_wheelFR = m_vehicle.wheelState[m_vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Right)];
+			int rearAxle = m_vehicle.GetAxleCount() - 1;
+			m_wheelRL = m_vehicle.wheelState[m_vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Left)];
+			m_wheelRR = m_vehicle.wheelState[m_vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Right)];
 
 			// Fill-in channel information
 
@@ -167,6 +168,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			channelInfo[1].SetNameAndSemantic("TorqueDiffRear", Telemetry.Semantic.WheelTorque);
 			channelInfo[2].SetNameAndSemantic("SpeedDiffFront", Telemetry.Semantic.Speed);
 			channelInfo[3].SetNameAndSemantic("SpeedDiffRear", Telemetry.Semantic.Speed);
+			channelInfo[4].SetNameAndSemantic("FrictionTorqueFront", Telemetry.Semantic.WheelTorque);
+			channelInfo[5].SetNameAndSemantic("FrictionTorqueRear", Telemetry.Semantic.WheelTorque);
 			}
 
 
@@ -176,6 +179,13 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+1] = m_wheelRL.driveTorque - m_wheelRR.driveTorque;
 			values[index+2] = m_wheelFL.angularVelocity * m_wheelFL.wheelCol.radius - m_wheelFR.angularVelocity * m_wheelFR.wheelCol.radius;
 			values[index+3] = m_wheelRL.angularVelocity * m_wheelRL.wheelCol.radius - m_wheelRR.angularVelocity * m_wheelRR.wheelCol.radius;
+
+			int[] custom = m_vehicle.data.Get(Channel.Custom);
+			float frontTorqueFiction = custom[Perrinn424Data.FrontDiffFriction] / 1000.0f;
+			float rearTorqueFiction = custom[Perrinn424Data.RearDiffFriction] / 1000.0f;
+
+			values[index+4] = frontTorqueFiction;
+			values[index+5] = rearTorqueFiction;
 			}
 		}
 
