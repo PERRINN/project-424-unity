@@ -168,8 +168,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			channelInfo[1].SetNameAndSemantic("TorqueDiffRear", Telemetry.Semantic.WheelTorque);
 			channelInfo[2].SetNameAndSemantic("SpeedDiffFront", Telemetry.Semantic.Speed);
 			channelInfo[3].SetNameAndSemantic("SpeedDiffRear", Telemetry.Semantic.Speed);
-			channelInfo[4].SetNameAndSemantic("FrictionTorqueFront", Telemetry.Semantic.WheelTorque);
-			channelInfo[5].SetNameAndSemantic("FrictionTorqueRear", Telemetry.Semantic.WheelTorque);
+			channelInfo[4].SetNameAndSemantic("TorqueFrictionFront", Telemetry.Semantic.WheelTorque);
+			channelInfo[5].SetNameAndSemantic("TorqueFrictionRear", Telemetry.Semantic.WheelTorque);
 			}
 
 
