@@ -954,20 +954,20 @@ MonoBehaviour:
   deltaISA: 0
   dRSActivationDelay: 0.5
   dRSActivationTime: 0.25
-  frontFlapStaticAngle: 4
+  frontFlapStaticAngle: 3
   frontFlapDRSAngle: -10
-  frontFlapSCz0: 0.33
+  frontFlapSCz0: 0.38
   frontFlapSCz_perDeg: 0.037
-  frontFlapDeflectionPreload: 490
-  frontFlapDeflectionStiffness: -0.0055
+  frontFlapDeflectionPreload: 480
+  frontFlapDeflectionStiffness: -0.0042
   frontFlapDeflectionMax: -4
   front:
     applicationPoint: {fileID: 2483877716415502929}
-    constant: 2.87
-    frontRideHeightCoefficient: -0.0141
-    frontRideHeight2Coefficient: -0.000387
-    rearRideHeightCoefficient: 0.0258
-    rearRideHeight2Coefficient: -0.000113
+    constant: 3.07
+    frontRideHeightCoefficient: -0.0283
+    frontRideHeight2Coefficient: -0.000184
+    rearRideHeightCoefficient: 0.0291
+    rearRideHeight2Coefficient: -0.000104
     absoluteYawCoefficient: -0.02
     absoluteSteerCoefficient: -0.01
     absoluteRollCoefficient: -0.08
@@ -975,11 +975,11 @@ MonoBehaviour:
     frontFlapCoefficient: 0.091
   rear:
     applicationPoint: {fileID: 2483877716124499243}
-    constant: 2.77
-    frontRideHeightCoefficient: 0.0089
-    frontRideHeight2Coefficient: -0.0000444
-    rearRideHeightCoefficient: 0.0385
-    rearRideHeight2Coefficient: -0.000355
+    constant: 3.17
+    frontRideHeightCoefficient: 0.0004
+    frontRideHeight2Coefficient: 0.0000444
+    rearRideHeightCoefficient: 0.035
+    rearRideHeight2Coefficient: -0.000321
     absoluteYawCoefficient: -0.03
     absoluteSteerCoefficient: -0.01
     absoluteRollCoefficient: -0.09
@@ -987,11 +987,11 @@ MonoBehaviour:
     frontFlapCoefficient: -0.027
   drag:
     applicationPoint: {fileID: 2483877716124499243}
-    constant: 0.98
-    frontRideHeightCoefficient: 0.0085
-    frontRideHeight2Coefficient: -0.0000978
-    rearRideHeightCoefficient: 0.0041
-    rearRideHeight2Coefficient: -0.0000168
+    constant: 1.03
+    frontRideHeightCoefficient: 0.0074
+    frontRideHeight2Coefficient: -0.0001
+    rearRideHeightCoefficient: 0.003
+    rearRideHeight2Coefficient: -0.00000446
     absoluteYawCoefficient: 0
     absoluteSteerCoefficient: 0
     absoluteRollCoefficient: 0
