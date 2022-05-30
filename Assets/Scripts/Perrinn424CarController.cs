@@ -21,18 +21,20 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	public const int SteeringWheelAngle			= 2;		// Angle in the steering column			deg			1000			12420 = 12.42 degrees
 	public const int DrsPosition				= 3;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
 
-	public const int FrontRideHeight			= 4;		// Front ride height					m			1000			230 = 0.23 m = 230 mm
-	public const int FrontRollAngle				= 5;		// Front roll angle (signed)			deg			1000			2334 = 2.345 degrees
-	public const int RearRideHeight				= 6;		// Rear ride height						m			1000			230 = 0.23 m = 230 mm
-	public const int RearRollAngle				= 7;		// Rear roll angle (signed)				deg			1000			2334 = 2.345 degrees
+	public const int FrontDiffFriction			= 4;		// Front differential friction			Nm			1000			50000 = 50 Nm
+	public const int RearDiffFriction			= 5;		// Rear differential friction			Nm			1000			50000 = 50 Nm
 
-	public const int FrontDiffFriction			= 8;		// Front differential friction			Nm			1000			50000 = 50 Nm
-	public const int RearDiffFriction			= 9;		// Rear differential friction			Nm			1000			50000 = 50 Nm
+	public const int FrontRideHeight			= 10;		// Front ride height					m			1000			230 = 0.23 m = 230 mm
+	public const int FrontRollAngle				= 11;		// Front roll angle (signed)			deg			1000			2334 = 2.345 degrees
+	public const int RearRideHeight				= 12;		// Rear ride height						m			1000			230 = 0.23 m = 230 mm
+	public const int RearRollAngle				= 13;		// Rear roll angle (signed)				deg			1000			2334 = 2.345 degrees
+	public const int GroundAngle				= 14;		// Road angle (positive upwards)		deg			1000			2334 = 2.345 degrees
+	public const int GroundSlope				= 15;		// Road grade (positive upwards)		%			1000			1000 = 1.0 = 100%
 
 	// MGU data. Combine base ID with values.
 
-	public const int FrontMguBase				= 10;		// Base ID for front MGU data
-	public const int RearMguBase				= 20;		// Base ID for rear MGU data
+	public const int FrontMguBase				= 20;		// Base ID for front MGU data
+	public const int RearMguBase				= 30;		// Base ID for rear MGU data
 
 	public const int Rpm						= 0;		// Motor rpm							rpm			1000			1200000 = 1200 rpm
 	public const int Load						= 1;		// Motor load. Negative = renerative	ratio		1000			900 = 0.9 = 90%
@@ -47,13 +49,13 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 
 	// Processed input data. Used by autopilot / automation.
 
-	public const int EnableProcessedInput		= 40;		// If non-zero, use the processed input data below. Otherwise, use standard Input channel.
+	public const int EnableProcessedInput		= 50;		// If non-zero, use the processed input data below. Otherwise, use standard Input channel.
 
-	public const int InputMguThrottle			= 41;		// Throttle to be sent to the MGUs		ratio		10000			5000 = 0.5 = 50%
-	public const int InputBrakePressure			= 42;		// Brake pressure in the circuit		bar			10000			305000 = 30.5 bar
-	public const int InputSteerAngle			= 43;		// Steer angle for the steering column	deg			10000			155000 = 15.5 degrees
-	public const int InputGear					= 44;		// Gear (forward / neutral / reverse)				0 = Neutral, 1 = Forward, -1 = Reverse
-	public const int InputDrsPosition			= 45;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
+	public const int InputMguThrottle			= 51;		// Throttle to be sent to the MGUs		ratio		10000			5000 = 0.5 = 50%
+	public const int InputBrakePressure			= 52;		// Brake pressure in the circuit		bar			10000			305000 = 30.5 bar
+	public const int InputSteerAngle			= 53;		// Steer angle for the steering column	deg			10000			155000 = 15.5 degrees
+	public const int InputGear					= 54;		// Gear (forward / neutral / reverse)				0 = Neutral, 1 = Forward, -1 = Reverse
+	public const int InputDrsPosition			= 55;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
 	}
 
 
@@ -71,6 +73,7 @@ public class Perrinn424CarController : VehicleBase
 
 	public Transform frontAxleReference;
 	public Transform rearAxleReference;
+	public GroundTracker.Settings groundTracking = new GroundTracker.Settings();
 
 	// Powertrain and dynamics
 
@@ -129,6 +132,7 @@ public class Perrinn424CarController : VehicleBase
 
 	AxleFrameSensor m_frontAxleSensor = new AxleFrameSensor();
 	AxleFrameSensor m_rearAxleSensor = new AxleFrameSensor();
+	GroundTracker m_groundTracker = new GroundTracker();
 
 
 	// Internal Powertrain helper class
@@ -315,6 +319,7 @@ public class Perrinn424CarController : VehicleBase
 
 		m_frontAxleSensor.Configure(this, 0);
 		m_rearAxleSensor.Configure(this, 1);
+		m_groundTracker.settings = groundTracking;
 
 		// Initialize internal data
 
@@ -596,7 +601,7 @@ public class Perrinn424CarController : VehicleBase
 		m_rearPowertrain.FillDataBus(customData, Perrinn424Data.RearMguBase);
 
 		// Axle values
-
+		/*
 		if (frontAxleReference != null)
 			{
 			m_frontAxleSensor.DoUpdate(frontAxleReference);
@@ -610,6 +615,13 @@ public class Perrinn424CarController : VehicleBase
 			customData[Perrinn424Data.RearRideHeight] = (int)(m_rearAxleSensor.GetRideHeight() * 1000.0f);
 			customData[Perrinn424Data.RearRollAngle] = (int)(m_rearAxleSensor.GetRollAngle() * 1000.0f);
 			}
+		*/
+
+		m_groundTracker.DoUpdate(cachedTransform);
+		customData[Perrinn424Data.FrontRideHeight] = (int)(m_groundTracker.frontRideHeight * 1000.0f);
+		customData[Perrinn424Data.RearRideHeight] = (int)(m_groundTracker.rearRideHeight * 1000.0f);
+		customData[Perrinn424Data.FrontRollAngle] = (int)(m_groundTracker.frontRollAngle * 1000.0f);
+		customData[Perrinn424Data.RearRollAngle] = (int)(m_groundTracker.rearRollAngle * 1000.0f);
 		}
 
 

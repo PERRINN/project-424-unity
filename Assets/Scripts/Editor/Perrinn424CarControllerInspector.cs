@@ -34,6 +34,7 @@ public class Perrinn424CarControllerInspector : VPInspector
 		Space();
 		DrawProperty("frontAxleReference");
 		DrawProperty("rearAxleReference");
+		DrawProperty("groundTracking");
 
 		DrawHeader("Powertrain and dynamics");
 
