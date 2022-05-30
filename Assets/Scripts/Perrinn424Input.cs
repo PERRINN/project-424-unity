@@ -35,10 +35,23 @@ public class Perrinn424Input : VehicleBehaviour
 	public ForceFeedbackHelper.RumbleSettings rumbleSettings = new ForceFeedbackHelper.RumbleSettings();
 
 
+	// Expose force feedback for analysis
+
+	public InputDevice.ForceFeedback ForceFeedback ()
+		{
+		InputDevice.ForceFeedback forceFeedback = m_input != null? m_input.steer.ForceFeedback() : null;
+		if (forceFeedback == null)
+			forceFeedback = m_internalFF;
+
+		return forceFeedback;
+		}
+
+
 	// Private fields
 
 	Perrinn424InputUser m_input;
 	ForceFeedbackHelper m_ffHelper;
+	InputDevice.ForceFeedback m_internalFF = new InputDevice.ForceFeedback();
 	bool m_ffEnabled = false;
 
 	Steering.Settings m_steeringSettings;
@@ -52,6 +65,10 @@ public class Perrinn424Input : VehicleBehaviour
 		m_input = new Perrinn424InputUser(inputUserName);
 		InputManager.instance.RegisterUser(m_input);
 
+		m_ffHelper = new ForceFeedbackHelper(vehicle);
+		m_ffHelper.settings = forceFeedbackSettings;
+		m_ffHelper.rumbleSettings = rumbleSettings;
+
 		m_steeringSettings = vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
 		}
 
@@ -61,7 +78,10 @@ public class Perrinn424Input : VehicleBehaviour
 		// Stop force feedback
 
 		InputDevice.ForceFeedback forceFeedback = m_input.steer.ForceFeedback();
-		if (m_ffEnabled && forceFeedback != null)
+		if (forceFeedback == null)
+			forceFeedback = m_internalFF;
+
+		if (m_ffEnabled)
 			forceFeedback.StopAllEffects();
 
 		m_ffEnabled = false;
@@ -104,23 +124,18 @@ public class Perrinn424Input : VehicleBehaviour
 		// Process force feedback if available
 
 		InputDevice.ForceFeedback forceFeedback = m_input.steer.ForceFeedback();
+		if (forceFeedback == null)
+			forceFeedback = m_internalFF;
 
 		if (m_ffEnabled != forceFeedbackEnabled)
 			{
-			if (!forceFeedbackEnabled && forceFeedback != null)
+			if (!forceFeedbackEnabled)
 				forceFeedback.StopAllEffects();
-
-			if (forceFeedbackEnabled)
-				{
-				m_ffHelper = new ForceFeedbackHelper(vehicle);
-				m_ffHelper.settings = forceFeedbackSettings;
-				m_ffHelper.rumbleSettings = rumbleSettings;
-				}
 
 			m_ffEnabled = forceFeedbackEnabled;
 			}
 
-		if (m_ffEnabled && forceFeedback != null)
+		if (m_ffEnabled)
 			{
 			m_ffHelper.Update();
 			ProcessForceFeedback(forceFeedback);

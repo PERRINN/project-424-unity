@@ -1,7 +1,11 @@
 
 using UnityEngine;
 using VehiclePhysics;
+using VehiclePhysics.InputManagement;
 
+
+namespace Perrinn424
+{
 
 public class Perrinn424GenericTelemetry : VehicleBehaviour
 	{
@@ -341,7 +345,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 	public class Perrinn424ForceFeedback : Telemetry.ChannelGroup
 		{
-		VPDeviceInput m_deviceInput;
+		Perrinn424Input m_input;
 
 
 		public override int GetChannelCount ()
@@ -359,7 +363,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
 			{
 			VehicleBase vehicle = instance as VehicleBase;
-			m_deviceInput = vehicle.GetComponentInChildren<VPDeviceInput>();
+			m_input = vehicle.GetComponentInChildren<Perrinn424Input>();
 
 			// Fill-in channel information
 
@@ -370,15 +374,18 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		public override void PollValues (float[] values, int index, Object instance)
 			{
-			if (m_deviceInput != null && m_deviceInput.isActiveAndEnabled)
+			values[index+0] = float.NaN;
+			values[index+1] = float.NaN;
+
+			if (m_input != null && m_input.isActiveAndEnabled)
 				{
-				values[index+0] = m_deviceInput.currentForceFactor;
-				values[index+1] = m_deviceInput.currentDamperFactor;
-				}
-			else
-				{
-				values[index+0] = float.NaN;
-				values[index+1] = float.NaN;
+				InputDevice.ForceFeedback forceFeedback = m_input.ForceFeedback();
+
+				if (forceFeedback != null)
+					{
+					values[index+0] = forceFeedback.force? forceFeedback.forceMagnitude : 0.0f;
+					values[index+1] = forceFeedback.damper? forceFeedback.damperCoefficient : 0.0f;
+					}
 				}
 			}
 		}
@@ -443,3 +450,5 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			}
 		}
 	}
+
+}
