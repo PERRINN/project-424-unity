@@ -194,29 +194,44 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		{
 		public override int GetChannelCount ()
 			{
-			return 2;
+			return 8;
 			}
 
 
 		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return Telemetry.PollFrequency.Normal;
+			return Telemetry.PollFrequency.High;
 			}
 
 
 		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
 			{
-			channelInfo[0].SetNameAndSemantic("PitchRate", Telemetry.Semantic.AngularVelocity);
-			channelInfo[1].SetNameAndSemantic("RollRate", Telemetry.Semantic.AngularVelocity);
+			channelInfo[0].SetNameAndSemantic("RideHeightFront", Telemetry.Semantic.SuspensionTravel);
+			channelInfo[1].SetNameAndSemantic("RideHeightRear", Telemetry.Semantic.SuspensionTravel);
+			channelInfo[2].SetNameAndSemantic("RollAngleFront", Telemetry.Semantic.BankAngle);
+			channelInfo[3].SetNameAndSemantic("RollAngleRear", Telemetry.Semantic.BankAngle);
+			channelInfo[4].SetNameAndSemantic("GroundSlope", Telemetry.Semantic.BankAngle);
+			channelInfo[5].SetNameAndSemantic("GroundGrade", Telemetry.Semantic.SignedRatio);
+			channelInfo[6].SetNameAndSemantic("PitchRate", Telemetry.Semantic.AngularVelocity);
+			channelInfo[7].SetNameAndSemantic("RollRate", Telemetry.Semantic.AngularVelocity);
 			}
 
 
 		public override void PollValues (float[] values, int index, Object instance)
 			{
 			VehicleBase vehicle = instance as VehicleBase;
+			int[] custom = vehicle.data.Get(Channel.Custom);
+
+			values[index+0] = custom[Perrinn424Data.FrontRideHeight] / 1000.0f;
+			values[index+1] = custom[Perrinn424Data.RearRideHeight] / 1000.0f;
+			values[index+2] = custom[Perrinn424Data.FrontRollAngle] / 1000.0f;
+			values[index+3] = custom[Perrinn424Data.RearRollAngle] / 1000.0f;
+			values[index+4] = custom[Perrinn424Data.GroundAngle] / 1000.0f;
+			values[index+5] = custom[Perrinn424Data.GroundSlope] / 1000.0f;
+
 			Vector3 angularVelocity = vehicle.cachedRigidbody.angularVelocity;
-			values[index+0] = angularVelocity.x;
-			values[index+1] = angularVelocity.z;
+			values[index+6] = angularVelocity.x;
+			values[index+7] = angularVelocity.z;
 			}
 		}
 
