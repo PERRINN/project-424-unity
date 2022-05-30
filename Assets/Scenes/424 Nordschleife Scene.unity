@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.3
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.04480496, g: 0.05739265, b: 0.07053054, a: 0.3}
+  m_IndirectSpecularColor: {r: 0.044780876, g: 0.05738007, b: 0.070604235, a: 0.3}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -500,8 +500,10 @@ GameObject:
   m_Component:
   - component: {fileID: 180212503}
   - component: {fileID: 180212504}
+  - component: {fileID: 180212505}
+  - component: {fileID: 180212506}
   m_Layer: 0
-  m_Name: Driver Camera Adjustments
+  m_Name: Driver Settings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,7 +521,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 570963769}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &180212504
 MonoBehaviour:
@@ -544,6 +546,35 @@ MonoBehaviour:
   fovStep: 5
   fovMin: 25
   fovMax: 45
+--- !u!114 &180212505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180212502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b041ad37fc21a7d428613cb15c27ad06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextOptionKey: 101
+  dashboard: {fileID: 2092259239}
+  steeringWheel: {fileID: 1853323986}
+--- !u!114 &180212506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180212502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eb1e3258e1b69c40ae91622823f8652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  driverCameraSettingsController: {fileID: 180212504}
+  steeringWheelVisibilityController: {fileID: 180212505}
 --- !u!1001 &190246643
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10325,7 +10356,6 @@ Transform:
   m_Children:
   - {fileID: 1646482523}
   - {fileID: 891192036}
-  - {fileID: 829521678}
   - {fileID: 180212503}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -10638,52 +10668,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b2d9942018d10448178eabdbdf6bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &829521677
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 829521678}
-  - component: {fileID: 829521679}
-  m_Layer: 0
-  m_Name: Steering Wheel Visibility Controller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
-  m_IsActive: 1
---- !u!4 &829521678
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 829521677}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 570963769}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &829521679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 829521677}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b041ad37fc21a7d428613cb15c27ad06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nextOptionKey: 101
-  dashboard: {fileID: 2092259239}
-  steeringWheel: {fileID: 1853323986}
 --- !u!224 &847784101 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2987558533034567684, guid: 9de9b3b659e67fb42b66d1ba2010c1ec,
