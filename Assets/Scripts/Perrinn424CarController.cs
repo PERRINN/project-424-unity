@@ -71,8 +71,6 @@ public class Perrinn424CarController : VehicleBase
 	public TireDataContainerBase frontTires;
 	public TireDataContainerBase rearTires;
 
-	public Transform frontAxleReference;
-	public Transform rearAxleReference;
 	public GroundTracker.Settings groundTracking = new GroundTracker.Settings();
 
 	// Powertrain and dynamics
@@ -130,8 +128,6 @@ public class Perrinn424CarController : VehicleBase
 	int m_prevGearMode;
 	int m_gear;
 
-	AxleFrameSensor m_frontAxleSensor = new AxleFrameSensor();
-	AxleFrameSensor m_rearAxleSensor = new AxleFrameSensor();
 	GroundTracker m_groundTracker = new GroundTracker();
 
 
@@ -315,10 +311,8 @@ public class Perrinn424CarController : VehicleBase
 		m_rearPowertrain.mgu.settings = rearMgu;
 		m_rearPowertrain.differential.settings = rearDifferential;
 
-		// Configure axle sensors
+		// Configure ground tracking
 
-		m_frontAxleSensor.Configure(this, 0);
-		m_rearAxleSensor.Configure(this, 1);
 		m_groundTracker.settings = groundTracking;
 
 		// Initialize internal data
@@ -517,9 +511,10 @@ public class Perrinn424CarController : VehicleBase
 			*/
 			}
 
-		// Track changes in the inertia settings
+		// Update inertia settings and ground tracking
 
 		m_inertia.DoUpdate(cachedRigidbody);
+		m_groundTracker.DoUpdate(cachedTransform);
 
 		// Differential overrides
 
@@ -600,24 +595,6 @@ public class Perrinn424CarController : VehicleBase
 		m_frontPowertrain.FillDataBus(customData, Perrinn424Data.FrontMguBase);
 		m_rearPowertrain.FillDataBus(customData, Perrinn424Data.RearMguBase);
 
-		// Axle values
-		/*
-		if (frontAxleReference != null)
-			{
-			m_frontAxleSensor.DoUpdate(frontAxleReference);
-			customData[Perrinn424Data.FrontRideHeight] = (int)(m_frontAxleSensor.GetRideHeight() * 1000.0f);
-			customData[Perrinn424Data.FrontRollAngle] = (int)(m_frontAxleSensor.GetRollAngle() * 1000.0f);
-			}
-
-		if (rearAxleReference != null)
-			{
-			m_rearAxleSensor.DoUpdate(rearAxleReference);
-			customData[Perrinn424Data.RearRideHeight] = (int)(m_rearAxleSensor.GetRideHeight() * 1000.0f);
-			customData[Perrinn424Data.RearRollAngle] = (int)(m_rearAxleSensor.GetRollAngle() * 1000.0f);
-			}
-		*/
-
-		m_groundTracker.DoUpdate(cachedTransform);
 		customData[Perrinn424Data.FrontRideHeight] = (int)(m_groundTracker.frontRideHeight * 1000.0f);
 		customData[Perrinn424Data.RearRideHeight] = (int)(m_groundTracker.rearRideHeight * 1000.0f);
 		customData[Perrinn424Data.FrontRollAngle] = (int)(m_groundTracker.frontRollAngle * 1000.0f);
