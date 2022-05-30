@@ -7,5 +7,6 @@ namespace Perrinn424.Utilities
     {
         public float height;
         public float fov;
+        public int steeringWheelVisibility;
     } 
 }

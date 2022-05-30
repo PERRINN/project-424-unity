@@ -1,4 +1,5 @@
 ﻿using Perrinn424.UI;
+using System;
 using UnityEngine;
 
 namespace Perrinn424.Utilities
@@ -8,26 +9,37 @@ namespace Perrinn424.Utilities
         public KeyCode nextOptionKey;
         public Dashboard dashboard;
         public GameObject steeringWheel;
-        public CircularIndex options;
+        private CircularIndex visibilityOption;
+
+        public int VisibilityOption => visibilityOption;
+
+        public event Action onVisibilityChanged;
+
 
         private void OnEnable()
         {
-            options = new CircularIndex(0, 3);
-            SteeringWheelVisibility();
+            visibilityOption = new CircularIndex(0, 3);
+            RefreshVisibility();
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(nextOptionKey))
             {
-                options++;
-                SteeringWheelVisibility();
+                SetVisbilityOption(visibilityOption + 1);
             }
         }
 
-        private void SteeringWheelVisibility()
+        public void SetVisbilityOption(int newOption)
         {
-            switch (options)
+            visibilityOption.Assign(newOption);
+            RefreshVisibility();
+            onVisibilityChanged?.Invoke();
+        }
+
+        private void RefreshVisibility()
+        {
+            switch (visibilityOption)
             {
                 case 0:
                     SteeringWheelVisibility(true, false);

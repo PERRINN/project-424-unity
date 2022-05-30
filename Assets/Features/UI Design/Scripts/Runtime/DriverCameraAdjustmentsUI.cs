@@ -13,16 +13,16 @@ namespace Perrinn424.UI
         private Text fovText = default;
 
         [SerializeField]
-        private DriverCameraAdjustmentsController adjustmentsController;
+        private DriverCameraSettingsController adjustmentsController;
 
         private void OnEnable()
         {
-            adjustmentsController.onAdjustmentsChanged += OnAdjustmentsChangedEventHandler;
+            adjustmentsController.onSettingsChanged += OnAdjustmentsChangedEventHandler;
         }
 
         private void OnDisable()
         {
-            adjustmentsController.onAdjustmentsChanged -= OnAdjustmentsChangedEventHandler;
+            adjustmentsController.onSettingsChanged -= OnAdjustmentsChangedEventHandler;
         }
 
         private void OnAdjustmentsChangedEventHandler()

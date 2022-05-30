@@ -4,7 +4,7 @@ using VehiclePhysics;
 
 namespace Perrinn424.Utilities
 {
-    public class DriverCameraAdjustmentsController : MonoBehaviour
+    public class DriverCameraSettingsController : MonoBehaviour
     {
 
         [Header("Height Adjustment")]
@@ -33,7 +33,7 @@ namespace Perrinn424.Utilities
         public float fovMax = 45f;
 
 
-        public event Action onAdjustmentsChanged;
+        public event Action onSettingsChanged;
 
         public float Height => firstPersonCameraTarget.localPosition.y;
         public float FOV => firstPersonCamera.driverCameraFov;
@@ -71,7 +71,7 @@ namespace Perrinn424.Utilities
             pos.y = Mathf.Clamp(height, -heightMax, heightMax);
             firstPersonCameraTarget.localPosition = pos;
 
-            onAdjustmentsChanged?.Invoke();
+            onSettingsChanged?.Invoke();
         }
 
         private void SetCameraFovDelta(float delta)
@@ -83,7 +83,7 @@ namespace Perrinn424.Utilities
         {
             firstPersonCamera.driverCameraFov = Mathf.Clamp(fov, fovMin, fovMax);
 
-            onAdjustmentsChanged?.Invoke();
+            onSettingsChanged?.Invoke();
         }
     } 
 }

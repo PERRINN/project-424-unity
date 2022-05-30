@@ -7,7 +7,10 @@ namespace Perrinn424.Utilities
     public class DriverSettingsPersistenceController : MonoBehaviour
     {
         [SerializeField]
-        private DriverCameraAdjustmentsController cameraAdjustments;
+        private DriverCameraSettingsController driverCameraSettingsController;
+
+        [SerializeField]
+        private SteeringWheelVisibilityController steeringWheelVisibilityController;
 
         private readonly string filename = "driverSettings.json";
 
@@ -18,12 +21,14 @@ namespace Perrinn424.Utilities
 
         private void OnEnable()
         {
-            cameraAdjustments.onAdjustmentsChanged += AdjustmentsChangedHandler;
+            driverCameraSettingsController.onSettingsChanged += SaveSettings;
+            steeringWheelVisibilityController.onVisibilityChanged += SaveSettings;
         }
 
         private void OnDisable()
         {
-            cameraAdjustments.onAdjustmentsChanged -= AdjustmentsChangedHandler;
+            driverCameraSettingsController.onSettingsChanged -= SaveSettings;
+            steeringWheelVisibilityController.onVisibilityChanged -= SaveSettings;
         }
 
         private void Start()
@@ -31,19 +36,15 @@ namespace Perrinn424.Utilities
             Load();
         }
 
-        private void AdjustmentsChangedHandler()
-        {
-            Save();
-        }
-
 
         [ContextMenu("Save")]
-        public void Save()
+        public void SaveSettings()
         {
             DriverSettings settings = new DriverSettings()
             {
-                height = cameraAdjustments.Height,
-                fov = cameraAdjustments.FOV
+                height = driverCameraSettingsController.Height,
+                fov = driverCameraSettingsController.FOV,
+                steeringWheelVisibility = steeringWheelVisibilityController.VisibilityOption
             };
 
             WriteToFile(settings);
@@ -59,8 +60,9 @@ namespace Perrinn424.Utilities
                 string json = File.ReadAllText(path);
                 DriverSettings settings = JsonUtility.FromJson<DriverSettings>(json);
 
-                cameraAdjustments.SetCameraFov(settings.fov);
-                cameraAdjustments.SetDriverHeight(settings.height);
+                driverCameraSettingsController.SetCameraFov(settings.fov);
+                driverCameraSettingsController.SetDriverHeight(settings.height);
+                steeringWheelVisibilityController.SetVisbilityOption(settings.steeringWheelVisibility);
             }
         }
 
