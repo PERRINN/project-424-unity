@@ -42,36 +42,47 @@ namespace Perrinn424.Utilities
         {
             if (Input.GetKeyDown(increaseHeight))
             {
-                ChangeDriverHeight(heightStep);
+                SetDriverHeightDelta(heightStep);
             }
             else if (Input.GetKeyDown(decreaseHeight))
             {
-                ChangeDriverHeight(-heightStep);
+                SetDriverHeightDelta(-heightStep);
             }
 
             if (Input.GetKeyDown(increaseFOV))
             {
-                ChangeCameraFov(fovStep);
+                SetCameraFovDelta(fovStep);
             }
             else if (Input.GetKeyDown(decreaseFOV))
             {
-                ChangeCameraFov(-fovStep);
+                SetCameraFovDelta(-fovStep);
             }
         }
 
-        private void ChangeDriverHeight(float delta)
+        private void SetDriverHeightDelta(float delta)
         {
             Vector3 pos = firstPersonCameraTarget.localPosition;
-            pos.y = Mathf.Clamp(pos.y + delta, -heightMax, heightMax);
+            SetDriverHeight(pos.y + delta);
+        }
+
+        public void SetDriverHeight(float height)
+        {
+            Vector3 pos = firstPersonCameraTarget.localPosition;
+            pos.y = Mathf.Clamp(height, -heightMax, heightMax);
             firstPersonCameraTarget.localPosition = pos;
-            
+
             onAdjustmentsChanged?.Invoke();
         }
 
-        private void ChangeCameraFov(float delta)
+        private void SetCameraFovDelta(float delta)
         {
-            firstPersonCamera.driverCameraFov = Mathf.Clamp(firstPersonCamera.driverCameraFov + delta, fovMin, fovMax);
-            
+            SetCameraFov(firstPersonCamera.driverCameraFov + delta);
+        }
+
+        public void SetCameraFov(float fov)
+        {
+            firstPersonCamera.driverCameraFov = Mathf.Clamp(fov, fovMin, fovMax);
+
             onAdjustmentsChanged?.Invoke();
         }
     } 
