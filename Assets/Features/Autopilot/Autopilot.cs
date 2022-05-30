@@ -26,6 +26,9 @@ namespace Perrinn424.AutopilotSystem
         [Header("Setup")]
 
         public InputType inputType;
+
+        [SerializeField]
+        private bool autoStart = false;
         
         [SerializeField]
         private AutopilotStartup startup;
@@ -59,6 +62,12 @@ namespace Perrinn424.AutopilotSystem
             pathDrawer.recordedLap = recordedLap;
 
             vehicle.onBeforeUpdateBlocks += UpdateAutopilot;
+            UpdateAutopilot();
+
+            if (autoStart)
+            {
+                SetStatus(true);
+            }
         }
 
         public override void OnDisableVehicle()
