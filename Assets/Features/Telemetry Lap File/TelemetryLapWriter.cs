@@ -147,11 +147,19 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void Save(bool isCompleted, float lapTime, Func<TelemetryLapMetadata> createMetadata)
         {
-            file.StopRecordingAndSaveFile(isCompleted, false, lapTime);
-            TelemetryLapMetadata metadata = createMetadata();
-            file.WriteMetadata(metadata);
-            telemetryLapMetadatas.Add(metadata);
-            Log($"File Saved at {file.FullRelativePath}");
+            try
+            {
+                file.StopRecordingAndSaveFile(isCompleted, false, lapTime);
+                TelemetryLapMetadata metadata = createMetadata();
+                file.WriteMetadata(metadata);
+                telemetryLapMetadatas.Add(metadata);
+                Log($"File Saved at {file.FullRelativePath}");
+            }
+            catch (Exception)
+            {
+                Debug.LogWarning($"Error saving {file.FullRelativePath}. Disabling CSV writing");
+                this.enabled = false;
+            }
         }
 
 
