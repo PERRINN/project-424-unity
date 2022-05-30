@@ -21,28 +21,38 @@ MonoBehaviour:
       labelOffset: 0
       displayOrigin: 0
       displayRange: 10
+      adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: ForceFeedbackDamperRatio
+      displayName: FFB Damper
+      labelOffset: 0
+      displayOrigin: 1
+      displayRange: 3
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0, g: 0.3903246, b: 1, a: 1}
     - name: SteeringAngle
       displayName: Steering Angle
       labelOffset: 0
-      displayOrigin: 6
+      displayOrigin: 7
       displayRange: -2
+      adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.8}
     - name: ForceFeedbackForceRatio
       displayName: FFB Force
       labelOffset: -1
-      displayOrigin: 6
-      displayRange: 2
+      displayOrigin: 7
+      displayRange: 3
+      adjustToRange: 0
+      mirror: 0
       displayColor: {r: 1, g: 0.6064061, b: 0, a: 0.8}
     - name: SteeringRackLoad
       displayName: Steering Rack Load
       labelOffset: -2
-      displayOrigin: 6
+      displayOrigin: 7
       displayRange: 2
+      adjustToRange: 0
+      mirror: 0
       displayColor: {r: 1, g: 0.07060647, b: 0, a: 0.8}
-    - name: ForceFeedbackDamperRatio
-      displayName: FFB Damper
-      labelOffset: 0
-      displayOrigin: 2
-      displayRange: 2
-      displayColor: {r: 0, g: 0.3903246, b: 1, a: 1}
