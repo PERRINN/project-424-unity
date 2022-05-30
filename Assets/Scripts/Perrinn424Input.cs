@@ -35,6 +35,11 @@ public class Perrinn424Input : VehicleBehaviour
 	public ForceFeedbackHelper.RumbleSettings rumbleSettings = new ForceFeedbackHelper.RumbleSettings();
 
 
+	// Expose force feedback for analysis
+
+	public InputDevice.ForceFeedback ForceFeedback () => m_input != null? m_input.steer.ForceFeedback() : null;
+
+
 	// Private fields
 
 	Perrinn424InputUser m_input;
