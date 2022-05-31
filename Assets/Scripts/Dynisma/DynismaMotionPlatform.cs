@@ -5,6 +5,10 @@
 // https://www.mathworks.com/help/driving/ug/coordinate-systems.html
 
 
+// TODO: Max frequency of packets sent
+// TODO: Steering wheel force feedback. Requires property for max Nm (maybe as input manager global?).
+
+
 using UnityEngine;
 using VehiclePhysics;
 using EdyCommonTools;
@@ -40,6 +44,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		public float angularAccelerationX;
 		[Range(-2,2)]
 		public float angularAccelerationY;
+		[Range(-2,2)]
 		public float angularAccelerationZ;
 		[Range(-30,30)]
 		public float steeringTorque;
@@ -110,7 +115,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		m_motionData.accelerationZ = accel.y;
 
 		// ISO: Each axis is positive in the clockwise direction, when looking in the positive direction of that axis.
-		// Unity: Each axis is positive in the counter-clockwise direction, when looking in the positive direction of that axis.
+		// Unity: Each axis is positive in the counterclockwise direction, when looking in the positive direction of that axis.
 
 		Vector3 angularAccel = vehicle.localAngularAcceleration;
 		m_motionData.angularAccelerationX = -angularAccel.z;
