@@ -1,4 +1,9 @@
 
+// Integration with Dynisma motion platform simulator
+//
+// Cordinate system is ISO 8855:
+// https://www.mathworks.com/help/driving/ug/coordinate-systems.html
+
 
 using UnityEngine;
 using VehiclePhysics;
@@ -9,7 +14,7 @@ using System.Text;
 
 namespace Perrinn424
 {
-
+#if false
 public class DynismaMotionPlatform : VehicleBehaviour
 	{
 	public string host = "127.0.0.1";
@@ -25,29 +30,35 @@ public class DynismaMotionPlatform : VehicleBehaviour
 	[Serializable]
 	public class TestData
 		{
+		[Range(-20,20)]
+		public float accelerationX;
+		[Range(-20,20)]
+		public float accelerationY;
+		[Range(-20,20)]
+		public float accelerationZ;
 		[Range(-2,2)]
-		public float longitudinalG = 0.0f;
+		public float angularAccelerationX;
 		[Range(-2,2)]
-		public float lateralG = 0.0f;
-		[Range(-2,2)]
-		public float verticalG = 0.0f;
-		[Range(-0.5f,0.5f)]
-		public float yawVelocity = 0.0f;
-		[Range(-0.5f,0.5f)]
-		public float rollVelocity = 0.0f;
-		[Range(-0.5f,0.5f)]
-		public float pitchVelocity = 0.0f;
+		public float angularAccelerationY;
+		public float angularAccelerationZ;
+		[Range(-30,30)]
+		public float steeringTorque;
+		[Range(0,100)]
+		public float carSpeed;
 		}
 
 
 	struct MotionData
 		{
-		public float longitudinalG;		// longitudinal g-force level
-		public float lateralG;			// lateral g-force level
-		public float verticalG;			// vertical g-force level
-		public float yawVelocity;		// angular velocity around vertical axis (racing)
-		public float rollVelocity;		// angular velocity around side-to-side axis (racing)
-		public float pitchVelocity;		// angular velocity around front-to-back axis (racing)
+		public double accelerationX;			// m/s2
+		public double accelerationY;			// m/s2
+		public double accelerationZ;			// m/s2
+		public double angularAccelerationX;		// rad/s2
+		public double angularAccelerationY;		// rad/s2
+		public double angularAccelerationZ;		// rad/s2
+		public double steeringTorque;			// Nm
+		public double carSpeed;					// m/s
+		public double simulationTime;			// s
 		}
 
 
@@ -90,17 +101,26 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		{
 		if (!motionEnabled) return;
 
-		// Fill the short data struct
+		// Fill the short data struct (ISO convention)
+		// https://www.mathworks.com/help/driving/ug/coordinate-systems.html
 
 		Vector3 accel = vehicle.localAcceleration;
-		m_motionData.longitudinalG = -accel.z / Gravity.reference;
-		m_motionData.lateralG = accel.x / Gravity.reference;
-		m_motionData.verticalG = accel.y / Gravity.reference;
+		m_motionData.accelerationX = accel.z;
+		m_motionData.accelerationY = -accel.x;
+		m_motionData.accelerationZ = accel.y;
 
-		Vector3 angularVelocity = vehicle.cachedRigidbody.angularVelocity;
-		m_motionData.yawVelocity = angularVelocity.y;
-		m_motionData.rollVelocity = angularVelocity.z;
-		m_motionData.pitchVelocity = angularVelocity.x;
+		// ISO: Each axis is positive in the clockwise direction, when looking in the positive direction of that axis.
+		// Unity: Each axis is positive in the counter-clockwise direction, when looking in the positive direction of that axis.
+
+		Vector3 angularAccel = vehicle.localAngularAcceleration;
+		m_motionData.angularAccelerationX = -angularAccel.z;
+		m_motionData.angularAccelerationY = angularAccel.x;
+		m_motionData.angularAccelerationZ = -angularAccel.y;
+
+		// Speed and time
+
+		m_motionData.carSpeed = vehicle.speed;
+		m_motionData.simulationTime = Time.time;
 
 		// Send data via UDP
 
@@ -112,14 +132,17 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		{
 		if (!motionEnabled) return;
 
-		// Fill the short data struct with the test values
+		// Fill the motion data struct with the test values
 
-		m_motionData.longitudinalG = testData.longitudinalG;
-		m_motionData.lateralG = testData.lateralG;
-		m_motionData.verticalG = testData.verticalG;
-		m_motionData.yawVelocity = testData.yawVelocity;
-		m_motionData.rollVelocity = testData.rollVelocity;
-		m_motionData.pitchVelocity = testData.pitchVelocity;
+		m_motionData.accelerationX = testData.accelerationX;
+		m_motionData.accelerationY = testData.accelerationY;
+		m_motionData.accelerationZ = testData.accelerationZ;
+		m_motionData.angularAccelerationX = testData.angularAccelerationX;
+		m_motionData.angularAccelerationY = testData.angularAccelerationY;
+		m_motionData.angularAccelerationZ = testData.angularAccelerationZ;
+		m_motionData.steeringTorque = testData.steeringTorque;
+		m_motionData.carSpeed = testData.carSpeed;
+		m_motionData.simulationTime = Time.time;
 
 		// Send data via UDP
 
@@ -127,5 +150,5 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		}
 
 	}
-
+#endif
 }
