@@ -92,7 +92,7 @@ public class Perrinn424Input : VehicleBehaviour
 		}
 
 
-	public override void FixedUpdateVehicle ()
+	public override void UpdateVehicleInput ()
 		{
 		int[] inputData = vehicle.data.Get(Channel.Input);
 		int[] raceInputData = vehicle.data.Get(Channel.RaceInput);
