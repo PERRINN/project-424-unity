@@ -6,11 +6,11 @@
 
 
 // TODO: Max frequency of packets sent
-// TODO: Steering wheel force feedback. Requires property for max Nm (maybe as input manager global?).
 
 
 using UnityEngine;
 using VehiclePhysics;
+using VehiclePhysics.InputManagement;
 using EdyCommonTools;
 using System;
 using System.Text;
@@ -18,7 +18,7 @@ using System.Text;
 
 namespace Perrinn424
 {
-#if false
+
 public class DynismaMotionPlatform : VehicleBehaviour
 	{
 	public string host = "127.0.0.1";
@@ -26,6 +26,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 
 	[Space(5)]
 	public bool motionEnabled = true;
+	public float maxSteeringTorque = 20.0f;		// Nm
 
 	[Header("Test mode")]
 	public bool testModeEnabled = false;
@@ -69,11 +70,12 @@ public class DynismaMotionPlatform : VehicleBehaviour
 
 	UdpConnection m_udp = new UdpConnection();
 	MotionData m_motionData = new MotionData();
+	Perrinn424Input m_input;
 
 
-	public override void GetUpdateOrder ()
+	public override int GetUpdateOrder ()
 		{
-		// Execute after the Perrinn424Input to ensure the force feedback values
+		// Execute after Perrinn424Input to ensure the force feedback values
 		// have been calculated for the current simulation step.
 
 		return 100;
@@ -93,6 +95,10 @@ public class DynismaMotionPlatform : VehicleBehaviour
 			DebugLogWarning("Connection error: " + ex.Message + ". Component disabled.");
 			enabled = false;
 			}
+
+		// Locate the Perrinn424Input component for the force feedback data.
+
+		m_input = vehicle.GetComponentInChildren<Perrinn424Input>();
 		}
 
 
@@ -136,6 +142,18 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		m_motionData.carSpeed = vehicle.speed;
 		m_motionData.simulationTime = Time.time;
 
+		// Force feedback
+
+		m_motionData.steeringTorque = 0.0f;
+
+		if (m_input != null && m_input.isActiveAndEnabled)
+			{
+			InputDevice.ForceFeedback forceFeedback = m_input.ForceFeedback();
+
+			if (forceFeedback != null && forceFeedback.force)
+				m_motionData.steeringTorque = maxSteeringTorque * forceFeedback.forceMagnitude;
+			}
+
 		// Send data via UDP
 
 		m_udp.SendMessageBinary(ObjectUtility.GetBytesFromStruct<MotionData>(m_motionData));
@@ -164,5 +182,5 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		}
 
 	}
-#endif
+
 }
