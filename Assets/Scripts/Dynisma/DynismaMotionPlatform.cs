@@ -71,6 +71,15 @@ public class DynismaMotionPlatform : VehicleBehaviour
 	MotionData m_motionData = new MotionData();
 
 
+	public override void GetUpdateOrder ()
+		{
+		// Execute after the Perrinn424Input to ensure the force feedback values
+		// have been calculated for the current simulation step.
+
+		return 100;
+		}
+
+
 	public override void OnEnableVehicle ()
 		{
 		// Connect with host

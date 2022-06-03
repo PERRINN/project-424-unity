@@ -120,8 +120,15 @@ public class Perrinn424Input : VehicleBehaviour
 		// DRS
 
 		if (m_input.drsEnable.PressedThisFrame()) raceInputData[RaceInputData.Drs] = 1;
+		}
 
-		// Process force feedback if available
+
+
+	public override void FixedUpdateVehicle ()
+		{
+		// Calculate and process force feedback.
+		// FixedUpdateVehicle happens right after the vehicle simulation step,
+		// with all interal values updated.
 
 		InputDevice.ForceFeedback forceFeedback = m_input.steer.ForceFeedback();
 		if (forceFeedback == null)
