@@ -21,7 +21,9 @@ namespace Perrinn424
 public class DynismaMotionPlatform : VehicleBehaviour
 	{
 	public string host = "127.0.0.1";
-	public int port = 56236 ;
+	public int port = 56236;
+	[Range(10, 500)]
+	public int maxTransferFrequency = 200;		// packets/s
 
 	[Space(5)]
 	public bool motionEnabled = true;
@@ -70,6 +72,8 @@ public class DynismaMotionPlatform : VehicleBehaviour
 	UdpConnection m_udp = new UdpConnection();
 	MotionData m_motionData = new MotionData();
 	Perrinn424Input m_input;
+	int m_skipCount;
+	int m_sendInterval;
 
 
 	public override int GetUpdateOrder ()
@@ -83,6 +87,8 @@ public class DynismaMotionPlatform : VehicleBehaviour
 
 	public override void OnEnableVehicle ()
 		{
+		m_skipCount = 0;
+
 		// Connect with host
 
 		try {
@@ -95,7 +101,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 			enabled = false;
 			}
 
-		// Locate the Perrinn424Input component for the force feedback data.
+		// Locate the Perrinn424Input component for the force feedback data
 
 		m_input = vehicle.GetComponentInChildren<Perrinn424Input>();
 		}
@@ -109,10 +115,21 @@ public class DynismaMotionPlatform : VehicleBehaviour
 
 	public override void FixedUpdateVehicle ()
 		{
-		if (testModeEnabled)
-			SendTestData();
-		else
-			SendMotionData();
+		// The interval is stored so it can be inspected in Debug inspector
+
+		float fixedUpdateFrequency = 1.0f / Time.fixedDeltaTime;
+		m_sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxTransferFrequency);
+
+		m_skipCount++;
+		if (m_skipCount >= m_sendInterval)
+			{
+			if (testModeEnabled)
+				SendTestData();
+			else
+				SendMotionData();
+
+			m_skipCount = 0;
+			}
 		}
 
 
