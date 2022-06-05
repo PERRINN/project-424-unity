@@ -46,6 +46,9 @@ public class DynismaTester : MonoBehaviour
 	int m_size = 0;
 	MotionData m_motionData = new MotionData();
 	int m_received = 0;
+	int m_packetCount = 0;
+	float m_packetCountTime;
+	float m_packetFrequency;
 
 
 	void OnValidate ()
@@ -64,6 +67,9 @@ public class DynismaTester : MonoBehaviour
 		m_thread.Start(m_listener, OnReceiveData);
 		m_size = 0;
 		m_received = 0;
+		m_packetCount = 0;
+		m_packetCountTime = Time.time;
+		m_packetFrequency = 0.0f;
 
 		// Initialize widget
 
@@ -92,6 +98,15 @@ public class DynismaTester : MonoBehaviour
 				}
 			}
 
+		// Measure packet frequency
+
+		if (Time.time - m_packetCountTime >= 1.0f)
+			{
+			m_packetFrequency = m_received - m_packetCount;
+			m_packetCount = m_received;
+			m_packetCountTime = Time.time;
+			}
+
 		UpdateWidgetText();
 		}
 
@@ -106,7 +121,7 @@ public class DynismaTester : MonoBehaviour
 		{
 		m_text.Clear();
 		m_text.Append("Motion Platform Data\n\n");
-		m_text.Append($"Packets:               {m_received}\n");
+		m_text.Append($"Packets:               {m_received}  ({m_packetFrequency:0.} Hz)\n");
 		m_text.Append($"Acceleration:          X:{m_motionData.accelerationX,12:0.000000}  Y:{m_motionData.accelerationY,12:0.000000}  Z:{m_motionData.accelerationZ,12:0.000000}  m/s2\n");
 		m_text.Append($"Angular Acceleration:  X:{m_motionData.angularAccelerationX,12:0.000000}  Y:{m_motionData.angularAccelerationY,12:0.000000}  Z:{m_motionData.angularAccelerationZ,12:0.000000}  rad/s2\n");
 		m_text.Append($"Steering Torque:      {m_motionData.steeringTorque,11:0.000000}  Nm\n");
