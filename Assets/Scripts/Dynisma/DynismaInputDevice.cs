@@ -19,8 +19,6 @@ public class DynismaInputDevice : InputDevice
 	public class Settings
 		{
 		public int listeningPort = 56234;
-		[Range(90,900)]
-		public float steerRange = 400;
 		}
 
 
@@ -89,7 +87,8 @@ public class DynismaInputDevice : InputDevice
 			{
 			// Analog steer, throttle and brake
 
-			m_state.analog[0] = (int)(Mathf.Clamp(-1.0f, 1.0f, (float)(m_inputData.steerAngle / settings.steerRange * 2.0)) * 32767);
+			float physicalWheelRange = InputManager.instance.settings.physicalWheelRange;
+			m_state.analog[0] = (int)(Mathf.Clamp(-1.0f, 1.0f, (float)(m_inputData.steerAngle / physicalWheelRange * 2.0)) * 32767);
 			m_state.analog[1] = (int)(Mathf.Clamp01((float)(m_inputData.throttle)) * 32767 * 2 - 32767);
 			m_state.analog[2] = (int)(Mathf.Clamp01((float)(m_inputData.brake)) * 32767 * 2 - 32767);
 
