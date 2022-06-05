@@ -15,11 +15,17 @@ public class DynismaDeviceProvider : InputDeviceProvider
 
 
 	InputDevice m_device = null;
-
-	static readonly DeviceDefinition m_deviceDefinition = new DeviceDefinition()
+	DeviceDefinition m_deviceDefinition = new DeviceDefinition()
 		{
 		name = "Dynisma Remote Input"
 		};
+
+
+	public override bool Initialize ()
+		{
+		UpdateDeviceDefinition();
+		return true;
+		}
 
 
 	public override DeviceDefinition[] GetDeviceList ()
@@ -55,6 +61,7 @@ public class DynismaDeviceProvider : InputDeviceProvider
 
 		if (m_device == null)
 			{
+			UpdateDeviceDefinition();
 			m_device = new DynismaInputDevice()
 				{
 				definition = m_deviceDefinition,
@@ -146,6 +153,13 @@ public class DynismaDeviceProvider : InputDeviceProvider
 
 		return false;
 		}
+
+
+	void UpdateDeviceDefinition ()
+		{
+		m_deviceDefinition.product = $"Port:{settings.listeningPort}";
+		}
+
 	}
 
 }
