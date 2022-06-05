@@ -129,22 +129,22 @@ public class DynismaInputDevice : InputDevice
 			m_state.button[24] = (byte)(rotary0 == 14? 1 : 0);
 			m_state.button[25] = (byte)(rotary0 == 15? 1 : 0);
 
-			m_state.button[20] = (byte)(rotary1 == 0? 1 : 0);
-			m_state.button[21] = (byte)(rotary1 == 1? 1 : 0);
-			m_state.button[22] = (byte)(rotary1 == 2? 1 : 0);
-			m_state.button[23] = (byte)(rotary1 == 3? 1 : 0);
-			m_state.button[24] = (byte)(rotary1 == 4? 1 : 0);
-			m_state.button[25] = (byte)(rotary1 == 5? 1 : 0);
-			m_state.button[26] = (byte)(rotary1 == 6? 1 : 0);
-			m_state.button[27] = (byte)(rotary1 == 7? 1 : 0);
-			m_state.button[28] = (byte)(rotary1 == 8? 1 : 0);
-			m_state.button[29] = (byte)(rotary1 == 9? 1 : 0);
-			m_state.button[30] = (byte)(rotary1 == 10? 1 : 0);
-			m_state.button[31] = (byte)(rotary1 == 11? 1 : 0);
-			m_state.button[32] = (byte)(rotary1 == 12? 1 : 0);
-			m_state.button[33] = (byte)(rotary1 == 13? 1 : 0);
-			m_state.button[34] = (byte)(rotary1 == 14? 1 : 0);
-			m_state.button[35] = (byte)(rotary1 == 15? 1 : 0);
+			m_state.button[30] = (byte)(rotary1 == 0? 1 : 0);
+			m_state.button[31] = (byte)(rotary1 == 1? 1 : 0);
+			m_state.button[32] = (byte)(rotary1 == 2? 1 : 0);
+			m_state.button[33] = (byte)(rotary1 == 3? 1 : 0);
+			m_state.button[34] = (byte)(rotary1 == 4? 1 : 0);
+			m_state.button[35] = (byte)(rotary1 == 5? 1 : 0);
+			m_state.button[36] = (byte)(rotary1 == 6? 1 : 0);
+			m_state.button[37] = (byte)(rotary1 == 7? 1 : 0);
+			m_state.button[38] = (byte)(rotary1 == 8? 1 : 0);
+			m_state.button[39] = (byte)(rotary1 == 9? 1 : 0);
+			m_state.button[40] = (byte)(rotary1 == 10? 1 : 0);
+			m_state.button[41] = (byte)(rotary1 == 11? 1 : 0);
+			m_state.button[42] = (byte)(rotary1 == 12? 1 : 0);
+			m_state.button[43] = (byte)(rotary1 == 13? 1 : 0);
+			m_state.button[44] = (byte)(rotary1 == 14? 1 : 0);
+			m_state.button[45] = (byte)(rotary1 == 15? 1 : 0);
 
 			m_newInputData = false;
 			}
