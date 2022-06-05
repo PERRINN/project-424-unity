@@ -122,8 +122,8 @@ public class DynismaTester : MonoBehaviour
 		m_text.Clear();
 		m_text.Append("Motion Platform Data\n\n");
 		m_text.Append($"Packets:               {m_received}  ({m_packetFrequency:0.} Hz)\n");
-		m_text.Append($"Acceleration:          X:{m_motionData.accelerationX,12:0.000000}  Y:{m_motionData.accelerationY,12:0.000000}  Z:{m_motionData.accelerationZ,12:0.000000}  m/s2\n");
-		m_text.Append($"Angular Acceleration:  X:{m_motionData.angularAccelerationX,12:0.000000}  Y:{m_motionData.angularAccelerationY,12:0.000000}  Z:{m_motionData.angularAccelerationZ,12:0.000000}  rad/s2\n");
+		m_text.Append($"Acceleration:          X:{m_motionData.accelerationX,10:0.000000}  Y:{m_motionData.accelerationY,10:0.000000}  Z:{m_motionData.accelerationZ,10:0.000000}  m/s2\n");
+		m_text.Append($"Angular Acceleration:  X:{m_motionData.angularAccelerationX,10:0.000000}  Y:{m_motionData.angularAccelerationY,10:0.000000}  Z:{m_motionData.angularAccelerationZ,10:0.000000}  rad/s2\n");
 		m_text.Append($"Steering Torque:      {m_motionData.steeringTorque,11:0.000000}  Nm\n");
 		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
 		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
