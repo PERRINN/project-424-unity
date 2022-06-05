@@ -8,30 +8,144 @@ using VehiclePhysics.InputManagement;
 
 namespace Perrinn424
 {
-/*
+
 public class DynismaDeviceProvider : InputDeviceProvider
 	{
-	public virtual bool Initialize () { return true; }
-	public virtual void Release () { }
-	public virtual void Update () { }
+	public DynismaInputDevice.Settings settings = new DynismaInputDevice.Settings();
 
-	public virtual bool DetectDevicesChanged () { return false; }
-	public virtual void EnumerateConnectedDevices () { }
 
-	// GetDevice and GetDeviceByIndex must return a device opened and ready to use, or null
+	InputDevice m_device = null;
 
-	public abstract DeviceDefinition[] GetDeviceList ();
-	public abstract InputDevice GetDevice (DeviceDefinition definition, DeviceSearchMode searchMode = DeviceSearchMode.Default);
-	public abstract InputDevice GetDeviceByIndex (int index);
+	static readonly DeviceDefinition m_deviceDefinition = new DeviceDefinition()
+		{
+		name = "Dynisma Remote Input"
+		};
 
-	public abstract DeviceInfo GetDeviceInfo (int index);
 
-	public abstract void OpenAllDevices ();
-	public abstract void CloseAllDevices ();
-	public abstract void CloseUnusedDevices ();
+	public override DeviceDefinition[] GetDeviceList ()
+		{
+		return new DeviceDefinition[] { m_deviceDefinition };
+		}
 
-	public abstract void TakeControlSnapshot ();
-	public abstract bool DetectPressedControl (ref ControlDefinition control, ref DeviceDefinition device);
+
+	public override InputDevice GetDevice (DeviceDefinition definition, DeviceSearchMode searchMode = DeviceSearchMode.Default)
+		{
+		// Verify if the definition matches our device
+
+		if (searchMode == DeviceSearchMode.Default)
+			{
+			if (!definition.Match(m_deviceDefinition))
+				return null;
+			}
+		else
+		if (searchMode != DeviceSearchMode.ByName || !definition.MatchName(m_deviceDefinition))
+			return null;
+
+		// Return our unique device
+
+		return GetDeviceByIndex(0);
+		}
+
+
+	public override InputDevice GetDeviceByIndex (int index)
+		{
+		if (index != 0) return null;
+
+		// Create an instance of the device, open and return it
+
+		if (m_device == null)
+			{
+			m_device = new DynismaInputDevice()
+				{
+				definition = m_deviceDefinition,
+				settings = settings,
+				};
+
+			m_device.Open();
+			}
+
+		return m_device;
+		}
+
+
+	public override DeviceInfo GetDeviceInfo (int index)
+		{
+		if (index != 0)
+			return new DeviceInfo { name = "Bad device index" };
+
+		return new DeviceInfo
+			{
+			name = "Dynisma Remote Input",
+			axes = 3,
+			buttons = 46,
+			dpads = 0,
+			forceFeedback = false,
+			};
+		}
+
+
+	public override void Update ()
+		{
+		if (m_device != null)
+			m_device.Update();
+		}
+
+
+	public override void Release ()
+		{
+		if (m_device != null)
+			{
+			m_device.Close();
+			m_device = null;
+			}
+		}
+
+
+	public override void OpenAllDevices ()
+		{
+		GetDeviceByIndex(0);
+		}
+
+
+	public override void CloseAllDevices ()
+		{
+		if (m_device != null)
+			{
+			m_device.Close();
+			m_device = null;
+			}
+		}
+
+
+	public override void CloseUnusedDevices ()
+		{
+		if (m_device != null && !InputManager.instance.DeviceHasBindings(m_deviceDefinition))
+			{
+			m_device.Close();
+			m_device = null;
+			}
+		}
+
+
+	public override void TakeControlSnapshot ()
+		{
+		if (m_device != null)
+			m_device.TakeControlSnapshot();
+		}
+
+
+	public override bool DetectPressedControl (ref ControlDefinition control, ref DeviceDefinition device)
+		{
+		if (m_device == null) return false;
+
+		if (m_device.DetectPressedControl(ref control))
+			{
+			device = m_device.definition;
+			return true;
+			}
+
+		return false;
+		}
 	}
-*/
+
 }

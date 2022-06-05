@@ -106,7 +106,7 @@ public class DynismaInputDevice : InputDevice
 			m_state.button[8] = (byte)(m_inputData.upShift? 1 : 0);
 			m_state.button[9] = (byte)(m_inputData.downShift? 1 : 0);
 
-			// Rotaries encoded as individual buttons for each position
+			// Rotaries encoded as an individual button for each position
 
 			int rotary0 = (m_inputData.rotary & 0x0F);
 			int rotary1 = (m_inputData.rotary >> 4);
@@ -144,6 +144,8 @@ public class DynismaInputDevice : InputDevice
 			m_state.button[43] = (byte)(rotary1 == 13? 1 : 0);
 			m_state.button[44] = (byte)(rotary1 == 14? 1 : 0);
 			m_state.button[45] = (byte)(rotary1 == 15? 1 : 0);
+
+			// Acknowledge new input data converted
 
 			m_newInputData = false;
 			}
