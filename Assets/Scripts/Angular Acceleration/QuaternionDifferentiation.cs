@@ -7,24 +7,21 @@ public class QuaternionDifferentiation
     public Rigidbody rb;
 
     public Quaternion w;
-    public Quaternion rotation;
-    public Quaternion rotation_prev;
 
     public ShiftBuffer<Quaternion> buffer;
 
     public float[] coefficients;
 
+    public Vector3 angularAcceleration;
+    public Vector3 localAngularAcceleration;
+
     public void Init(Rigidbody rb)
     {
         this.rb = rb;
-
-        rotation = rb.transform.rotation;
-        rotation_prev = rotation;
-
-        buffer = new ShiftBuffer<Quaternion>(2);
+        
+        coefficients = new[] { 1f, -2f, 1 };
+        buffer = new ShiftBuffer<Quaternion>(coefficients.Length);
         buffer.Fill(rb.transform.rotation);
-
-        coefficients = new[] { 1f, -1f };
     }
 
     public void Compute(float dt)
@@ -38,11 +35,11 @@ public class QuaternionDifferentiation
             accumulator = Add(accumulator, summand);
         }
 
-
-        Quaternion diff = Sub(rotation, rotation_prev);
-        Quaternion rotation_dot = ScalarMultiply(accumulator, 1f / dt);
-        w = rotation_dot * Quaternion.Inverse(rotation);
+        Quaternion rotation_dot_dot = ScalarMultiply(accumulator, 1f / (dt*dt));
+        w = rotation_dot_dot * Quaternion.Inverse(buffer[0]);
         w = ScalarMultiply(w, 2f);
+        angularAcceleration = new Vector3(w.x, w.y, w.z);
+        localAngularAcceleration = rb.transform.InverseTransformDirection(angularAcceleration);
     }
 
     public static Quaternion ScalarMultiply(Quaternion input, float scalar)
