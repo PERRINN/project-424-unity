@@ -160,7 +160,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 
 		// Force feedback
 
-		m_motionData.steeringTorque = 0.0f;
+		m_motionData.steeringTorque = 0.0;
 
 		if (m_input != null && m_input.isActiveAndEnabled)
 			{

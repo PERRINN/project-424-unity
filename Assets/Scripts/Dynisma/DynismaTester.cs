@@ -14,6 +14,7 @@ public class DynismaTester : MonoBehaviour
 	{
 	public string host = "127.0.0.1";
 	public int port = 56234;
+	public int maxInputFrequency = 100;
 	public int listeningPort = 56236;
 
 	public GUITextBox.Settings widget = new GUITextBox.Settings();
@@ -33,13 +34,26 @@ public class DynismaTester : MonoBehaviour
 		}
 
 
+	struct InputData
+		{
+		public double throttle;
+		public double brake;
+		public double steerAngle;
+		public bool upShift;
+		public bool downShift;
+		public byte button;				// 1 bit per button
+		public byte rotary;				// two 8-position rotaries on the wheel, split the uint8 into two 4-bit values
+		}
+
+
 	// Trick to configure a default font in the widget. Configure the font at the script settings.
 	[HideInInspector] public Font defaultConsoleFont;
 
 	GUITextBox m_widget = new GUITextBox();
 	StringBuilder m_text = new StringBuilder();
 
-	UdpSender m_sender;
+	// Listen to motion data
+
 	UdpConnection m_listener = new UdpConnection();
 	UdpListenThread m_thread = new UdpListenThread();
 	byte[] m_buffer = new byte[1024];
@@ -49,6 +63,20 @@ public class DynismaTester : MonoBehaviour
 	int m_packetCount = 0;
 	float m_packetCountTime;
 	float m_packetFrequency;
+
+	// Send input data
+
+	UdpSender m_sender;
+	InputData m_inputData = new InputData();
+	int m_skipCount = 0;
+	float m_throttle = 0.0f;
+	float m_brake = 0.0f;
+	float m_steerAngle = 0.0f;
+	bool m_upShift = false;
+	bool m_downShift = false;
+	bool[] m_button = new bool[8];
+	int m_rotary0 = 0;
+	int m_rotary1 = 0;
 
 
 	void OnValidate ()
@@ -63,13 +91,22 @@ public class DynismaTester : MonoBehaviour
 		// Initialize connections
 
         m_sender = new UdpSender(host, port);
+		m_skipCount = 0;
+
 		m_listener.StartConnection(listeningPort);
-		m_thread.Start(m_listener, OnReceiveData);
 		m_size = 0;
 		m_received = 0;
 		m_packetCount = 0;
 		m_packetCountTime = Time.time;
 		m_packetFrequency = 0.0f;
+		m_thread.Start(m_listener, () =>
+			{
+			lock (m_buffer)
+				{
+				m_size = m_listener.GetMessageBinary(m_buffer);
+				m_received++;
+				}
+			});
 
 		// Initialize widget
 
@@ -89,6 +126,8 @@ public class DynismaTester : MonoBehaviour
 
 	void Update ()
 		{
+		// Receive motion data
+
 		lock (m_buffer)
 			{
 			if (m_size > 0)
@@ -107,7 +146,46 @@ public class DynismaTester : MonoBehaviour
 			m_packetCountTime = Time.time;
 			}
 
+		// Update text from motion data
+
 		UpdateWidgetText();
+
+		// Send input data limited by the maximum frequency specified
+
+		float fixedUpdateFrequency = 1.0f / Time.fixedDeltaTime;
+		int sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxInputFrequency);
+
+		m_skipCount++;
+		if (m_skipCount >= sendInterval)
+			{
+			SendInputData();
+			}
+		}
+
+
+	void SendInputData ()
+		{
+		m_inputData.throttle = m_throttle;
+		m_inputData.brake = m_brake;
+		m_inputData.steerAngle = m_steerAngle;
+		m_inputData.upShift = m_upShift;
+		m_inputData.downShift = m_downShift;
+
+		m_inputData.button = 0;
+		if (m_button[0]) m_inputData.button |= 0x01;
+		if (m_button[1]) m_inputData.button |= 0x02;
+		if (m_button[2]) m_inputData.button |= 0x04;
+		if (m_button[3]) m_inputData.button |= 0x08;
+		if (m_button[4]) m_inputData.button |= 0x10;
+		if (m_button[5]) m_inputData.button |= 0x20;
+		if (m_button[6]) m_inputData.button |= 0x40;
+		if (m_button[7]) m_inputData.button |= 0x80;
+
+		int rotary0 = Mathf.Clamp(m_rotary0, 0, 15);
+		int rotary1 = Mathf.Clamp(m_rotary1, 0, 15);
+		m_inputData.rotary = (byte)((rotary1 << 4) | rotary0);
+
+		m_sender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
 		}
 
 
@@ -128,17 +206,6 @@ public class DynismaTester : MonoBehaviour
 		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
 		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
 		m_widget.text = m_text.ToString();
-		}
-
-	// This is called from the listener thread
-
-	void OnReceiveData ()
-		{
-		lock (m_buffer)
-			{
-			m_size = m_listener.GetMessageBinary(m_buffer);
-			m_received++;
-			}
 		}
 	}
 
