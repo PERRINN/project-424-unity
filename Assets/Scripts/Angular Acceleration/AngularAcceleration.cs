@@ -1,5 +1,4 @@
-﻿using Perrinn424.TelemetryLapSystem;
-using UnityEngine;
+﻿using UnityEngine;
 using VehiclePhysics;
 
 public class AngularAcceleration : VehicleBehaviour
@@ -46,20 +45,25 @@ public class AngularAcceleration : VehicleBehaviour
     {
         angularVelocityDifferentiation.Compute(Time.deltaTime);
         quaternionDifferentiation.Compute(Time.deltaTime);
-        //Draw();
     }
 
     public void Draw() 
     {
+#if SQUIGGLE
+
         Draw(vehicle.localAngularAcceleration, DebugGraph.DefaultBlue);
         Draw(angularVelocityDifferentiation.localAngularAcceleration, DebugGraph.DefaultGreen);
         Draw(quaternionDifferentiation.localAngularAcceleration, DebugGraph.DefaultRed);
+#endif
+
     }
 
     public void Draw(Vector3 localAngularAcceleration, Color color)
     {
+#if SQUIGGLE
         DebugGraph.MultiLog("Yaw rad / s²", color, localAngularAcceleration.y);
         DebugGraph.MultiLog("Roll rad / s²", color, localAngularAcceleration.z);
         DebugGraph.MultiLog("Pitch rad / s²", color, localAngularAcceleration.x);
+#endif
     }
 }
