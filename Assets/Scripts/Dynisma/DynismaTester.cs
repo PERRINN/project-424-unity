@@ -49,7 +49,7 @@ public class DynismaTester : MonoBehaviour
 	// Trick to configure a default font in the widget. Configure the font at the script settings.
 	[HideInInspector] public Font defaultConsoleFont;
 
-	GUITextBox m_widget = new GUITextBox();
+	GUITextBox m_textBox = new GUITextBox();
 	StringBuilder m_text = new StringBuilder();
 
 	// Listen to motion data
@@ -110,9 +110,8 @@ public class DynismaTester : MonoBehaviour
 
 		// Initialize widget
 
-		m_widget.settings = widget;
-		m_widget.title = "Dynisma Tester";
-		m_widget.richText = true;
+		m_textBox.settings = widget;
+		m_textBox.title = "Dynisma Tester";
 		}
 
 
@@ -191,7 +190,20 @@ public class DynismaTester : MonoBehaviour
 
 	void OnGUI ()
 		{
-		m_widget.OnGUI();
+		m_textBox.OnGUI();
+
+		Rect boxRect = m_textBox.boxRect;
+		float margin = m_textBox.margin;
+
+		boxRect.x += boxRect.width;
+		boxRect.width = 200;
+
+		GUILayout.BeginArea(boxRect);
+
+		m_throttle = GUILayout.HorizontalScrollbar(m_throttle, 0.1f, 0.0f, 1.1f);
+
+		GUILayout.EndArea();
+
 		}
 
 
@@ -205,7 +217,7 @@ public class DynismaTester : MonoBehaviour
 		m_text.Append($"Steering Torque:      {m_motionData.steeringTorque,11:0.000000}  Nm\n");
 		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
 		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
-		m_widget.text = m_text.ToString();
+		m_textBox.text = m_text.ToString();
 		}
 	}
 
