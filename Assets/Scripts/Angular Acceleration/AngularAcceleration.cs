@@ -10,18 +10,25 @@ public class AngularAcceleration : VehicleBehaviour
     public override void OnEnableVehicle()
     {
         rb = vehicle.cachedRigidbody;
-        angularVelocityDifferentiation = new AngularVelocityDifferentiation(rb, new float[] { 1.5f,-2f,0.5f});
+        float[] coefficients = new float[0];
+        coefficients = new float[] { 1f, -1f };
+        coefficients = new float[] { 1.5f, -2f, 0.5f };
+        coefficients = new float[] { 11/6f, -18/6f, 9/6f, -2/6f };
+        coefficients = new float[] { 25 / 12f, -48 / 12f, 36 / 12f, -16 / 12f, 3/12f };
+        coefficients = new float[] { 147 / 60f, -360 / 60f, 450 / 60f, -400 / 60f, 225/60f, -72/60f, 10/60f };
+        angularVelocityDifferentiation = new AngularVelocityDifferentiation(rb, coefficients);
     }
 
 
     public override void UpdateVehicle()
     {
+        Draw();
     }
 
     public override void FixedUpdateVehicle()
     {
         angularVelocityDifferentiation.Compute(Time.deltaTime);
-        Draw();
+        //Draw();
     }
 
     public void Draw() 
