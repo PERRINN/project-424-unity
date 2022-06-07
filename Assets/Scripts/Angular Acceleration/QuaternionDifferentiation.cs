@@ -1,6 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
+//https://math.stackexchange.com/questions/1792826/estimate-angular-velocity-and-acceleration-from-a-sequence-of-rotations
+//https://fgiesen.wordpress.com/2012/08/24/quaternion-differentiation/
+//https://physics.stackexchange.com/questions/460311/derivation-for-angular-acceleration-from-quaternion-profile
 [Serializable]
 public class QuaternionDifferentiation
 {
