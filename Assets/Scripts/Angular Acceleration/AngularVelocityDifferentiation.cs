@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
+//https://web.media.mit.edu/~crtaylor/calculator.html
 [Serializable]
 public class AngularVelocityDifferentiation
 {
@@ -13,14 +14,12 @@ public class AngularVelocityDifferentiation
 
     public ShiftBuffer<Vector3> buffer;
 
-    public AngularVelocityDifferentiation(Rigidbody rb, float [] coefficients)
+    public void Init(Rigidbody rb, float[] coefficients)
     {
         this.rb = rb;
         this.coefficients = coefficients;
         buffer = new ShiftBuffer<Vector3>(coefficients.Length);
         buffer.Fill(rb.angularVelocity);
-
-
     }
 
     public void Compute(float dt)
