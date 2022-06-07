@@ -46,7 +46,13 @@ public class DynismaInputDevice : InputDevice
 		{
 		m_listener.StartConnection(settings.listeningPort);
 		m_thread.threadSleepIntervalMs = 1;
-		m_thread.Start(m_listener, OnReceiveData);
+		m_thread.Start(m_listener, () =>
+			{
+			lock (m_buffer)
+				{
+				m_size = m_listener.GetMessageBinary(m_buffer);
+				}
+			});
 		m_newInputData = false;
 
 		ClearState();
@@ -69,6 +75,8 @@ public class DynismaInputDevice : InputDevice
 		{
 		StorePreviousState();
 
+		// Check for new input data received
+
 		lock (m_buffer)
 			{
 			if (m_size > 0)
@@ -77,11 +85,11 @@ public class DynismaInputDevice : InputDevice
 
 				m_inputData = ObjectUtility.GetStructFromBytes<InputData>(m_buffer);
 				m_size = 0;
+				m_newInputData = true;
 				}
 			}
 
 		// New input data available? Convert to state.
-		// Thread might be writing to the byte buffer meanwhile, no problem.
 
 		if (m_newInputData)
 			{
@@ -193,17 +201,6 @@ public class DynismaInputDevice : InputDevice
 			}
 
 		return true;
-		}
-
-
-	// This is called from the listener thread
-
-	void OnReceiveData ()
-		{
-		lock (m_buffer)
-			{
-			m_size = m_listener.GetMessageBinary(m_buffer);
-			}
 		}
 	}
 
