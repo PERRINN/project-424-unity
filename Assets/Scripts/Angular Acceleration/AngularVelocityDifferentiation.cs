@@ -6,26 +6,36 @@ public class AngularVelocityDifferentiation
 {
     public Rigidbody rb;
 
-    public Vector3 angularVelocity;
-    public Vector3 angularVelocity_prev;
     public Vector3 angularAcceleration;
     public Vector3 localAngularAcceleration;
 
-    public AngularVelocityDifferentiation(Rigidbody rb)
+    public float[] coefficients;
+
+    public ShiftBuffer<Vector3> buffer;
+
+    public AngularVelocityDifferentiation(Rigidbody rb, float [] coefficients)
     {
         this.rb = rb;
-        angularVelocity = rb.angularVelocity;
-        angularVelocity_prev = angularVelocity;
+        this.coefficients = coefficients;
+        buffer = new ShiftBuffer<Vector3>(coefficients.Length);
+        buffer.Fill(rb.angularVelocity);
+
 
     }
 
     public void Compute(float dt)
     {
-        angularVelocity = rb.angularVelocity;
-        Vector3 diff = angularVelocity - angularVelocity_prev;
-        angularAcceleration = diff / dt;
-        localAngularAcceleration = rb.transform.InverseTransformDirection(angularAcceleration);
+        buffer.Push(rb.angularVelocity);
 
-        angularVelocity_prev = angularVelocity;
+        Vector3 accumulator = Vector3.zero;
+        for (int i = 0; i < buffer.length; i++)
+        {
+            accumulator += buffer[i] * coefficients[i];
+        }
+
+        accumulator = accumulator / dt;
+        angularAcceleration = accumulator;
+
+        localAngularAcceleration = rb.transform.InverseTransformDirection(angularAcceleration);
     }
 }

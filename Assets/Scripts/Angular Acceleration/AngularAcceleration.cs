@@ -10,7 +10,7 @@ public class AngularAcceleration : VehicleBehaviour
     public override void OnEnableVehicle()
     {
         rb = vehicle.cachedRigidbody;
-        angularVelocityDifferentiation = new AngularVelocityDifferentiation(rb);
+        angularVelocityDifferentiation = new AngularVelocityDifferentiation(rb, new float[] { 1.5f,-2f,0.5f});
     }
 
 
