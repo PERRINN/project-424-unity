@@ -539,7 +539,7 @@ MonoBehaviour:
   decreaseHeight: 55
   firstPersonCameraTarget: {fileID: 295459827}
   heightStep: 0.005
-  heightMax: 0.05
+  heightMax: 0.1
   increaseFOV: 61
   decreaseFOV: 45
   firstPersonCamera: {fileID: 1672645018}
@@ -10615,8 +10615,68 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
+      propertyPath: array.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
       propertyPath: frontFlapRestAngle
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: myArray.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: array.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSZone.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSSectors.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: myArray.Array.data[0].end
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: myArray.Array.data[0].start
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSZone.Array.data[0].end
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSZone.Array.data[1].end
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSSectors.Array.data[0].end
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSZone.Array.data[0].segmentEnd
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSZone.Array.data[0].segmentStart
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 5604649752922501110, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
