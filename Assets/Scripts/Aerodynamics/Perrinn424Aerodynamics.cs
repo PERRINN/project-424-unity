@@ -101,11 +101,11 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	float DRStime = 0;
 
 	// Function Name: noDRSZone
-	// Check if car is inside a DRS activation zone
+	// Check if car is inside a no DRS activation zone
 	//
 	//	 [IN]	lapDistance [m]
 	//
-	//	 [OUT]	true or false
+	//	 [OUT]	true (DRS disabled) or false (DRS enabled)
 	bool isNoDRSZone(float lapDistance)
 	{
 		for (int i = 0; i < noDRSZone.Length; i++)
@@ -221,7 +221,6 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// checking if car is in a DRS enabled zone
 		bool drsDisabled = isNoDRSZone(distance);
-		Debug.Log(drsDisabled);
 
 		// Getting driver's input
 		int[] customData = vehicle.data.Get(Channel.Custom);
