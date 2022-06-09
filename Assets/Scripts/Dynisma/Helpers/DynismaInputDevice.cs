@@ -162,6 +162,14 @@ public class DynismaInputDevice : InputDevice
 
 	// Comprehensive names for the controls
 
+	// Aqui:
+	// 	- Método sobreescribible InputDevice.CustomControlName(Control)
+	// 	- Se llama automáticamente tras DetectPressedControl (evita la necesidad de sobreescribir éste).
+	// 	- Método interno DefaultControlName(Control) en alguna parte.
+	// 	- Antes de grabar mappings se aplican los nombres por defecto (OnBeforeSerialize?).
+	// 	- Después de cargar mappings se aplican los custom control names (OnAfterDeserialize?).
+
+
 	public override bool DetectPressedControl (ref ControlDefinition control)
 		{
 		if (!base.DetectPressedControl(ref control))
@@ -189,12 +197,12 @@ public class DynismaInputDevice : InputDevice
 				control.name = "DOWNSHIFT";
 				}
 			else
-			if (control.id0 >= 10 && control.id1 <= 25)
+			if (control.id0 >= 10 && control.id0 <= 25)
 				{
 				control.name = $"ROT0-{control.id0}";
 				}
 			else
-			if (control.id0 >= 20 && control.id1 <= 35)
+			if (control.id0 >= 20 && control.id0 <= 35)
 				{
 				control.name = $"ROT1-{control.id0}";
 				}
