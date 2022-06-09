@@ -162,19 +162,9 @@ public class DynismaInputDevice : InputDevice
 
 	// Comprehensive names for the controls
 
-	// Aqui:
-	// 	- Método sobreescribible InputDevice.CustomControlName(Control)
-	// 	- Se llama automáticamente tras DetectPressedControl (evita la necesidad de sobreescribir éste).
-	// 	- Método interno DefaultControlName(Control) en alguna parte.
-	// 	- Antes de grabar mappings se aplican los nombres por defecto (OnBeforeSerialize?).
-	// 	- Después de cargar mappings se aplican los custom control names (OnAfterDeserialize?).
 
-
-	public override bool DetectPressedControl (ref ControlDefinition control)
+	public override void SetCustomControlName (ref ControlDefinition control)
 		{
-		if (!base.DetectPressedControl(ref control))
-			return false;
-
 		if (control.type == ControlType.Analog)
 			{
 			switch (control.id0)
@@ -184,31 +174,40 @@ public class DynismaInputDevice : InputDevice
 				case 2: control.name = "BRAKE"; break;
 				}
 			}
-
+		else
 		if (control.type == ControlType.Binary)
 			{
-			if (control.id0 == 8)
-				{
-				control.name = "UPSHIFT";
-				}
+			if (control.dualBinary)
+				control.name = $"{GetBinaryControlName(control.id0)},{GetBinaryControlName(control.id1)}";
 			else
-			if (control.id0 == 9)
-				{
-				control.name = "DOWNSHIFT";
-				}
-			else
-			if (control.id0 >= 10 && control.id0 <= 25)
-				{
-				control.name = $"ROT0-{control.id0}";
-				}
-			else
-			if (control.id0 >= 20 && control.id0 <= 35)
-				{
-				control.name = $"ROT1-{control.id0}";
-				}
+				control.name = $"{GetBinaryControlName(control.id0)}";
+			}
+		}
+
+
+	string GetBinaryControlName (int id)
+		{
+		if (id == 8)
+			{
+			return "UPSHIFT";
+			}
+		else
+		if (id == 9)
+			{
+			return "DOWNSHIFT";
+			}
+		else
+		if (id >= 10 && id <= 25)
+			{
+			return $"ROT1-{id}";
+			}
+		else
+		if (id >= 20 && id <= 35)
+			{
+			return $"ROT2-{id}";
 			}
 
-		return true;
+		return $"BTN{id+1}";
 		}
 	}
 

@@ -107,7 +107,7 @@ public class WheelDetectDialog : InputDetectionDialogBase
 						//	- Currently detected control is dpad but from other device
 						//	- Currently detected control is dpad in same device, but either is a different dpad or its direction doesn't overlap with current dpad direction
 
-						if (!m_controlDetected || control.type != ControlType.Dpad || !device.Match(m_tmpDevice) || !control.Match(m_tmpControl, compareBothDirs:true))
+						if (!m_controlDetected || control.type != ControlType.Dpad || !device.Match(m_tmpDevice) || !control.Match(m_tmpControl))
 							{
 							testAxis.bindings.Clear();
 							InputManager.instance.CreateBinding(testAxis, m_tmpDevice, m_tmpControl);
@@ -132,15 +132,16 @@ public class WheelDetectDialog : InputDetectionDialogBase
 						//	- Currently detected control is binary but from other device
 						//	- Currently detected control is binary in same device with 2 ids, but the new id doesn't match any of them
 
-						if (!m_controlDetected || control.type != ControlType.Binary || !device.Match(m_tmpDevice)
-							|| m_controlDetected && m_tmpControl.id0 != control.id0 && m_tmpControl.id0 != control.id1)
+						if (!m_controlDetected || control.type != ControlType.Binary || !device.Match(m_tmpDevice) || !control.Match(m_tmpControl))
 							{
 							// Detecting either first control, or second control in different device:
-							// -> assume it's the first control for direction RIGHT.
+							// -> assume the first control is for direction RIGHT.
+							// -> id1 is set to the latest button to prevent the axis to cancel itself when first control is id0.
 
 							if (!m_firstControlDetected || !device.Match(m_tmpDevice))
 								{
 								testAxis.bindings.Clear();
+								m_tmpControl.id1 = 149;
 								InputManager.instance.CreateBinding(testAxis, m_tmpDevice, m_tmpControl);
 								InputManager.instance.RefreshActionBindings(testAxis);
 								SetBindingValue("sensitivity", 2.0f);
@@ -163,6 +164,7 @@ public class WheelDetectDialog : InputDetectionDialogBase
 								if (device.Match(m_tmpDevice))
 									{
 									m_tmpControl.ReplaceDeviceId("");
+									control.dualBinary = true;
 									control.id1 = m_tmpControl.id0;
 									control.name = $"{control.name}{m_tmpControl.name}";
 									SetBindingControl(control);

@@ -5,9 +5,6 @@
 // https://www.mathworks.com/help/driving/ug/coordinate-systems.html
 
 
-// TODO: Max frequency of packets sent
-
-
 using UnityEngine;
 using VehiclePhysics;
 using VehiclePhysics.InputManagement;
