@@ -21,6 +21,8 @@ public class DynismaInputProvider : MonoBehaviour
 			DynismaDeviceProvider provider = InputManager.instance.GetDeviceProvider<DynismaDeviceProvider>();
 			provider.settings = settings;
 			}
+
+		InputManager.instance.RefreshAllBindings();
 		}
 
 

@@ -39,7 +39,8 @@ public class DynismaInputDevice : InputDevice
 	byte[] m_buffer = new byte[1024];
 	int m_size = 0;
 	InputData m_inputData = new InputData();
-	bool m_newInputData = false;
+	bool m_newInputData;
+	bool m_firstState;
 
 
 	public override void Open ()
@@ -54,9 +55,9 @@ public class DynismaInputDevice : InputDevice
 				}
 			});
 		m_newInputData = false;
+		m_firstState = true;
 
 		ClearState();
-		TakeControlSnapshot();
 		}
 
 
@@ -156,6 +157,14 @@ public class DynismaInputDevice : InputDevice
 			// Acknowledge new input data converted
 
 			m_newInputData = false;
+
+			// Take a snapshot if this is the first state received
+
+			if (m_firstState)
+				{
+				TakeControlSnapshot();
+				m_firstState = false;
+				}
 			}
 		}
 
