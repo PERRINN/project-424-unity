@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     templateName: Aerodynamics
-    verticalRange: 14
+    verticalRange: 15
     channels:
     - name: Speed
       displayName: 
@@ -22,6 +22,7 @@ MonoBehaviour:
       displayOrigin: 0
       displayRange: 14
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
     - name: AeroDrsPosition
       displayName: DRS
@@ -29,13 +30,23 @@ MonoBehaviour:
       displayOrigin: 13
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0, g: 1, b: 0.065425634, a: 0.74509805}
+    - name: AeroNoDRSZone
+      displayName: NoDRSZone
+      labelOffset: 1
+      displayOrigin: 13
+      displayRange: 1
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 1, g: 0, b: 0.97479534, a: 0.74509805}
     - name: AeroFrontFlap
       displayName: Front Flap
       labelOffset: -1
       displayOrigin: 13
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.8679245, g: 0.2874043, b: 0.08597365, a: 0.74509805}
     - name: AeroSczFront
       displayName: SCz Front
@@ -43,6 +54,7 @@ MonoBehaviour:
       displayOrigin: 10
       displayRange: 2
       adjustToRange: 1
+      mirror: 0
       displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
     - name: AeroSczRear
       displayName: SCz Rear
@@ -50,6 +62,7 @@ MonoBehaviour:
       displayOrigin: 10
       displayRange: 2
       adjustToRange: 1
+      mirror: 0
       displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.74509805}
     - name: AeroDrag
       displayName: Drag
@@ -57,6 +70,7 @@ MonoBehaviour:
       displayOrigin: 6
       displayRange: 4
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.57801414, g: 0.5, b: 1, a: 0.74509805}
     - name: AeroBalance
       displayName: Balance
@@ -64,6 +78,7 @@ MonoBehaviour:
       displayOrigin: 6
       displayRange: 4
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 1, g: 0.6064061, b: 0, a: 0.74509805}
     - name: AeroDownforceFront
       displayName: Downforce Front
@@ -71,6 +86,7 @@ MonoBehaviour:
       displayOrigin: 6
       displayRange: 4
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.74509805}
     - name: AeroDownforceRear
       displayName: Downforce Rear
@@ -78,6 +94,7 @@ MonoBehaviour:
       displayOrigin: 6
       displayRange: 4
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.74509805}
     - name: RideHeightFront
       displayName: Front Ride Height
@@ -85,6 +102,7 @@ MonoBehaviour:
       displayOrigin: 4
       displayRange: 2
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.7307761, g: 0.9622642, b: 0.7401292, a: 0.74509805}
     - name: RideHeightRear
       displayName: Rear Ride Height
@@ -92,6 +110,7 @@ MonoBehaviour:
       displayOrigin: 4
       displayRange: 2
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.74509805}
     - name: AeroRoll
       displayName: Roll
@@ -99,6 +118,7 @@ MonoBehaviour:
       displayOrigin: 3
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.023529414, g: 0.7058824, b: 0.7843138, a: 0.8}
     - name: AeroSteer
       displayName: Steer
@@ -106,6 +126,7 @@ MonoBehaviour:
       displayOrigin: 3
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 1, g: 0, b: 0.5697689, a: 0.74509805}
     - name: AeroYaw
       displayName: Yaw
@@ -113,6 +134,7 @@ MonoBehaviour:
       displayOrigin: 3
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.29803923, g: 0.6862745, b: 0.3137255, a: 0.8509804}
     - name: AirDensity
       displayName: Air Density
@@ -120,4 +142,5 @@ MonoBehaviour:
       displayOrigin: 1
       displayRange: 1
       adjustToRange: 1
+      mirror: 0
       displayColor: {r: 1, g: 1, b: 1, a: 0.7490196}
