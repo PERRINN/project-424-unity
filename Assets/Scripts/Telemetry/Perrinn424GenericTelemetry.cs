@@ -199,7 +199,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		{
 		public override int GetChannelCount ()
 			{
-			return 8;
+			return 6;
 			}
 
 
@@ -217,8 +217,6 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			channelInfo[3].SetNameAndSemantic("RollAngleRear", Telemetry.Semantic.BankAngle);
 			channelInfo[4].SetNameAndSemantic("GroundSlope", Telemetry.Semantic.BankAngle);
 			channelInfo[5].SetNameAndSemantic("GroundGrade", Telemetry.Semantic.SignedRatio);
-			channelInfo[6].SetNameAndSemantic("PitchRate", Telemetry.Semantic.AngularVelocity);
-			channelInfo[7].SetNameAndSemantic("RollRate", Telemetry.Semantic.AngularVelocity);
 			}
 
 
@@ -233,10 +231,6 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+3] = custom[Perrinn424Data.RearRollAngle] / 1000.0f;
 			values[index+4] = custom[Perrinn424Data.GroundAngle] / 1000.0f;
 			values[index+5] = custom[Perrinn424Data.GroundSlope] / 1000.0f;
-
-			Vector3 angularVelocity = vehicle.cachedRigidbody.angularVelocity;
-			values[index+6] = angularVelocity.x;
-			values[index+7] = angularVelocity.z;
 			}
 		}
 

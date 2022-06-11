@@ -35,7 +35,7 @@ public class WheelDetectDialog : InputDetectionDialogBase
 	public Button restartButton;
 
 
-	InputAxis testAxis = new InputAxis("Test Axis");
+	InputAxis m_testAxis = new InputAxis("Test Axis");
 	DeviceDefinition m_tmpDevice = new DeviceDefinition();
 	ControlDefinition m_tmpControl = new ControlDefinition();
 
@@ -68,8 +68,8 @@ public class WheelDetectDialog : InputDetectionDialogBase
 
 		// Clear it anyways to remove innecessary references
 
-		testAxis.bindings.Clear();
-		testAxis.BindingsUpdate();
+		m_testAxis.bindings.Clear();
+		m_testAxis.BindingsUpdate();
 		}
 
 
@@ -77,15 +77,15 @@ public class WheelDetectDialog : InputDetectionDialogBase
 		{
 		if (InputManager.instance.DetectPressedControl(ref m_tmpControl, ref m_tmpDevice))
 			{
-			if (testAxis.FindBinding(m_tmpDevice, m_tmpControl) == null)
+			if (m_testAxis.FindBinding(m_tmpDevice, m_tmpControl) == null)
 				{
 				switch (m_tmpControl.type)
 					{
 					case ControlType.Analog:
 						{
-						testAxis.bindings.Clear();
-						InputManager.instance.CreateBinding(testAxis, m_tmpDevice, m_tmpControl);
-						InputManager.instance.RefreshActionBindings(testAxis);
+						m_testAxis.bindings.Clear();
+						InputManager.instance.CreateBinding(m_testAxis, m_tmpDevice, m_tmpControl);
+						InputManager.instance.RefreshActionBindings(m_testAxis);
 
 						device = m_tmpDevice;
 						control = m_tmpControl;
@@ -109,9 +109,9 @@ public class WheelDetectDialog : InputDetectionDialogBase
 
 						if (!m_controlDetected || control.type != ControlType.Dpad || !device.Match(m_tmpDevice) || !control.Match(m_tmpControl))
 							{
-							testAxis.bindings.Clear();
-							InputManager.instance.CreateBinding(testAxis, m_tmpDevice, m_tmpControl);
-							InputManager.instance.RefreshActionBindings(testAxis);
+							m_testAxis.bindings.Clear();
+							InputManager.instance.CreateBinding(m_testAxis, m_tmpDevice, m_tmpControl);
+							InputManager.instance.RefreshActionBindings(m_testAxis);
 							SetBindingValue("sensitivity", 2.0f);
 							SetBindingValue("gravity", 3.5f);
 							SetBindingValue("snap", false);
@@ -140,10 +140,10 @@ public class WheelDetectDialog : InputDetectionDialogBase
 
 							if (!m_firstControlDetected || !device.Match(m_tmpDevice))
 								{
-								testAxis.bindings.Clear();
+								m_testAxis.bindings.Clear();
 								m_tmpControl.id1 = 149;
-								InputManager.instance.CreateBinding(testAxis, m_tmpDevice, m_tmpControl);
-								InputManager.instance.RefreshActionBindings(testAxis);
+								InputManager.instance.CreateBinding(m_testAxis, m_tmpDevice, m_tmpControl);
+								InputManager.instance.RefreshActionBindings(m_testAxis);
 								SetBindingValue("sensitivity", 2.0f);
 								SetBindingValue("gravity", 3.5f);
 								SetBindingValue("snap", false);
@@ -251,16 +251,16 @@ public class WheelDetectDialog : InputDetectionDialogBase
 				}
 			else
 				{
-				float value = testAxis.Value();
+				float value = m_testAxis.Value();
 				if (value >= 0.0f)
 					{
-					UITools.SetImageFill(wheelRightImage, testAxis.Value());
+					UITools.SetImageFill(wheelRightImage, m_testAxis.Value());
 					UITools.SetImageFill(wheelLeftImage, 0.0f);
 					}
 				else
 					{
 					UITools.SetImageFill(wheelRightImage, 0.0f);
-					UITools.SetImageFill(wheelLeftImage, -testAxis.Value());
+					UITools.SetImageFill(wheelLeftImage, -m_testAxis.Value());
 					}
 				}
 			}
@@ -277,8 +277,8 @@ public class WheelDetectDialog : InputDetectionDialogBase
 
 	int RawValue ()
 		{
-		if (testAxis.activeBindings.Count > 0)
-			return testAxis.activeBindings[0].RawValue();
+		if (m_testAxis.activeBindings.Count > 0)
+			return m_testAxis.activeBindings[0].RawValue();
 		else
 			return 0;
 		}
@@ -286,36 +286,36 @@ public class WheelDetectDialog : InputDetectionDialogBase
 
 	void UpdateBinding ()
 		{
-		if (testAxis.activeBindings.Count > 0)
-			testAxis.activeBindings[0].Update();
+		if (m_testAxis.activeBindings.Count > 0)
+			m_testAxis.activeBindings[0].Update();
 		}
 
 
 	void SetBindingValue (string name, float value)
 		{
-		if (testAxis.activeBindings.Count > 0)
-			testAxis.activeBindings[0].SetFloat(name, value);
+		if (m_testAxis.activeBindings.Count > 0)
+			m_testAxis.activeBindings[0].SetFloat(name, value);
 		}
 
 
 	void SetBindingValue (string name, int value)
 		{
-		if (testAxis.activeBindings.Count > 0)
-			testAxis.activeBindings[0].SetInt(name, value);
+		if (m_testAxis.activeBindings.Count > 0)
+			m_testAxis.activeBindings[0].SetInt(name, value);
 		}
 
 
 	void SetBindingValue (string name, bool value)
 		{
-		if (testAxis.activeBindings.Count > 0)
-			testAxis.activeBindings[0].SetBool(name, value);
+		if (m_testAxis.activeBindings.Count > 0)
+			m_testAxis.activeBindings[0].SetBool(name, value);
 		}
 
 
 	void SetBindingControl (ControlDefinition control)
 		{
-		if (testAxis.activeBindings.Count > 0)
-			testAxis.activeBindings[0].control = control;
+		if (m_testAxis.activeBindings.Count > 0)
+			m_testAxis.activeBindings[0].control = control;
 		}
 
 
@@ -331,8 +331,8 @@ public class WheelDetectDialog : InputDetectionDialogBase
 		UITools.SetVisible(maxValueText, false);
 		UITools.SetVisible(minValueText, false);
 
-		testAxis.bindings.Clear();
-		testAxis.BindingsUpdate();
+		m_testAxis.bindings.Clear();
+		m_testAxis.BindingsUpdate();
 		InputManager.instance.OpenAllDevices();
 		InputManager.instance.TakeControlSnapshot();
 
@@ -352,8 +352,8 @@ public class WheelDetectDialog : InputDetectionDialogBase
 	void OnAccept ()
 		{
 		assigned = m_controlDetected;
-		if (testAxis.activeBindings.Count > 0)
-			settings = testAxis.activeBindings[0].ReadSettings();
+		if (m_testAxis.activeBindings.Count > 0)
+			settings = m_testAxis.activeBindings[0].ReadSettings();
 
 		this.gameObject.SetActive(false);
 		}
