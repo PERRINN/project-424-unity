@@ -14,29 +14,61 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     templateName: Chassis
-    verticalRange: 10
+    verticalRange: 11
     channels:
     - name: Speed
       displayName: 
       labelOffset: 0
       displayOrigin: 0
-      displayRange: 10
+      displayRange: 11
+      adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
-    - name: YawRate
-      displayName: 
+    - name: AccelerationYaw
+      displayName: Yaw Accel
       labelOffset: 0
-      displayOrigin: 5
-      displayRange: 5
-      displayColor: {r: 0, g: 1, b: 0.065425634, a: 0.7490196}
-    - name: PitchRate
-      displayName: 
+      displayOrigin: 3
+      displayRange: 3
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.40400004, g: 1, b: 0.44373333, a: 0.7490196}
+    - name: AccelerationPitch
+      displayName: Pitch Accel
       labelOffset: -1
-      displayOrigin: 5
-      displayRange: 5
-      displayColor: {r: 1, g: 0.08466068, b: 0, a: 0.7490196}
-    - name: RollRate
-      displayName: 
+      displayOrigin: 3
+      displayRange: 3
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 1, g: 0.45541966, b: 0.40400004, a: 0.7490196}
+    - name: AccelerationRoll
+      displayName: Roll Accel
       labelOffset: -2
-      displayOrigin: 5
+      displayOrigin: 3
+      displayRange: 3
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.40400004, g: 0.49982744, b: 1, a: 0.7490196}
+    - name: VelocityYaw
+      displayName: Yaw Rate
+      labelOffset: 0
+      displayOrigin: 8
       displayRange: 5
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0, g: 1, b: 0.065425634, a: 0.7490196}
+    - name: VelocityPitch
+      displayName: Pitch Rate
+      labelOffset: -1
+      displayOrigin: 8
+      displayRange: 5
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 1, g: 0.08466068, b: 0, a: 0.7490196}
+    - name: VelocityRoll
+      displayName: Roll Rate
+      labelOffset: -2
+      displayOrigin: 8
+      displayRange: 5
+      adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0, g: 0.16215587, b: 1, a: 0.7490196}
