@@ -1493,7 +1493,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   host: 127.0.0.1
   port: 56234
+  maxFrequency: 100
+  maxSteerAngle: 300
   listeningPort: 56236
+  showWidget: 1
   widget:
     position: {x: 8, y: 300}
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
@@ -4165,6 +4168,11 @@ PrefabInstance:
     - target: {fileID: 2483877716221292743, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483877716263781661, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781661, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,

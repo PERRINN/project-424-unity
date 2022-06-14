@@ -214,7 +214,7 @@ public class DynismaTester : MonoBehaviour
 		boxRect.yMin = boxRect.yMax - 160;
 
 		GUILayout.BeginArea(boxRect);
-		m_steerInput = GUILayout.HorizontalScrollbar(m_steerInput, 0.2f, -1.0f, 1.1f);
+		m_steerInput = GUILayout.HorizontalScrollbar(m_steerInput, 0.2f, -1.0f, 1.2f);
 		m_throttle = GUILayout.HorizontalScrollbar(m_throttle, 0.1f, 0.0f, 1.1f);
 		m_brake = GUILayout.HorizontalScrollbar(m_brake, 0.1f, 0.0f, 1.1f);
 
