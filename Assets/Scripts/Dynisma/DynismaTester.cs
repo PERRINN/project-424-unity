@@ -12,11 +12,16 @@ namespace Perrinn424
 
 public class DynismaTester : MonoBehaviour
 	{
+	[Header("Input Data")]
 	public string host = "127.0.0.1";
 	public int port = 56234;
-	public int maxInputFrequency = 100;
+	public int maxFrequency = 100;
+	public int maxSteerAngle = 300;
+
+	[Header("Motion Data")]
 	public int listeningPort = 56236;
 
+	[Header("Debug")]
 	public bool showWidget = true;
 	public GUITextBox.Settings widget = new GUITextBox.Settings();
 
@@ -72,7 +77,7 @@ public class DynismaTester : MonoBehaviour
 	int m_skipCount = 0;
 	float m_throttle = 0.0f;
 	float m_brake = 0.0f;
-	float m_steerAngle = 0.0f;
+	float m_steerInput = 0.0f;
 	bool m_upShift = false;
 	bool m_downShift = false;
 	bool[] m_button = new bool[8];
@@ -154,7 +159,7 @@ public class DynismaTester : MonoBehaviour
 		// Send input data limited by the maximum frequency specified
 
 		float fixedUpdateFrequency = 1.0f / Time.fixedDeltaTime;
-		int sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxInputFrequency);
+		int sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxFrequency);
 
 		m_skipCount++;
 		if (m_skipCount >= sendInterval)
@@ -168,7 +173,7 @@ public class DynismaTester : MonoBehaviour
 		{
 		m_inputData.throttle = m_throttle;
 		m_inputData.brake = m_brake;
-		m_inputData.steerAngle = m_steerAngle;
+		m_inputData.steerAngle = m_steerInput * maxSteerAngle;
 		m_inputData.upShift = m_upShift;
 		m_inputData.downShift = m_downShift;
 
@@ -189,6 +194,8 @@ public class DynismaTester : MonoBehaviour
 		m_sender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
 		}
 
+	readonly string[] m_rotary0Labels = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+	readonly string[] m_rotary1Labels = new string[] { "M", "N", "O", "P", "Q", "R", "S", "T" };
 
 	void OnGUI ()
 		{
@@ -200,12 +207,35 @@ public class DynismaTester : MonoBehaviour
 		Rect boxRect = m_textBox.boxRect;
 		float margin = m_textBox.margin;
 
-		boxRect.x += boxRect.width;
-		boxRect.width = 200;
+		int boxWidth = 216;
+		boxRect.x += boxRect.width - boxWidth - 8;
+		boxRect.width = boxWidth;
+		boxRect.xMin = boxRect.xMax - boxWidth;
+		boxRect.yMin = boxRect.yMax - 160;
 
 		GUILayout.BeginArea(boxRect);
-
+		m_steerInput = GUILayout.HorizontalScrollbar(m_steerInput, 0.2f, -1.0f, 1.1f);
 		m_throttle = GUILayout.HorizontalScrollbar(m_throttle, 0.1f, 0.0f, 1.1f);
+		m_brake = GUILayout.HorizontalScrollbar(m_brake, 0.1f, 0.0f, 1.1f);
+
+		GUILayout.BeginHorizontal();
+		m_upShift = GUILayout.RepeatButton("  Up  ");
+		m_downShift = GUILayout.RepeatButton("Down");
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+		m_button[0] = GUILayout.RepeatButton("1");
+		m_button[1] = GUILayout.RepeatButton("2");
+		m_button[2] = GUILayout.RepeatButton("3");
+		m_button[3] = GUILayout.RepeatButton("4");
+		m_button[4] = GUILayout.RepeatButton("5");
+		m_button[5] = GUILayout.RepeatButton("6");
+		m_button[6] = GUILayout.RepeatButton("7");
+		m_button[7] = GUILayout.RepeatButton("8");
+		GUILayout.EndHorizontal();
+
+		m_rotary0 = GUILayout.Toolbar(m_rotary0, m_rotary0Labels);
+		m_rotary1 = GUILayout.Toolbar(m_rotary1, m_rotary1Labels);
 
 		GUILayout.EndArea();
 		}
@@ -214,13 +244,30 @@ public class DynismaTester : MonoBehaviour
 	void UpdateWidgetText ()
 		{
 		m_text.Clear();
-		m_text.Append("Motion Platform Data\n\n");
+		m_text.Append("Motion Platform Data (Received)\n\n");
 		m_text.Append($"Packets:               {m_received}  ({m_packetFrequency:0.} Hz)\n");
 		m_text.Append($"Acceleration:          X:{m_motionData.accelerationX,10:0.000000}  Y:{m_motionData.accelerationY,10:0.000000}  Z:{m_motionData.accelerationZ,10:0.000000}  m/s2\n");
 		m_text.Append($"Angular Acceleration:  X:{m_motionData.angularAccelerationX,10:0.000000}  Y:{m_motionData.angularAccelerationY,10:0.000000}  Z:{m_motionData.angularAccelerationZ,10:0.000000}  rad/s2\n");
 		m_text.Append($"Steering Torque:      {m_motionData.steeringTorque,11:0.000000}  Nm\n");
 		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
 		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
+		m_text.Append("\nInput Data (Sent)\n\n");
+		m_text.Append($"Throttle:             {m_inputData.throttle,8:0.000}\n");
+		m_text.Append($"Brake:                {m_inputData.brake,8:0.000}\n");
+		m_text.Append($"Steer Angle:          {m_inputData.steerAngle,8:0.000}\n");
+		m_text.Append($"Up Shift:             {m_inputData.upShift}\n");
+		m_text.Append($"Down Shift:           {m_inputData.downShift}\n");
+
+		m_text.Append($"Buttons:              ");
+		for (int i = 0, c = m_button.Length; i < c; i++)
+			if (m_button[i]) m_text.Append($"{i+1} ");
+		m_text.Append("\n");
+
+		int rotary0 = (m_inputData.rotary & 0x0F);
+		int rotary1 = (m_inputData.rotary >> 4);
+		m_text.Append($"Rotary 1:             {rotary0}\n");
+		m_text.Append($"Rotary 2:             {rotary1}\n");
+
 		m_textBox.text = m_text.ToString();
 		}
 	}
