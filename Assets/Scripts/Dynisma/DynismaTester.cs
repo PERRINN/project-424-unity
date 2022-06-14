@@ -17,6 +17,7 @@ public class DynismaTester : MonoBehaviour
 	public int maxInputFrequency = 100;
 	public int listeningPort = 56236;
 
+	public bool showWidget = true;
 	public GUITextBox.Settings widget = new GUITextBox.Settings();
 
 
@@ -147,7 +148,8 @@ public class DynismaTester : MonoBehaviour
 
 		// Update text from motion data
 
-		UpdateWidgetText();
+		if (showWidget)
+			UpdateWidgetText();
 
 		// Send input data limited by the maximum frequency specified
 
@@ -190,6 +192,9 @@ public class DynismaTester : MonoBehaviour
 
 	void OnGUI ()
 		{
+		if (!showWidget)
+			return;
+
 		m_textBox.OnGUI();
 
 		Rect boxRect = m_textBox.boxRect;
@@ -203,7 +208,6 @@ public class DynismaTester : MonoBehaviour
 		m_throttle = GUILayout.HorizontalScrollbar(m_throttle, 0.1f, 0.0f, 1.1f);
 
 		GUILayout.EndArea();
-
 		}
 
 
