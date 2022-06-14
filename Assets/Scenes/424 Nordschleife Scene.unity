@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.3
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.044780876, g: 0.05738007, b: 0.070604235, a: 0.3}
+  m_IndirectSpecularColor: {r: 0.044782605, g: 0.05738021, b: 0.07060575, a: 0.3}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -10713,59 +10713,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b2d9942018d10448178eabdbdf6bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &789434748
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 789434750}
-  - component: {fileID: 789434749}
-  m_Layer: 0
-  m_Name: Dynisma Tester
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &789434749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 789434748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac776934fff74ad47af9c4fb2ffbbd2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  host: 127.0.0.1
-  port: 56234
-  listeningPort: 56236
-  widget:
-    position: {x: 8, y: 120}
-    font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
-    fontSize: 12
-    fontColor: {r: 1, g: 1, b: 1, a: 1}
-    scrollLines: 0
-  defaultConsoleFont: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
---- !u!4 &789434750
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 789434748}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 773184386}
-  m_RootOrder: 19
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &847784101 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2987558533034567684, guid: 9de9b3b659e67fb42b66d1ba2010c1ec,

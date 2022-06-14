@@ -1462,6 +1462,59 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1337927121}
   m_Mesh: {fileID: 4300000, guid: e444ae5e29bfa4b438b933f1d0c19dae, type: 3}
+--- !u!1 &1358357848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1358357850}
+  - component: {fileID: 1358357849}
+  m_Layer: 0
+  m_Name: Dynisma Tester
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1358357849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358357848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac776934fff74ad47af9c4fb2ffbbd2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  host: 127.0.0.1
+  port: 56234
+  listeningPort: 56236
+  widget:
+    position: {x: 8, y: 300}
+    font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
+    fontSize: 12
+    fontColor: {r: 1, g: 1, b: 1, a: 1}
+    scrollLines: 0
+  defaultConsoleFont: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
+--- !u!4 &1358357850
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358357848}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1428899532}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1360238559 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7322827628306836598, guid: 8e3a3654418a6b048a4707246e320c89,

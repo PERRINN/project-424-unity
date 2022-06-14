@@ -252,21 +252,21 @@ public class DynismaTester : MonoBehaviour
 		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
 		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
 		m_text.Append("\nInput Data (Sent)\n\n");
+		m_text.Append($"Steer Angle:          {m_inputData.steerAngle,8:0.000}\n");
 		m_text.Append($"Throttle:             {m_inputData.throttle,8:0.000}\n");
 		m_text.Append($"Brake:                {m_inputData.brake,8:0.000}\n");
-		m_text.Append($"Steer Angle:          {m_inputData.steerAngle,8:0.000}\n");
-		m_text.Append($"Up Shift:             {m_inputData.upShift}\n");
-		m_text.Append($"Down Shift:           {m_inputData.downShift}\n");
+		m_text.Append($"Up Shift:              {m_inputData.upShift}\n");
+		m_text.Append($"Down Shift:            {m_inputData.downShift}\n");
 
-		m_text.Append($"Buttons:              ");
+		m_text.Append($"Buttons:               ");
 		for (int i = 0, c = m_button.Length; i < c; i++)
 			if (m_button[i]) m_text.Append($"{i+1} ");
 		m_text.Append("\n");
 
 		int rotary0 = (m_inputData.rotary & 0x0F);
 		int rotary1 = (m_inputData.rotary >> 4);
-		m_text.Append($"Rotary 1:             {rotary0}\n");
-		m_text.Append($"Rotary 2:             {rotary1}\n");
+		m_text.Append($"Rotary 1:              {rotary0}\n");
+		m_text.Append($"Rotary 2:              {rotary1}\n");
 
 		m_textBox.text = m_text.ToString();
 		}
