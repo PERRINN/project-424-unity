@@ -34,7 +34,7 @@ public class PedalDetectDialog : InputDetectionDialogBase
 	public Button restartButton;
 
 
-	InputSlider testSlider = new InputSlider("Test Slider");
+	InputSlider m_testSlider = new InputSlider("Test Slider");
 	bool m_detected = false;
 	int m_minValue = 0;
 	int m_maxValue = 0;
@@ -63,8 +63,8 @@ public class PedalDetectDialog : InputDetectionDialogBase
 
 		// Clear it anyways to remove innecessary references
 
-		testSlider.bindings.Clear();
-		testSlider.BindingsUpdate();
+		m_testSlider.bindings.Clear();
+		m_testSlider.BindingsUpdate();
 		}
 
 
@@ -72,13 +72,13 @@ public class PedalDetectDialog : InputDetectionDialogBase
 		{
 		if (InputManager.instance.DetectPressedControl(ref control, ref device))
 			{
-			if (testSlider.FindBinding(device, control) == null)
+			if (m_testSlider.FindBinding(device, control) == null)
 				{
 				// Create a binding for the detected control
 
-				testSlider.bindings.Clear();
-				InputManager.instance.CreateBinding(testSlider, device, control);
-				InputManager.instance.RefreshActionBindings(testSlider);
+				m_testSlider.bindings.Clear();
+				InputManager.instance.CreateBinding(m_testSlider, device, control);
+				InputManager.instance.RefreshActionBindings(m_testSlider);
 
 				// Report control and name
 
@@ -157,7 +157,7 @@ public class PedalDetectDialog : InputDetectionDialogBase
 			if (isAnalog && m_direction == 0)
 				UITools.SetImageFill(pedalImage, 0.0f);
 			else
-				UITools.SetImageFill(pedalImage, testSlider.Value());
+				UITools.SetImageFill(pedalImage, m_testSlider.Value());
 			}
 
 		// Detect Esc
@@ -172,8 +172,8 @@ public class PedalDetectDialog : InputDetectionDialogBase
 
 	int RawValue ()
 		{
-		if (testSlider.activeBindings.Count > 0)
-			return testSlider.activeBindings[0].RawValue();
+		if (m_testSlider.activeBindings.Count > 0)
+			return m_testSlider.activeBindings[0].RawValue();
 		else
 			return 0;
 		}
@@ -181,29 +181,29 @@ public class PedalDetectDialog : InputDetectionDialogBase
 
 	void UpdateBinding ()
 		{
-		if (testSlider.activeBindings.Count > 0)
-			testSlider.activeBindings[0].Update();
+		if (m_testSlider.activeBindings.Count > 0)
+			m_testSlider.activeBindings[0].Update();
 		}
 
 
 	void SetBindingValue (string name, float value)
 		{
-		if (testSlider.activeBindings.Count > 0)
-			testSlider.activeBindings[0].SetFloat(name, value);
+		if (m_testSlider.activeBindings.Count > 0)
+			m_testSlider.activeBindings[0].SetFloat(name, value);
 		}
 
 
 	void SetBindingValue (string name, int value)
 		{
-		if (testSlider.activeBindings.Count > 0)
-			testSlider.activeBindings[0].SetInt(name, value);
+		if (m_testSlider.activeBindings.Count > 0)
+			m_testSlider.activeBindings[0].SetInt(name, value);
 		}
 
 
 	void SetBindingValue (string name, bool value)
 		{
-		if (testSlider.activeBindings.Count > 0)
-			testSlider.activeBindings[0].SetBool(name, value);
+		if (m_testSlider.activeBindings.Count > 0)
+			m_testSlider.activeBindings[0].SetBool(name, value);
 		}
 
 
@@ -218,8 +218,8 @@ public class PedalDetectDialog : InputDetectionDialogBase
 		UITools.SetVisible(maxValueText, false);
 		UITools.SetVisible(minValueText, false);
 
-		testSlider.bindings.Clear();
-		testSlider.BindingsUpdate();
+		m_testSlider.bindings.Clear();
+		m_testSlider.BindingsUpdate();
 		InputManager.instance.OpenAllDevices();
 		InputManager.instance.TakeControlSnapshot();
 
@@ -238,8 +238,8 @@ public class PedalDetectDialog : InputDetectionDialogBase
 	void OnAccept ()
 		{
 		assigned = m_detected;
-		if (testSlider.activeBindings.Count > 0)
-			settings = testSlider.activeBindings[0].ReadSettings();
+		if (m_testSlider.activeBindings.Count > 0)
+			settings = m_testSlider.activeBindings[0].ReadSettings();
 
 		this.gameObject.SetActive(false);
 		}

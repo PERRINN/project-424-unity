@@ -707,7 +707,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2483877714874542022}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.76, y: 0.24, z: -3}
+  m_LocalPosition: {x: -0.76, y: 0.24, z: -3.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2483877714929404271}
@@ -727,7 +727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 25
   radius: 0.34
-  center: {x: 0, y: 0, z: 0}
+  center: {x: 0, y: 0, z: 0.15}
   suspensionDistance: 0.09
   suspensionAnchor: 0
   springRate: 170000
@@ -1445,7 +1445,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2483877715907473430}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.76, y: 0.24, z: -3}
+  m_LocalPosition: {x: 0.76, y: 0.24, z: -3.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2483877714929404271}
@@ -1465,7 +1465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 25
   radius: 0.34
-  center: {x: 0, y: 0, z: 0}
+  center: {x: 0, y: 0, z: 0.15}
   suspensionDistance: 0.09
   suspensionAnchor: 0
   springRate: 170000
@@ -2036,6 +2036,7 @@ MonoBehaviour:
   emitTelemetry: 1
   inputs: 0
   platform: 1
+  velocities: 1
   accelerations: 1
   powertrain: 0
   suspension: 1

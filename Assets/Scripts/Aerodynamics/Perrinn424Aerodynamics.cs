@@ -8,11 +8,24 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 {
 	public AltitudeConverter altitudeConverter;
 
+	[System.Serializable]
+	public class NoDRSarray
+	{
+		public float segmentStart = 0.0f;
+		public float segmentEnd = 500.0f;
+	}
+
+
+
 	[Space(5)]
 	public float deltaISA                  = 0.0f;
 	public float dRSActivationDelay        = 0.0f;
 	public float dRSActivationTime         = 0.0f;
-	
+
+	[Space(5)]
+	[SerializeField] private NoDRSarray[] noDRSZone;
+
+	[Space(5)]
 	public float frontFlapStaticAngle         = 5.0f;
 	public float frontFlapDRSAngle            = -15.0f;
 	public float frontFlapSCz0				  = 0.34f;
@@ -81,11 +94,28 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float frontRideHeight = 0.0f;
 	[HideInInspector] public float rearRideHeight  = 0.0f;
 	[HideInInspector] public float rho = 0.0f;
+	[HideInInspector] public float noDRSzone = 0.0f;
 
 	// Private members
 
 	Atmosphere atmosphere = new Atmosphere();
 	float DRStime = 0;
+
+	// Function Name: noDRSZone
+	// Check if car is inside a no DRS activation zone
+	//
+	//	 [IN]	lapDistance [m]
+	//
+	//	 [OUT]	true (DRS disabled) or false (DRS enabled)
+	bool isNoDRSZone(float lapDistance)
+	{
+		for (int i = 0; i < noDRSZone.Length; i++)
+		{
+			if (lapDistance > noDRSZone[i].segmentStart && lapDistance < noDRSZone[i].segmentEnd)
+				return true;
+        }
+		return false;
+    }
 
 	// Function Name: CalcAeroCoeff
 	// This function calculates a given aerodynamic coefficient based on:
@@ -139,9 +169,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//
 	//	 [OUT]	DRSpos:      0 to 1 [-]
 
-	float CalcDRSPosition(float throttlePos, float brakePressure, float DRSpos, bool DRSbutton)
+	float CalcDRSPosition(float throttlePos, float brakePressure, float DRSpos, bool DRSbutton, bool DRSdisabled)
 	{
-		if (throttlePos == 1 && brakePressure < 1 && !DRSclosing)
+		if (throttlePos == 1 && brakePressure < 1 && !DRSclosing && !DRSdisabled)
 		{
 			if (DRSbutton == true)
 				DRSopenButton = true;
@@ -183,20 +213,28 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	
 	
 	public override void FixedUpdateVehicle()
-	{
+	{	
 		Rigidbody rb = vehicle.cachedRigidbody;
+		
+		// Getting traveled distance in current lap
+		Telemetry.DataRow telemetryDataRow = vehicle.telemetry.latest;
+		float distance = (float)telemetryDataRow.distance;
+
+		// checking if car is in a DRS disabled zone
+		bool drsDisabled = isNoDRSZone(distance);
+		noDRSzone = System.Convert.ToSingle(drsDisabled);
 
 		// Getting driver's input
-
 		int[] customData = vehicle.data.Get(Channel.Custom);
 		bool processedInputs = customData[Perrinn424Data.EnableProcessedInput] != 0;
-		if (processedInputs)
-			{
-			// Processed DRS position from the 424 data
-			DRS = customData[Perrinn424Data.InputDrsPosition] / 1000.0f;
-			}
-		else
-			{
+		
+		//if (processedInputs)
+		//	{
+		//	// Processed DRS position from the 424 data
+		//	DRS = customData[Perrinn424Data.InputDrsPosition] / 1000.0f;
+		//	}
+		//else
+		//	{
 			// Detecting DRS button pressed and acknowledge
 			int[] raceInput = vehicle.data.Get(Channel.RaceInput);
 			bool drsPressed = raceInput[RaceInputData.Drs] != 0;
@@ -207,8 +245,8 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			float brakePressure = customData[Perrinn424Data.BrakePressure] / 1000.0f;
 
 			// Calculating DRS position
-			DRS = CalcDRSPosition(throttleInput, brakePressure, DRS, drsPressed);
-			}
+			DRS = CalcDRSPosition(throttleInput, brakePressure, DRS, drsPressed, drsDisabled);
+		//	}
 
 		// Feeding DRS position to the car data bus
 		customData[Perrinn424Data.DrsPosition] = Mathf.RoundToInt(DRS * 1000);
@@ -314,7 +352,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	{
 		public override int GetChannelCount ()
 		{
-			return 12;
+			return 13;
 		}
 
 
@@ -351,7 +389,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			steerAngleSemantic.SetRangeAndFormat(-steering.maxSteerAngle, steering.maxSteerAngle, "0.0", "°", quantization:5);
 
 			// Fill-in channel information
-
+			
 			channelInfo[0].SetNameAndSemantic("AeroDrsPosition", Telemetry.Semantic.Ratio);
 			channelInfo[1].SetNameAndSemantic("AeroSczFront", Telemetry.Semantic.Custom, aeroCoeffSemantic);
 			channelInfo[2].SetNameAndSemantic("AeroSczRear", Telemetry.Semantic.Custom, aeroCoeffSemantic);
@@ -366,6 +404,8 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			channelInfo[9].SetNameAndSemantic("AeroBalance", Telemetry.Semantic.Ratio);
 			channelInfo[10].SetNameAndSemantic("AeroFrontFlap", Telemetry.Semantic.Custom, aeroAngleSemantic);
 			channelInfo[11].SetNameAndSemantic("AirDensity", Telemetry.Semantic.Custom, airDensitySemantic);
+
+			channelInfo[12].SetNameAndSemantic("AeroNoDRSZone", Telemetry.Semantic.Ratio);
 		}
 
 
@@ -387,6 +427,8 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			values[index+9] = aero.aeroBal / 100.0f;
 			values[index+10] = aero.flapAngle;
 			values[index+11] = aero.rho;
+
+			values[index+12] = aero.noDRSzone;
 		}
 	}
 
