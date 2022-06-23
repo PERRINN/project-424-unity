@@ -52,23 +52,44 @@ public class DynismaSettings : MonoBehaviour
 
 		if (!string.IsNullOrEmpty(json))
 			{
-			SavedSettings savedSettings = JsonUtility.FromJson<SavedSettings>(json);
+			SavedSettings settings = JsonUtility.FromJson<SavedSettings>(json);
 
 			// Copy settings to preserve current references
 
 			if (inputProvider != null)
 				{
-				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaInputDevice.Settings>(savedSettings.inputSettings, ref inputProvider.settings);
+				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaInputDevice.Settings>(settings.inputSettings, ref inputProvider.settings);
 
 				inputProvider.enabled = true;
 				}
 
 			if (motionPlatform != null)
 				{
-				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaMotionPlatform.Settings>(savedSettings.motionSettings, ref motionPlatform.settings);
+				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaMotionPlatform.Settings>(settings.motionSettings, ref motionPlatform.settings);
 
 				motionPlatform.enabled = true;
 				}
+			}
+		}
+
+
+	[ContextMenu("Save current settings to file")]
+	public void SaveCurrentSettings ()
+		{
+		SavedSettings settings = new SavedSettings();
+		if (inputProvider != null) settings.inputSettings = inputProvider.settings;
+		if (motionPlatform != null) settings.motionSettings = motionPlatform.settings;
+
+		string json = JsonUtility.ToJson(settings, prettyPrint: true);
+		string path = Path.Combine(Application.persistentDataPath, fileName);
+		try
+			{
+			File.WriteAllText(path, json);
+			Debug.Log($"Dynisma settings saved to file.\nPath: [{path}]");
+			}
+		catch (Exception e)
+			{
+			Debug.LogWarning($"Error writing Dynisma settings to file: {e.Message}\nPath: [{path}]");
 			}
 		}
 	}
