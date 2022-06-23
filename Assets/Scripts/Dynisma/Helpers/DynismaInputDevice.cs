@@ -50,6 +50,7 @@ public class DynismaInputDevice : InputDevice
 
 		try {
 			m_listener.StartConnection(settings.listeningPort);
+			Debug.Log($"DynismaInputDevice: listening at port {settings.listeningPort}");
 			}
 		catch (Exception ex)
 			{

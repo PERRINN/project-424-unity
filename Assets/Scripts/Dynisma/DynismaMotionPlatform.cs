@@ -96,10 +96,12 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		try {
 			m_udp.StartConnection(settings.port+20);
 			m_udp.SetDestination(settings.host, settings.port);
+
+			Debug.Log($"DynismaMotionPlatform: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz)");
 			}
 		catch (Exception ex)
 			{
-			Debug.LogWarning("DynismaMotionPlatform connection error: " + ex.Message + ". Component disabled.");
+			Debug.LogWarning($"DynismaMotionPlatform connection error: {ex.Message}. Component disabled.");
 			enabled = false;
 			}
 
