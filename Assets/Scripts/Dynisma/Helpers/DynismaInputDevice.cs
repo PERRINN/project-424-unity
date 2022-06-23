@@ -76,6 +76,8 @@ public class DynismaInputDevice : InputDevice
 			});
 
 		ClearState();
+		m_state.analog[1] = -32767;
+		m_state.analog[2] = -32767;
 		}
 
 
@@ -85,6 +87,9 @@ public class DynismaInputDevice : InputDevice
 		m_listener.StopConnection();
 
 		ClearState();
+		m_state.analog[1] = -32767;
+		m_state.analog[2] = -32767;
+
 		StorePreviousState();
 		TakeControlSnapshot();
 		}
