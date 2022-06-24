@@ -72,7 +72,7 @@ public class DynismaTester : MonoBehaviour
 
 	// Send input data
 
-	UdpSender m_sender;
+	UdpSender m_sender = null;
 	InputData m_inputData = new InputData();
 	int m_skipCount = 0;
 	float m_throttle = 0.0f;
@@ -96,6 +96,68 @@ public class DynismaTester : MonoBehaviour
 		{
 		// Initialize connections
 
+		Connect();
+
+		// Initialize widget
+
+		m_textBox.settings = widget;
+		m_textBox.title = "Dynisma Tester";
+		}
+
+
+	void OnDisable ()
+		{
+		Disconnect();
+		}
+
+
+	void Update ()
+		{
+		// Receive motion data
+
+		lock (m_buffer)
+			{
+			if (m_size > 0)
+				{
+				m_motionData = ObjectUtility.GetStructFromBytes<MotionData>(m_buffer);
+				m_size = 0;
+				}
+			}
+
+		// Measure received packet frequency
+
+		if (Time.time - m_packetCountTime >= 1.0f)
+			{
+			m_packetFrequency = m_received - m_packetCount;
+			m_packetCount = m_received;
+			m_packetCountTime = Time.time;
+			}
+
+		// Update text from motion data
+
+		if (showWidget)
+			UpdateWidgetText();
+		}
+
+
+	void FixedUpdate ()
+		{
+		// Send input data limited by the maximum frequency specified
+
+		float fixedUpdateFrequency = 1.0f / Time.fixedDeltaTime;
+		int sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxFrequency);
+
+		m_skipCount++;
+		if (m_sender != null && m_skipCount >= sendInterval)
+			{
+			SendInputData();
+			m_skipCount = 0;
+			}
+		}
+
+
+	void Connect ()
+		{
         m_sender = new UdpSender(host, port);
 		m_skipCount = 0;
 
@@ -113,59 +175,16 @@ public class DynismaTester : MonoBehaviour
 				m_received++;
 				}
 			});
-
-		// Initialize widget
-
-		m_textBox.settings = widget;
-		m_textBox.title = "Dynisma Tester";
 		}
 
 
-	void OnDisable ()
+	void Disconnect ()
 		{
 		m_sender.Close();
 		m_thread.Stop();
 		m_listener.StopConnection();
-		}
 
-
-	void Update ()
-		{
-		// Receive motion data
-
-		lock (m_buffer)
-			{
-			if (m_size > 0)
-				{
-				m_motionData = ObjectUtility.GetStructFromBytes<MotionData>(m_buffer);
-				m_size = 0;
-				}
-			}
-
-		// Measure packet frequency
-
-		if (Time.time - m_packetCountTime >= 1.0f)
-			{
-			m_packetFrequency = m_received - m_packetCount;
-			m_packetCount = m_received;
-			m_packetCountTime = Time.time;
-			}
-
-		// Update text from motion data
-
-		if (showWidget)
-			UpdateWidgetText();
-
-		// Send input data limited by the maximum frequency specified
-
-		float fixedUpdateFrequency = 1.0f / Time.fixedDeltaTime;
-		int sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxFrequency);
-
-		m_skipCount++;
-		if (m_skipCount >= sendInterval)
-			{
-			SendInputData();
-			}
+		m_sender = null;
 		}
 
 
@@ -194,8 +213,6 @@ public class DynismaTester : MonoBehaviour
 		m_sender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
 		}
 
-	readonly string[] m_rotary0Labels = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
-	readonly string[] m_rotary1Labels = new string[] { "M", "N", "O", "P", "Q", "R", "S", "T" };
 
 	void OnGUI ()
 		{
@@ -203,9 +220,18 @@ public class DynismaTester : MonoBehaviour
 			return;
 
 		m_textBox.OnGUI();
+		GUISettings();
+		GUIInputControls();
+		}
 
+
+	readonly string[] m_rotary0Labels = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+	readonly string[] m_rotary1Labels = new string[] { "M", "N", "O", "P", "Q", "R", "S", "T" };
+
+
+	void GUIInputControls ()
+		{
 		Rect boxRect = m_textBox.boxRect;
-		float margin = m_textBox.margin;
 
 		int boxWidth = 216;
 		boxRect.x += boxRect.width - boxWidth - 8;
@@ -241,9 +267,48 @@ public class DynismaTester : MonoBehaviour
 		}
 
 
+	GUIStyle m_inputFieldStyle = null;
+
+
+	void GUISettings ()
+		{
+		if (m_inputFieldStyle == null)
+			m_inputFieldStyle = new GUIStyle(GUI.skin.textField);
+
+		m_inputFieldStyle.font = m_textBox.settings.font;
+		m_inputFieldStyle.fontSize = m_textBox.settings.fontSize;
+
+		float fieldSize = m_textBox.style.CalcSize(new GUIContent("888888888888888888888888")).x;
+
+		Rect rect = m_textBox.contentRect;
+		rect.y += m_textBox.margin/2;
+		GUILayout.BeginArea(rect);
+		GUILayout.Label("Listen to motion data at (port):", m_textBox.style);
+		int.TryParse(GUILayout.TextField(listeningPort.ToString(), m_inputFieldStyle, GUILayout.Width(fieldSize/2)), out listeningPort);
+		GUILayout.Label("Send input to (host, port):", m_textBox.style);
+		GUILayout.BeginHorizontal();
+		host = GUILayout.TextField(host, m_inputFieldStyle, GUILayout.Width(fieldSize));
+		int.TryParse(GUILayout.TextField(port.ToString(), m_inputFieldStyle, GUILayout.Width(fieldSize/2)), out port);
+		GUILayout.EndHorizontal();
+		GUILayout.EndArea();
+
+		// Reset connections button
+
+		rect.xMin = rect.width - 100;
+		rect.height = 60;
+		rect.width -= 8;
+		if (GUI.Button(rect, "Reset\nConnections"))
+			{
+			Disconnect();
+			Connect();
+			}
+		}
+
+
 	void UpdateWidgetText ()
 		{
 		m_text.Clear();
+		m_text.Append("\n\n\n\n\n\n\n\n");
 		m_text.Append("Motion Platform Data (Received)\n\n");
 		m_text.Append($"Packets:               {m_received}  ({m_packetFrequency:0.} Hz)\n");
 		m_text.Append($"Acceleration:          X:{m_motionData.accelerationX,10:0.000000}  Y:{m_motionData.accelerationY,10:0.000000}  Z:{m_motionData.accelerationZ,10:0.000000}  m/s2\n");
@@ -251,7 +316,7 @@ public class DynismaTester : MonoBehaviour
 		m_text.Append($"Steering Torque:      {m_motionData.steeringTorque,11:0.000000}  Nm\n");
 		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
 		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
-		m_text.Append("\nInput Data (Sent)\n\n");
+		m_text.Append("\n\nInput Data (Sent)\n\n");
 		m_text.Append($"Steer Angle:          {m_inputData.steerAngle,8:0.000}\n");
 		m_text.Append($"Throttle:             {m_inputData.throttle,8:0.000}\n");
 		m_text.Append($"Brake:                {m_inputData.brake,8:0.000}\n");
