@@ -17,14 +17,19 @@ namespace Perrinn424
 
 public class DynismaMotionPlatform : VehicleBehaviour
 	{
-	public string host = "127.0.0.1";
-	public int port = 56236;
-	[Range(10, 500)]
-	public int maxTransferFrequency = 200;		// packets/s
-
-	[Space(5)]
 	public bool motionEnabled = true;
-	public float maxSteeringTorque = 20.0f;		// Nm
+	[Header("Settings")]
+	public Settings settings = new Settings();
+
+	[Serializable]
+	public class Settings
+		{
+		public string host = "127.0.0.1";
+		public int port = 56236;
+		[Range(10, 500)]
+		public int maxTransferFrequency = 150;		// packets/s
+		public float maxSteeringTorque = 20.0f;		// Nm
+		}
 
 	[Header("Test mode")]
 	public bool testModeEnabled = false;
@@ -89,12 +94,14 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		// Connect with host
 
 		try {
-			m_udp.StartConnection(port+20);
-			m_udp.SetDestination(host, port);
+			m_udp.StartConnection(settings.port+20);
+			m_udp.SetDestination(settings.host, settings.port);
+
+			Debug.Log($"DynismaMotionPlatform: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz)");
 			}
 		catch (Exception ex)
 			{
-			DebugLogWarning("Connection error: " + ex.Message + ". Component disabled.");
+			Debug.LogWarning($"DynismaMotionPlatform connection error: {ex.Message}. Component disabled.");
 			enabled = false;
 			}
 
@@ -115,7 +122,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 		// The interval is stored so it can be inspected in Debug inspector
 
 		float fixedUpdateFrequency = 1.0f / Time.fixedDeltaTime;
-		m_sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxTransferFrequency);
+		m_sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / settings.maxTransferFrequency);
 
 		m_skipCount++;
 		if (m_skipCount >= m_sendInterval)
@@ -164,7 +171,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 			InputDevice.ForceFeedback forceFeedback = m_input.ForceFeedback();
 
 			if (forceFeedback != null && forceFeedback.force)
-				m_motionData.steeringTorque = maxSteeringTorque * forceFeedback.forceMagnitude;
+				m_motionData.steeringTorque = settings.maxSteeringTorque * forceFeedback.forceMagnitude;
 			}
 
 		// Send data via UDP

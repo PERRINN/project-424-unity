@@ -33,7 +33,6 @@ public class DynismaInputDevice : InputDevice
 		public byte rotary;				// two 8-position rotaries on the wheel, split the uint8 into two 4-bit values
 		}
 
-
 	UdpConnection m_listener = new UdpConnection();
 	UdpListenThread m_thread = new UdpListenThread();
 	byte[] m_buffer = new byte[1024];
@@ -49,7 +48,16 @@ public class DynismaInputDevice : InputDevice
 		m_newInputData = false;
 		m_firstState = true;
 
-		m_listener.StartConnection(settings.listeningPort);
+		try {
+			m_listener.StartConnection(settings.listeningPort);
+			Debug.Log($"DynismaInputDevice: listening at port {settings.listeningPort}");
+			}
+		catch (Exception ex)
+			{
+			Debug.LogWarning("DynismaInputDevice connection error: " + ex.Message + ". Won't be reading inputs.");
+			return;
+			}
+
 		m_thread.threadSleepIntervalMs = 1;
 		m_thread.Start(m_listener, () =>
 			{
