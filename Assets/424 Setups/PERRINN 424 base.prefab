@@ -985,49 +985,50 @@ MonoBehaviour:
   deltaISA: 0
   dRSActivationDelay: 0.5
   dRSActivationTime: 0.25
-  frontFlapStaticAngle: 3
-  frontFlapDRSAngle: -10
+  noDRSZone: []
+  frontFlapStaticAngle: 1.5
+  frontFlapDRSAngle: -13
   frontFlapSCz0: 0.38
-  frontFlapSCz_perDeg: 0.037
+  frontFlapSCz_perDeg: 0.035
   frontFlapDeflectionPreload: 480
-  frontFlapDeflectionStiffness: -0.0042
-  frontFlapDeflectionMax: -4
+  frontFlapDeflectionStiffness: -0.008
+  frontFlapDeflectionMax: -5
   front:
     applicationPoint: {fileID: 2483877716415502929}
-    constant: 3.07
-    frontRideHeightCoefficient: -0.0283
-    frontRideHeight2Coefficient: -0.000184
-    rearRideHeightCoefficient: 0.0291
-    rearRideHeight2Coefficient: -0.000104
+    constant: 3.39
+    frontRideHeightCoefficient: -0.0106
+    frontRideHeight2Coefficient: -0.000411
+    rearRideHeightCoefficient: 0.018
+    rearRideHeight2Coefficient: -0.0000437
     absoluteYawCoefficient: -0.02
     absoluteSteerCoefficient: -0.01
     absoluteRollCoefficient: -0.08
-    dRS_Coefficient: 0.15
-    frontFlapCoefficient: 0.091
+    dRS_Coefficient: 0
+    frontFlapCoefficient: 0.084
   rear:
     applicationPoint: {fileID: 2483877716124499243}
-    constant: 3.17
-    frontRideHeightCoefficient: 0.0004
-    frontRideHeight2Coefficient: 0.0000444
-    rearRideHeightCoefficient: 0.035
-    rearRideHeight2Coefficient: -0.000321
+    constant: 2.72
+    frontRideHeightCoefficient: 0.0379
+    frontRideHeight2Coefficient: -0.000324
+    rearRideHeightCoefficient: 0.019
+    rearRideHeight2Coefficient: -0.000198
     absoluteYawCoefficient: -0.03
     absoluteSteerCoefficient: -0.01
     absoluteRollCoefficient: -0.09
-    dRS_Coefficient: -1.38
-    frontFlapCoefficient: -0.027
+    dRS_Coefficient: -1.5
+    frontFlapCoefficient: -0.032
   drag:
     applicationPoint: {fileID: 2483877716124499243}
-    constant: 1.03
-    frontRideHeightCoefficient: 0.0074
-    frontRideHeight2Coefficient: -0.0001
-    rearRideHeightCoefficient: 0.003
-    rearRideHeight2Coefficient: -0.00000446
+    constant: 1.11
+    frontRideHeightCoefficient: 0.0038
+    frontRideHeight2Coefficient: -0.0000495
+    rearRideHeightCoefficient: 0.0028
+    rearRideHeight2Coefficient: -0.00000804
     absoluteYawCoefficient: 0
     absoluteSteerCoefficient: 0
     absoluteRollCoefficient: 0
-    dRS_Coefficient: -0.343
-    frontFlapCoefficient: 0
+    dRS_Coefficient: -0.332
+    frontFlapCoefficient: 0.003
   emitTelemetry: 0
   drsFlap: {fileID: 3609935057921437074}
   drsClosedAngle: 0
@@ -1055,6 +1056,7 @@ MonoBehaviour:
   frontRideHeight: 40
   rearRideHeight: 50
   rho: 0
+  noDRSzone: 0
 --- !u!114 &2623578543911979919
 MonoBehaviour:
   m_ObjectHideFlags: 0
