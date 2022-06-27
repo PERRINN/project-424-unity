@@ -16,7 +16,7 @@ public class DynismaTester : MonoBehaviour
 	public string host = "127.0.0.1";
 	public int port = 56234;
 	public int maxFrequency = 100;
-	public int maxSteerAngle = 300;
+	public int steerAngleRange = 300;
 
 	[Header("Motion Data")]
 	public int listeningPort = 56236;
@@ -192,7 +192,7 @@ public class DynismaTester : MonoBehaviour
 		{
 		m_inputData.throttle = m_throttle;
 		m_inputData.brake = m_brake;
-		m_inputData.steerAngle = m_steerInput * maxSteerAngle;
+		m_inputData.steerAngle = m_steerInput * steerAngleRange * 2;
 		m_inputData.upShift = m_upShift;
 		m_inputData.downShift = m_downShift;
 

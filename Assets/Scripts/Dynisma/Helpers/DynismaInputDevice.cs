@@ -115,8 +115,8 @@ public class DynismaInputDevice : InputDevice
 				{
 				// Analog steer, throttle and brake
 
-				float physicalWheelRange = InputManager.instance.settings.physicalWheelRange;
-				m_state.analog[0] = (int)(Mathf.Clamp((float)(m_inputData.steerAngle / physicalWheelRange), -1.0f, 1.0f) * 32767);
+				float halfWheelRange = InputManager.instance.settings.physicalWheelRange * 0.5f;
+				m_state.analog[0] = (int)(Mathf.Clamp((float)(m_inputData.steerAngle / halfWheelRange), -1.0f, 1.0f) * 32767);
 				m_state.analog[1] = (int)(Mathf.Clamp01((float)(m_inputData.throttle)) * 32767 * 2 - 32767);
 				m_state.analog[2] = (int)(Mathf.Clamp01((float)(m_inputData.brake)) * 32767 * 2 - 32767);
 
