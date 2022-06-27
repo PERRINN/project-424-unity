@@ -30,11 +30,14 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public float frontFlapDRSAngle            = -15.0f;
 	public float frontFlapSCz0				  = 0.34f;
 	public float frontFlapSCz_perDeg          = 0.03f;
-	
+
 	//public float frontFlapFlexMaxDownforce    = 10000.0f;
 	public float frontFlapDeflectionPreload   = 470.0f;
 	public float frontFlapDeflectionStiffness = -0.006f;
 	public float frontFlapDeflectionMax       = -5.0f;
+
+	public float takeOffFrontRideHeight       = 70.0f;
+	public float takeOffGain 						      = 0.26f;
 
 	[Serializable]
 	public class AeroSettings
@@ -137,13 +140,16 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		float SCn;
 
 		// Checking limits before calculating forces
-		fRH_mm = Mathf.Clamp(fRH_mm, 0, 100);
-		rRH_mm = Mathf.Clamp(rRH_mm, 0, 100);
+		fRH_mm = Mathf.Clamp(fRH_mm, 0, 200);
+		rRH_mm = Mathf.Clamp(rRH_mm, 0, 200);
 		DRSpos = Mathf.Clamp(DRSpos, 0, 1);
 		flapAngle_deg = Mathf.Clamp(flapAngle_deg, -15, 15);
 		yawAngle_deg = Mathf.Clamp(Math.Abs(yawAngle_deg), 0, 10);
 		steerAngle_deg = Mathf.Clamp(Math.Abs(steerAngle_deg), 0, 20);
 		rollAngle_deg = Mathf.Clamp(Math.Abs(rollAngle_deg), 0, 3);
+
+		// fRH modifier for take off map
+		fRH_mm = Mathf.Min(fRH_mm, ( fRH_mm - takeOffFrontRideHeight ) * takeOffGain + takeOffFrontRideHeight );
 
 		// Calculate total force
 		SCn = aeroSetting.constant +
@@ -210,12 +216,12 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public override void OnEnableVehicle() {
 		flapAngle = frontFlapStaticAngle;
 	}
-	
-	
+
+
 	public override void FixedUpdateVehicle()
-	{	
+	{
 		Rigidbody rb = vehicle.cachedRigidbody;
-		
+
 		// Getting traveled distance in current lap
 		Telemetry.DataRow telemetryDataRow = vehicle.telemetry.latest;
 		float distance = (float)telemetryDataRow.distance;
@@ -227,7 +233,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		// Getting driver's input
 		int[] customData = vehicle.data.Get(Channel.Custom);
 		bool processedInputs = customData[Perrinn424Data.EnableProcessedInput] != 0;
-		
+
 		//if (processedInputs)
 		//	{
 		//	// Processed DRS position from the 424 data
@@ -309,7 +315,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		{
 			float flapNorm  = (flapAngle - 15.0f) / (-30.0f);
 			float visualFlapAngle = Mathf.Lerp(15.0f, -15.0f, flapNorm);
-			
+
 			frontFlap.localRotation = Quaternion.Euler(visualFlapAngle + frontFlapRestAngle, 0.0f, 0.0f);
 		}
 	}
@@ -389,7 +395,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			steerAngleSemantic.SetRangeAndFormat(-steering.maxSteerAngle, steering.maxSteerAngle, "0.0", "°", quantization:5);
 
 			// Fill-in channel information
-			
+
 			channelInfo[0].SetNameAndSemantic("AeroDrsPosition", Telemetry.Semantic.Ratio);
 			channelInfo[1].SetNameAndSemantic("AeroSczFront", Telemetry.Semantic.Custom, aeroCoeffSemantic);
 			channelInfo[2].SetNameAndSemantic("AeroSczRear", Telemetry.Semantic.Custom, aeroCoeffSemantic);
