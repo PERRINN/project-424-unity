@@ -5,6 +5,7 @@
 using UnityEngine;
 using EdyCommonTools;
 using System.Text;
+using System.Runtime.InteropServices;
 
 
 namespace Perrinn424
@@ -94,6 +95,10 @@ public class DynismaTester : MonoBehaviour
 
 	void OnEnable ()
 		{
+		// Show runtime byte sizes of each struct
+
+		Debug.Log($"InputData: {Marshal.SizeOf(new InputData())} MotionData: {Marshal.SizeOf(new MotionData())}");
+
 		// Initialize connections
 
 		Connect();
