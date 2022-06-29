@@ -91,13 +91,14 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 	public class Perrinn424Inputs : Telemetry.ChannelGroup
 		{
+		VehicleBase m_vehicle;
 		Steering.Settings m_steering;
 		Perrinn424CarController m_controller;
 
 
 		public override int GetChannelCount ()
 			{
-			return 4;
+			return 5;
 			}
 
 
@@ -111,9 +112,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			{
 			// Access to information in the vehicle
 
-			VehicleBase vehicle = instance as VehicleBase;
-			m_steering = vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
-			m_controller = vehicle.GetComponent<Perrinn424CarController>();
+			m_vehicle = instance as VehicleBase;
+			m_steering = m_vehicle.GetInternalObject(typeof(Steering.Settings)) as Steering.Settings;
+			m_controller = m_vehicle.GetComponent<Perrinn424CarController>();
 
 			// Fill-in channel information
 
@@ -121,6 +122,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteeringWheelAngle);
 			channelInfo[2].SetNameAndSemantic("Throttle", Telemetry.Semantic.Ratio);
 			channelInfo[3].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.BrakePressure);
+			channelInfo[4].SetNameAndSemantic("Speed", Telemetry.Semantic.Speed);
 			}
 
 
@@ -130,6 +132,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+1] = m_controller.steerAngle;
 			values[index+2] = m_controller.throttleInput;
 			values[index+3] = m_controller.brakePressure;
+			values[index+4] = m_vehicle.speed;
 			}
 		}
 
