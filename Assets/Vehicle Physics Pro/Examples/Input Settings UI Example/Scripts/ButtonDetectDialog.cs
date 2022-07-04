@@ -32,7 +32,7 @@ public class ButtonDetectDialog : InputDetectionDialogBase
 	public Button restartButton;
 
 
-	InputButton testButton = new InputButton("Test Button");
+	InputButton m_testButton = new InputButton("Test Button");
 	bool m_detected = false;
 
 
@@ -58,8 +58,8 @@ public class ButtonDetectDialog : InputDetectionDialogBase
 
 		// Clear it anyways to remove innecessary references
 
-		testButton.bindings.Clear();
-		testButton.BindingsUpdate();
+		m_testButton.bindings.Clear();
+		m_testButton.BindingsUpdate();
 		}
 
 
@@ -69,13 +69,13 @@ public class ButtonDetectDialog : InputDetectionDialogBase
 			{
 			// TODO Allow analog controls? Require detecting min/max as with pedals.
 
-			if (control.type != ControlType.Analog && testButton.FindBinding(device, control) == null)
+			if (control.type != ControlType.Analog && m_testButton.FindBinding(device, control) == null)
 				{
 				// Create a binding for the detected control
 
-				testButton.bindings.Clear();
-				InputManager.instance.CreateBinding(testButton, device, control);
-				InputManager.instance.RefreshActionBindings(testButton);
+				m_testButton.bindings.Clear();
+				InputManager.instance.CreateBinding(m_testButton, device, control);
+				InputManager.instance.RefreshActionBindings(m_testButton);
 
 				// Report control and name
 
@@ -94,7 +94,7 @@ public class ButtonDetectDialog : InputDetectionDialogBase
 
 		// Update image
 
-		UITools.SetImageFill(buttonImage, testButton.Pressed()? 1.0f : 0.0f);
+		UITools.SetImageFill(buttonImage, m_testButton.Pressed()? 1.0f : 0.0f);
 
 		// Detect Esc
 
@@ -112,8 +112,8 @@ public class ButtonDetectDialog : InputDetectionDialogBase
 		UITools.SetText(controlText, "");
 		UITools.SetImageFill(buttonImage, 0.0f);
 
-		testButton.bindings.Clear();
-		testButton.BindingsUpdate();
+		m_testButton.bindings.Clear();
+		m_testButton.BindingsUpdate();
 		InputManager.instance.OpenAllDevices();
 		InputManager.instance.TakeControlSnapshot();
 
@@ -131,8 +131,8 @@ public class ButtonDetectDialog : InputDetectionDialogBase
 	void OnAccept ()
 		{
 		assigned = m_detected;
-		if (testButton.activeBindings.Count > 0)
-			settings = testButton.activeBindings[0].ReadSettings();
+		if (m_testButton.activeBindings.Count > 0)
+			settings = m_testButton.activeBindings[0].ReadSettings();
 
 		this.gameObject.SetActive(false);
 		}
