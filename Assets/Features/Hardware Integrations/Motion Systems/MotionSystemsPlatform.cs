@@ -117,7 +117,6 @@ public class MotionSystemsPlatform : VehicleBehaviour
 		m_skipCount = 0;
 		m_structSize = Marshal.SizeOf(m_motionData);
 		m_controller = vehicle as Perrinn424CarController;
-		Debug.Log(m_structSize);
 
 		// Initialize wheel identifiers
 
@@ -148,7 +147,7 @@ public class MotionSystemsPlatform : VehicleBehaviour
 			m_udp.StartConnection(settings.port+20);
 			m_udp.SetDestination(settings.host, settings.port);
 
-			Debug.Log($"MotionSystemsPlatform: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz)");
+			Debug.Log($"MotionSystemsPlatform: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz), frame size {m_structSize} bytes.");
 			}
 		catch (Exception ex)
 			{
