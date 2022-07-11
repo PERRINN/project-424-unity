@@ -241,6 +241,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 	public class Perrinn424Tires : Telemetry.ChannelGroup
 		{
+		Perrinn424CarController m_controller;
+
 		VehicleBase.WheelState m_wheelFL;
 		VehicleBase.WheelState m_wheelFR;
 		VehicleBase.WheelState m_wheelRL;
@@ -262,6 +264,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
 			{
 			VehicleBase vehicle = instance as VehicleBase;
+			m_controller = vehicle as Perrinn424CarController;
 
 			// Retrieve states for the four monitored wheels
 
@@ -297,9 +300,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			FillData(m_wheelFR, values, index+1);
 			FillData(m_wheelRL, values, index+2);
 			FillData(m_wheelRR, values, index+3);
-
-			Perrinn424CarController vehicle = instance as Perrinn424CarController;
-			values[index+8] = vehicle.understeerAngle;
+			values[index+8] = m_controller.understeerAngle;
 			}
 
 
