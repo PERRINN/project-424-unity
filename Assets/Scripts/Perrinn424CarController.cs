@@ -31,6 +31,8 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	public const int GroundAngle				= 14;		// Road angle (positive upwards)		deg			1000			2334 = 2.345 degrees
 	public const int GroundSlope				= 15;		// Road grade (positive upwards)		%			1000			1000 = 1.0 = 100%
 
+	public const int UndersteerAngle			= 16;		// Understeer angle (positive = oversteer)	deg		1000			-3.567 = 3.567 degrees of oversteer
+
 	// MGU data. Combine base ID with values.
 
 	public const int FrontMguBase				= 20;		// Base ID for front MGU data
@@ -107,10 +109,12 @@ public class Perrinn424CarController : VehicleBase
 
 	// Internal values exposed
 
-	public float throttleInput { get => m_throttleInput; }
-	public float brakePressure { get => m_brakePressure; }
-	public float steerAngle { get => m_steerAngle; }
-	public int gear { get => m_gear; }
+	public float throttleInput => m_throttleInput;
+	public float brakePressure => m_brakePressure;
+	public float steerAngle => m_steerAngle;
+	public int gear => m_gear;
+
+	public float understeerAngle => m_understeerAngle;
 
 
 	// Private members
@@ -127,6 +131,7 @@ public class Perrinn424CarController : VehicleBase
 	int m_gearMode;
 	int m_prevGearMode;
 	int m_gear;
+	float m_understeerAngle;
 
 	GroundTracker m_groundTracker = new GroundTracker();
 
@@ -360,14 +365,6 @@ public class Perrinn424CarController : VehicleBase
 		}
 
 
-	// Compute the longitudinal position of an axle (local)
-
-	float GetAxleLocalPosition (VPAxle axle)
-		{
-		return 0.5f * (GetWheelLocalPosition(axle.leftWheel).z + GetWheelLocalPosition(axle.rightWheel).z);
-		}
-
-
 	// Expose internal components
 
 	public override object GetInternalObject (System.Type type)
@@ -382,6 +379,34 @@ public class Perrinn424CarController : VehicleBase
 			return steering;
 
 		return null;
+		}
+
+
+	// Compute understeer-oversteer
+
+	void ComputeUndersteerAngle ()
+		{
+		// We define understeer as the difference between absolute front slip angle (average both wheels) and abolute rear slip angle (average both wheels).
+		// If positive then undesteer, if negative then oversteer.
+
+		float absFrontSlipAngle = GetAbsSlipAngle(wheelState[0], wheelState[1]);
+		float absRearSlipAngle = GetAbsSlipAngle(wheelState[2], wheelState[3]);
+		m_understeerAngle = absFrontSlipAngle - absRearSlipAngle;
+		}
+
+
+	float GetAbsSlipAngle (VehicleBase.WheelState leftWheel, VehicleBase.WheelState rightWheel)
+		{
+		if (leftWheel.grounded && rightWheel.grounded)
+			return MathUtility.FastAbs(0.5f * (leftWheel.slipAngle + rightWheel.slipAngle));
+		else
+		if (leftWheel.grounded)
+			return MathUtility.FastAbs(leftWheel.slipAngle);
+		else
+		if (rightWheel.grounded)
+			return MathUtility.FastAbs(rightWheel.slipAngle);
+		else
+			return float.NaN;
 		}
 
 
@@ -599,6 +624,11 @@ public class Perrinn424CarController : VehicleBase
 		customData[Perrinn424Data.RearRideHeight] = (int)(m_groundTracker.rearRideHeight * 1000.0f);
 		customData[Perrinn424Data.FrontRollAngle] = (int)(m_groundTracker.frontRollAngle * 1000.0f);
 		customData[Perrinn424Data.RearRollAngle] = (int)(m_groundTracker.rearRollAngle * 1000.0f);
+
+		// Understeer
+
+		ComputeUndersteerAngle();
+		customData[Perrinn424Data.UndersteerAngle] = (int)(m_understeerAngle * 1000.0f);
 		}
 
 
