@@ -223,14 +223,12 @@ public class MotionSystemsPlatform : VehicleBehaviour
 		// Vehicle state
 
 		m_motionData.steer = (m_wheelFL.steerAngle + m_wheelFR.steerAngle) * 0.5f * Mathf.Deg2Rad;
+		m_motionData.speed = vehicle.speed;
 
 		Vector3 angles = vehicle.cachedTransform.eulerAngles;
 		m_motionData.roll = MathUtility.ClampAngle(angles.z) * Mathf.Deg2Rad;
 		m_motionData.pitch = MathUtility.ClampAngle(angles.x) * Mathf.Deg2Rad;
 		m_motionData.yaw = angles.y * Mathf.Deg2Rad;
-
-		// QUESTION Forward speed as seen in the speedometer, or global motion of speed of the vehicle?
-		m_motionData.speed = vehicle.speed;
 
 		// Normalized wheel slip state
 
