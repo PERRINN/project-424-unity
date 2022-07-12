@@ -10,6 +10,7 @@ using VehiclePhysics;
 using VehiclePhysics.InputManagement;
 using EdyCommonTools;
 using System;
+using System.Runtime.InteropServices;
 
 
 namespace Perrinn424
@@ -18,7 +19,6 @@ namespace Perrinn424
 public class DynismaMotionPlatform : VehicleBehaviour
 	{
 	public bool motionEnabled = true;
-	[Header("Settings")]
 	public Settings settings = new Settings();
 
 	[Serializable]
@@ -97,7 +97,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 			m_udp.StartConnection(settings.port+20);
 			m_udp.SetDestination(settings.host, settings.port);
 
-			Debug.Log($"DynismaMotionPlatform: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz)");
+			Debug.Log($"DynismaMotionPlatform: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz), frame size {Marshal.SizeOf(m_motionData)} bytes");
 			}
 		catch (Exception ex)
 			{

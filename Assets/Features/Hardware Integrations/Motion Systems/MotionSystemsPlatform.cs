@@ -18,7 +18,6 @@ namespace Perrinn424
 public class MotionSystemsPlatform : VehicleBehaviour
 	{
 	public bool motionEnabled = true;
-	[Header("Settings")]
 	public Settings settings = new Settings();
 
 

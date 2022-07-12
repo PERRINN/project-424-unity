@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.3
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.04480496, g: 0.05739265, b: 0.07053054, a: 0.3}
+  m_IndirectSpecularColor: {r: 0.044782605, g: 0.05738021, b: 0.07060575, a: 0.3}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -12151,8 +12151,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1796731535}
   - component: {fileID: 1796731536}
+  - component: {fileID: 1796731537}
   m_Layer: 0
-  m_Name: Dynisma Settings
+  m_Name: Motion Platform Settings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12187,6 +12188,20 @@ MonoBehaviour:
   inputProvider: {fileID: 531594965}
   motionPlatform: {fileID: 2111449869}
   fileName: DynismaSettings.json
+--- !u!114 &1796731537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796731534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e616590b2b6c7624cb1e520cb4f58f05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionPlatform: {fileID: 2111449870}
+  fileName: MotionSystemsSettings.json
 --- !u!114 &1804202570 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7322827628306836598, guid: 8e3a3654418a6b048a4707246e320c89,
@@ -13144,8 +13159,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2111449868}
   - component: {fileID: 2111449869}
+  - component: {fileID: 2111449870}
   m_Layer: 8
-  m_Name: Dynisma Motion Platform
+  m_Name: Motion Platforms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13193,6 +13209,23 @@ MonoBehaviour:
     angularAccelerationZ: 0
     steeringTorque: 0
     carSpeed: 0
+--- !u!114 &2111449870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111449867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298ae3d56fd64964c91091a021af6a9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionEnabled: 1
+  settings:
+    host: 127.0.0.1
+    port: 42477
+    maxTransferFrequency: 150
 --- !u!65 &2128301406 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 7952151444841075546, guid: 82551522d2fc4e6448e536d034cfbe47,
