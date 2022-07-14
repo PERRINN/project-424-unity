@@ -241,6 +241,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 	public class Perrinn424Tires : Telemetry.ChannelGroup
 		{
+		Perrinn424CarController m_controller;
+
 		VehicleBase.WheelState m_wheelFL;
 		VehicleBase.WheelState m_wheelFR;
 		VehicleBase.WheelState m_wheelRL;
@@ -262,6 +264,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
 			{
 			VehicleBase vehicle = instance as VehicleBase;
+			m_controller = vehicle as Perrinn424CarController;
 
 			// Retrieve states for the four monitored wheels
 
@@ -297,14 +300,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			FillData(m_wheelFR, values, index+1);
 			FillData(m_wheelRL, values, index+2);
 			FillData(m_wheelRR, values, index+3);
-
-			// Compute understeer-oversteer.
-			// We define understeer as the difference between absolute front slip angle (average both wheels) and abolute rear slip angle (average both wheels).
-			// If positive then undesteer, if negative then oversteer.
-
-			float absFrontSlipAngle = GetAbsSlipAngle(m_wheelFL, m_wheelFR);
-			float absRearSlipAngle = GetAbsSlipAngle(m_wheelRL, m_wheelRR);
-			values[index+8] = absFrontSlipAngle - absRearSlipAngle;
+			values[index+8] = m_controller.understeerAngle;
 			}
 
 
@@ -320,21 +316,6 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 				values[index+0] = float.NaN;
 				values[index+4] = float.NaN;
 				}
-			}
-
-
-		float GetAbsSlipAngle (VehicleBase.WheelState leftWheel, VehicleBase.WheelState rightWheel)
-			{
-			if (leftWheel.grounded && rightWheel.grounded)
-				return MathUtility.FastAbs(0.5f * (leftWheel.slipAngle + rightWheel.slipAngle));
-			else
-			if (leftWheel.grounded)
-				return MathUtility.FastAbs(leftWheel.slipAngle);
-			else
-			if (rightWheel.grounded)
-				return MathUtility.FastAbs(rightWheel.slipAngle);
-			else
-				return float.NaN;
 			}
 		}
 
