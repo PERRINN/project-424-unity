@@ -23,7 +23,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public float dRSActivationTime         = 0.0f;
 
 	[Space(5)]
-	[SerializeField] private NoDRSarray[] noDRSZone;
+	[SerializeField] private NoDRSarray[] noDRSSegment;
 
 	[Space(5)]
 	public float frontFlapStaticAngle         = 5.0f;
@@ -31,13 +31,12 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public float frontFlapSCz0				  = 0.34f;
 	public float frontFlapSCz_perDeg          = 0.03f;
 
-	//public float frontFlapFlexMaxDownforce    = 10000.0f;
 	public float frontFlapDeflectionPreload   = 470.0f;
 	public float frontFlapDeflectionStiffness = -0.006f;
 	public float frontFlapDeflectionMax       = -5.0f;
 
 	public float takeOffFrontRideHeight       = 70.0f;
-	public float takeOffGain 						      = 0.26f;
+	public float takeOffGain 				  = 0.26f;
 
 	[Serializable]
 	public class AeroSettings
@@ -97,14 +96,14 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float frontRideHeight = 0.0f;
 	[HideInInspector] public float rearRideHeight  = 0.0f;
 	[HideInInspector] public float rho = 0.0f;
-	[HideInInspector] public float noDRSzone = 0.0f;
+	[HideInInspector] public float noDRSseg = 0.0f;
 
 	// Private members
 
 	Atmosphere atmosphere = new Atmosphere();
 	float DRStime = 0;
 
-	// Function Name: noDRSZone
+	// Function Name: noDRSSegment
 	// Check if car is inside a no DRS activation zone
 	//
 	//	 [IN]	lapDistance [m]
@@ -112,9 +111,9 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//	 [OUT]	true (DRS disabled) or false (DRS enabled)
 	bool isNoDRSZone(float lapDistance)
 	{
-		for (int i = 0; i < noDRSZone.Length; i++)
+		for (int i = 0; i < noDRSSegment.Length; i++)
 		{
-			if (lapDistance > noDRSZone[i].segmentStart && lapDistance < noDRSZone[i].segmentEnd)
+			if (lapDistance > noDRSSegment[i].segmentStart && lapDistance < noDRSSegment[i].segmentEnd)
 				return true;
         }
 		return false;
@@ -228,7 +227,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// checking if car is in a DRS disabled zone
 		bool drsDisabled = isNoDRSZone(distance);
-		noDRSzone = System.Convert.ToSingle(drsDisabled);
+		noDRSseg = System.Convert.ToSingle(drsDisabled);
 
 		// Getting driver's input
 		int[] customData = vehicle.data.Get(Channel.Custom);
@@ -411,7 +410,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			channelInfo[10].SetNameAndSemantic("AeroFrontFlap", Telemetry.Semantic.Custom, aeroAngleSemantic);
 			channelInfo[11].SetNameAndSemantic("AirDensity", Telemetry.Semantic.Custom, airDensitySemantic);
 
-			channelInfo[12].SetNameAndSemantic("AeroNoDRSZone", Telemetry.Semantic.Ratio);
+			channelInfo[12].SetNameAndSemantic("AeroNoDRSSegment", Telemetry.Semantic.Ratio);
 		}
 
 
@@ -434,7 +433,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			values[index+10] = aero.flapAngle;
 			values[index+11] = aero.rho;
 
-			values[index+12] = aero.noDRSzone;
+			values[index+12] = aero.noDRSseg;
 		}
 	}
 
