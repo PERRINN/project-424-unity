@@ -884,7 +884,6 @@ GameObject:
   - component: {fileID: 2623578543911979919}
   - component: {fileID: 2218053485607648859}
   - component: {fileID: 1193015119273251600}
-  - component: {fileID: 6983017985155414204}
   m_Layer: 8
   m_Name: Dynamics
   m_TagString: Untagged
@@ -1156,23 +1155,6 @@ MonoBehaviour:
   adjustDamper: 0
   maxDamperRateOffset: 500
   linearityFactor: 0.5
---- !u!114 &6983017985155414204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2483877715235533906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2ad0b628b3031c41b80ee4e5c5e9473, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speedLimiterSegment:
-  - segmentStart: 0
-    segmentEnd: 0
-    minimumLimiter: 1
-  emitTelemetry: 0
 --- !u!1 &2483877715271342903
 GameObject:
   m_ObjectHideFlags: 0
@@ -6755,15 +6737,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3323407102002314100}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2996481841330314399 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
-    type: 3}
-  m_PrefabInstance: {fileID: 3323407102002314100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &685717978459552737 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6369437904875978603, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
+    type: 3}
+  m_PrefabInstance: {fileID: 3323407102002314100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2996481841330314399 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a2514ec946e6ba40a1d701bdc2a7b68,
     type: 3}
   m_PrefabInstance: {fileID: 3323407102002314100}
   m_PrefabAsset: {fileID: 0}
