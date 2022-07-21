@@ -84,26 +84,25 @@ public class Perrinn424SpeedLimiter : VehicleBehaviour
         {
             return Telemetry.PollFrequency.Normal;
         }
-    }
-
-    
-    public void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, UnityEngine.Object instance)
-    {
-
-        // Fill-in channel information
-
-        channelInfo[0].SetNameAndSemantic("SpeedLimiterActive", Telemetry.Semantic.Ratio);
-        channelInfo[1].SetNameAndSemantic("LimiterValue", Telemetry.Semantic.Ratio);
-    }
 
 
-    public void PollValues(float[] values, int index, UnityEngine.Object instance)
-    {
-        Perrinn424SpeedLimiter speedLimiter = instance as Perrinn424SpeedLimiter;
+        public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, UnityEngine.Object instance)
+        {
+            // Fill-in channel information
 
-        values[index + 0] = speedLimiter.limiterEnabled;
-        values[index + 1] = speedLimiter.limiterValue;
+            channelInfo[0].SetNameAndSemantic("SpeedLimiterActive", Telemetry.Semantic.Ratio);
+            channelInfo[1].SetNameAndSemantic("LimiterValue", Telemetry.Semantic.Ratio);
+        }
 
+
+        public override void PollValues(float[] values, int index, UnityEngine.Object instance)
+        {
+            Perrinn424SpeedLimiter speedLimiter = instance as Perrinn424SpeedLimiter;
+
+            values[index + 0] = speedLimiter.limiterEnabled;
+            values[index + 1] = speedLimiter.limiterValue;
+
+        }
     }
 
 }
