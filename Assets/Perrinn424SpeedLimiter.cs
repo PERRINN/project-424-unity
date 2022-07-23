@@ -21,17 +21,17 @@ public class Perrinn424SpeedLimiter : VehicleBehaviour
 
     // Speed limiter segments configuration
     [Space(5)]
-    [SerializeField] private SpeedLimiterArray[] speedLimiterSegment;
+    [SerializeField] private SpeedLimiterArray[] speedLimiterSegments;
 
     [HideInInspector] public float limiterValue = 1.0f;
     [HideInInspector] public float limiterEnabled = 0.0f;
 
     float getLimiterValue(float lapDistance)
     {
-        for (int i = 0; i < speedLimiterSegment.Length; i++)
+        for (int i = 0; i < speedLimiterSegments.Length; i++)
         {
-            if (lapDistance > speedLimiterSegment[i].segmentStart && lapDistance < speedLimiterSegment[i].segmentEnd)
-                return speedLimiterSegment[i].minimumLimiter;
+            if (lapDistance > speedLimiterSegments[i].segmentStart && lapDistance < speedLimiterSegments[i].segmentEnd)
+                return speedLimiterSegments[i].minimumLimiter;
         }
         return 1.0f;
     }
