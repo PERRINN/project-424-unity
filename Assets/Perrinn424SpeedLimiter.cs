@@ -91,7 +91,7 @@ public class Perrinn424SpeedLimiter : VehicleBehaviour
             // Fill-in channel information
 
             channelInfo[0].SetNameAndSemantic("SpeedLimiterActive", Telemetry.Semantic.Ratio);
-            channelInfo[1].SetNameAndSemantic("LimiterValue", Telemetry.Semantic.Ratio);
+            channelInfo[1].SetNameAndSemantic("SpeedLimiter", Telemetry.Semantic.Ratio);
         }
 
 
