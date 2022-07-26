@@ -26,6 +26,10 @@ public class Perrinn424SpeedLimiter : VehicleBehaviour
     [HideInInspector] public float limiterValue = 1.0f;
     [HideInInspector] public float limiterEnabled = 0.0f;
 
+    // Private members
+    Perrinn424CarController m_vehicle;
+
+
     float getLimiterValue(float lapDistance)
     {
         for (int i = 0; i < speedLimiterSegments.Length; i++)
@@ -35,6 +39,13 @@ public class Perrinn424SpeedLimiter : VehicleBehaviour
         }
         return 1.0f;
     }
+
+
+    public override void OnEnableVehicle()
+        {
+        m_vehicle = vehicle as Perrinn424CarController;
+        }
+
 
     public override void FixedUpdateVehicle()
     {
@@ -50,6 +61,8 @@ public class Perrinn424SpeedLimiter : VehicleBehaviour
         if (limiterValue < 1.0f)
             limiterEnabled = 1.0f;
 
+        // Apply limiter to the vehicle
+        m_vehicle.mguLimiter = limiterValue;
     }
 
 
