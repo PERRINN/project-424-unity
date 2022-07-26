@@ -96,6 +96,11 @@ public class Perrinn424CarController : VehicleBase
 
 	public TractionControl.Settings tractionControl = new TractionControl.Settings();
 
+	// Speed / power limiter applied externally
+
+	[System.NonSerialized]
+	public float mguLimiter = 1.0f;
+
 	// Mostly internal settings not exposed in the inspector
 
 	[System.NonSerialized]
@@ -105,7 +110,6 @@ public class Perrinn424CarController : VehicleBase
 
 	[System.NonSerialized]
 	public float brakePressureThreshold = 3.0f;
-
 
 	// Internal values exposed
 
@@ -161,13 +165,14 @@ public class Perrinn424CarController : VehicleBase
 			}
 
 
-		public void SetInputs (int gearInput, float throttleInput, float brakePressure)
+		public void SetInputs (int gearInput, float throttleInput, float brakePressure, float limiter)
 			{
 			// MGU
 
 			mgu.gearInput = gearInput;
 			mgu.throttleInput = throttleInput;
 			mgu.brakePressure = brakePressure;
+			mgu.limiterInput = Mathf.Clamp01(limiter);
 
 			// Wheel brakes
 
@@ -503,8 +508,8 @@ public class Perrinn424CarController : VehicleBase
 		// Apply received inputs to car elements
 
 		if (m_brakePressure > brakePressureThreshold) m_throttleInput = 0.0f;
-		m_frontPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure);
-		m_rearPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure);
+		m_frontPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure, mguLimiter);
+		m_rearPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure, mguLimiter);
 
 		m_steering.steerInput = m_steerAngle / steering.steeringWheelRange * 2.0f;
 		m_steering.DoUpdate();
