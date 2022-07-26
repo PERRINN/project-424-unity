@@ -209,8 +209,7 @@ public class MotionSystemsPlatform : VehicleBehaviour
 
 		// Velocities
 
-		// TODO use exposed vehicle.localVelocity
-		Vector3 linearVelocity = vehicle.cachedTransform.InverseTransformDirection(vehicle.cachedRigidbody.velocity);
+		Vector3 linearVelocity = vehicle.localVelocity;
 		m_motionData.linearVelocityX = linearVelocity.z;
 		m_motionData.linearVelocityY = -linearVelocity.x;
 		m_motionData.linearVelocityZ = linearVelocity.y;
