@@ -20,6 +20,8 @@ namespace Perrinn424.AutopilotSystem
         public override float MaxForceD => maxForceD;
 
         private float previousUnsignedError;
+        private Vector3 localForce;
+
         public void Correct(Vector3 targetPosition)
         {
 
@@ -37,7 +39,7 @@ namespace Perrinn424.AutopilotSystem
 
             PIDController.input = Error;
             PIDController.Compute();
-            Vector3 localForce = -correctionAxis * PIDController.output;
+            localForce = -correctionAxis * PIDController.output;
 
             Force = rb.transform.TransformVector(localForce);
 
