@@ -7,12 +7,6 @@ namespace Perrinn424.AutopilotSystem
 {
     public class Autopilot : BaseAutopilot
     {
-        public enum InputType
-        {
-            Raw,
-            Processed
-        }
-
 
         [Header("References")]
         public RecordedLap recordedLap;
@@ -24,8 +18,6 @@ namespace Perrinn424.AutopilotSystem
         private PathDrawer pathDrawer;
 
         [Header("Setup")]
-
-        public InputType inputType;
 
         [SerializeField]
         private bool autoStart = false;
@@ -175,23 +167,12 @@ namespace Perrinn424.AutopilotSystem
 
         private void WriteInput(Sample s)
         {
-            if (inputType == InputType.Raw)
-            {
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 0);
-                vehicle.data.Set(Channel.Input, InputData.Steer, s.rawSteer);
-                vehicle.data.Set(Channel.Input, InputData.Throttle, s.rawThrottle);
-                vehicle.data.Set(Channel.Input, InputData.Brake, s.rawBrake);
-                vehicle.data.Set(Channel.Input, InputData.AutomaticGear, s.automaticGear);
-            }
-            else
-            {
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 1);
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputDrsPosition, (int)(s.drsPosition*10.0f));
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputSteerAngle, (int)(s.steeringAngle * 10000.0f));
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputMguThrottle, (int)(s.throttle * 100.0f));
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePressure, (int)(s.brakePressure * 10000.0f));
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, 1); //TODO
-            }
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 1);
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputDrsPosition, (int)(s.drsPosition * 10.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputSteerAngle, (int)(s.steeringAngle * 10000.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputMguThrottle, (int)(s.throttle * 100.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePressure, (int)(s.brakePressure * 10000.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, 1); //TODO
         }
 
         public override float CalculateDuration()
