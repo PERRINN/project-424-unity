@@ -1,10 +1,10 @@
 ﻿using Perrinn424.Utilities;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using System.IO;
 
 namespace Perrinn424.TelemetryLapSystem
 {
@@ -25,13 +25,6 @@ namespace Perrinn424.TelemetryLapSystem
         private readonly TimeFormatter timeFormatter;
 
 
-        private string GetRoot()
-        {
-            var myDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var telemetryFolder = Path.Combine(myDocumentsFolder, "Perrinn 424", "Lap Data");
-            return telemetryFolder;
-        }
-
         public IReadOnlyList<string> Headers { get; private set; }
         public IReadOnlyList<string> Units { get; private set; }
         public bool IsRecordingReady { get; private set; }
@@ -44,16 +37,11 @@ namespace Perrinn424.TelemetryLapSystem
             invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
             builder = new StringBuilder();
             timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
-
-            if (!Directory.Exists(GetRoot()))
-            {
-                Directory.CreateDirectory(GetRoot());
-            }
         }
 
         public void StartRecording()
         {
-            TempFullPath = Path.Combine(GetRoot(), "temp.csv");
+            TempFullPath = FolderManager.Combine("temp.csv");
 
             FileStream fs = new FileStream(TempFullPath, FileMode.Create, FileAccess.Write);
             fileWriter = new CSVFileWriter(fs);
@@ -79,13 +67,13 @@ namespace Perrinn424.TelemetryLapSystem
             string ideal = isIdeal ? " ideal" : string.Empty;
 
             Filename = $"{dateStr} {lapTimeStr}{ideal}.csv";
-            FullPath = Path.Combine(GetRoot(), Filename);
+            FullPath = FolderManager.Combine(Filename);
         }
 
         private void DisposeFileAndRename()
         {
             fileWriter.Dispose();
-            File.Move(TempFullPath, FullPath); // Rename the oldFileName into newFileName
+            FolderManager.Rename(TempFullPath, FullPath); // Rename the oldFileName into newFileName
         }
 
         public void WriteMetadata(TelemetryLapMetadata meta)
@@ -165,20 +153,9 @@ namespace Perrinn424.TelemetryLapSystem
 
         public void Delete()
         {
-            if (File.Exists(FullPath))
-            {
-                File.Delete(FullPath);
-            }
-
-            if (File.Exists(MetadataFullPath))
-            {
-                File.Delete(MetadataFullPath);
-            }
-
-            if (File.Exists(TempFullPath))
-            {
-                File.Delete(TempFullPath);
-            }
+            FolderManager.Delete(FullPath);
+            FolderManager.Delete(MetadataFullPath);
+            FolderManager.Delete(TempFullPath);
         }
     } 
 }

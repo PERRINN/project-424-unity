@@ -216,11 +216,8 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void WriteSectorInFile(int sector, string filename, TelemetryLapFileWriter telemetryLapFileWriter)
         {
-            if (!filename.Contains("Telemetry"))
-            {
-                filename = Path.Combine("Telemetry", filename);
-            }
-            
+            filename = FolderManager.GetFullPath(filename);
+
             if (!File.Exists(@filename))
             {
                 Debug.LogError($"{filename} not found");
