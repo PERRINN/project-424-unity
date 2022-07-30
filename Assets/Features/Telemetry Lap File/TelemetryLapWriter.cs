@@ -82,7 +82,7 @@ namespace Perrinn424.TelemetryLapSystem
         private void LapBeginEventHandler()
         {
             file.StartRecording();
-            Log($"Recording at {file.TempFullRelativePath}");
+            Log($"Recording at {file.TempFullPath}");
         }
 
         private void LapCompletedEventHandler(float lapTime, bool validBool, float[] sectors, bool[] validSectors)
@@ -153,11 +153,11 @@ namespace Perrinn424.TelemetryLapSystem
                 TelemetryLapMetadata metadata = createMetadata();
                 file.WriteMetadata(metadata);
                 telemetryLapMetadatas.Add(metadata);
-                Log($"File Saved at {file.FullRelativePath}");
+                Log($"File Saved at {file.FullPath}");
             }
             catch (Exception)
             {
-                Debug.LogWarning($"Error saving {file.FullRelativePath}. Disabling CSV writing");
+                Debug.LogWarning($"Error saving {file.FullPath}. Disabling CSV writing");
                 this.enabled = false;
             }
         }

@@ -12,20 +12,25 @@ namespace Perrinn424.TelemetryLapSystem
     {
         private CSVFileWriter fileWriter;
         public string Filename { get; private set; }
-        public string FullRelativePath { get; private set; }
         public string FullPath { get; private set; }
-        public string MetadataFullRelativePath { get; private set; }
-        public string TempFullRelativePath { get; private set; }
+        public string TempFullPath { get; private set; }
+        public string MetadataFullPath { get; private set; }
         public bool HeadersWritten { get; private set; }
         public int ColumnCount { get; private set; }
         public int LineCount { get; private set; }
 
-        private const string root = "Telemetry";
         private const string separator = ",";
         private readonly IFormatProvider invariantCulture;
         private readonly StringBuilder builder;
         private readonly TimeFormatter timeFormatter;
 
+
+        private string GetRoot()
+        {
+            var myDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var telemetryFolder = Path.Combine(myDocumentsFolder, "Perrinn 424", "Lap Data");
+            return telemetryFolder;
+        }
 
         public IReadOnlyList<string> Headers { get; private set; }
         public IReadOnlyList<string> Units { get; private set; }
@@ -40,17 +45,17 @@ namespace Perrinn424.TelemetryLapSystem
             builder = new StringBuilder();
             timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
 
-            if (!Directory.Exists(root))
+            if (!Directory.Exists(GetRoot()))
             {
-                Directory.CreateDirectory(root);
+                Directory.CreateDirectory(GetRoot());
             }
         }
 
         public void StartRecording()
         {
-            TempFullRelativePath = Path.Combine(root, "temp.csv");
+            TempFullPath = Path.Combine(GetRoot(), "temp.csv");
 
-            FileStream fs = new FileStream(TempFullRelativePath, FileMode.Create, FileAccess.Write);
+            FileStream fs = new FileStream(TempFullPath, FileMode.Create, FileAccess.Write);
             fileWriter = new CSVFileWriter(fs);
             
             HeadersWritten = false;
@@ -74,21 +79,20 @@ namespace Perrinn424.TelemetryLapSystem
             string ideal = isIdeal ? " ideal" : string.Empty;
 
             Filename = $"{dateStr} {lapTimeStr}{ideal}.csv";
-            FullRelativePath = Path.Combine(root, Filename);
-            FullPath = Path.Combine(Application.dataPath, FullRelativePath);
+            FullPath = Path.Combine(GetRoot(), Filename);
         }
 
         private void DisposeFileAndRename()
         {
             fileWriter.Dispose();
-            File.Move(TempFullRelativePath, FullRelativePath); // Rename the oldFileName into newFileName
+            File.Move(TempFullPath, FullPath); // Rename the oldFileName into newFileName
         }
 
         public void WriteMetadata(TelemetryLapMetadata meta)
         {
             string json = JsonUtility.ToJson(meta, true);
-            MetadataFullRelativePath = $"{FullRelativePath}.metadata";
-            File.WriteAllText(MetadataFullRelativePath, json);
+            MetadataFullPath = $"{FullPath}.metadata";
+            File.WriteAllText(MetadataFullPath, json);
         }
 
         public void WriteHeaders(IEnumerable<string> headers, IEnumerable<string> units)
@@ -161,19 +165,19 @@ namespace Perrinn424.TelemetryLapSystem
 
         public void Delete()
         {
-            if (File.Exists(FullRelativePath))
+            if (File.Exists(FullPath))
             {
-                File.Delete(FullRelativePath);
+                File.Delete(FullPath);
             }
 
-            if (File.Exists(MetadataFullRelativePath))
+            if (File.Exists(MetadataFullPath))
             {
-                File.Delete(MetadataFullRelativePath);
+                File.Delete(MetadataFullPath);
             }
 
-            if (File.Exists(TempFullRelativePath))
+            if (File.Exists(TempFullPath))
             {
-                File.Delete(TempFullRelativePath);
+                File.Delete(TempFullPath);
             }
         }
     } 
