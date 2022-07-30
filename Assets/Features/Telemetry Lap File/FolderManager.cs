@@ -4,11 +4,18 @@ using UnityEngine;
 
 namespace Perrinn424.TelemetryLapSystem
 {
+#if UNITY_EDITOR
+    [UnityEditor.InitializeOnLoad]
+#endif
     public static class FolderManager
     {
-
         public static string RootFolder { get; private set; }
-        
+
+        static FolderManager()
+        {
+            Init();
+        }
+
         [RuntimeInitializeOnLoadMethod]
         private static void Init()
         {
@@ -31,14 +38,9 @@ namespace Perrinn424.TelemetryLapSystem
             }
         }
 
-        public static string Combine(string path1, string path2)
-        {
-            return Path.Combine(path1, path2);
-        }
-
         public static string Combine(string path)
         {
-            return Combine(RootFolder, path);
+            return Path.Combine(RootFolder, path);
         }
 
         public static void Rename(string oldPath, string newPath)
