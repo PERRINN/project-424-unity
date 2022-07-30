@@ -26,7 +26,7 @@ namespace Perrinn424.TelemetryLapSystem
         private static string GetRoot()
         {
             var myDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var telemetryFolder = Path.Combine(myDocumentsFolder, "Perrinn 424", "Lap Data");
+            var telemetryFolder = Path.Combine(myDocumentsFolder, "PERRINN 424", "Lap Data");
             return telemetryFolder;
         }
 
