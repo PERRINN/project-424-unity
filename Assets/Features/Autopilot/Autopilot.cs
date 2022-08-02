@@ -40,7 +40,8 @@ namespace Perrinn424.AutopilotSystem
 
         public Sample ReferenceSample { get; private set; }
         public float ReferenceSpeed { get; private set; }
-        public float PlayingTime { get; private set; }
+        public override float PlayingTime => playingTime;
+        private float playingTime;
 
         //TODO use this value at dashboard
         public override float DeltaTime => deltaTime;
@@ -74,7 +75,7 @@ namespace Perrinn424.AutopilotSystem
             autopilotSearcher.Search(vehicle.transform);
             ReferenceSample = GetInterpolatedNearestSample();
             ReferenceSpeed = ReferenceSample.speed;
-            PlayingTime = CalculatePlayingTime();
+            playingTime = CalculatePlayingTime();
             deltaTime = timer.currentLapTime - PlayingTime;
             pathDrawer.index = autopilotSearcher.StartIndex;
 
@@ -115,8 +116,7 @@ namespace Perrinn424.AutopilotSystem
 
         }
 
-        //TODO make private and use Property PlayingTime
-        public override float CalculatePlayingTime()
+        private float CalculatePlayingTime()
         {
             float sampleIndex = (autopilotSearcher.StartIndex + autopilotSearcher.Ratio);
             float playingTimeBySampleIndex = sampleIndex / recordedLap.frequency;
@@ -174,7 +174,7 @@ namespace Perrinn424.AutopilotSystem
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputSteerAngle, (int)(s.steeringAngle * 10000.0f));
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputMguThrottle, (int)(s.throttle * 100.0f));
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePressure, (int)(s.brakePressure * 10000.0f));
-            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, 1); //TODO
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, s.gear); //TODO
         }
 
         public override float CalculateDuration()

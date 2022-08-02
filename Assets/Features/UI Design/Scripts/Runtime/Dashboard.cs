@@ -1,11 +1,9 @@
 ﻿using Perrinn424.AutopilotSystem;
 using Perrinn424.Utilities;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
-using VehiclePhysics.UI;
 
 namespace Perrinn424.UI
 {
