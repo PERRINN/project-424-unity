@@ -20,7 +20,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
 
         private static void Import()
         {
-            string path = EditorUtility.OpenFilePanel("CSV Importer", "./Telemetry", "metadata");
+            string path = EditorUtility.OpenFilePanel("CSV Importer", FolderManager.RootFolder, "metadata");
             if (path.Length != 0)
             {
                 try

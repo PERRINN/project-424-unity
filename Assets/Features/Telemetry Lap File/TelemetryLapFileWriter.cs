@@ -1,10 +1,10 @@
 ﻿using Perrinn424.Utilities;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using System.IO;
 
 namespace Perrinn424.TelemetryLapSystem
 {
@@ -12,15 +12,13 @@ namespace Perrinn424.TelemetryLapSystem
     {
         private CSVFileWriter fileWriter;
         public string Filename { get; private set; }
-        public string FullRelativePath { get; private set; }
         public string FullPath { get; private set; }
-        public string MetadataFullRelativePath { get; private set; }
-        public string TempFullRelativePath { get; private set; }
+        public string TempFullPath { get; private set; }
+        public string MetadataFullPath { get; private set; }
         public bool HeadersWritten { get; private set; }
         public int ColumnCount { get; private set; }
         public int LineCount { get; private set; }
 
-        private const string root = "Telemetry";
         private const string separator = ",";
         private readonly IFormatProvider invariantCulture;
         private readonly StringBuilder builder;
@@ -39,18 +37,13 @@ namespace Perrinn424.TelemetryLapSystem
             invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
             builder = new StringBuilder();
             timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"mm\.ss\.fff", @"ss\.fff");
-
-            if (!Directory.Exists(root))
-            {
-                Directory.CreateDirectory(root);
-            }
         }
 
         public void StartRecording()
         {
-            TempFullRelativePath = Path.Combine(root, "temp.csv");
+            TempFullPath = FolderManager.Combine("temp.csv");
 
-            FileStream fs = new FileStream(TempFullRelativePath, FileMode.Create, FileAccess.Write);
+            FileStream fs = new FileStream(TempFullPath, FileMode.Create, FileAccess.Write);
             fileWriter = new CSVFileWriter(fs);
             
             HeadersWritten = false;
@@ -74,21 +67,20 @@ namespace Perrinn424.TelemetryLapSystem
             string ideal = isIdeal ? " ideal" : string.Empty;
 
             Filename = $"{dateStr} {lapTimeStr}{ideal}.csv";
-            FullRelativePath = Path.Combine(root, Filename);
-            FullPath = Path.Combine(Application.dataPath, FullRelativePath);
+            FullPath = FolderManager.Combine(Filename);
         }
 
         private void DisposeFileAndRename()
         {
             fileWriter.Dispose();
-            File.Move(TempFullRelativePath, FullRelativePath); // Rename the oldFileName into newFileName
+            FolderManager.Rename(TempFullPath, FullPath); // Rename the oldFileName into newFileName
         }
 
         public void WriteMetadata(TelemetryLapMetadata meta)
         {
             string json = JsonUtility.ToJson(meta, true);
-            MetadataFullRelativePath = $"{FullRelativePath}.metadata";
-            File.WriteAllText(MetadataFullRelativePath, json);
+            MetadataFullPath = $"{FullPath}.metadata";
+            File.WriteAllText(MetadataFullPath, json);
         }
 
         public void WriteHeaders(IEnumerable<string> headers, IEnumerable<string> units)
@@ -161,20 +153,9 @@ namespace Perrinn424.TelemetryLapSystem
 
         public void Delete()
         {
-            if (File.Exists(FullRelativePath))
-            {
-                File.Delete(FullRelativePath);
-            }
-
-            if (File.Exists(MetadataFullRelativePath))
-            {
-                File.Delete(MetadataFullRelativePath);
-            }
-
-            if (File.Exists(TempFullRelativePath))
-            {
-                File.Delete(TempFullRelativePath);
-            }
+            FolderManager.Delete(FullPath);
+            FolderManager.Delete(MetadataFullPath);
+            FolderManager.Delete(TempFullPath);
         }
     } 
 }
