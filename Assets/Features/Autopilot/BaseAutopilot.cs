@@ -3,7 +3,6 @@ using VehiclePhysics;
 
 namespace Perrinn424.AutopilotSystem
 {
-    //TODO convert in interface
     public abstract class BaseAutopilot : VehicleBehaviour, IPIDInfo
     {
         public bool IsOn { get; private set; }
@@ -25,6 +24,7 @@ namespace Perrinn424.AutopilotSystem
         public abstract float MaxForceD { get; }
         public abstract float DeltaTime { get;}
         public abstract float PlayingTime { get; }
+        public abstract float Duration { get; }
 
         public void ToggleStatus()
         {
@@ -36,7 +36,5 @@ namespace Perrinn424.AutopilotSystem
             IsOn = isOn;
             OnStatusChanged?.Invoke(IsOn);
         }
-
-        public abstract float CalculateDuration();
     } 
 }

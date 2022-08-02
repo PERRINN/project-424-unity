@@ -43,9 +43,10 @@ namespace Perrinn424.AutopilotSystem
         public override float PlayingTime => playingTime;
         private float playingTime;
 
-        //TODO use this value at dashboard
         public override float DeltaTime => deltaTime;
         private float deltaTime;
+
+        public override float Duration => recordedLap.lapTime;
 
         public override void OnEnableVehicle()
         {
@@ -175,11 +176,6 @@ namespace Perrinn424.AutopilotSystem
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputMguThrottle, (int)(s.throttle * 100.0f));
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePressure, (int)(s.brakePressure * 10000.0f));
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, s.gear); //TODO
-        }
-
-        public override float CalculateDuration()
-        {
-            return recordedLap.lapTime;
         }
 
         private void OnDrawGizmos()
