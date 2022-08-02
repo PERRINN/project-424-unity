@@ -22,6 +22,8 @@ namespace Perrinn424.AutopilotSystem
         public abstract float MaxForceP { get; }
 
         public abstract float MaxForceD { get; }
+        //TODO use this value at dashboard
+        public abstract float DeltaTime { get;}
 
         public void ToggleStatus()
         {

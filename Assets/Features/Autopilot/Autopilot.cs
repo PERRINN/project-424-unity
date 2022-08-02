@@ -41,8 +41,10 @@ namespace Perrinn424.AutopilotSystem
         public Sample ReferenceSample { get; private set; }
         public float ReferenceSpeed { get; private set; }
         public float PlayingTime { get; private set; }
+
         //TODO use this value at dashboard
-        public float DeltaTime { get; private set; }
+        public override float DeltaTime => deltaTime;
+        private float deltaTime;
 
         public override void OnEnableVehicle()
         {
@@ -73,7 +75,7 @@ namespace Perrinn424.AutopilotSystem
             ReferenceSample = GetInterpolatedNearestSample();
             ReferenceSpeed = ReferenceSample.speed;
             PlayingTime = CalculatePlayingTime();
-            DeltaTime = timer.currentLapTime - PlayingTime;
+            deltaTime = timer.currentLapTime - PlayingTime;
             pathDrawer.index = autopilotSearcher.StartIndex;
 
             if (IsOn)
