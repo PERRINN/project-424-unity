@@ -1200,15 +1200,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputUserName: Perrinn424
   forceFeedbackEnabled: 1
-  rumbleEnabled: 0
-  forceFeedbackSettings:
-    forceGain: 0.75
+  forceFeedbackModel: 0
+  ffbTelemetry: 1
+  ffbSettingsV1:
+    forceGain: 1
     steeringSensitivity: 0.3
     nonLinearBias: 0.55
     damperEffect: 0.3
     frictionEffect: 0.05
     frictionMaxSpeed: 2
-  rumbleSettings:
+  rumbleEnabled: 0
+  ffbRumbleV1:
     idleIntensity: 0.2
     minIntensity: 0.1
     maxIntensity: 0.7
@@ -1218,6 +1220,19 @@ MonoBehaviour:
     suspensionGain: 0.2
     suspensionCutSpeed: 0.5
     suspensionMaxSpeed: 5
+  ffbSettingsV2:
+    longForceFactor: 0.32
+    latForceFactor: 0.28
+    vertForceFactor: 0.1
+    shaftTorqueFactor: 1.96
+    rackRatio: 0.0065
+    assistanceRatio: 0.5
+    assistanceMax: 50
+    simulatedTorqueRange: 14
+    zeroLoadDamper: 0.2
+    maxLoadDamper: 0.4
+    damperNonLinearBias: 0.7
+    maxNormalizedLoad: 6
 --- !u!1 &2483877715507374421
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.3
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.044780876, g: 0.05738007, b: 0.070604235, a: 0.3}
+  m_IndirectSpecularColor: {r: 0.044782605, g: 0.05738021, b: 0.07060575, a: 0.3}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -8343,7 +8343,7 @@ PrefabInstance:
     - target: {fileID: 2871200712215333718, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0000019073486
+      value: 0.000011444092
       objectReference: {fileID: 0}
     - target: {fileID: 2973885201336558946, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
@@ -10293,6 +10293,9 @@ MonoBehaviour:
   updateDevicesAt: 1
   settings:
     physicalWheelRange: 300
+    forceFeedbackForceGain: 1
+    forceFeedbackDamperGain: 1
+    forceFeedbackEffectsGain: 1
     autoForwardAndReverse: 0
   fixedMappings: []
   unityStandardInput: 1
