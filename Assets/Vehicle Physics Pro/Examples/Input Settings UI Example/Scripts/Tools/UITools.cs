@@ -30,12 +30,14 @@ public static class UITools
 		if (button != null) button.onClick.RemoveListener(method);
 		}
 
+
 	// Set text in Text field
 
 	public static void SetText (Text text, string textString)
 		{
 		if (text != null) text.text = textString;
 		}
+
 
 	// Set image fill in Image
 
@@ -44,12 +46,14 @@ public static class UITools
 		if (image != null) image.fillAmount = fill;
 		}
 
+
 	// Show/hide any element
 
 	public static void SetVisible (Behaviour element, bool enabled)
 		{
 		if (element != null) element.enabled = enabled;
 		}
+
 
 	// Enable/disable interactions
 
@@ -64,6 +68,7 @@ public static class UITools
 		GraphicRaycaster rayCaster = gameObject.GetComponent<GraphicRaycaster>();
 		if (rayCaster != null) rayCaster.enabled = false;
 		}
+
 
 	// Enable/disable objects
 
@@ -97,6 +102,7 @@ public static class UITools
 		return element != null? element.isActiveAndEnabled : false;
 		}
 
+
 	// Get/Set value in a slider
 
 	public static float GetValue (Slider slider, float defaultValue = 0.0f)
@@ -108,6 +114,7 @@ public static class UITools
 		{
 		if (slider != null) slider.value = value;
 		}
+
 
 	//----------------------------------------------------------------------------------------------
 	// Groups and helpers
@@ -127,7 +134,8 @@ public static class UITools
 			group.button.onClick.RemoveListener(method);
 		}
 
-	// Set text in Text field
+
+	// Set text in Text field of a button label group
 
 	public static void SetText (ButtonLabelGroup group, string text)
 		{
@@ -135,20 +143,21 @@ public static class UITools
 			group.label.text = text;
 		}
 
-	// Get/Set value in a slider
+
+	// Get/Set value in a slider value group
 
 	public static float GetValue (SliderValueGroup group, float defaultValue = 0.0f)
 		{
-		if (group != null && group.slider != null)
-			return group.slider.value;
+		if (group != null)
+			return group.GetValue(defaultValue);
 		else
 			return defaultValue;
 		}
 
 	public static void SetValue (SliderValueGroup group, float value)
 		{
-		if (group != null && group.slider != null)
-			group.slider.value = value;
+		if (group != null)
+			group.SetValue(value);
 		}
 	}
 

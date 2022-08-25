@@ -68,7 +68,7 @@ public class InputSetupDialog : MonoBehaviour
 
 		m_inputUser = new Perrinn424InputUser(carInputUser);
 		InputManager.instance.RegisterUser(m_inputUser);
-		UITools.SetValue(steeringRangeSetup, InputManager.instance.settings.physicalWheelRange / 10);
+		UITools.SetValue(steeringRangeSetup, InputManager.instance.settings.physicalWheelRange);
 
 		// Initialize UI
 
@@ -127,7 +127,7 @@ public class InputSetupDialog : MonoBehaviour
 		// Apply settings so effects may be observed lively
 
 		int wheelRange = InputManager.instance.settings.physicalWheelRange;
-		InputManager.instance.settings.physicalWheelRange = Mathf.RoundToInt(UITools.GetValue(steeringRangeSetup, defaultValue: wheelRange/10) * 10);
+		InputManager.instance.settings.physicalWheelRange = Mathf.RoundToInt(UITools.GetValue(steeringRangeSetup, defaultValue: wheelRange));
 
 		// Detect Esc
 
@@ -148,7 +148,7 @@ public class InputSetupDialog : MonoBehaviour
 
 		if (steeringWheelIcon != null)
 			{
-			float angle = -m_inputUser.steer.Value() * UITools.GetValue(steeringRangeSetup, defaultValue:18.0f) / 2 * 10;
+			float angle = -m_inputUser.steer.Value() * UITools.GetValue(steeringRangeSetup, defaultValue:180) / 2;
 			steeringWheelIcon.rotation = Quaternion.Euler(0, 0, angle);
 			}
 
