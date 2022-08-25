@@ -30,13 +30,13 @@ public class Perrinn424Input : VehicleBehaviour
 
 	public enum ForceFeedbackModel { V1, V2 }
 	public ForceFeedbackModel forceFeedbackModel = ForceFeedbackModel.V1;
-	public bool ffbTelemetry = false;
+	public bool ffbTelemetry = true;
+	[Header("Force Feedback V2")]
+	public ForceFeedbackModelV2.Settings ffbSettingsV2 = new ForceFeedbackModelV2.Settings();
 	[Header("Force Feedback V1")]
 	public ForceFeedbackModelV1.Settings ffbSettingsV1 = new ForceFeedbackModelV1.Settings();
 	public bool rumbleEnabled = false;
 	public ForceFeedbackModelV1.RumbleSettings ffbRumbleV1 = new ForceFeedbackModelV1.RumbleSettings();
-	[Header("Force Feedback V2")]
-	public ForceFeedbackModelV2.Settings ffbSettingsV2 = new ForceFeedbackModelV2.Settings();
 
 
 	// Private fields
