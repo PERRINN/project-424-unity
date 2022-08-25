@@ -18,7 +18,6 @@ class Perrinn424InputUser : InputUser
 	public InputSlider brake 		= new InputSlider("Brake");
 	public InputButton gearUp		= new InputButton("GearShiftUp");
 	public InputButton gearDown		= new InputButton("GearShiftDown");
-	public InputButton drsEnable	= new InputButton("DrsEnable");
 	}
 
 
@@ -120,10 +119,6 @@ public class Perrinn424Input : VehicleBehaviour
 
 		if (m_input.gearUp.PressedThisFrame()) inputData[InputData.AutomaticGear]++;
 		if (m_input.gearDown.PressedThisFrame()) inputData[InputData.AutomaticGear]--;
-
-		// DRS
-
-		if (m_input.drsEnable.PressedThisFrame()) raceInputData[RaceInputData.Drs] = 1;
 		}
 
 
