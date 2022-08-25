@@ -32,6 +32,8 @@ public class InputSetupDialog : MonoBehaviour
 	[Space(5)]
 	public ButtonLabelGroup steeringSetup;
 	public SliderValueGroup steeringRangeSetup;
+	public SliderValueGroup ffbForceGainSetup;
+	public SliderValueGroup ffbDamperGainSetup;
 	public ButtonLabelGroup throttleSetup;
 	public ButtonLabelGroup brakeSetup;
 	public ButtonLabelGroup gearUpSetup;
@@ -68,7 +70,10 @@ public class InputSetupDialog : MonoBehaviour
 
 		m_inputUser = new Perrinn424InputUser(carInputUser);
 		InputManager.instance.RegisterUser(m_inputUser);
+
 		UITools.SetValue(steeringRangeSetup, InputManager.instance.settings.physicalWheelRange);
+		UITools.SetValue(ffbForceGainSetup, InputManager.instance.settings.forceFeedbackForceGain);
+		UITools.SetValue(ffbDamperGainSetup, InputManager.instance.settings.forceFeedbackDamperGain);
 
 		// Initialize UI
 
@@ -124,10 +129,16 @@ public class InputSetupDialog : MonoBehaviour
 
 		UpdateControlLabels();
 
-		// Apply settings so effects may be observed lively
+		// Apply global settings so effects may be observed lively
 
-		int wheelRange = InputManager.instance.settings.physicalWheelRange;
-		InputManager.instance.settings.physicalWheelRange = Mathf.RoundToInt(UITools.GetValue(steeringRangeSetup, defaultValue: wheelRange));
+		InputSettings inputSettings = InputManager.instance.settings;
+		int wheelRange = inputSettings.physicalWheelRange;
+		float forceGain = inputSettings.forceFeedbackForceGain;
+		float damperGain = inputSettings.forceFeedbackDamperGain;
+
+		inputSettings.physicalWheelRange = Mathf.RoundToInt(UITools.GetValue(steeringRangeSetup, defaultValue: wheelRange));
+		inputSettings.forceFeedbackForceGain = UITools.GetValue(ffbForceGainSetup, defaultValue: forceGain);
+		inputSettings.forceFeedbackDamperGain = UITools.GetValue(ffbDamperGainSetup, defaultValue: damperGain);
 
 		// Detect Esc
 
