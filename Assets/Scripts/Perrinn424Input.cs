@@ -216,12 +216,19 @@ public class Perrinn424Input : VehicleBehaviour
 			channelInfo[0].SetNameAndSemantic("ForceFeedbackForceRatio", Telemetry.Semantic.SignedRatio);
 			channelInfo[1].SetNameAndSemantic("ForceFeedbackDamperRatio", Telemetry.Semantic.Ratio);
 
-			channelInfo[2].SetNameAndSemantic("ffbTrackroadLoadLeft", Telemetry.Semantic.SuspensionForce);
-			channelInfo[3].SetNameAndSemantic("ffbTrackroadLoadRight", Telemetry.Semantic.SuspensionForce);
-			channelInfo[4].SetNameAndSemantic("ffbSteeringRackLoad", Telemetry.Semantic.SuspensionForce);
-			channelInfo[5].SetNameAndSemantic("ffbSteeringColumnLoad", Telemetry.Semantic.WheelTorque);
-			channelInfo[6].SetNameAndSemantic("ffbSteeringAssistanceLoad", Telemetry.Semantic.WheelTorque);
-			channelInfo[7].SetNameAndSemantic("ffbSteeringWheelLoad", Telemetry.Semantic.WheelTorque);
+			Telemetry.SemanticInfo rackLoadSemantic = new Telemetry.SemanticInfo();
+			rackLoadSemantic.SetRangeAndFormat(-10000.0f, 10000.0f, "0", " N", quantization:1000);
+
+			channelInfo[2].SetNameAndSemantic("FFBTrackroadLoadLeft", Telemetry.Semantic.Custom, rackLoadSemantic);
+			channelInfo[3].SetNameAndSemantic("FFBTrackroadLoadRight", Telemetry.Semantic.Custom, rackLoadSemantic);
+			channelInfo[4].SetNameAndSemantic("FFBSteeringRackLoad", Telemetry.Semantic.Custom, rackLoadSemantic);
+
+			Telemetry.SemanticInfo steeringLoadSemantic = new Telemetry.SemanticInfo();
+			steeringLoadSemantic.SetRangeAndFormat(-80.0f, 80.0f, "0.0", " Nm", quantization:10);
+
+			channelInfo[5].SetNameAndSemantic("FFBSteeringColumnLoad", Telemetry.Semantic.Custom, steeringLoadSemantic);
+			channelInfo[6].SetNameAndSemantic("FFBSteeringAssistanceLoad", Telemetry.Semantic.Custom, steeringLoadSemantic);
+			channelInfo[7].SetNameAndSemantic("FFBSteeringWheelLoad", Telemetry.Semantic.Custom, steeringLoadSemantic);
 			}
 
 
