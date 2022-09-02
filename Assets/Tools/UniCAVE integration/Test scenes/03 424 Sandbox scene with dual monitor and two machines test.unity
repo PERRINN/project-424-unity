@@ -361,10 +361,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11431438, guid: 2cd00faae1c08854f97acb5a87bb5f0d, type: 3}
-      propertyPath: showBug
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 114078917666696320, guid: 2cd00faae1c08854f97acb5a87bb5f0d,
         type: 3}
       propertyPath: timeScale
@@ -871,7 +867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
   oldMachineName: 
-  machineNameAsset: {fileID: 11400000, guid: 80a584bff39fa3b4985d60ced8483f02, type: 2}
+  machineNameAsset: {fileID: 11400000, guid: 9b9e86ba610f41847b0fc9fac22af91a, type: 2}
   width: 1.6
   height: 0.9
   head: {fileID: 2467123758255636402}
@@ -879,12 +875,12 @@ MonoBehaviour:
   useRenderTextures: 0
   renderTextureSize: {x: 0, y: 0}
   is3D: 0
-  exclusiveFullscreen: 0
-  display: 1
+  exclusiveFullscreen: 1
+  display: 0
   dualPipe: 0
   dualInstance: 0
   windowBounds:
-    x: 1280
+    x: 0
     y: 0
     width: 1280
     height: 720
@@ -928,7 +924,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
   oldMachineName: 
-  machineNameAsset: {fileID: 11400000, guid: 143b3f327dc8e874b87e6038e9d48159, type: 2}
+  machineNameAsset: {fileID: 11400000, guid: 9fbefa277f00bc140bd8e126b14753a8, type: 2}
   width: 1.6
   height: 0.9
   head: {fileID: 2467123758255636402}
@@ -936,7 +932,7 @@ MonoBehaviour:
   useRenderTextures: 0
   renderTextureSize: {x: 0, y: 0}
   is3D: 0
-  exclusiveFullscreen: 0
+  exclusiveFullscreen: 1
   display: 0
   dualPipe: 0
   dualInstance: 0
@@ -1147,7 +1143,7 @@ PrefabInstance:
         type: 3}
       propertyPath: headMachineAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 143b3f327dc8e874b87e6038e9d48159,
+      objectReference: {fileID: 11400000, guid: 9b9e86ba610f41847b0fc9fac22af91a,
         type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d1a5c5ffe0d19242ae8289cdb440807, type: 3}
@@ -1211,7 +1207,7 @@ GameObject:
   - component: {fileID: 1171515118903176926}
   - component: {fileID: 849326867760527108}
   m_Layer: 0
-  m_Name: RIGHT Display - SUB
+  m_Name: RIGHT Display - HEAD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1682,7 +1678,7 @@ GameObject:
   - component: {fileID: 3804641446322881550}
   - component: {fileID: 1560259890132990355}
   m_Layer: 0
-  m_Name: LEFT Display - HEAD
+  m_Name: LEFT Display - SUB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
