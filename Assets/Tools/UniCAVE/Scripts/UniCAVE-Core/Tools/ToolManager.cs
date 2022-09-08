@@ -1,13 +1,13 @@
 ﻿//MIT License
-//Copyright 2016-Present 
+//Copyright 2016-Present
 //James H. Money
 //Luke Kingsley
 //Idaho National Laboratory
-//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
-//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, 
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute,
 //sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 //INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 //IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 //TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -42,7 +42,7 @@ namespace UniCAVE
         public bool negativeAnalogX;
         public bool negativeAnalogY;
 
-        private string TOOL_NAME_PREFIX = "Tool: ";
+        // private string TOOL_NAME_PREFIX = "Tool: ";
 
         /// <summary>
         /// Creates the toolManager object which holds a list of all ITOOL interfaces
@@ -60,7 +60,7 @@ namespace UniCAVE
 
             list = new List<ITool>();
 
-            //fill the list with all the tool interfaces 
+            //fill the list with all the tool interfaces
             list.Add(wandControls.GetComponent<WarpTool>());
             list.Add(wandControls.GetComponent<GrabberTool>());
             list.Add(wandControls.GetComponent<ButtonTool>());
@@ -73,7 +73,7 @@ namespace UniCAVE
         }
 
         /// <summary>
-        /// Increments the tool number 
+        /// Increments the tool number
         /// </summary>
         public void NextTool()
         {

@@ -1,13 +1,13 @@
 ﻿//MIT License
-//Copyright 2016-Present 
+//Copyright 2016-Present
 //James H. Money
 //Luke Kingsley
 //Idaho National Laboratory
-//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
-//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, 
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute,
 //sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 //INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 //IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 //TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -33,7 +33,6 @@ namespace UniCAVE
         RaycastHit hit;
         public GameObject wandObject;
         public GameObject holder;
-        bool hide = true;
         public Text txt;
         RaycastHit tester;
         Vector3 origin, direction;
@@ -44,12 +43,11 @@ namespace UniCAVE
         Dictionary<int, Dropdown> dropDownDictionary = new Dictionary<int, Dropdown>();
 
         /// <summary>
-        /// Selects or highlights UI elements 
+        /// Selects or highlights UI elements
         /// </summary>
         /// <returns></returns>
         public IEnumerator buttonInput()
         {
-            bool hide = true;
             while(true)
             {
                 //check to see that we are on the buttonclick tool
@@ -84,6 +82,7 @@ namespace UniCAVE
                     EventSystem.current.SetSelectedGameObject(null);
                 }
             }
+#pragma warning disable 0162
             yield return null;
         }
 
@@ -108,7 +107,7 @@ namespace UniCAVE
         }
 
         /// <summary>
-        /// Handles the UI button click interactions 
+        /// Handles the UI button click interactions
         /// </summary>
         /// <param name="buttonNum"></param>
         /// <param name="origin"></param>
@@ -143,7 +142,7 @@ namespace UniCAVE
 
                 }
 
-                //If the object is a dropdown menu selectable set that as the new dropdown value and call the method attatched 
+                //If the object is a dropdown menu selectable set that as the new dropdown value and call the method attatched
                 else if(hit.collider != null && hit.transform.gameObject.GetComponent<Toggle>() != null)
                 {
                     Toggle toggle = hit.transform.gameObject.GetComponent<Toggle>();
@@ -164,7 +163,7 @@ namespace UniCAVE
         }
 
         /// <summary>
-        /// Allows the user to interact with sliders and scrollbars 
+        /// Allows the user to interact with sliders and scrollbars
         /// </summary>
         /// <param name="hit_"></param>
         /// <param name="offset"></param>

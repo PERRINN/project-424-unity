@@ -317,7 +317,7 @@ namespace UniCAVE
         public class Editor : UnityEditor.Editor
         {
             private Material material;
-            private int selectedIndex = 0;
+            // private int selectedIndex = 0;
 
             void OnEnable()
             {
