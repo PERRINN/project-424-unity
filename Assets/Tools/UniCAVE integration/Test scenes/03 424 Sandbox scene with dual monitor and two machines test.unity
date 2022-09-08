@@ -1193,7 +1193,7 @@ MonoBehaviour:
   DualMode: 0
   NoDelay: 1
   Interval: 10
-  Timeout: 10000
+  Timeout: 999999999
   FastResend: 2
   CongestionWindow: 0
   SendWindowSize: 4096
@@ -1220,8 +1220,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
   runInBackground: 1
-  autoStartServerBuild: 1
-  serverTickRate: 30
+  autoStartServerBuild: 0
+  serverTickRate: 60
   offlineScene: 
   onlineScene: 
   transport: {fileID: 2742666747236634518}
@@ -1229,7 +1229,7 @@ MonoBehaviour:
   maxConnections: 100
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 0}
-  autoCreatePlayer: 1
+  autoCreatePlayer: 0
   playerSpawnMethod: 0
   spawnPrefabs: []
 --- !u!4 &3804641446322881550
