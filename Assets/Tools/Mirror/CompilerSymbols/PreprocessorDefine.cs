@@ -3,6 +3,8 @@ using UnityEditor;
 
 namespace Mirror
 {
+    /* EDY: REMOVED. Mirror itself doesn't use any of these, neither our code does.
+
     static class PreprocessorDefine
     {
         /// <summary>
@@ -55,4 +57,5 @@ namespace Mirror
             }
         }
     }
+    */
 }
