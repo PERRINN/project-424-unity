@@ -91,7 +91,7 @@ namespace UniCAVE
                     networkManager.StartClient();
                 }
 
-                if(Time.time > TimeoutWaitTime && !networkManager.IsClientConnected())
+                if(TimeoutWaitTime > 0 && Time.time > TimeoutWaitTime && !networkManager.IsClientConnected())
                 {
                     Application.Quit();
                 }
