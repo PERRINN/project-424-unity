@@ -69,7 +69,6 @@ namespace UniCAVE
             networkManager.networkAddress = serverAddress;
             networkManager.networkPort = serverPort;
 
-#if !UNITY_EDITOR
             if ((Util.GetArg("forceClient") == "1") || (Util.GetMachineName() != headMachine))
             {
                 networkManager.StartClient();
@@ -78,9 +77,6 @@ namespace UniCAVE
             {
                 networkManager.StartServer();
             }
-#else
-            networkManager.StartServer();
-#endif
         }
 
         /// <summary>
