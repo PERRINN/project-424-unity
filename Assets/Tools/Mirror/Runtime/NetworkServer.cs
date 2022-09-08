@@ -60,7 +60,7 @@ namespace Mirror
             if (initialized)
                 return;
 
-            // Debug.Log($"NetworkServer Created version {Version.Current}");
+            Debug.Log($"NetworkServer Created version {Version.Current}");
 
             //Make sure connections are cleared in case any old connections references exist from previous sessions
             connections.Clear();
@@ -104,7 +104,7 @@ namespace Mirror
             {
                 if (!identity.isClient)
                 {
-                    // Debug.Log($"ActivateHostScene {identity.netId} {identity}");
+                    Debug.Log($"ActivateHostScene {identity.netId} {identity}");
                     identity.OnStartClient();
                 }
             }
@@ -395,7 +395,7 @@ namespace Mirror
         // called by transport
         static void OnTransportConnected(int connectionId)
         {
-            // Debug.Log($"Server accepted client:{connectionId}");
+            Debug.Log($"Server accepted client:{connectionId}");
 
             // connectionId needs to be != 0 because 0 is reserved for local player
             // note that some transports like kcp generate connectionId by
@@ -411,7 +411,7 @@ namespace Mirror
             if (connections.ContainsKey(connectionId))
             {
                 Transport.activeTransport.ServerDisconnect(connectionId);
-                // Debug.Log($"Server connectionId {connectionId} already in use...kicked client");
+                Debug.Log($"Server connectionId {connectionId} already in use...kicked client");
                 return;
             }
 
@@ -430,13 +430,13 @@ namespace Mirror
             {
                 // kick
                 Transport.activeTransport.ServerDisconnect(connectionId);
-                // Debug.Log($"Server full, kicked client {connectionId}");
+                Debug.Log($"Server full, kicked client {connectionId}");
             }
         }
 
         internal static void OnConnected(NetworkConnectionToClient conn)
         {
-            // Debug.Log($"Server accepted client:{conn}");
+            Debug.Log($"Server accepted client:{conn}");
 
             // add connection and invoke connected event
             AddConnection(conn);
@@ -569,11 +569,11 @@ namespace Mirror
         //            => which we do by removing the connection!
         internal static void OnTransportDisconnected(int connectionId)
         {
-            // Debug.Log($"Server disconnect client:{connectionId}");
+            Debug.Log($"Server disconnect client:{connectionId}");
             if (connections.TryGetValue(connectionId, out NetworkConnectionToClient conn))
             {
                 RemoveConnection(connectionId);
-                // Debug.Log($"Server lost client:{connectionId}");
+                Debug.Log($"Server lost client:{connectionId}");
 
                 // NetworkManager hooks into OnDisconnectedEvent to make
                 // DestroyPlayerForConnection(conn) optional, e.g. for PvP MMOs
@@ -746,7 +746,7 @@ namespace Mirror
             // set ready if not set yet
             SetClientReady(conn);
 
-            // Debug.Log($"Adding new playerGameObject object netId: {identity.netId} asset ID: {identity.assetId}");
+            Debug.Log($"Adding new playerGameObject object netId: {identity.netId} asset ID: {identity.assetId}");
 
             Respawn(identity);
             return true;
@@ -851,7 +851,7 @@ namespace Mirror
         // is probably fine, so this call wont be needed.
         public static void SetClientReady(NetworkConnectionToClient conn)
         {
-            // Debug.Log($"SetClientReadyInternal for conn:{conn}");
+            Debug.Log($"SetClientReadyInternal for conn:{conn}");
 
             // set ready
             conn.isReady = true;
@@ -887,7 +887,7 @@ namespace Mirror
         // default ready handler.
         static void OnClientReadyMessage(NetworkConnectionToClient conn, ReadyMessage msg)
         {
-            // Debug.Log($"Default handler for ready message from {conn}");
+            Debug.Log($"Default handler for ready message from {conn}");
             SetClientReady(conn);
         }
 
@@ -1075,7 +1075,7 @@ namespace Mirror
 
             identity.OnStartServer();
 
-            // Debug.Log($"SpawnObject instance ID {identity.netId} asset ID {identity.assetId}");
+            Debug.Log($"SpawnObject instance ID {identity.netId} asset ID {identity.assetId}");
 
             if (aoi)
             {
@@ -1165,7 +1165,7 @@ namespace Mirror
             {
                 if (ValidateSceneObject(identity))
                 {
-                    // Debug.Log($"SpawnObjects sceneId:{identity.sceneId:X} name:{identity.gameObject.name}");
+                    Debug.Log($"SpawnObjects sceneId:{identity.sceneId:X} name:{identity.gameObject.name}");
                     identity.gameObject.SetActive(true);
 
                     // fix https://github.com/vis2k/Mirror/issues/2778:
@@ -1307,7 +1307,7 @@ namespace Mirror
 
         static void DestroyObject(NetworkIdentity identity, DestroyMode mode)
         {
-            // Debug.Log($"DestroyObject instance:{identity.netId}");
+            Debug.Log($"DestroyObject instance:{identity.netId}");
 
             // only call OnRebuildObservers while active,
             // not while shutting down
@@ -1476,7 +1476,7 @@ namespace Mirror
                     {
                         // new observer
                         conn.AddToObserving(identity);
-                        // Debug.Log($"New Observer for {gameObject} {conn}");
+                        Debug.Log($"New Observer for {gameObject} {conn}");
                         changed = true;
                     }
                 }
@@ -1489,7 +1489,7 @@ namespace Mirror
                 {
                     // removed observer
                     conn.RemoveFromObserving(identity, false);
-                    // Debug.Log($"Removed Observer for {gameObjec} {conn}");
+                    Debug.Log($"Removed Observer for {gameObjec} {conn}");
                     changed = true;
                 }
             }

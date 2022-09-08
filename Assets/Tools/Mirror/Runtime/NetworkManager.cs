@@ -234,7 +234,7 @@ namespace Mirror
         // full server setup code, without spawning objects yet
         void SetupServer()
         {
-            // Debug.Log("NetworkManager SetupServer");
+            Debug.Log("NetworkManager SetupServer");
             InitializeSingleton();
 
             if (runInBackground)
@@ -338,7 +338,7 @@ namespace Mirror
                 Debug.LogError("Must set the Network Address field in the manager");
                 return;
             }
-            // Debug.Log($"NetworkManager StartClient address:{networkAddress}");
+            Debug.Log($"NetworkManager StartClient address:{networkAddress}");
 
             NetworkClient.Connect(networkAddress);
 
@@ -369,7 +369,7 @@ namespace Mirror
 
             RegisterClientMessages();
 
-            // Debug.Log($"NetworkManager StartClient address:{uri}");
+            Debug.Log($"NetworkManager StartClient address:{uri}");
             networkAddress = uri.Host;
 
             NetworkClient.Connect(uri);
@@ -642,7 +642,7 @@ namespace Mirror
         {
 #if UNITY_SERVER
             Application.targetFrameRate = serverTickRate;
-            // Debug.Log($"Server Tick Rate set to {Application.targetFrameRate} Hz.");
+            Debug.Log($"Server Tick Rate set to {Application.targetFrameRate} Hz.");
 #endif
         }
 
@@ -762,7 +762,7 @@ namespace Mirror
                 return;
             }
 
-            // Debug.Log($"ServerChangeScene {newSceneName}");
+            Debug.Log($"ServerChangeScene {newSceneName}");
             NetworkServer.SetAllClientsNotReady();
             networkSceneName = newSceneName;
 
@@ -815,7 +815,7 @@ namespace Mirror
             // as soon as the load is finishing, causing all kinds of bugs
             // because of missing state.
             // (client may be null after StopClient etc.)
-            // Debug.Log("ClientChangeScene: pausing handlers while scene is loading to avoid data loss after scene was loaded.");
+            Debug.Log("ClientChangeScene: pausing handlers while scene is loading to avoid data loss after scene was loaded.");
             NetworkClient.isLoadingScene = true;
 
             // Cache sceneOperation so we know what was requested by the
@@ -883,12 +883,12 @@ namespace Mirror
                 {
                     // TODO only respawn the server objects from that scene later!
                     NetworkServer.SpawnObjects();
-                    // Debug.Log($"Respawned Server objects after additive scene load: {scene.name}");
+                    Debug.Log($"Respawned Server objects after additive scene load: {scene.name}");
                 }
                 if (NetworkClient.active)
                 {
                     NetworkClient.PrepareToSpawnSceneObjects();
-                    // Debug.Log($"Rebuild Client spawnableObjects after additive scene load: {scene.name}");
+                    Debug.Log($"Rebuild Client spawnableObjects after additive scene load: {scene.name}");
                 }
             }
         }
@@ -1032,7 +1032,7 @@ namespace Mirror
         // and singleton may not exist yet
         public static void RegisterStartPosition(Transform start)
         {
-            // Debug.Log($"RegisterStartPosition: {start.gameObject.name} {start.position}");
+            Debug.Log($"RegisterStartPosition: {start.gameObject.name} {start.position}");
             startPositions.Add(start);
 
             // reorder the list so that round-robin spawning uses the start positions
