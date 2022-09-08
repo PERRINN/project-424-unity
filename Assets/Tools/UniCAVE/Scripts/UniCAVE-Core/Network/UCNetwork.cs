@@ -16,7 +16,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -24,7 +24,6 @@ using UnityEditor.SceneManagement;
 
 namespace UniCAVE
 {
-    [NetworkSettings(channel = 1, sendInterval = 0.016f)]
     public class UCNetwork : NetworkBehaviour
     {
         const float MIN_TIME_SCALE = .01f;
@@ -39,6 +38,14 @@ namespace UniCAVE
         private bool syncedRandomSeed = false;
 
         private int frameCount = 0;
+
+        /// <summary>
+        /// Configure send interval
+        /// </summary>
+        void Start()
+        {
+            syncInterval = 0.016f;
+        }
 
         /// <summary>
         /// If server, broadcast information to all clients.

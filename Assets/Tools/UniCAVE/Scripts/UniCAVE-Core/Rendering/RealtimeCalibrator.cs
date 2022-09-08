@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -236,7 +236,7 @@ namespace UniCAVE
         }
 
         /// <summary>
-        /// Activates the info display, sets it parent to provided transform, 
+        /// Activates the info display, sets it parent to provided transform,
         /// and resets its local position so it is centered to the parent.
         /// </summary>
         /// <param name="infoDisplay"></param>
@@ -251,11 +251,11 @@ namespace UniCAVE
         /// <summary>
         /// Creates a dictionary of indexes and move factors which holds the
         /// indexs surrounding the provided index, the selection is a square around the index,
-        /// and each square selection will get a "move factor". The move factor tells how much the verex at index 
+        /// and each square selection will get a "move factor". The move factor tells how much the verex at index
         /// will be allowed to move compared to the main vertex(provided index). The selections move factor will degrade by
         /// selection size. This makes it possible to create a "smudge effect"
-        /// 
-        /// The size is the X axis size. 
+        ///
+        /// The size is the X axis size.
         /// </summary>
         /// <param name="size">the x axis size</param>
         /// <param name="index">the index number</param>
@@ -527,7 +527,7 @@ namespace UniCAVE
         }
 
         /// <summary>
-        /// Client RPC method which calls <c>LocalAdjustGridSelectSize</c> on clients to 
+        /// Client RPC method which calls <c>LocalAdjustGridSelectSize</c> on clients to
         /// adjustment of grid selection size of vertex movement.
         /// Uses bool to tell if it is a increase or decrease.
         /// </summary>

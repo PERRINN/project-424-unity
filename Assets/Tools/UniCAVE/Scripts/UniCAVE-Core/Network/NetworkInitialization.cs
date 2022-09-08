@@ -15,7 +15,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -67,7 +67,7 @@ namespace UniCAVE
             Debug.Log($"serverAddress = {serverAddress}, serverPort = {serverPort}, headMachine = {headMachine}, runningMachine = {runningMachineName}");
 
             networkManager.networkAddress = serverAddress;
-            networkManager.networkPort = serverPort;
+            (networkManager.transport as kcp2k.KcpTransport).Port = (ushort)serverPort;
 
             if ((Util.GetArg("forceClient") == "1") || (Util.GetMachineName() != headMachine))
             {
@@ -86,12 +86,12 @@ namespace UniCAVE
         {
             if(Util.GetMachineName() != oldHeadMachine)
             {
-                if(networkManager.client == null)
-                {
-                    networkManager.StartClient();
-                }
+                // if(!NetworkClient.active)
+                // {
+                    // networkManager.StartClient();
+                // }
 
-                if(TimeoutWaitTime > 0 && Time.time > TimeoutWaitTime && !networkManager.IsClientConnected())
+                if(TimeoutWaitTime > 0 && Time.time > TimeoutWaitTime && !NetworkClient.isConnected)
                 {
                     Application.Quit();
                 }
