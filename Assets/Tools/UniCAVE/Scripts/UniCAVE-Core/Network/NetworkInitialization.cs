@@ -84,12 +84,12 @@ namespace UniCAVE
         /// </summary>
         void Update()
         {
-            if(Util.GetMachineName() != oldHeadMachine)
+            if(Util.GetMachineName() != headMachine)
             {
-                // if(!NetworkClient.active)
-                // {
-                    // networkManager.StartClient();
-                // }
+                if(!NetworkClient.isConnected && !NetworkClient.isConnecting)
+                {
+                    networkManager.StartClient();
+                }
 
                 if(TimeoutWaitTime > 0 && Time.time > TimeoutWaitTime && !NetworkClient.isConnected)
                 {
