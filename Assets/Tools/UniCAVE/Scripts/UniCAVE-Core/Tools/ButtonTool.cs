@@ -81,9 +81,9 @@ namespace UniCAVE
                 {
                     EventSystem.current.SetSelectedGameObject(null);
                 }
-            }
-#pragma warning disable 0162
+
             yield return null;
+            }
         }
 
         /// <summary>
