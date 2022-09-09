@@ -159,7 +159,7 @@ namespace Mirror
         /// <summary>Connect client to a NetworkServer by address.</summary>
         public static void Connect(string address)
         {
-            Debug.Log($"Client Connect: {address}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"Client Connect: {address}");
             Debug.Assert(Transport.activeTransport != null, "There was no active transport when calling NetworkClient.Connect, If you are calling Connect manually then make sure to set 'Transport.activeTransport' first");
 
             RegisterSystemHandlers(false);
@@ -175,7 +175,7 @@ namespace Mirror
         /// <summary>Connect client to a NetworkServer by Uri.</summary>
         public static void Connect(Uri uri)
         {
-            Debug.Log($"Client Connect: {uri}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"Client Connect: {uri}");
             Debug.Assert(Transport.activeTransport != null, "There was no active transport when calling NetworkClient.Connect, If you are calling Connect manually then make sure to set 'Transport.activeTransport' first");
 
             RegisterSystemHandlers(false);
@@ -192,7 +192,7 @@ namespace Mirror
         // called from NetworkManager.FinishStartHost()
         public static void ConnectHost()
         {
-            Debug.Log("Client Connect Host to Server");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Client Connect Host to Server");
 
             RegisterSystemHandlers(true);
 
@@ -544,7 +544,7 @@ namespace Mirror
                 Debug.LogWarning($"Adding prefab '{prefab.name}' with assetId '{prefab.assetId}' when spawnHandlers with same assetId already exists. If you want to use custom spawn handling, then remove the prefab from NetworkManager's registered prefabs first.");
             }
 
-            Debug.Log($"Registering prefab '{prefab.name}' as asset:{prefab.assetId}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"Registering prefab '{prefab.name}' as asset:{prefab.assetId}");
 
             prefabs[prefab.assetId] = prefab.gameObject;
         }
@@ -732,7 +732,7 @@ namespace Mirror
                 Debug.LogError($"Prefab '{prefab.name}' has multiple NetworkIdentity components. There should only be one NetworkIdentity on a prefab, and it must be on the root object.");
             }
 
-            Debug.Log($"Registering custom prefab {prefab.name} as asset:{assetId} {spawnHandler.GetMethodName()}/{unspawnHandler.GetMethodName()}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"Registering custom prefab {prefab.name} as asset:{assetId} {spawnHandler.GetMethodName()}/{unspawnHandler.GetMethodName()}");
 
             spawnHandlers[assetId] = spawnHandler;
             unspawnHandlers[assetId] = unspawnHandler;
@@ -798,7 +798,7 @@ namespace Mirror
                 Debug.LogError($"Prefab '{prefab.name}' has multiple NetworkIdentity components. There should only be one NetworkIdentity on a prefab, and it must be on the root object.");
             }
 
-            Debug.Log($"Registering custom prefab {prefab.name} as asset:{assetId} {spawnHandler.GetMethodName()}/{unspawnHandler.GetMethodName()}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"Registering custom prefab {prefab.name} as asset:{assetId} {spawnHandler.GetMethodName()}/{unspawnHandler.GetMethodName()}");
 
             spawnHandlers[assetId] = spawnHandler;
             unspawnHandlers[assetId] = unspawnHandler;
@@ -883,7 +883,7 @@ namespace Mirror
                 Debug.LogError($"assetId '{assetId}' is already used by prefab '{prefabs[assetId].name}'");
             }
 
-            Debug.Log("RegisterSpawnHandler asset {assetId} {spawnHandler.GetMethodName()}/{unspawnHandler.GetMethodName()}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("RegisterSpawnHandler asset {assetId} {spawnHandler.GetMethodName()}/{unspawnHandler.GetMethodName()}");
 
             spawnHandlers[assetId] = spawnHandler;
             unspawnHandlers[assetId] = unspawnHandler;
@@ -922,7 +922,7 @@ namespace Mirror
         // the players object for example.
         public static bool Ready()
         {
-            Debug.Log($"NetworkClient.Ready() called with connection {connection}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkClient.Ready() called with connection {connection}");
             if (ready)
             {
                 Debug.LogError("NetworkClient is already ready. It shouldn't be called twice.");
@@ -951,7 +951,7 @@ namespace Mirror
         // called from message handler for Owner message
         internal static void InternalAddPlayer(NetworkIdentity identity)
         {
-            Debug.Log("NetworkClient.InternalAddPlayer");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("NetworkClient.InternalAddPlayer");
 
             // NOTE: It can be "normal" when changing scenes for the player to be destroyed and recreated.
             // But, the player structures are not cleaned up, we'll just replace the old player
@@ -994,7 +994,7 @@ namespace Mirror
                 return false;
             }
 
-            Debug.Log($"NetworkClient.AddPlayer() called with connection {connection}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkClient.AddPlayer() called with connection {connection}");
             connection.Send(new AddPlayerMessage());
             return true;
         }
@@ -1111,7 +1111,7 @@ namespace Mirror
             if (GetPrefab(message.assetId, out GameObject prefab))
             {
                 GameObject obj = GameObject.Instantiate(prefab, message.position, message.rotation);
-                Debug.Log($"Client spawn handler instantiating [netId{message.netId} asset ID:{message.assetId} pos:{message.position} rotation:{message.rotation}]");
+                if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"Client spawn handler instantiating [netId{message.netId} asset ID:{message.assetId} pos:{message.position} rotation:{message.rotation}]");
                 return obj.GetComponent<NetworkIdentity>();
             }
 
@@ -1127,10 +1127,15 @@ namespace Mirror
                 Debug.LogError($"Spawn scene object not found for {sceneId:X}. Make sure that client and server use exactly the same project. This only happens if the hierarchy gets out of sync.");
 
                 // dump the whole spawnable objects dict for easier debugging
-                //foreach (KeyValuePair<ulong, NetworkIdentity> kvp in spawnableObjects)
-                //    Debug.Log($"Spawnable: SceneId={kvp.Key:X} name={kvp.Value.name}");
+                if (NetworkManager.DebugInfoLevel >= 2)
+                {
+                    string msg = "";
+                    foreach (KeyValuePair<ulong, NetworkIdentity> kvp in spawnableObjects)
+                        msg += $"Spawnable: SceneId={kvp.Key:X} name={kvp.Value.name}\n";
+                    Debug.Log(msg);
+                }
             }
-            else Debug.Log($"Client spawn for [sceneId:{sceneId:X}] obj:{identity}");
+            else if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"Client spawn for [sceneId:{sceneId:X}] obj:{identity}");
             return identity;
         }
 
@@ -1184,14 +1189,14 @@ namespace Mirror
 
         internal static void OnObjectSpawnStarted(ObjectSpawnStartedMessage _)
         {
-            Debug.Log("SpawnStarted");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("SpawnStarted");
             PrepareToSpawnSceneObjects();
             isSpawnFinished = false;
         }
 
         internal static void OnObjectSpawnFinished(ObjectSpawnFinishedMessage _)
         {
-            Debug.Log("SpawnFinished");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("SpawnFinished");
             ClearNullFromSpawned();
 
             // paul: Initialize the objects in the same order as they were
@@ -1233,13 +1238,13 @@ namespace Mirror
         // host mode callbacks /////////////////////////////////////////////////
         static void OnHostClientObjectDestroy(ObjectDestroyMessage message)
         {
-            Debug.Log($"NetworkClient.OnLocalObjectObjDestroy netId:{message.netId}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkClient.OnLocalObjectObjDestroy netId:{message.netId}");
             spawned.Remove(message.netId);
         }
 
         static void OnHostClientObjectHide(ObjectHideMessage message)
         {
-            Debug.Log($"ClientScene::OnLocalObjectObjHide netId:{message.netId}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"ClientScene::OnLocalObjectObjHide netId:{message.netId}");
             if (spawned.TryGetValue(message.netId, out NetworkIdentity localObject) &&
                 localObject != null)
             {
@@ -1274,7 +1279,7 @@ namespace Mirror
         // client-only mode callbacks //////////////////////////////////////////
         static void OnEntityStateMessage(EntityStateMessage message)
         {
-            // Debug.Log($"NetworkClient.OnUpdateVarsMessage {message.netId}");
+            if (NetworkManager.DebugInfoLevel >= 3) Debug.Log($"NetworkClient.OnUpdateVarsMessage {message.netId}");
             if (spawned.TryGetValue(message.netId, out NetworkIdentity localObject) && localObject != null)
             {
                 using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(message.payload))
@@ -1285,7 +1290,7 @@ namespace Mirror
 
         static void OnRPCMessage(RpcMessage message)
         {
-            // Debug.Log($"NetworkClient.OnRPCMessage hash:{message.functionHash} netId:{message.netId}");
+            if (NetworkManager.DebugInfoLevel >= 3) Debug.Log($"NetworkClient.OnRPCMessage hash:{message.functionHash} netId:{message.netId}");
             if (spawned.TryGetValue(message.netId, out NetworkIdentity identity))
             {
                 using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(message.payload))
@@ -1299,7 +1304,7 @@ namespace Mirror
 
         internal static void OnSpawn(SpawnMessage message)
         {
-            Debug.Log($"Client spawn handler instantiating netId={message.netId} assetID={message.assetId} sceneId={message.sceneId:X} pos={message.position}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"Client spawn handler instantiating netId={message.netId} assetID={message.assetId} sceneId={message.sceneId:X} pos={message.position}");
             if (FindOrSpawnObject(message, out NetworkIdentity identity))
             {
                 ApplySpawnPayload(identity, message);
@@ -1358,14 +1363,14 @@ namespace Mirror
                 // OnStartLocalPlayer in all scripts on the same GO
                 identity.connectionToServer = connection;
                 identity.OnStartLocalPlayer();
-                Debug.Log($"NetworkClient.OnOwnerMessage player:{identity.name}");
+                if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkClient.OnOwnerMessage player:{identity.name}");
             }
         }
 
         // destroy /////////////////////////////////////////////////////////////
         static void DestroyObject(uint netId)
         {
-            Debug.Log($"NetworkClient.OnObjDestroy netId: {netId}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkClient.OnObjDestroy netId: {netId}");
             if (spawned.TryGetValue(netId, out NetworkIdentity localObject) && localObject != null)
             {
                 if (localObject.isLocalPlayer)
@@ -1508,7 +1513,7 @@ namespace Mirror
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Shutdown()
         {
-            Debug.Log("Shutting down client.");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Shutting down client.");
 
             // calls prefabs.Clear();
             // calls spawnHandlers.Clear();
