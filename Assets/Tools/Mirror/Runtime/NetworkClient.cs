@@ -1274,7 +1274,7 @@ namespace Mirror
         // client-only mode callbacks //////////////////////////////////////////
         static void OnEntityStateMessage(EntityStateMessage message)
         {
-            Debug.Log($"NetworkClient.OnUpdateVarsMessage {message.netId}");
+            // Debug.Log($"NetworkClient.OnUpdateVarsMessage {message.netId}");
             if (spawned.TryGetValue(message.netId, out NetworkIdentity localObject) && localObject != null)
             {
                 using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(message.payload))
@@ -1285,7 +1285,7 @@ namespace Mirror
 
         static void OnRPCMessage(RpcMessage message)
         {
-            Debug.Log($"NetworkClient.OnRPCMessage hash:{message.functionHash} netId:{message.netId}");
+            // Debug.Log($"NetworkClient.OnRPCMessage hash:{message.functionHash} netId:{message.netId}");
             if (spawned.TryGetValue(message.netId, out NetworkIdentity identity))
             {
                 using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(message.payload))
