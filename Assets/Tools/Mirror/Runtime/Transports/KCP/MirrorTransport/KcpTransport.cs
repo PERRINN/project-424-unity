@@ -134,7 +134,7 @@ namespace kcp2k
             if (statisticsLog)
                 InvokeRepeating(nameof(OnLogStatistics), 1, 1);
 
-            Debug.Log("KcpTransport initialized!");
+            Log.Info("KcpTransport initialized!");
         }
 
         void OnValidate()
