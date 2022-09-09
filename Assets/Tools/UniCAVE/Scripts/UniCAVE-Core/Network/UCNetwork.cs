@@ -71,7 +71,7 @@ namespace UniCAVE
 
                 RpcSetTime(Time.time);
 
-                // TODO make this shit somehow decent.
+                // TODO make this shit somehow decent. Sync whenever a new client connects.
                 if(!syncedRandomSeed && frameCount > 600)
                 {
                     //don't sync this until all connections have occurred.
@@ -80,8 +80,11 @@ namespace UniCAVE
                     {
                         if (m.connections.Length == numSlaveNodes)
                         {*/
-                    // RpcSetRandomSeed(UnityEngine.Random.seed); //should update this to use Random.state...
-                    RpcSetRandomSeed(Random.state); //should update this to use Random.state...
+
+                    int seed = (int)(Random.value * int.MaxValue);
+                    if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Syncing random seed to {seed}.");
+
+                    RpcSetRandomSeed(Random.state, seed);
                     syncedRandomSeed = true;
                     //}
                     //}
@@ -145,9 +148,10 @@ namespace UniCAVE
         /// Initialize Unity's random number generator with a seed.
         /// <para>Also restarts all ParticleSystems with the new seed.</para>
         /// </summary>
-        /// <param name="seed">the seed</param>
+        /// <param name="state">the state of the Random number generator in the server</param>
+        /// <param name="seed">the seed for particle systems</param>
         [ClientRpc]
-        void RpcSetRandomSeed(Random.State state)
+        void RpcSetRandomSeed(Random.State state, int seed)
         {
             ParticleSystem[] particleSystems = FindObjectsOfType<ParticleSystem>();
             bool[] isPlaying = new bool[particleSystems.Length];
@@ -159,8 +163,7 @@ namespace UniCAVE
                 ps.Stop();
             }
 
-            int seed = (int)(Random.value * int.MaxValue);
-            Random.InitState(seed);
+            Random.state = state;
 
             for (int i = 0, c = particleSystems.Length; i < c; i++)
             {
