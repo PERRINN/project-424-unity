@@ -60,7 +60,7 @@ namespace Mirror
             if (initialized)
                 return;
 
-            Debug.Log($"NetworkServer Created version {Version.Current}");
+            Debug.Log($"NetworkServer Initialize");
 
             //Make sure connections are cleared in case any old connections references exist from previous sessions
             connections.Clear();
@@ -127,7 +127,7 @@ namespace Mirror
             if (!dontListen)
             {
                 Transport.activeTransport.ServerStart();
-                //Debug.Log("Server started listening");
+                Debug.Log("Server started listening");
             }
 
             active = true;
@@ -787,7 +787,7 @@ namespace Mirror
             }
 
             //NOTE: there can be an existing player
-            //Debug.Log("NetworkServer ReplacePlayer");
+            Debug.Log("NetworkServer ReplacePlayer");
 
             NetworkIdentity previousPlayer = conn.identity;
 
@@ -810,7 +810,7 @@ namespace Mirror
             // IMPORTANT: do this in AddPlayerForConnection & ReplacePlayerForConnection!
             SpawnObserversForConnection(conn);
 
-            //Debug.Log($"Replacing playerGameObject object netId:{player.GetComponent<NetworkIdentity>().netId} asset ID {player.GetComponent<NetworkIdentity>().assetId}");
+            Debug.Log($"Replacing playerGameObject object netId:{player.GetComponent<NetworkIdentity>().netId} asset ID {player.GetComponent<NetworkIdentity>().assetId}");
 
             Respawn(identity);
 
@@ -994,7 +994,7 @@ namespace Mirror
         {
             if (identity.serverOnly) return;
 
-            //Debug.Log($"Server SendSpawnMessage: name:{identity.name} sceneId:{identity.sceneId:X} netid:{identity.netId}");
+            Debug.Log($"Server SendSpawnMessage: name:{identity.name} sceneId:{identity.sceneId:X} netid:{identity.netId}");
 
             // one writer for owner, one for observers
             using (NetworkWriterPooled ownerWriter = NetworkWriterPool.Get(), observersWriter = NetworkWriterPool.Get())
@@ -1027,7 +1027,7 @@ namespace Mirror
             // May be excluded from the client by interest management
             if (!conn.observing.Contains(identity)) return;
 
-            //Debug.Log($"Server SendChangeOwnerMessage: name={identity.name} netid={identity.netId}");
+            Debug.Log($"Server SendChangeOwnerMessage: name={identity.name} netid={identity.netId}");
 
             conn.Send(new ChangeOwnerMessage
             {
@@ -1208,7 +1208,7 @@ namespace Mirror
 
         static void SpawnObserversForConnection(NetworkConnectionToClient conn)
         {
-            //Debug.Log($"Spawning {spawned.Count} objects for conn {conn}");
+            Debug.Log($"Spawning {spawned.Count} objects for conn {conn}");
 
             if (!conn.isReady)
             {
@@ -1476,7 +1476,7 @@ namespace Mirror
                     {
                         // new observer
                         conn.AddToObserving(identity);
-                        Debug.Log($"New Observer for {gameObject} {conn}");
+                        Debug.Log($"New Observer for {identity} {conn}");
                         changed = true;
                     }
                 }
@@ -1489,7 +1489,7 @@ namespace Mirror
                 {
                     // removed observer
                     conn.RemoveFromObserving(identity, false);
-                    Debug.Log($"Removed Observer for {gameObjec} {conn}");
+                    Debug.Log($"Removed Observer for {identity} {conn}");
                     changed = true;
                 }
             }
