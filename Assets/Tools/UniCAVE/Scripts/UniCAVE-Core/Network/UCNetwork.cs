@@ -71,6 +71,7 @@ namespace UniCAVE
 
                 RpcSetTime(Time.time);
 
+                // TODO make this shit somehow decent.
                 if(!syncedRandomSeed && frameCount > 600)
                 {
                     //don't sync this until all connections have occurred.
@@ -79,7 +80,8 @@ namespace UniCAVE
                     {
                         if (m.connections.Length == numSlaveNodes)
                         {*/
-                    RpcSetRandomSeed(UnityEngine.Random.seed); //should update this to use Random.state...
+                    // RpcSetRandomSeed(UnityEngine.Random.seed); //should update this to use Random.state...
+                    RpcSetRandomSeed(Random.state); //should update this to use Random.state...
                     syncedRandomSeed = true;
                     //}
                     //}
@@ -145,7 +147,7 @@ namespace UniCAVE
         /// </summary>
         /// <param name="seed">the seed</param>
         [ClientRpc]
-        void RpcSetRandomSeed(int seed)
+        void RpcSetRandomSeed(Random.State state)
         {
             ParticleSystem[] particleSystems = FindObjectsOfType<ParticleSystem>();
             bool[] isPlaying = new bool[particleSystems.Length];
@@ -157,6 +159,7 @@ namespace UniCAVE
                 ps.Stop();
             }
 
+            int seed = (int)(Random.value * int.MaxValue);
             Random.InitState(seed);
 
             for (int i = 0, c = particleSystems.Length; i < c; i++)
