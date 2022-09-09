@@ -64,7 +64,7 @@ namespace UniCAVE
             }
 
             string runningMachineName = Util.GetMachineName();
-            Debug.Log($"serverAddress = {serverAddress}, serverPort = {serverPort}, headMachine = {headMachine}, runningMachine = {runningMachineName}");
+            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"serverAddress = {serverAddress}, serverPort = {serverPort}, headMachine = {headMachine}, runningMachine = {runningMachineName}");
 
             networkManager.networkAddress = serverAddress;
             (networkManager.transport as kcp2k.KcpTransport).Port = (ushort)serverPort;

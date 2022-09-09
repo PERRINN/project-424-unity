@@ -168,7 +168,7 @@ namespace UniCAVE
                 if (isPlaying[i]) ps.Play();
             }
 
-            Debug.Log($"Synced random seed to {seed}.");
+            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Synced random seed to {seed}.");
         }
 
         /// <summary>

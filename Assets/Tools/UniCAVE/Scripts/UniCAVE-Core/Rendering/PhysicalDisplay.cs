@@ -352,27 +352,27 @@ namespace UniCAVE
 
             if(loadSettingsAtRuntime)
             {
-                Debug.Log("Attempting to Load Settings for Display: " + gameObject.name);
+                if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Attempting to Load Settings for Display: " + gameObject.name);
                 TryToDeSerialize(serializedLocation);
             }
 
             if(!ShouldBeActive())
             {
-                Debug.Log("Deactivating Display: " + gameObject.name);
+                if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Deactivating Display: " + gameObject.name);
                 gameObject.SetActive(false);
                 return;
             }
 
-            Debug.Log("Display Active: " + gameObject.name);
+            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Display Active: " + gameObject.name);
 
             foreach(string er in GetSettingsErrors())
             {
-                Debug.Log("Display Warning for Display: " + gameObject.name + ": " + er);
+                if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Display Warning for Display: " + gameObject.name + ": " + er);
             }
 
             if(head == null)
             {
-                Debug.Log("Display Error for Display: " + gameObject.name + ": Physical Display has no head object");
+                if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Display Error for Display: " + gameObject.name + ": Physical Display has no head object");
             }
 
             initialized = true;
@@ -385,13 +385,13 @@ namespace UniCAVE
                 }
                 else
                 {
-                    Debug.Log("Display Error for Display: " + gameObject.name + ": Physical Display uses display index " + display + " but Unity does not detect that many displays");
+                    if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Display Error for Display: " + gameObject.name + ": Physical Display uses display index " + display + " but Unity does not detect that many displays");
                 }
             }
 
             if(!exclusiveFullscreen)
             {
-                Debug.Log("Setting Display: " + gameObject.name + " to Windowed Mode...");
+                if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Setting Display: " + gameObject.name + " to Windowed Mode...");
                 if(!is3D || useXRCameras)
                 {
                     centerCam = head.CreateEye(HeadConfiguration.Eyes.Center, gameObject.name);
@@ -402,9 +402,9 @@ namespace UniCAVE
                         StereoBlit blit = centerCam.gameObject.AddComponent<StereoBlit>();
                         blit.lcam = leftCam;
                         blit.rcam = rightCam;
-                        Debug.Log("Created dummy cams");
+                        if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Created dummy cams");
                     }
-                    Debug.Log("Setting Display: " + gameObject.name + " to Non-3D Windowed");
+                    if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Setting Display: " + gameObject.name + " to Non-3D Windowed");
 #if UNITY_STANDALONE_WIN
                     if(manager == null) WindowsUtils.SetMyWindowInfo("Non-3D Windowed", windowBounds.x, windowBounds.y, windowBounds.width, windowBounds.height, 441, 411);
 #endif
@@ -415,7 +415,7 @@ namespace UniCAVE
                     {
                         leftCam = head.CreateEye(HeadConfiguration.Eyes.Left, gameObject.name);
                         rightCam = head.CreateEye(HeadConfiguration.Eyes.Right, gameObject.name);
-                        Debug.Log("Setting Display: " + gameObject.name + " to Quad Buffer 3D Windowed");
+                        if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Setting Display: " + gameObject.name + " to Quad Buffer 3D Windowed");
 #if UNITY_STANDALONE_WIN
                         if(manager == null) WindowsUtils.SetMyWindowInfo("Quad Buffer 3D Windowed", windowBounds.x, windowBounds.y, windowBounds.width, windowBounds.height, 421, 420);
 #endif
@@ -424,7 +424,7 @@ namespace UniCAVE
                     {
                         leftCam = head.CreateEye(HeadConfiguration.Eyes.Left, gameObject.name);
                         rightCam = head.CreateEye(HeadConfiguration.Eyes.Right, gameObject.name);
-                        Debug.Log("Setting Display: " + gameObject.name + " to Dual-Eye Dual-Pipe-3D Windowed");
+                        if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Setting Display: " + gameObject.name + " to Dual-Eye Dual-Pipe-3D Windowed");
 #if UNITY_STANDALONE_WIN
                         if(manager == null) WindowsUtils.SetMyWindowInfo("Dual-Eye Dual-Pipe-3D Windowed", windowBounds.x, windowBounds.y, windowBounds.width, windowBounds.height, 422, 398);
 #endif
@@ -434,7 +434,7 @@ namespace UniCAVE
                         if(Util.GetArg("eye") == "left")
                         {
                             leftCam = head.CreateEye(HeadConfiguration.Eyes.Left, gameObject.name);
-                            Debug.Log("Setting Display: " + gameObject.name + " to Left-Eye Dual-Pipe-3D Windowed");
+                            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Setting Display: " + gameObject.name + " to Left-Eye Dual-Pipe-3D Windowed");
 #if UNITY_STANDALONE_WIN
                             if(manager == null) WindowsUtils.SetMyWindowInfo("Left-Eye Dual-Pipe-3D Windowed", leftViewport.x, leftViewport.y, leftViewport.width, leftViewport.height, 300, 367);
 #endif
@@ -442,7 +442,7 @@ namespace UniCAVE
                         else if(Util.GetArg("eye") == "right")
                         {
                             rightCam = head.CreateEye(HeadConfiguration.Eyes.Right, gameObject.name);
-                            Debug.Log("Setting Display: " + gameObject.name + " to Right-Eye Dual-Pipe-3D Windowed");
+                            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Setting Display: " + gameObject.name + " to Right-Eye Dual-Pipe-3D Windowed");
 #if UNITY_STANDALONE_WIN
                             if(manager == null) WindowsUtils.SetMyWindowInfo("Right-Eye Dual-Pipe-3D Windowed", rightViewport.x, rightViewport.y, rightViewport.width, rightViewport.height, 342, 498);
 #endif
@@ -462,7 +462,7 @@ namespace UniCAVE
                         StereoBlit blit = centerCam.gameObject.AddComponent<StereoBlit>();
                         blit.lcam = leftCam;
                         blit.rcam = rightCam;
-                        Debug.Log("Created dummy cams");
+                        if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Created dummy cams");
                     }
                 }
                 else
