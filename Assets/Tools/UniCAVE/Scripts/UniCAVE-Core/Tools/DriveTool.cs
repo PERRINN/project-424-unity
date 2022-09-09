@@ -1,13 +1,13 @@
 ﻿//MIT License
-//Copyright 2016-Present 
+//Copyright 2016-Present
 //James H. Money
 //Luke Kingsley
 //Idaho National Laboratory
-//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
-//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, 
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute,
 //sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 //INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 //IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 //TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -42,7 +42,7 @@ namespace UniCAVE
         private bool rotateHorizontal = true;
 
         /// <summary>
-        /// DriveTool Constructor. Object handles all the analog 
+        /// DriveTool Constructor. Object handles all the analog
         /// </summary>
         /// <param name="deadZone_"></param>
         /// <param name="rotationSpeed_"></param>
@@ -85,7 +85,7 @@ namespace UniCAVE
             //**RT - 11/8/2017 commenting this out as it just ends up overriding the editor setting (and in our case was way too fast)
             //movementSpeed = analogData.magnitude; /// 2f;
 
-            //Check if the Y value is bad input 
+            //Check if the Y value is bad input
             if(y >= deadZone || y <= -deadZone) // || movementSpeed <= -deadZone)
             {
                 //Check if the IQ station is initialized
@@ -99,7 +99,7 @@ namespace UniCAVE
                 }
             }
 
-            //Check if the X value is bad input 
+            //Check if the X value is bad input
             if(x >= deadZone || x <= -deadZone) // || analogHorizontal <= -deadZone)
             {
                 //Check if the IQ station is initialized
