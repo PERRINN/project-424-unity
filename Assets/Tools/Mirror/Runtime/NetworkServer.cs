@@ -167,7 +167,8 @@ namespace Mirror
 
         /// <summary>Shuts down the server and disconnects all clients</summary>
         // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // EDY: This is explictly called from NetworkManager when it's disabled
         public static void Shutdown()
         {
             if (initialized)

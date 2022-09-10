@@ -650,6 +650,8 @@ namespace Mirror
 
             // Call ResetStatics to reset statics and singleton
             ResetStatics();
+            NetworkDiagnostics.ResetStatics();
+            NetworkTime.ResetStatics();
 
             // Reset network loop callbacks
             NetworkLoop.Release();
@@ -731,7 +733,8 @@ namespace Mirror
 
         // This is the only way to clear the singleton, so another instance can be created.
         // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // EDY: Explictly called from OnDisable.
         public static void ResetStatics()
         {
             // call StopHost if we have a singleton

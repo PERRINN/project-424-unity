@@ -33,8 +33,9 @@ namespace Mirror
         public static event Action<MessageInfo> InMessageEvent;
 
         // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
-        [UnityEngine.RuntimeInitializeOnLoadMethod]
-        static void ResetStatics()
+        // [UnityEngine.RuntimeInitializeOnLoadMethod]
+        // EDY: This is explictly called from NetworkManager when it's disabled
+        internal static void ResetStatics()
         {
             InMessageEvent = null;
             OutMessageEvent = null;

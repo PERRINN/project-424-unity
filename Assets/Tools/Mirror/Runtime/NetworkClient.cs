@@ -1510,7 +1510,8 @@ namespace Mirror
 
         /// <summary>Shutdown the client.</summary>
         // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // EDY: This is explictly called from NetworkManager when it's disabled
         public static void Shutdown()
         {
             if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Shutting down client.");

@@ -51,7 +51,7 @@ namespace Mirror
 
         // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
         // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        // EDY: NetworkLoop is now explicitly initialized and disposed from NetworkManager.
+        // EDY: NetworkLoop is now explicitly initialized and disposed from NetworkManager. See Release() below.
         // static void ResetStatics()
         // {
         //    OnEarlyUpdate = null;

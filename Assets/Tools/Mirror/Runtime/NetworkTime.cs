@@ -82,7 +82,8 @@ namespace Mirror
         public static double rttStandardDeviation => Math.Sqrt(rttVariance);
 
         // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
-        [UnityEngine.RuntimeInitializeOnLoadMethod]
+        // [UnityEngine.RuntimeInitializeOnLoadMethod]
+        // EDY: This is explictly called from NetworkManager when it's disabled
         public static void ResetStatics()
         {
             PingFrequency = 2.0f;

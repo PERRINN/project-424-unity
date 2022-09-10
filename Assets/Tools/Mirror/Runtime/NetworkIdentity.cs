@@ -262,7 +262,8 @@ namespace Mirror
 
         // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
         // internal so it can be called from NetworkServer & NetworkClient
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // EDY: This is explictly called from NetworkServer when shutting down
         internal static void ResetStatics()
         {
             // reset ALL statics
