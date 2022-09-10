@@ -188,9 +188,15 @@ namespace Mirror
             }
         }
 
-        // virtual so that inheriting classes' Awake() can call base.Awake() too
-        public virtual void Awake()
+        // EDY: OnEnable instead of Awake, which is not called when enabling/disabling the component or on hot script reload.
+        // Virtual so that inheriting classes' OnEnable() can call base.OnEnable() too
+        public virtual void OnEnable()
         {
+            Debug.Log("NetworManager OnEnable");
+
+            // EDY: Explicitly initialize the network loop to survive the hot script reload.
+            NetworkLoop.Initialize();
+
             // Don't allow collision-destroyed second instance to continue.
             if (!InitializeSingleton()) return;
 
@@ -618,11 +624,14 @@ namespace Mirror
             networkSceneName = "";
         }
 
-        // called when quitting the application by closing the window / pressing
-        // stop in the editor. virtual so that inheriting classes'
-        // OnApplicationQuit() can call base.OnApplicationQuit() too
-        public virtual void OnApplicationQuit()
+        // EDY: OnDisable instead of OnApplicationQuit, which is not called when enabling/disabling the component or on hot script reload.
+        // Called when this component is disabled for any reason (closing the window / pressing stop in
+        // the editor / disabling the component / hot script reload)
+        // Virtual so that inheriting classes' OnDisable() can call base.OnDisable() too
+        public virtual void OnDisable()
         {
+            Debug.Log("NetworManager OnDisable");
+
             // stop client first
             // (we want to send the quit packet to the server instead of waiting
             //  for a timeout)
@@ -641,6 +650,9 @@ namespace Mirror
 
             // Call ResetStatics to reset statics and singleton
             ResetStatics();
+
+            // Reset network loop callbacks
+            NetworkLoop.Finalize();
         }
 
         /// <summary>Set the frame rate for a headless builds. Override to disable or modify.</summary>
@@ -738,10 +750,11 @@ namespace Mirror
         }
 
         // virtual so that inheriting classes' OnDestroy() can call base.OnDestroy() too
-        public virtual void OnDestroy()
-        {
-            if (DebugInfoLevel >= 2) Debug.Log("NetworkManager destroyed");
-        }
+        // EDY: No. Override OnDisable instead.
+        // public virtual void OnDestroy()
+        // {
+        //    if (DebugInfoLevel >= 2) Debug.Log("NetworkManager destroyed");
+        // }
 
         /// <summary>The name of the current network scene.</summary>
         // set by NetworkManager when changing the scene.

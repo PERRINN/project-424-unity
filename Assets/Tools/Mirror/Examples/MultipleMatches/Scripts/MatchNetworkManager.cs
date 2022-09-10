@@ -20,9 +20,9 @@ namespace Mirror.Examples.MultipleMatch
         /// Runs on both Server and Client
         /// Networking is NOT initialized when this fires
         /// </summary>
-        public override void Awake()
+        public override void OnEnable()
         {
-            base.Awake();
+            base.OnEnable();
             canvasController.InitializeData();
         }
 

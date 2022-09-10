@@ -179,8 +179,14 @@ namespace Mirror
         /// <summary>Shut down the transport, both as client and server</summary>
         public abstract void Shutdown();
 
-        /// <summary>Called by Unity when quitting. Inheriting Transports should call base for proper Shutdown.</summary>
-        public virtual void OnApplicationQuit()
+        // EDY: OnEnable and OnDisable instead of Awake and OnApplicationQuit or OnDestroy.
+        // Apart from other advantages (i.e. surviving hot script reload) this allows having multiple
+        // transport components, enabling only the one that will be used, and switching amont them in runtime.
+        /// <summary>Called by Unity when the component is enabled. Inheriting Transports should call base for proper initialization.</summary>
+        public virtual void OnEnable() {}
+
+        /// <summary>Called by Unity when the component is disabled. Inheriting Transports should call base for proper Shutdown.</summary>
+        public virtual void OnDisable()
         {
             // stop transport (e.g. to shut down threads)
             // (when pressing Stop in the Editor, Unity keeps threads alive

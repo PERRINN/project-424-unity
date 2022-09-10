@@ -68,8 +68,12 @@ namespace kcp2k
         static KcpChannel ToKcpChannel(int channel) =>
             channel == Channels.Reliable ? KcpChannel.Reliable : KcpChannel.Unreliable;
 
-        void Awake()
+        // EDY: OnEnable instead of Awake so it survives hot script reload
+        public override void OnEnable()
         {
+            base.OnEnable();
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("KcpTransport: OnEnable");
+
             // logging
             //   Log.Info should use Debug.Log if enabled, or nothing otherwise
             //   (don't want to spam the console on headless servers)

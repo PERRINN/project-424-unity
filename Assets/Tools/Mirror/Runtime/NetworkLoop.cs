@@ -50,16 +50,18 @@ namespace Mirror
         public static Action OnLateUpdate;
 
         // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void ResetStatics()
-        {
-            OnEarlyUpdate = null;
-            OnLateUpdate = null;
-        }
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // EDY: NetworkLoop is now explicitly initialized and disposed from NetworkManager.
+        // static void ResetStatics()
+        // {
+        //    OnEarlyUpdate = null;
+        //    OnLateUpdate = null;
+        // }
 
         // helper function to find an update function's index in a player loop
         // type. this is used for testing to guarantee our functions are added
         // at the beginning/end properly.
+        // EDY: Also used for checking if functions are already there so we don't add them twice.
         internal static int FindPlayerLoopEntryIndex(PlayerLoopSystem.UpdateFunction function, PlayerLoopSystem playerLoop, Type playerLoopSystemType)
         {
             // did we find the type? e.g. EarlyUpdate/PreLateUpdate/etc.
@@ -158,10 +160,11 @@ namespace Mirror
         }
 
         // hook into Unity runtime to actually add our custom functions
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void RuntimeInitializeOnLoad()
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // EDY: Explicitly called from NetworkManager on initialization.
+        internal static void Initialize()
         {
-            //Debug.Log("Mirror: adding Network[Early/Late]Update to Unity...");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Adding Network[Early/Late]Update to Unity if they're not there...");
 
             // get loop
             // 2019 has GetCURRENTPlayerLoop which is safe to use without
@@ -176,15 +179,30 @@ namespace Mirror
 
             // add NetworkEarlyUpdate to the end of EarlyUpdate so it runs after
             // any Unity initializations but before the first Update/FixedUpdate
-            AddToPlayerLoop(NetworkEarlyUpdate, typeof(NetworkLoop), ref playerLoop, typeof(EarlyUpdate), AddMode.End);
+            if (FindPlayerLoopEntryIndex(NetworkEarlyUpdate, playerLoop, typeof(EarlyUpdate)) < 0)
+            {
+                AddToPlayerLoop(NetworkEarlyUpdate, typeof(NetworkLoop), ref playerLoop, typeof(EarlyUpdate), AddMode.End);
+                if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Added NetworkEarlyUpdate to PlayerLoop");
+            }
 
             // add NetworkLateUpdate to the end of PreLateUpdate so it runs after
             // LateUpdate(). adding to the beginning of PostLateUpdate doesn't
             // actually work.
-            AddToPlayerLoop(NetworkLateUpdate, typeof(NetworkLoop), ref playerLoop, typeof(PreLateUpdate), AddMode.End);
+            if (FindPlayerLoopEntryIndex(NetworkLateUpdate, playerLoop, typeof(PreLateUpdate)) < 0)
+            {
+                AddToPlayerLoop(NetworkLateUpdate, typeof(NetworkLoop), ref playerLoop, typeof(PreLateUpdate), AddMode.End);
+                if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Added NetworkLateUpdate to PlayerLoop");
+            }
 
             // set the new loop
             PlayerLoop.SetPlayerLoop(playerLoop);
+        }
+
+        // EDY: Explicitly called from NetworkManager on finalization
+        internal static void Finalize()
+        {
+            OnEarlyUpdate = null;
+            OnLateUpdate = null;
         }
 
         static void NetworkEarlyUpdate()
