@@ -8,17 +8,9 @@ namespace Mirror
     [DisallowMultipleComponent]
     public class MultiplexTransport : Transport
     {
-        public Transport[] transports;
+        public Transport[] transports = new Transport[0];
 
         Transport available;
-
-        public void Awake()
-        {
-            if (transports == null || transports.Length == 0)
-            {
-                Debug.LogError("Multiplex transport requires at least 1 underlying transport");
-            }
-        }
 
         public override void ClientEarlyUpdate()
         {
@@ -52,20 +44,28 @@ namespace Mirror
             }
         }
 
-        void OnEnable()
+        public override void OnEnable()
         {
+            // EDY: Moved from Awake. Initialization should be in OnEnable.
+            if (transports.Length == 0)
+            {
+                Debug.LogError("Multiplex transport requires at least 1 underlying transport");
+            }
+
+            base.OnEnable();
             foreach (Transport transport in transports)
             {
                 transport.enabled = true;
             }
         }
 
-        void OnDisable()
+        public override void OnDisable()
         {
             foreach (Transport transport in transports)
             {
                 transport.enabled = false;
             }
+            base.OnDisable();
         }
 
         public override bool Available()

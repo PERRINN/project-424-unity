@@ -652,7 +652,7 @@ namespace Mirror
             ResetStatics();
 
             // Reset network loop callbacks
-            NetworkLoop.Finalize();
+            NetworkLoop.Release();
         }
 
         /// <summary>Set the frame rate for a headless builds. Override to disable or modify.</summary>

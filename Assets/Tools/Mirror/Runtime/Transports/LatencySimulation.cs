@@ -60,15 +60,22 @@ namespace Mirror
         // => NextDouble() is ALWAYS < 1 so loss=1 always drops!
         System.Random random = new System.Random();
 
-        public void Awake()
+        // forward enable/disable to the wrapped transport
+        public override void OnEnable()
         {
+            // EDY: Moved from Awake. Initialization should be in OnEnable.
             if (wrap == null)
-                throw new Exception("PressureDrop requires an underlying transport to wrap around.");
+                throw new Exception("LatencySimulation requires an underlying transport to wrap around.");
+
+            base.OnEnable();
+            wrap.enabled = true;
         }
 
-        // forward enable/disable to the wrapped transport
-        void OnEnable() { wrap.enabled = true; }
-        void OnDisable() { wrap.enabled = false; }
+        public override void OnDisable()
+        {
+            wrap.enabled = false;
+            base.OnDisable();
+        }
 
         // noise function can be replaced if needed
         protected virtual float Noise(float time) => Mathf.PerlinNoise(time, time);

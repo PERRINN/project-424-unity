@@ -199,7 +199,7 @@ namespace Mirror
         }
 
         // EDY: Explicitly called from NetworkManager on finalization
-        internal static void Finalize()
+        internal static void Release()
         {
             OnEarlyUpdate = null;
             OnLateUpdate = null;
