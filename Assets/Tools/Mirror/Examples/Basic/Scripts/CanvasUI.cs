@@ -13,7 +13,7 @@ namespace Mirror.Examples.Basic
         // static instance that can be referenced directly from Player script
         public static CanvasUI instance;
 
-        void Awake()
+        void OnEnable()
         {
             instance = this;
         }
