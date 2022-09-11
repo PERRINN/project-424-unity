@@ -99,6 +99,7 @@ namespace UniCAVE
             }
         }
 
+        /*
         /// <summary>
         /// Raises the client connected flag when a client connects
         /// </summary>
@@ -107,7 +108,14 @@ namespace UniCAVE
             Debug.Log("UCNetworkManager OnServerConnect");
             base.OnServerConnect(conn);
             m_clientConnected = true;
-            }
+            }*/
+
+        public override void OnServerAddPlayer(NetworkConnectionToClient conn)
+        {
+            Debug.Log("UCNetworkManager OnServerAddPlayer");
+            base.OnServerAddPlayer(conn);
+            m_clientConnected = true;
+        }
 
         /// <summary>
         /// Client permanently tries to connect and reconnect to the server
