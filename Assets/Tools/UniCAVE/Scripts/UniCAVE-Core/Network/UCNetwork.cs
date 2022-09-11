@@ -21,30 +21,33 @@ using Mirror;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
+using EdyCommonTools;   // for RandomStateWrapper
+
 
 namespace UniCAVE
 {
     public class UCNetwork : NetworkBehaviour
     {
         const float MIN_TIME_SCALE = .01f;
-
-        const float MAX_TIME_SCALE = 100f;
+        const float MAX_TIME_SCALE = 10f;
 
         [Tooltip("This object will be transformed by this script")]
         public HeadConfiguration head;
 
-        private float lastTime = 0.0f;
-
-        private bool syncedRandomSeed = false;
-
-        private int frameCount = 0;
+        private float m_lastTime = 0.0f;
+        private bool m_syncedRandomSeed = false;
+        private int m_frameCount = 0;
 
         /// <summary>
-        /// Configure send interval
+        /// Configure send interval and initialize private vars
         /// </summary>
-        void Start()
+        void OnEnable()
         {
             syncInterval = 0.016f;
+
+            m_lastTime = 0.0f;
+            m_syncedRandomSeed = false;
+            m_frameCount = 0;
         }
 
         /// <summary>
@@ -54,12 +57,6 @@ namespace UniCAVE
         {
             if(isServer)
             {
-                if(Input.GetKeyDown(KeyCode.Escape))
-                {
-                    RpcQuitApplication();
-                    Application.Quit();
-                }
-
                 if(head != null)
                 {
                     RpcSetTransforms(transform.position, transform.rotation, head.transform.position, head.transform.rotation);
@@ -72,25 +69,19 @@ namespace UniCAVE
                 RpcSetTime(Time.time);
 
                 // TODO make this shit somehow decent. Sync whenever a new client connects.
-                if(!syncedRandomSeed && frameCount > 600)
+                if(!m_syncedRandomSeed && m_frameCount > 100)
                 {
-                    //don't sync this until all connections have occurred.
-                    /*NetworkManager m = gameObject.transform.parent.GetComponent<NetworkManager>();
-                    if(m != null)
-                    {
-                        if (m.connections.Length == numSlaveNodes)
-                        {*/
+                    // Must pass the random state using the wrapper. Random.State doesn't survive the RPC call
+                    // and the client receives an invalid state (all zeros).
+                    RandomStateWrapper state = Random.state;
+                    if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Syncing random state [{state.seed}]...");
 
-                    int seed = (int)(Random.value * int.MaxValue);
-                    if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Syncing random seed to {seed}.");
-
-                    RpcSetRandomSeed(Random.state, seed);
-                    syncedRandomSeed = true;
-                    //}
-                    //}
+                    SetRandomState(state);      // Server
+                    RpcSetRandomState(state);   // Clients (RPC)
+                    m_syncedRandomSeed = true;
                 }
 
-                frameCount++;
+                m_frameCount++;
             }
         }
 
@@ -119,23 +110,23 @@ namespace UniCAVE
         [ClientRpc]
         void RpcSetTime(float canonicalTime)
         {
-            if(lastTime == 0.0f)
+            if(m_lastTime == 0.0f)
             {
-                lastTime = canonicalTime;
+                m_lastTime = canonicalTime;
             }
             else
             {
                 float ourTime = Time.time;
-                float timeDiff = canonicalTime - lastTime;
+                float timeDiff = canonicalTime - m_lastTime;
                 float scale = ((canonicalTime - ourTime) + timeDiff) / timeDiff;
 
-                lastTime = canonicalTime;
+                m_lastTime = canonicalTime;
 
-                if(scale < 0.0f)
+                if(scale < MIN_TIME_SCALE)
                 {
                     scale = MIN_TIME_SCALE;
                 }
-                else if(scale > 100.0f)
+                else if(scale > MAX_TIME_SCALE)
                 {
                     scale = MAX_TIME_SCALE;
                 }
@@ -145,13 +136,20 @@ namespace UniCAVE
         }
 
         /// <summary>
-        /// Initialize Unity's random number generator with a seed.
-        /// <para>Also restarts all ParticleSystems with the new seed.</para>
+        /// Initialize Unity's random number generator with a state.
+        /// Also restarts all ParticleSystems with a new seed.
         /// </summary>
         /// <param name="state">the state of the Random number generator in the server</param>
-        /// <param name="seed">the seed for particle systems</param>
         [ClientRpc]
-        void RpcSetRandomSeed(Random.State state, int seed)
+        void RpcSetRandomState(RandomStateWrapper state)
+        {
+            SetRandomState(state);
+        }
+
+        /// <summary>
+        /// Initialize the random state. Also restarts all ParticleSystems with a new seed.
+        /// </summary>
+        void SetRandomState(RandomStateWrapper state)
         {
             ParticleSystem[] particleSystems = FindObjectsOfType<ParticleSystem>();
             bool[] isPlaying = new bool[particleSystems.Length];
@@ -169,22 +167,14 @@ namespace UniCAVE
             {
                 ParticleSystem ps = particleSystems[i];
                 ps.useAutoRandomSeed = false;
-                ps.randomSeed = (uint)seed;
+                ps.randomSeed = state.seed;
                 ps.Simulate(0.0f, true, true, false);
                 if (isPlaying[i]) ps.Play();
             }
 
-            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Synced random seed to {seed}.");
+            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Synced random state [{state.seed}] (Server: {isServer}).");
         }
 
-        /// <summary>
-        /// Shutdown Unity.
-        /// </summary>
-        [ClientRpc]
-        void RpcQuitApplication()
-        {
-            Application.Quit();
-        }
 
         /// <summary>
         /// Returns true if all PhysicalDisplays are initialized, false otherwise.
