@@ -50,6 +50,17 @@ namespace UniCAVE
             m_frameCount = 0;
         }
 
+        public override void OnStartServer ()
+            {
+            // Must pass the random state using the wrapper. Random.State doesn't survive the RPC call
+            // and the client receives an invalid state (all zeros).
+            RandomStateWrapper state = Random.state;
+            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Syncing random state [{state.seed}]...");
+
+            SetRandomState(state);      // Server
+            RpcSetRandomState(state);   // Clients (RPC)
+            }
+
         /// <summary>
         /// If server, broadcast information to all clients.
         /// </summary>
@@ -67,7 +78,7 @@ namespace UniCAVE
                 }
 
                 RpcSetTime(Time.time);
-
+                /*
                 // TODO make this shit somehow decent. Sync whenever a new client connects.
                 if(!m_syncedRandomSeed && m_frameCount > 100)
                 {
@@ -82,6 +93,7 @@ namespace UniCAVE
                 }
 
                 m_frameCount++;
+                */
             }
         }
 
