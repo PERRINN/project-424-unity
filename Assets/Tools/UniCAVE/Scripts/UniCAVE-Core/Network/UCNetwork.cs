@@ -66,8 +66,6 @@ namespace UniCAVE
                 // Check for new client(s) connected
                 if (UCNetworkManager.clientConnected)
                 {
-                    Debug.Log("UCNetwork clientConnected");
-
                     // Must pass the random state using the wrapper. Random.State doesn't survive the RPC call
                     // and the client receives an invalid state (all zeros).
                     RandomStateWrapper state = Random.state;
