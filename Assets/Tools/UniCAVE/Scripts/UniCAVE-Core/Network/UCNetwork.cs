@@ -42,10 +42,7 @@ namespace UniCAVE
         void OnEnable()
         {
             syncInterval = 0.016f;
-
             m_lastTime = 0.0f;
-            m_syncedRandomSeed = false;
-            m_frameCount = 0;
         }
 
         /// <summary>
