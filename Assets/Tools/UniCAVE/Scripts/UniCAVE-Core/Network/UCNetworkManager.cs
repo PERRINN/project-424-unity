@@ -60,6 +60,7 @@ namespace UniCAVE
         public override void OnEnable ()
         {
             m_clientConnected = false;
+            base.OnEnable();
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace UniCAVE
         /// </summary>
         public override void Start()
         {
-            // Don't call base.Start because it only handles server-only builds.
+            // Don't call base.Start because it only calls StartServer on conditions unrelated to us.
             // base.Start();
 
             string serverArg = Util.GetArg("serverAddress");
@@ -104,6 +105,7 @@ namespace UniCAVE
         public override void OnServerConnect (NetworkConnectionToClient conn)
             {
             Debug.Log("UCNetworkManager OnServerConnect");
+            base.OnServerConnect(conn);
             m_clientConnected = true;
             }
 
