@@ -35,8 +35,6 @@ namespace UniCAVE
         public HeadConfiguration head;
 
         private float m_lastTime = 0.0f;
-        private bool m_syncedRandomSeed = false;
-        private int m_frameCount = 0;
 
         /// <summary>
         /// Configure send interval and initialize private vars
@@ -49,17 +47,6 @@ namespace UniCAVE
             m_syncedRandomSeed = false;
             m_frameCount = 0;
         }
-
-        public override void OnStartServer ()
-            {
-            // Must pass the random state using the wrapper. Random.State doesn't survive the RPC call
-            // and the client receives an invalid state (all zeros).
-            RandomStateWrapper state = Random.state;
-            if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Syncing random state [{state.seed}]...");
-
-            SetRandomState(state);      // Server
-            RpcSetRandomState(state);   // Clients (RPC)
-            }
 
         /// <summary>
         /// If server, broadcast information to all clients.
@@ -78,10 +65,12 @@ namespace UniCAVE
                 }
 
                 RpcSetTime(Time.time);
-                /*
-                // TODO make this shit somehow decent. Sync whenever a new client connects.
-                if(!m_syncedRandomSeed && m_frameCount > 100)
+
+                // Check for new client(s) connected
+                if (UCNetworkManager.clientConnected)
                 {
+                    Debug.Log("UCNetwork clientConnected");
+
                     // Must pass the random state using the wrapper. Random.State doesn't survive the RPC call
                     // and the client receives an invalid state (all zeros).
                     RandomStateWrapper state = Random.state;
@@ -89,11 +78,7 @@ namespace UniCAVE
 
                     SetRandomState(state);      // Server
                     RpcSetRandomState(state);   // Clients (RPC)
-                    m_syncedRandomSeed = true;
                 }
-
-                m_frameCount++;
-                */
             }
         }
 

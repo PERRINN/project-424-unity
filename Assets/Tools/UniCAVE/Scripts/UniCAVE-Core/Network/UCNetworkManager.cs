@@ -32,12 +32,35 @@ namespace UniCAVE
         public MachineName headMachineAsset;
 
         [Tooltip("This can be overriden at runtime with parameter serverAddress, for example \"serverAddress 192.168.0.100\"")]
-        public string serverAddress = "192.168.4.140";
+        public string serverAddress = "localhost";
 
         [Tooltip("This can be overriden at runtime with parameter serverPort, for example \"serverPort 8421\"")]
         public int serverPort = 7568;
 
         public string headMachine => MachineName.GetMachineName(null, headMachineAsset);
+
+        static bool m_clientConnected = false;
+
+        /// <summary>
+        /// Exposes the client connection flag. Automatically resets it to false when read.
+        /// </summary>
+        public static bool clientConnected
+        {
+            get
+            {
+                bool value = m_clientConnected;
+                m_clientConnected = false;
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Resets the client connection flag
+        /// </summary>
+        public override void OnEnable ()
+        {
+            m_clientConnected = false;
+        }
 
         /// <summary>
         /// Starts as client or server.
@@ -74,6 +97,15 @@ namespace UniCAVE
                 StartServer();
             }
         }
+
+        /// <summary>
+        /// Raises the client connected flag when a client connects
+        /// </summary>
+        public override void OnServerConnect (NetworkConnectionToClient conn)
+            {
+            Debug.Log("UCNetworkManager OnServerConnect");
+            m_clientConnected = true;
+            }
 
         /// <summary>
         /// Client permanently tries to connect and reconnect to the server
