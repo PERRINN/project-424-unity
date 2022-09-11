@@ -192,7 +192,7 @@ namespace Mirror
         // Virtual so that inheriting classes' OnEnable() can call base.OnEnable() too
         public virtual void OnEnable()
         {
-            Debug.Log("NetworManager OnEnable");
+            if (DebugInfoLevel >= 2) Debug.Log("NetworManager OnEnable");
 
             // EDY: Explicitly initialize the network loop to survive the hot script reload.
             NetworkLoop.Initialize();
@@ -630,7 +630,7 @@ namespace Mirror
         // Virtual so that inheriting classes' OnDisable() can call base.OnDisable() too
         public virtual void OnDisable()
         {
-            Debug.Log("NetworManager OnDisable");
+            if (DebugInfoLevel >= 2) Debug.Log("NetworManager OnDisable");
 
             // stop client first
             // (we want to send the quit packet to the server instead of waiting
