@@ -33,6 +33,8 @@ namespace UniCAVE
 
         [Tooltip("This object will be transformed by this script")]
         public HeadConfiguration head;
+        [Tooltip("Use time syncing to play videos. Otherwise it's likely not needed")]
+        public bool synchronizeTime = false;
 
         private float m_lastTime = 0.0f;
 
@@ -61,7 +63,8 @@ namespace UniCAVE
                     RpcSetTransforms(transform.position, transform.rotation, Vector3.zero, Quaternion.identity);
                 }
 
-                RpcSetTime(Time.time);
+                if (synchronizeTime)
+                    RpcSetTime(Time.time);
 
                 // Check for new client(s) connected
                 if (UCNetworkManager.clientConnected)
@@ -354,6 +357,7 @@ namespace UniCAVE
                 UCNetwork cave = target as UCNetwork;
 
                 cave.head = (HeadConfiguration)EditorGUILayout.ObjectField("Head", cave.head, typeof(HeadConfiguration), true);
+                cave.synchronizeTime = EditorGUILayout.Toggle("Synchronize Time", cave.synchronizeTime);
 
                 if(GUILayout.Button("Save Launch Script"))
                 {
