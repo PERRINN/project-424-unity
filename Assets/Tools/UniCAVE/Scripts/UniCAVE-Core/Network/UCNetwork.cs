@@ -34,10 +34,13 @@ namespace UniCAVE
         [Tooltip("This object will be transformed by this script")]
         public HeadConfiguration head;
 
+        public float maxUpdateRate = 90.0f;
+
         public enum SynchronizeTime { Disabled, TimeScaleOnly, FullTimeSync }
         public SynchronizeTime synchronizeTime = SynchronizeTime.Disabled;
 
         private float m_lastTime = 0.0f;
+        private float m_lastUpdateTime;
 
         /// <summary>
         /// Configure send interval and initialize private vars
@@ -46,6 +49,7 @@ namespace UniCAVE
         {
             syncInterval = 0.016f;
             m_lastTime = 0.0f;
+            m_lastUpdateTime = -1.0f;
         }
 
         /// <summary>
@@ -55,8 +59,18 @@ namespace UniCAVE
         {
             if(isServer)
             {
-                // TODO: limit sending rate to avoid flowing the connection on high frame rates
+                // Limit update rate to avoid flowing the connection on high frame rates
+                if (maxUpdateRate > 0.1f)
+                {
+                    float minDeltaTime = 1.0f / maxUpdateRate;
+                    float t = Time.unscaledTime;
+                    float dt = t - m_lastUpdateTime;
+                    if (dt < minDeltaTime)
+                        return;
+                    m_lastUpdateTime = t;
+                }
 
+                // Sync pose
                 if(head != null)
                 {
                     RpcSetTransforms(transform.position, transform.rotation, head.transform.position, head.transform.rotation);
@@ -66,7 +80,7 @@ namespace UniCAVE
                     RpcSetTransforms(transform.position, transform.rotation, Vector3.zero, Quaternion.identity);
                 }
 
-                // Synchronize time
+                // Sync time
                 switch (synchronizeTime)
                 {
                     case SynchronizeTime.TimeScaleOnly:
@@ -383,6 +397,7 @@ namespace UniCAVE
                 UCNetwork cave = target as UCNetwork;
 
                 cave.head = (HeadConfiguration)EditorGUILayout.ObjectField("Head", cave.head, typeof(HeadConfiguration), true);
+                cave.maxUpdateRate = EditorGUILayout.FloatField("Max Update Rate", cave.maxUpdateRate);
                 cave.synchronizeTime = (SynchronizeTime)EditorGUILayout.EnumPopup("Synchronize Time", cave.synchronizeTime);
 
                 if(GUILayout.Button("Save Launch Script"))
