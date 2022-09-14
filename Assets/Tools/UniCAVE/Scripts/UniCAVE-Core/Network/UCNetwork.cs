@@ -35,6 +35,7 @@ namespace UniCAVE
         public HeadConfiguration head;
 
         public float maxUpdateRate = 90.0f;
+        public bool synchronizeTransforms = true;
 
         public enum SynchronizeTime { Disabled, TimeScaleOnly, FullTimeSync }
         public SynchronizeTime synchronizeTime = SynchronizeTime.Disabled;
@@ -71,13 +72,16 @@ namespace UniCAVE
                 }
 
                 // Sync pose
-                if(head != null)
+                if (synchronizeTransforms)
                 {
-                    RpcSetTransforms(transform.position, transform.rotation, head.transform.position, head.transform.rotation);
-                }
-                else
-                {
-                    RpcSetTransforms(transform.position, transform.rotation, Vector3.zero, Quaternion.identity);
+                    if(head != null)
+                    {
+                        RpcSetTransforms(transform.position, transform.rotation, head.transform.position, head.transform.rotation);
+                    }
+                    else
+                    {
+                        RpcSetTransforms(transform.position, transform.rotation, Vector3.zero, Quaternion.identity);
+                    }
                 }
 
                 // Sync time
@@ -398,6 +402,7 @@ namespace UniCAVE
 
                 cave.head = (HeadConfiguration)EditorGUILayout.ObjectField("Head", cave.head, typeof(HeadConfiguration), true);
                 cave.maxUpdateRate = EditorGUILayout.FloatField("Max Update Rate", cave.maxUpdateRate);
+                cave.synchronizeTransforms = EditorGUILayout.Toggle("Synchronize Transforms", cave.synchronizeTransforms);
                 cave.synchronizeTime = (SynchronizeTime)EditorGUILayout.EnumPopup("Synchronize Time", cave.synchronizeTime);
 
                 if(GUILayout.Button("Save Launch Script"))
