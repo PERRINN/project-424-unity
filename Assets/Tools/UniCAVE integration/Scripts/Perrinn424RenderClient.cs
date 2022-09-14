@@ -12,17 +12,27 @@ namespace Perrinn424
 public class Perrinn424RenderClient : NetworkBehaviour
 	{
 	public Perrinn424CarController vehicle;
+	public Transform cave;
+	public Transform head;
 
 
-	public struct VehicleState
+	public struct RenderState
 		{
-		public Vector3 position;
-		public Quaternion rotation;
+		public Vector3 vehiclePosition;
+		public Quaternion vehicleRotation;
+
+		public Vector3 cavePosition;
+		public Quaternion caveRotation;
+
+		public Vector3 headPosition;
+		public Quaternion headRotation;
 		}
 
 
 	bool m_firstUpdate = true;
 	Transform m_vehicleTransform;
+	Transform m_caveTransform;
+	Transform m_headTransform;
 
 
 	// Order of execution & flags
@@ -45,7 +55,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			return;
 			}
 
+		syncInterval = 0.016f;
+
 		m_vehicleTransform = vehicle.cachedTransform;
+		m_caveTransform = cave != null? cave.transform : null;
+		m_headTransform = head != null? head.transform : null;
 		}
 
 
@@ -84,7 +98,25 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		if (isServer)
 			{
-			RpcSetVehicleState(new VehicleState() { position = m_vehicleTransform.position, rotation = m_vehicleTransform.rotation });
+			RenderState state = new RenderState()
+				{
+				vehiclePosition = m_vehicleTransform.position,
+				vehicleRotation = m_vehicleTransform.rotation,
+				};
+
+			if (m_caveTransform != null)
+				{
+				state.cavePosition = m_caveTransform.position;
+				state.caveRotation = m_caveTransform.rotation;
+				}
+
+			if (m_headTransform != null)
+				{
+				state.headPosition = m_headTransform.position;
+				state.headRotation = m_headTransform.rotation;
+				}
+
+			RpcSetRenderState(state);
 			}
 		}
 
@@ -93,11 +125,16 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 
 	[ClientRpc]
-	void RpcSetVehicleState (VehicleState state)
+	void RpcSetRenderState (RenderState state)
 		{
-		m_vehicleTransform.SetPositionAndRotation(state.position, state.rotation);
-		}
+		m_vehicleTransform.SetPositionAndRotation(state.vehiclePosition, state.vehicleRotation);
 
+		if (m_caveTransform != null)
+			m_caveTransform.SetPositionAndRotation(state.cavePosition, state.caveRotation);
+
+		if (m_headTransform != null)
+			m_headTransform.SetPositionAndRotation(state.headPosition, state.headRotation);
+		}
 	}
 
 }
