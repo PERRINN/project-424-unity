@@ -526,7 +526,8 @@ namespace UniCAVE
                 if(GUI.changed)
                 {
                     EditorUtility.SetDirty(cave);
-                    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                    if (!Application.isPlaying)
+                        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
                 }
             }
         }

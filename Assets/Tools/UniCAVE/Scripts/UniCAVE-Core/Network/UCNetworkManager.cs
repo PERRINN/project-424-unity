@@ -102,10 +102,10 @@ namespace UniCAVE
         /// <summary>
         /// Raises the client connected flag when a client connects
         /// </summary>
-        public override void OnServerAddPlayer(NetworkConnectionToClient conn)
+        public override void OnServerReady(NetworkConnectionToClient conn)
         {
             if (DebugInfoLevel >= 2) Debug.Log("UCNetworkManager OnServerAddPlayer");
-            base.OnServerAddPlayer(conn);
+            base.OnServerReady(conn);
             m_clientConnected = true;
         }
 
