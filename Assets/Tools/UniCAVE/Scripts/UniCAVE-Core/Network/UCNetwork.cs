@@ -33,8 +33,9 @@ namespace UniCAVE
 
         [Tooltip("This object will be transformed by this script")]
         public HeadConfiguration head;
-        [Tooltip("Use time syncing to play videos. Otherwise it's likely not needed")]
-        public bool synchronizeTime = false;
+
+        public enum SynchronizeTime { Disabled, TimeScaleOnly, FullTimeSync }
+        public SynchronizeTime synchronizeTime = SynchronizeTime.Disabled;
 
         private float m_lastTime = 0.0f;
 
@@ -54,6 +55,8 @@ namespace UniCAVE
         {
             if(isServer)
             {
+                // TODO: limit sending rate to avoid flowing the connection on high frame rates
+
                 if(head != null)
                 {
                     RpcSetTransforms(transform.position, transform.rotation, head.transform.position, head.transform.rotation);
@@ -63,14 +66,27 @@ namespace UniCAVE
                     RpcSetTransforms(transform.position, transform.rotation, Vector3.zero, Quaternion.identity);
                 }
 
-                if (synchronizeTime)
-                    RpcSetTime(Time.time);
+                // Synchronize time
+                switch (synchronizeTime)
+                {
+                    case SynchronizeTime.TimeScaleOnly:
+                    {
+                        RpcSetTimeScale(Time.timeScale);
+                        break;
+                    }
+
+                    case SynchronizeTime.FullTimeSync:
+                    {
+                        RpcSetTime(Time.time);
+                        break;
+                    }
+                }
 
                 // Check for new client(s) connected
                 if (UCNetworkManager.clientConnected)
                 {
                     // Must pass the random state using the wrapper. Random.State doesn't survive the RPC call
-                    // and the client receives an invalid state (all zeros).
+                    // and the client receives an invalid random state (all zeros).
                     RandomStateWrapper state = Random.state;
                     if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log($"Syncing random state [{state.seed}]...");
 
@@ -96,6 +112,16 @@ namespace UniCAVE
             {
                 head.transform.SetPositionAndRotation(headPos, headOri);
             }
+        }
+
+        /// <summary>
+        /// Set unity time scale
+        /// </summary>
+        /// <param name="scale">current time scale</param>
+        [ClientRpc]
+        void RpcSetTimeScale(float scale)
+        {
+            Time.timeScale = scale;
         }
 
         /// <summary>
@@ -357,7 +383,7 @@ namespace UniCAVE
                 UCNetwork cave = target as UCNetwork;
 
                 cave.head = (HeadConfiguration)EditorGUILayout.ObjectField("Head", cave.head, typeof(HeadConfiguration), true);
-                cave.synchronizeTime = EditorGUILayout.Toggle("Synchronize Time", cave.synchronizeTime);
+                cave.synchronizeTime = (SynchronizeTime)EditorGUILayout.EnumPopup("Synchronize Time", cave.synchronizeTime);
 
                 if(GUILayout.Button("Save Launch Script"))
                 {
