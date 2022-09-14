@@ -14,7 +14,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public Perrinn424CarController vehicle;
 
 
-	public struct CarState
+	public struct VehicleState
 		{
 		public Vector3 position;
 		public Quaternion rotation;
@@ -22,6 +22,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 
 	bool m_firstUpdate = true;
+	Transform m_vehicleTransform;
 
 
 	// Order of execution & flags
@@ -35,7 +36,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	void OnEnable ()
 		{
-		Debug.Log("OnEnable");
+		Debug.Log("RenderClient OnEnable");
 
 		if (vehicle == null)
 			{
@@ -43,30 +44,33 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			enabled = false;
 			return;
 			}
+
+		m_vehicleTransform = vehicle.cachedTransform;
 		}
 
 
 	public override void OnStartServer ()
 		{
-		Debug.Log($"SERVER - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
+		Debug.Log($"RenderClient SERVER - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
 		m_firstUpdate = true;
 		}
 
 
 	public override void OnStartClient ()
 		{
-		Debug.Log($"CLIENT - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
+		Debug.Log($"RenderClient CLIENT - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
 		m_firstUpdate = true;
 
-		// Host mode. Ignore client initialization
+		// Host mode. Ignore client initialization.
 
 		if (isServer) return;
 
-		// FixedUpdate at normal rate
+		// FixedUpdate at normal rate. Configure physics.
 
 		Time.fixedDeltaTime = 0.02f;
+		Physics.autoSyncTransforms = false;
 
-		// Disable vehicle physics
+		// Disable vehicle dynamics
 
 		vehicle.cachedRigidbody.isKinematic = true;
 		vehicle.enabled = false;
@@ -75,8 +79,23 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	void Update ()
 		{
-		if (m_firstUpdate) Debug.Log("First Update");
+		if (m_firstUpdate) Debug.Log("RenderClient First Update");
 		m_firstUpdate = false;
+
+		if (isServer)
+			{
+			RpcSetVehicleState(new VehicleState() { position = m_vehicleTransform.position, rotation = m_vehicleTransform.rotation });
+			}
+		}
+
+
+	//------------------------------------------------------------------------------------------------------
+
+
+	[ClientRpc]
+	void RpcSetVehicleState (VehicleState state)
+		{
+		m_vehicleTransform.SetPositionAndRotation(state.position, state.rotation);
 		}
 
 	}
