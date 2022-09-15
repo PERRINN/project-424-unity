@@ -645,7 +645,7 @@ namespace Mirror
             // buffer limit should be at least multiplier to have enough in there
             bufferSizeLimit = Mathf.Max(bufferTimeMultiplier, bufferSizeLimit);
         }
-        
+
         public override bool OnSerialize(NetworkWriter writer, bool initialState)
         {
             // sync target component's position on spawn.
@@ -685,6 +685,7 @@ namespace Mirror
             // IMPORTANT: this is basically an ESP hack for shooter games.
             //            DO NOT make this available with a hotkey in release builds
             if (!Debug.isDebugBuild) return;
+            if (Camera.main == null) return;
 
             // project position to screen
             Vector3 point = Camera.main.WorldToScreenPoint(targetComponent.position);
