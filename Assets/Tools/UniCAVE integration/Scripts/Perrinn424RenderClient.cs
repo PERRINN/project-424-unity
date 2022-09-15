@@ -12,6 +12,7 @@ namespace Perrinn424
 public class Perrinn424RenderClient : NetworkBehaviour
 	{
 	public Perrinn424CarController vehicle;
+	public Behaviour cameraController;
 	public Transform cave;
 	public Transform head;
 
@@ -87,11 +88,19 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Disable vehicle dynamics
 
 		vehicle.cachedRigidbody.isKinematic = true;
+		vehicle.cachedRigidbody.interpolation = RigidbodyInterpolation.None;
 		vehicle.enabled = false;
+
+		// Disable camera controller
+
+		if (cameraController != null)
+			cameraController.enabled = false;
 		}
 
 
-	void Update ()
+	// LateUpdate executed _after_ the default time to get the latest position from the camera.
+
+	void LateUpdate ()
 		{
 		if (m_firstUpdate) Debug.Log("RenderClient First Update");
 		m_firstUpdate = false;
