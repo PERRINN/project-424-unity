@@ -47,7 +47,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	void OnEnable ()
 		{
-		Debug.Log("RenderClient OnEnable");
+        if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("RenderClient OnEnable");
 
 		if (vehicle == null)
 			{
@@ -66,14 +66,16 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	public override void OnStartServer ()
 		{
-		Debug.Log($"RenderClient SERVER - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
+		if (NetworkManager.DebugInfoLevel >= 2)
+			Debug.Log($"RenderClient SERVER - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
 		m_firstUpdate = true;
 		}
 
 
 	public override void OnStartClient ()
 		{
-		Debug.Log($"RenderClient CLIENT - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
+		if (NetworkManager.DebugInfoLevel >= 2)
+			Debug.Log($"RenderClient CLIENT - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
 		m_firstUpdate = true;
 
 		// Host mode. Ignore client initialization.
@@ -102,7 +104,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	void LateUpdate ()
 		{
-		if (m_firstUpdate) Debug.Log("RenderClient First Update");
+		if (m_firstUpdate && NetworkManager.DebugInfoLevel >= 2)
+			Debug.Log("RenderClient First Update");
 		m_firstUpdate = false;
 
 		if (isServer)

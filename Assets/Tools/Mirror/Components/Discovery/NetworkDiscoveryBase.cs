@@ -83,7 +83,7 @@ namespace Mirror.Discovery
             EndpMulticastLock();
 
             if (NetworkManager.DebugInfoLevel >= 2 && (serverUdpClient != null || clientUdpClient != null))
-                Debug.Log($"Shutdown Network Discovery. Server: {serverUdpClient != null} Client: {clientUdpClient != null}");
+                Debug.Log($"NetworkDiscovery Shutdown. Server: {serverUdpClient != null} Client: {clientUdpClient != null}");
 
             if (serverUdpClient != null)
             {
@@ -128,7 +128,7 @@ namespace Mirror.Discovery
 
             StopDiscovery();
 
-            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Start Network Server Advertisement for Discovery");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("NetworkDiscovery Start Server Advertisement");
 
             // Setup port -- may throw exception
             serverUdpClient = new UdpClient(serverBroadcastListenPort)
@@ -280,7 +280,7 @@ namespace Mirror.Discovery
 
             StopDiscovery();
 
-            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Start Network Discovery");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("NetworkDiscovery Start Discovery");
 
             try
             {

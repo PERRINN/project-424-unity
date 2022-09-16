@@ -106,6 +106,7 @@ namespace Mirror.Discovery
             };
             response.uri = realUri.Uri;
 
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkDiscovery Server Found. URI: {response.uri} ServerID: {response.serverId}");
             OnServerFound.Invoke(response);
         }
 
