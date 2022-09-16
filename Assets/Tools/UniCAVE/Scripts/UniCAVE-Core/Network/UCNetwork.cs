@@ -60,8 +60,7 @@ namespace UniCAVE
         {
             if(isServer)
             {
-                // Limit update rate to avoid flowing the connection on high frame rates
-                // NOTE: Already limited by syncInterval?
+                // Limit update rate to reduce bandwidth if not all features are used
                 if (maxUpdateRate > 0.1f)
                 {
                     float minDeltaTime = 1.0f / maxUpdateRate;

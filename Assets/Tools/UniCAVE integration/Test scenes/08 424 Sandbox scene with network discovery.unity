@@ -782,6 +782,8 @@ GameObject:
   - component: {fileID: 1650974540}
   - component: {fileID: 1650974539}
   - component: {fileID: 1650974542}
+  - component: {fileID: 1650974544}
+  - component: {fileID: 1650974543}
   m_Layer: 0
   m_Name: UniCAVE Network Manager
   m_TagString: Untagged
@@ -805,7 +807,7 @@ MonoBehaviour:
   DualMode: 0
   NoDelay: 1
   Interval: 10
-  Timeout: 999999999
+  Timeout: 5000
   FastResend: 2
   CongestionWindow: 0
   SendWindowSize: 4096
@@ -869,13 +871,57 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650974538}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   offsetX: 0
   offsetY: 0
+--- !u!114 &1650974543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650974538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88c37d3deca7a834d80cfd8d3cfcc510, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkDiscovery: {fileID: 1650974544}
+--- !u!114 &1650974544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650974538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c761308e733c51245b2e8bb4201f46dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secretHandshake: 7046482198533960535
+  serverBroadcastListenPort: 47568
+  enableActiveDiscovery: 1
+  ActiveDiscoveryInterval: 3
+  transport: {fileID: 1650974539}
+  OnServerFound:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1650974543}
+        m_MethodName: OnDiscoveredServer
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!1 &1716988318
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,7 +939,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1716988319
 Transform:
   m_ObjectHideFlags: 0
@@ -915,7 +961,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1716988318}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2dc55d7b5827a674590f396228c2038d, type: 3}
   m_Name: 
@@ -923,6 +969,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   vehicle: {fileID: 626402878}
+  cameraController: {fileID: 6905166632989773343}
   cave: {fileID: 3897279290908718372}
   head: {fileID: 1766672685383321443}
 --- !u!114 &1716988321
@@ -1746,8 +1793,6 @@ GameObject:
   - component: {fileID: 6905166632995612195}
   - component: {fileID: 6905166632989773343}
   - component: {fileID: 6905166632995273850}
-  - component: {fileID: 6905166632995273852}
-  - component: {fileID: 6905166632995273851}
   m_Layer: 0
   m_Name: Camera Controller
   m_TagString: Untagged
@@ -1763,57 +1808,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6905166632995273849}
   m_Enabled: 1
---- !u!114 &6905166632995273851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6905166632995273849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  clientAuthority: 0
-  sendInterval: 0.0166
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 0
-  bufferTimeMultiplier: 1
-  bufferSizeLimit: 64
-  catchupThreshold: 4
-  catchupMultiplier: 0.1
-  onlySyncOnChange: 0
-  bufferResetMultiplier: 5
-  positionSensitivity: 0.01
-  rotationSensitivity: 0.01
-  scaleSensitivity: 0.01
-  showGizmos: 1
-  showOverlay: 1
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
---- !u!114 &6905166632995273852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6905166632995273849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 3666796802
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
 --- !u!1 &6905166632995387959
 GameObject:
   m_ObjectHideFlags: 0
@@ -1902,9 +1896,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   head: {fileID: 2467123758255636402}
-  maxUpdateRate: 1
+  maxUpdateRate: 10
   synchronizeTransforms: 0
-  synchronizeTime: 0
+  synchronizeTime: 1
   settingsToLoad: 
 --- !u!1 &9202764296841255649
 GameObject:
