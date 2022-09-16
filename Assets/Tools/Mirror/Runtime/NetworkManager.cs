@@ -127,7 +127,7 @@ namespace Mirror
         // 2: All initialization and connect/disconnect/spawn messages
         // 3: All messages, RPC calls, etc
         // TODO Expose in the inspector somehow.
-        public static int DebugInfoLevel = 1;
+        public static int DebugInfoLevel = 2;
 
         // virtual so that inheriting classes' OnValidate() can call base.OnValidate() too
         public virtual void OnValidate()
