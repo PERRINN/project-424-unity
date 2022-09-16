@@ -783,7 +783,6 @@ GameObject:
   - component: {fileID: 1650974539}
   - component: {fileID: 1650974542}
   - component: {fileID: 1650974544}
-  - component: {fileID: 1650974543}
   m_Layer: 0
   m_Name: UniCAVE Network Manager
   m_TagString: Untagged
@@ -850,6 +849,7 @@ MonoBehaviour:
   headMachineAsset: {fileID: 11400000, guid: 143b3f327dc8e874b87e6038e9d48159, type: 2}
   serverAddress: localhost
   serverPort: 7568
+  clientAutoConnect: 0
 --- !u!4 &1650974541
 Transform:
   m_ObjectHideFlags: 0
@@ -871,26 +871,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650974538}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   offsetX: 0
   offsetY: 0
---- !u!114 &1650974543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1650974538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88c37d3deca7a834d80cfd8d3cfcc510, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  networkDiscovery: {fileID: 1650974544}
 --- !u!114 &1650974544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -910,18 +897,7 @@ MonoBehaviour:
   transport: {fileID: 1650974539}
   OnServerFound:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1650974543}
-        m_MethodName: OnDiscoveredServer
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
 --- !u!1 &1716988318
 GameObject:
   m_ObjectHideFlags: 0

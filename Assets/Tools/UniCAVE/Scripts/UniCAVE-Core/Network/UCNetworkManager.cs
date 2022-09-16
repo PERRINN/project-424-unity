@@ -16,6 +16,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using Mirror.Discovery;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -37,29 +38,42 @@ namespace UniCAVE
         [Tooltip("This can be overriden at runtime with parameter serverPort, for example \"serverPort 8421\"")]
         public int serverPort = 7568;
 
+        [Tooltip("If client, automatically connect to Server Address. Disable if using Network Discovery")]
+        public bool clientAutoConnect = true;
+
         public string headMachine => MachineName.GetMachineName(null, headMachineAsset);
 
-        static bool m_clientConnected = false;
+        static bool m_newClientConnected = false;
+
+        NetworkDiscovery m_networkDiscovery;
+        bool m_asClient;
 
         /// <summary>
         /// Exposes the client connection flag. Automatically resets it to false when read.
         /// </summary>
-        public static bool clientConnected
+        public static bool newClientConnected
         {
             get
             {
-                bool value = m_clientConnected;
-                m_clientConnected = false;
+                bool value = m_newClientConnected;
+                m_newClientConnected = false;
                 return value;
             }
         }
 
         /// <summary>
-        /// Resets the client connection flag
+        /// Resets the client connection flag and find if we have a Network Discovery component
         /// </summary>
         public override void OnEnable ()
         {
-            m_clientConnected = false;
+            m_newClientConnected = false;
+            m_asClient = Util.GetArg("forceClient") == "1" || Util.GetMachineName() != headMachine;
+            m_networkDiscovery = GetComponent<NetworkDiscovery>();
+
+            // Server re-connection only in client mode (not in host)
+            if (m_asClient && m_networkDiscovery != null)
+                m_networkDiscovery.OnServerFound.AddListener(OnDiscoveredServer);
+
             base.OnEnable();
         }
 
@@ -89,9 +103,13 @@ namespace UniCAVE
             networkAddress = serverAddress;
             (transport as kcp2k.KcpTransport).Port = (ushort)serverPort;
 
-            if ((Util.GetArg("forceClient") == "1") || (Util.GetMachineName() != headMachine))
+            if (m_asClient)
             {
-                StartClient();
+                if (m_networkDiscovery != null)
+                    m_networkDiscovery.StartDiscovery();
+                else
+                if (clientAutoConnect)
+                    StartClient();
             }
             else
             {
@@ -100,13 +118,51 @@ namespace UniCAVE
         }
 
         /// <summary>
-        /// Raises the client connected flag when a client connects
+        /// Stop server and/or client connections (base). Stop server discovery.
+        /// </summary>
+        public override void OnDisable ()
+            {
+            if (m_networkDiscovery != null)
+            {
+                m_networkDiscovery.StopDiscovery();
+                if (m_asClient)
+                    m_networkDiscovery.OnServerFound.RemoveListener(OnDiscoveredServer);
+            }
+            base.OnDisable();
+            }
+
+        /// <summary>
+        /// Server: server ready. Start advertising as server.
+        /// </summary>
+        public override void OnStartServer()
+        {
+            if (DebugInfoLevel >= 2) Debug.Log("UCNetworkManager OnStartServer");
+            base.OnStartServer();
+            if (m_networkDiscovery != null)
+                m_networkDiscovery.AdvertiseServer();
+        }
+
+        /// <summary>
+        /// Server: client connected and ready. Raises the client connected flag.
         /// </summary>
         public override void OnServerReady(NetworkConnectionToClient conn)
         {
-            if (DebugInfoLevel >= 2) Debug.Log("UCNetworkManager OnServerAddPlayer");
+            if (DebugInfoLevel >= 2) Debug.Log("UCNetworkManager OnServerReady");
             base.OnServerReady(conn);
-            m_clientConnected = true;
+            m_newClientConnected = true;
+        }
+
+        /// <summary>
+        /// Client: client disconnected. Restart server discovery.
+        /// Server discovery is automatically stopped when the client connects.
+        /// </summary>
+        public override void OnClientDisconnect()
+        {
+            if (DebugInfoLevel >= 2) Debug.Log("UCNetworkManager OnClientDisconnect");
+
+            base.OnClientDisconnect();
+            if (m_networkDiscovery != null)
+                m_networkDiscovery.StartDiscovery();
         }
 
         /// <summary>
@@ -114,12 +170,25 @@ namespace UniCAVE
         /// </summary>
         void Update()
         {
-            if(Util.GetMachineName() != headMachine)
+            if(clientAutoConnect && m_asClient)
             {
                 if(!NetworkClient.isConnected && !NetworkClient.isConnecting)
                 {
                     StartClient();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Client: Server responded to client's server discovery. Connect to it immediately.
+        /// </summary>
+        void OnDiscoveredServer(ServerResponse info)
+        {
+            if (DebugInfoLevel >= 2) Debug.Log($"UCNetworkManager OnDiscoveredServer: {info.uri} isConnected: {NetworkClient.isConnected} isConnecting: {NetworkClient.isConnecting}");
+
+            if (!NetworkClient.isConnected && !!NetworkClient.isConnecting)
+            {
+                StartClient(info.uri);
             }
         }
     }
