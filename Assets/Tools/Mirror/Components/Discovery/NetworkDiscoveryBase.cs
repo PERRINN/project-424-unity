@@ -72,28 +72,19 @@ namespace Mirror.Discovery
 #endif
         }
 
-        // Ensure the ports are cleared no matter when Game/Unity UI exits
-        void OnApplicationQuit()
-        {
-            //Debug.Log("NetworkDiscoveryBase OnApplicationQuit");
-            Shutdown();
-        }
-
         void OnDisable()
         {
             //Debug.Log("NetworkDiscoveryBase OnDisable");
             Shutdown();
         }
 
-        void OnDestroy()
-        {
-            //Debug.Log("NetworkDiscoveryBase OnDestroy");
-            Shutdown();
-        }
-
         void Shutdown()
         {
             EndpMulticastLock();
+
+            if (NetworkManager.DebugInfoLevel >= 2 && (serverUdpClient != null || clientUdpClient != null))
+                Debug.Log($"Shutdown Network Discovery. Server: {serverUdpClient != null} Client: {clientUdpClient != null}");
+
             if (serverUdpClient != null)
             {
                 try
@@ -136,6 +127,8 @@ namespace Mirror.Discovery
                 throw new PlatformNotSupportedException("Network discovery not supported in this platform");
 
             StopDiscovery();
+
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Start Network Server Advertisement for Discovery");
 
             // Setup port -- may throw exception
             serverUdpClient = new UdpClient(serverBroadcastListenPort)
@@ -247,7 +240,7 @@ namespace Mirror.Discovery
 		{
 #if UNITY_ANDROID
             if (hasMulticastLock) return;
-                
+
             if (Application.platform == RuntimePlatform.Android)
             {
                 using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
@@ -267,7 +260,7 @@ namespace Mirror.Discovery
         {
 #if UNITY_ANDROID
             if (!hasMulticastLock) return;
-            
+
             multicastLock?.Call("release");
             hasMulticastLock = false;
 #endif
@@ -286,6 +279,8 @@ namespace Mirror.Discovery
                 throw new PlatformNotSupportedException("Network discovery not supported in this platform");
 
             StopDiscovery();
+
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("Start Network Discovery");
 
             try
             {
@@ -324,16 +319,16 @@ namespace Mirror.Discovery
         /// <returns>ClientListenAsync Task</returns>
         public async Task ClientListenAsync()
         {
-            // while clientUpdClient to fix: 
+            // while clientUpdClient to fix:
             // https://github.com/vis2k/Mirror/pull/2908
             //
             // If, you cancel discovery the clientUdpClient is set to null.
             // However, nothing cancels ClientListenAsync. If we change the if(true)
-            // to check if the client is null. You can properly cancel the discovery, 
+            // to check if the client is null. You can properly cancel the discovery,
             // and kill the listen thread.
             //
-            // Prior to this fix, if you cancel the discovery search. It crashes the 
-            // thread, and is super noisy in the output. As well as causes issues on 
+            // Prior to this fix, if you cancel the discovery search. It crashes the
+            // thread, and is super noisy in the output. As well as causes issues on
             // the quest.
             while (clientUdpClient != null)
             {
