@@ -36,6 +36,7 @@ namespace Mirror
         {
             Init();
             DrawDefaultInspector();
+            EditorGUILayout.Space();
             EditorGUI.BeginChangeCheck();
             spawnList.DoLayoutList();
             if (EditorGUI.EndChangeCheck())

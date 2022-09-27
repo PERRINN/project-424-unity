@@ -38,7 +38,7 @@ namespace UniCAVE
         [Tooltip("This can be overriden at runtime with parameter serverPort, for example \"serverPort 8421\"")]
         public int serverPort = 7568;
 
-        [Tooltip("If client, automatically connect to Server Address. Disable if using Network Discovery")]
+        [Tooltip("If client, automatically search and find server (requires Network Discovery component). If client is forced (forceClient = 1) then connect to Server Address.")]
         public bool clientAutoConnect = true;
 
         public string headMachine => MachineName.GetMachineName(null, headMachineAsset);
@@ -47,6 +47,7 @@ namespace UniCAVE
 
         NetworkDiscovery m_networkDiscovery;
         bool m_asClient;
+        bool m_asForcedClient;
 
         /// <summary>
         /// Exposes the client connection flag. Automatically resets it to false when read.
@@ -67,11 +68,12 @@ namespace UniCAVE
         public override void OnEnable ()
         {
             m_newClientConnected = false;
-            m_asClient = Util.GetArg("forceClient") == "1" || Util.GetMachineName() != headMachine;
+            m_asForcedClient = Util.GetArg("forceClient") == "1";
+            m_asClient = m_asForcedClient || Util.GetMachineName() != headMachine;
             m_networkDiscovery = GetComponent<NetworkDiscovery>();
 
             // Server re-connection only in client mode (not in host)
-            if (m_asClient && m_networkDiscovery != null)
+            if (m_asClient && !m_asForcedClient && m_networkDiscovery != null)
                 m_networkDiscovery.OnServerFound.AddListener(OnDiscoveredServer);
 
             base.OnEnable();
@@ -105,11 +107,14 @@ namespace UniCAVE
 
             if (m_asClient)
             {
-                if (m_networkDiscovery != null)
-                    m_networkDiscovery.StartDiscovery();
-                else
                 if (clientAutoConnect)
-                    StartClient();
+                {
+                    if (m_asForcedClient)
+                        StartClient();
+                    else
+                    if (m_networkDiscovery != null)
+                        m_networkDiscovery.StartDiscovery();
+                }
             }
             else
             {
@@ -125,7 +130,7 @@ namespace UniCAVE
             if (m_networkDiscovery != null)
             {
                 m_networkDiscovery.StopDiscovery();
-                if (m_asClient)
+                if (m_asClient && !m_asForcedClient)
                     m_networkDiscovery.OnServerFound.RemoveListener(OnDiscoveredServer);
             }
             base.OnDisable();
@@ -161,16 +166,16 @@ namespace UniCAVE
             if (DebugInfoLevel >= 2) Debug.Log("UCNetworkManager OnClientDisconnect");
 
             base.OnClientDisconnect();
-            if (m_networkDiscovery != null)
+            if (clientAutoConnect && !m_asForcedClient && m_networkDiscovery != null)
                 m_networkDiscovery.StartDiscovery();
         }
 
         /// <summary>
-        /// Client permanently tries to connect and reconnect to the server
+        /// Forced client permanently tries to connect and reconnect to the server address
         /// </summary>
         void Update()
         {
-            if(clientAutoConnect && m_asClient)
+            if(clientAutoConnect && m_asClient && m_asForcedClient)
             {
                 if(!NetworkClient.isConnected && !NetworkClient.isConnecting)
                 {
@@ -186,7 +191,7 @@ namespace UniCAVE
         {
             if (DebugInfoLevel >= 2) Debug.Log($"UCNetworkManager OnDiscoveredServer: {info.uri} isConnected: {NetworkClient.isConnected} isConnecting: {NetworkClient.isConnecting}");
 
-            if (!NetworkClient.isConnected && !!NetworkClient.isConnecting)
+            if (clientAutoConnect && !NetworkClient.isConnected && !!NetworkClient.isConnecting)
             {
                 StartClient(info.uri);
             }
