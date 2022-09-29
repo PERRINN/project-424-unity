@@ -203,7 +203,7 @@ namespace UniCAVE
         {
             if (DebugInfoLevel >= 2) Debug.Log($"UCNetworkManager OnDiscoveredServer: {info.uri} isConnected: {NetworkClient.isConnected} isConnecting: {NetworkClient.isConnecting}");
 
-            if (clientAutoConnect && !NetworkClient.isConnected && !!NetworkClient.isConnecting)
+            if (clientAutoConnect && !NetworkClient.isConnected && !NetworkClient.isConnecting)
             {
                 StartClient(info.uri);
             }
