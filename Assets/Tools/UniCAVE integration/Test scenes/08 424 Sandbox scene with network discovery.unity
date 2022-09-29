@@ -835,8 +835,12 @@ MonoBehaviour:
   runInBackground: 1
   autoStartServerBuild: 1
   serverTickRate: 60
-  offlineScene: 
-  onlineScene: 
+  offlineScene:
+    sceneAsset: {fileID: 0}
+    scenePath: 
+  onlineScene:
+    sceneAsset: {fileID: 0}
+    scenePath: 
   transport: {fileID: 1650974539}
   networkAddress: localhost
   maxConnections: 100
@@ -849,7 +853,7 @@ MonoBehaviour:
   headMachineAsset: {fileID: 11400000, guid: 143b3f327dc8e874b87e6038e9d48159, type: 2}
   serverAddress: localhost
   serverPort: 7568
-  clientAutoConnect: 0
+  clientAutoConnect: 1
 --- !u!4 &1650974541
 Transform:
   m_ObjectHideFlags: 0

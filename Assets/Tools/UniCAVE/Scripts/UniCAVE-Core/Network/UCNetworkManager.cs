@@ -111,6 +111,8 @@ namespace UniCAVE
             networkAddress = serverAddress;
             (transport as kcp2k.KcpTransport).Port = (ushort)serverPort;
 
+            if (DebugInfoLevel >= 2) Debug.Log($"Starting UC Network. AsClient: {m_asClient} AsForcedClient: {m_asForcedClient} ClientAutoConnect: {clientAutoConnect}");
+
             if (m_asClient)
             {
                 if (clientAutoConnect)
