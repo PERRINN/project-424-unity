@@ -40,7 +40,7 @@ namespace UniCAVE
         /// <summary>
         /// The startup code. Gets the VRPN input and maps the current buttons.
         /// </summary>
-        private void Start()
+        private void OnEnable()
         {
             vrpnInput = this.GetComponent<VRPNInput>();
             updateButtonMappings();
@@ -126,14 +126,6 @@ namespace UniCAVE
             SerializedObject GetTarget;
             SerializedProperty ThisList;
             int ListSize;
-
-            /// <summary>
-            /// Noting to start yet.
-            /// </summary>
-            private void Start()
-            {
-
-            }
 
             /// <summary>
             /// Handles the enabling of the editor. Gets the list currently.

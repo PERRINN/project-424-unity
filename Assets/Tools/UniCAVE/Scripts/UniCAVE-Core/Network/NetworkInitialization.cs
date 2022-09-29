@@ -46,11 +46,21 @@ namespace UniCAVE
         [Tooltip("This can be overriden at runtime with parameter serverPort, for example \"serverPort 8421\"")]
         public int serverPort = 7568;
 
+        //EDY: Start is not called when disabling/enabling the component or on hot script reload.
+        bool m_startCalled;
+
+        void OnEnable()
+        {
+            m_startCalled = false;
+        }
+
         /// <summary>
         /// Starts as client or server.
         /// </summary>
         void Start()
         {
+            m_startCalled = true;
+
             string serverArg = Util.GetArg("serverAddress");
             if(serverArg != null)
             {
@@ -84,6 +94,9 @@ namespace UniCAVE
         /// </summary>
         void Update()
         {
+            if (!m_startCalled)
+                Start();
+
             if(Util.GetMachineName() != headMachine)
             {
                 if(!NetworkClient.isConnected && !NetworkClient.isConnecting)

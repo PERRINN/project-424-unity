@@ -88,7 +88,8 @@ namespace UniCAVE
 
         public bool loadSettingsAtRuntime;
 
-        private bool updatedViewports = false;
+        private bool updatedViewports;
+
 
         /// <summary>
         /// Camera for rendering stereo left eye
@@ -343,8 +344,9 @@ namespace UniCAVE
         /// Disable this object if it shouldn't be active
         /// Otherwise, create and assign cameras, reposition window, etc
         /// </summary>
-        void Start()
+        void OnEnable()
         {
+            updatedViewports = false;
 
             centerCam = null;
             leftCam = null;

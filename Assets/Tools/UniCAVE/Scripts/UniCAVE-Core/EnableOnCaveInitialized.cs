@@ -12,7 +12,7 @@ namespace UniCAVE
     {
         public GameObject toEnable;
 
-        private void Start()
+        private void OnEnable()
         {
             if(toEnable == null || gameObject.GetComponent<UCNetwork>() == null) Destroy(this);
         }

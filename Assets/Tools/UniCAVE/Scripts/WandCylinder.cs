@@ -34,7 +34,7 @@ namespace UniCAVE
         /// Starts up and inits the ray to red.
         /// </summary>
         // Use this for initialization
-        void Start()
+        void OnEnable()
         {
             currentValue = false;
             this.GetComponent<Renderer>().material = red;

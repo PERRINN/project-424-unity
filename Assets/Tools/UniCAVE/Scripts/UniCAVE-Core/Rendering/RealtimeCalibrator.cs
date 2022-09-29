@@ -79,7 +79,7 @@ namespace UniCAVE
         /// </summary>
         public string configsFolder = "configs";
 
-        void Start()
+        void OnEnable()
         {
             allOptions = new List<CalibrationSelection>();
             //generate list of options

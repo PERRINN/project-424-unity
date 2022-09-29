@@ -49,7 +49,7 @@ namespace UniCAVE
         }
 
         // Use this for initialization
-        void Start()
+        void OnEnable()
         {
             //Get all necessary game objects
             if(wandObject == null)

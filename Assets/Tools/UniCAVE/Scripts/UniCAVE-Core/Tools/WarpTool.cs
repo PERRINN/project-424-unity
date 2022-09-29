@@ -33,7 +33,7 @@ namespace UniCAVE
         /// <summary>
         /// Basically a constructor
         /// </summary>
-        private void Start()
+        private void OnEnable()
         {
             //Get all necessary game objects
             if(wandObject == null)

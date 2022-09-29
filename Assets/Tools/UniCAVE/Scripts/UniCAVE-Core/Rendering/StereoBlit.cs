@@ -19,7 +19,7 @@ namespace UniCAVE
         /// <summary>
         /// Assign my camera and create target camera render textures
         /// </summary>
-        private void Start()
+        private void OnEnable()
         {
             cam = GetComponent<Camera>();
             cam.depth = 100;

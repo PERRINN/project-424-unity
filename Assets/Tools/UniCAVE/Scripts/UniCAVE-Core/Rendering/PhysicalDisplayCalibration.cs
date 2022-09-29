@@ -545,7 +545,9 @@ namespace UniCAVE
             return initialized;
         }
 
-        void Start()
+        private bool initialized = false;
+
+        void OnEnable()
         {
             PhysicalDisplay disp = this.display = gameObject.GetComponent<PhysicalDisplay>();
             disp.transform.localPosition = disp.transform.localPosition +
@@ -555,9 +557,10 @@ namespace UniCAVE
             Vector2 shift = new Vector2((leftBlend + rightBlend) * disp.halfWidth(), (bottomBlend + topBlend) * disp.halfHeight());
             disp.width += shift.x;
             disp.height += shift.y;
+
+            initialized = false;
         }
 
-        private bool initialized = false;
         void Update()
         {
             if(!initialized)

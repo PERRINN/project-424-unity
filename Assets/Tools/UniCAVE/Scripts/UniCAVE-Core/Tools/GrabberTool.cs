@@ -35,7 +35,7 @@ namespace UniCAVE
         public Vector3 origin, direction, previousOrigin, previousDirection;
 
         //Initializes all the necessary fields while rendering the scene
-        private void Start()
+        private void OnEnable()
         {
             //Get all necessary game objects
             if(wandObject == null)

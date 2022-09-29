@@ -45,7 +45,7 @@ namespace UniCAVE
             canonicalPlaying = _canonicalPlaying;
         }
 
-        void Start()
+        void OnEnable()
         {
             player = GetComponent<VideoPlayer>();
         }

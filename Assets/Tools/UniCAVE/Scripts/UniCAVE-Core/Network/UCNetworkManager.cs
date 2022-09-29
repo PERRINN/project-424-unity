@@ -49,6 +49,9 @@ namespace UniCAVE
         bool m_asClient;
         bool m_asForcedClient;
 
+        //EDY: Start is not called when disabling/enabling the component or on hot script reload.
+        bool m_startCalled;
+
         /// <summary>
         /// Exposes the client connection flag. Automatically resets it to false when read.
         /// </summary>
@@ -67,6 +70,7 @@ namespace UniCAVE
         /// </summary>
         public override void OnEnable ()
         {
+            m_startCalled = false;
             m_newClientConnected = false;
             m_asForcedClient = Util.GetArg("forceClient") == "1";
             m_asClient = m_asForcedClient || Util.GetMachineName() != headMachine;
@@ -86,6 +90,8 @@ namespace UniCAVE
         {
             // Don't call base.Start because it only calls StartServer on conditions unrelated to us.
             // base.Start();
+
+            m_startCalled = true;
 
             string serverArg = Util.GetArg("serverAddress");
             if(serverArg != null)
@@ -175,6 +181,10 @@ namespace UniCAVE
         /// </summary>
         void Update()
         {
+            //EDY: Start is not called when disabling/enabling the component or on hot script reload.
+            if (!m_startCalled)
+                Start();
+
             if(clientAutoConnect && m_asClient && m_asForcedClient)
             {
                 if(!NetworkClient.isConnected && !NetworkClient.isConnecting)
