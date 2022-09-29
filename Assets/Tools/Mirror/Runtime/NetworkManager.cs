@@ -190,7 +190,7 @@ namespace Mirror
             }
         }
 
-        // EDY: OnEnable instead of Awake, which is not called when enabling/disabling the component or on hot script reload.
+        // EDY: OnEnable instead of Awake, which is not called when disabling/enabling the component or on hot script reload.
         // Virtual so that inheriting classes' OnEnable() can call base.OnEnable() too
         public virtual void OnEnable()
         {

@@ -13,7 +13,7 @@ namespace Mirror.Examples.AdditiveScenes
         NetworkAnimator networkAnimator;
 
         [ServerCallback]
-        void Start()
+        void OnEnable()
         {
             networkAnimator = GetComponent<NetworkAnimator>();
         }

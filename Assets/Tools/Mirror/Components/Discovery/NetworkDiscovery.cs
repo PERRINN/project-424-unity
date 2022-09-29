@@ -22,17 +22,34 @@ namespace Mirror.Discovery
         [Tooltip("Invoked when a server is found")]
         public ServerFoundUnityEvent OnServerFound;
 
+        // EDY: Start is not called on disable/re-enable the component nor on hot script reload.
+        bool m_startCalled;
+
+        void OnEnable()
+        {
+            m_startCalled = false;
+        }
+
         public override void Start()
         {
+            m_startCalled = true;
+
             ServerId = RandomLong();
 
-            // active transport gets initialized in awake
-            // so make sure we set it here in Start()  (after awakes)
+            // EDY: Using reliable OnEnable/OnDisable workflow. Start is not always called.
+            // active transport gets initialized in OnEnable
+            // so make sure we set it here in Start()  (after OnEnable)
             // Or just let the user assign it in the inspector
             if (transport == null)
                 transport = Transport.activeTransport;
 
             base.Start();
+        }
+
+        void Update()
+        {
+            if (!m_startCalled)
+                Start();
         }
 
         /// <summary>

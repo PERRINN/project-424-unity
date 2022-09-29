@@ -17,6 +17,9 @@ namespace Mirror
         // update interval
         double intervalStartTime;
 
+        // EDY: Fix execution flow
+        bool startCalled;
+
         // ---------------------------------------------------------------------
 
         // CLIENT
@@ -50,10 +53,18 @@ namespace Mirror
         int serverSentPacketsPerSecond;
         long serverSentBytesPerSecond;
 
-        // NetworkManager sets Transport.activeTransport in Awake().
+        // EDY: Using realiable OnEnable / OnDisable workflow. Start is not always called (disable/enable component)
+        void OnEnable()
+            {
+            startCalled = false;
+            }
+
+        // NetworkManager sets Transport.activeTransport in OnEnable().
         // so let's hook into it in Start().
         void Start()
         {
+            startCalled = true;
+
             // find available transport
             Transport transport = Transport.activeTransport;
             if (transport != null)
@@ -66,7 +77,7 @@ namespace Mirror
             else Debug.LogError($"NetworkStatistics: no available or active Transport found on this platform: {Application.platform}");
         }
 
-        void OnDestroy()
+        void OnDisable()
         {
             // remove transport hooks
             Transport transport = Transport.activeTransport;
@@ -105,6 +116,10 @@ namespace Mirror
 
         void Update()
         {
+            //EDY: Start is not called when disabling/enabling the component or on hot script reload.
+            if (!startCalled)
+                Start();
+
             // calculate results every second
             if (NetworkTime.localTime >= intervalStartTime + 1)
             {
