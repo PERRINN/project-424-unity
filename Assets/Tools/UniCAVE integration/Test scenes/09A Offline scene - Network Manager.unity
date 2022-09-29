@@ -220,8 +220,14 @@ MonoBehaviour:
   runInBackground: 1
   autoStartServerBuild: 0
   serverTickRate: 60
-  offlineScene: Assets/Tools/UniCAVE integration/Test scenes/09A Offline scene.unity
-  onlineScene: Assets/Tools/UniCAVE integration/Test scenes/09B Online scene.unity
+  offlineScene:
+    sceneAsset: {fileID: 102900000, guid: 5932753fd12a83b4db92b9369a66a90a, type: 3}
+    scenePath: Assets/Tools/UniCAVE integration/Test scenes/09A Offline scene - Network
+      Manager.unity
+  onlineScene:
+    sceneAsset: {fileID: 102900000, guid: 18603138aeae95b4b861323a0d8ff6de, type: 3}
+    scenePath: Assets/Tools/UniCAVE integration/Test scenes/09B Online scene - 424
+      Sandbox with UniCAVE.unity
   transport: {fileID: 392518822}
   networkAddress: localhost
   maxConnections: 100

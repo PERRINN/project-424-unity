@@ -39,16 +39,12 @@ namespace Mirror
 
         /// <summary>Automatically switch to this scene upon going offline (on start / on disconnect / on shutdown).</summary>
         [Header("Scene Management")]
-        [Scene]
-        [FormerlySerializedAs("m_OfflineScene")]
         [Tooltip("Scene that Mirror will switch to when the client or server is stopped")]
-        public string offlineScene = "";
+        public SceneReference offlineScene;
 
         /// <summary>Automatically switch to this scene upon going online (after connect/startserver).</summary>
-        [Scene]
-        [FormerlySerializedAs("m_OnlineScene")]
         [Tooltip("Scene that Mirror will switch to when the server is started. Clients will recieve a Scene Message to load the server's current scene when they connect.")]
-        public string onlineScene = "";
+        public SceneReference onlineScene;
 
         // transport layer
         [Header("Network Info")]
