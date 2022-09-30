@@ -166,7 +166,6 @@ public class SceneReferencePropertyDrawer : PropertyDrawer
 
     // Made these two const btw
     private const float PAD_SIZE = 2f;
-    private const float FOOTER_HEIGHT = 10f;
 
     private static readonly float lineHeight = EditorGUIUtility.singleLineHeight;
     private static readonly float paddedLine = lineHeight + PAD_SIZE;
@@ -197,7 +196,6 @@ public class SceneReferencePropertyDrawer : PropertyDrawer
                 var sceneAssetProperty = GetSceneAssetProperty(property);
 
                 // Draw the Box Background
-                position.height -= FOOTER_HEIGHT;
                 GUI.Box(EditorGUI.IndentedRect(position), GUIContent.none, EditorStyles.helpBox);
                 position = boxPadding.Remove(position);
                 position.height = lineHeight;
@@ -241,14 +239,16 @@ public class SceneReferencePropertyDrawer : PropertyDrawer
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         var sceneAssetProperty = GetSceneAssetProperty(property);
-        // Add an additional line and check if property.isExpanded
-        var lines = property.isExpanded ? sceneAssetProperty.objectReferenceValue != null ? 3 : 2 : 1;
-        // If this oneliner is confusing you - it does the same as
-        //var line = 3; // Fully expanded and with info
-        //if(sceneAssetProperty.objectReferenceValue == null) line = 2;
-        //if(!property.isExpanded) line = 1;
 
-        return boxPadding.vertical + lineHeight * lines + PAD_SIZE * (lines - 1) + FOOTER_HEIGHT;
+        if (property.isExpanded)
+        {
+            int lines = sceneAssetProperty.objectReferenceValue != null ? 3 : 2;
+            return boxPadding.vertical + lineHeight * lines + PAD_SIZE * (lines - 1);
+        }
+        else
+        {
+            return lineHeight;
+        }
     }
 
     /// <summary>
