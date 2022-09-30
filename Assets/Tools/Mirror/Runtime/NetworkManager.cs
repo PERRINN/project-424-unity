@@ -788,7 +788,7 @@ namespace Mirror
                 return;
             }
 
-            if (DebugInfoLevel >= 2) Debug.Log($"ServerChangeScene {newSceneName}");
+            if (DebugInfoLevel >= 2) Debug.Log($"ServerChangeScene [{newSceneName}]");
             NetworkServer.SetAllClientsNotReady();
             networkSceneName = newSceneName;
 
@@ -1127,7 +1127,7 @@ namespace Mirror
             // proceed with the login handshake by calling OnServerConnect
             if (networkSceneName != "" && networkSceneName != offlineScene)
             {
-                if (DebugInfoLevel >= 2) Debug.Log($"Sending SceneMessage to all clients: [{networkSceneName}]");
+                if (DebugInfoLevel >= 2) Debug.Log($"Sending SceneMessage to client {conn.connectionId} ({conn.address}): [{networkSceneName}]");
                 SceneMessage msg = new SceneMessage() { sceneName = networkSceneName };
                 conn.Send(msg);
             }
