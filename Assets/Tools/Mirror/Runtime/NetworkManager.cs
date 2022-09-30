@@ -125,7 +125,7 @@ namespace Mirror
         // TODO Expose in the inspector somehow:
         // - public member property debugLevel, so its serialized in the component
         // - static debugInfoLevel (camelcase) remapped to singleton.debugLevel
-        public static int DebugInfoLevel = 1;
+        public static int DebugInfoLevel = 2;
 
         // virtual so that inheriting classes' OnValidate() can call base.OnValidate() too
         public virtual void OnValidate()
@@ -705,6 +705,8 @@ namespace Mirror
 
         void RegisterServerMessages()
         {
+            if (DebugInfoLevel >= 2) Debug.Log("NetworkManager registering server messages");
+
             NetworkServer.OnConnectedEvent = OnServerConnectInternal;
             NetworkServer.OnDisconnectedEvent = OnServerDisconnect;
             NetworkServer.OnErrorEvent = OnServerError;
@@ -716,6 +718,8 @@ namespace Mirror
 
         void RegisterClientMessages()
         {
+            if (DebugInfoLevel >= 2) Debug.Log("NetworkManager registering client messages");
+
             NetworkClient.OnConnectedEvent = OnClientConnectInternal;
             NetworkClient.OnDisconnectedEvent = OnClientDisconnectInternal;
             NetworkClient.OnErrorEvent = OnClientError;
@@ -801,7 +805,7 @@ namespace Mirror
             // when this happens the server is not active so does not need to tell clients about the change
             if (NetworkServer.active)
             {
-                if (DebugInfoLevel >= 2) Debug.Log($"Sending SceneMessage to all clients: [{newSceneName}]");
+                if (DebugInfoLevel >= 1) Debug.Log($"Sending SceneMessage to all clients: [{newSceneName}]");
                 // notify all clients about the new scene
                 NetworkServer.SendToAll(new SceneMessage { sceneName = newSceneName });
             }
@@ -823,7 +827,7 @@ namespace Mirror
                 return;
             }
 
-            if (DebugInfoLevel >= 2) Debug.Log($"ClientChangeScene newSceneName: [{newSceneName}] networkSceneName: [{networkSceneName}]");
+            if (DebugInfoLevel >= 1) Debug.Log($"ClientChangeScene newSceneName: [{newSceneName}] networkSceneName: [{networkSceneName}]");
 
             // Let client prepare for scene change
             OnClientChangeScene(newSceneName, sceneOperation, customHandling);

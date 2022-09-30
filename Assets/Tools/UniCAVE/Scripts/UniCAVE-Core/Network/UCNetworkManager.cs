@@ -187,6 +187,7 @@ namespace UniCAVE
             if (!m_startCalled)
                 Start();
 
+            // Client tries to reconnect continuously when marked as forced (not using discovery)
             if(clientAutoConnect && m_asClient && m_asForcedClient)
             {
                 if(!NetworkClient.isConnected && !NetworkClient.isConnecting)
