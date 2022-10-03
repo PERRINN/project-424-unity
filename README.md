@@ -1,7 +1,17 @@
 # Project 424
-Simulation of the PERRINN 424 electric hypercar in Unity using Vehicle Physics Pro
+Simulation of the PERRINN 424 electric hypercar in Unity using Vehicle Physics Pro.
 
-[Hot Lap video in Monza](https://www.youtube.com/watch?v=OMoQGtA3gCs)
+[More information on Project 424](https://discover.perrinn.com/project-424/424-unity-simulation)
+
+## Videos
+
+A couple of laps in Nordschleife:
+
+[![Vehicle Physics Pro simulating PERRINN 424 in Nordschleife](https://img.youtube.com/vi/mwIE3rJ9SHk/maxresdefault.jpg)](https://youtu.be/mwIE3rJ9SHk)
+
+One of the first tests in Monza:
+
+[First test of new tire model in electric LMP1 racing car](https://www.youtube.com/watch?v=OMoQGtA3gCs)
 
 ## Requirements
 
