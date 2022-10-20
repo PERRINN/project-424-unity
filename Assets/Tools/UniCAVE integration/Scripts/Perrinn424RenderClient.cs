@@ -33,12 +33,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public Vector3 headPosition;
 		public Quaternion headRotation;
 
-		// Wheel angular velocities
+		// Wheel steering angles
 
-		public float angularVelocityFL;
-		public float angularVelocityFR;
-		public float angularVelocityRL;
-		public float angularVelocityRR;
+		public float steerAngleLeft;
+		public float steerAngleRight;
 
 		// Wheel angular positions
 
@@ -50,7 +48,6 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 
 	bool m_firstUpdate;
-	bool m_clientFirstState;
 	bool m_clientStateReceived;
 	Transform m_vehicleTransform;
 	Transform m_caveTransform;
@@ -125,31 +122,33 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Monitor states received
 
-		m_clientFirstState = false;
 		m_clientStateReceived = false;
 		}
 
 
 	// Client Update to apply the visual stuff from the latest state
+	//
+	// QUESTION: Move to RpcUpdateVisualState? Useful being here? I think not, as we're not syncing angular velocity anymore...
 
 	void Update ()
 		{
 		if (!isServer && m_clientStateReceived)
 			{
-			if (!m_clientFirstState)
-				{
-				m_clientFirstState = true;
+			vehicle.frontAxle.leftWheel.steerAngle = m_state.steerAngleLeft;
+			vehicle.frontAxle.rightWheel.steerAngle = m_state.steerAngleRight;
 
-				vehicle.frontAxle.leftWheel.angularPosition = m_state.angularPositionFL;
-				vehicle.frontAxle.rightWheel.angularPosition = m_state.angularPositionFR;
-				vehicle.rearAxle.leftWheel.angularPosition = m_state.angularPositionRL;
-				vehicle.rearAxle.rightWheel.angularPosition = m_state.angularPositionRR;
-				}
+			vehicle.frontAxle.leftWheel.angularPosition = m_state.angularPositionFL;
+			vehicle.frontAxle.rightWheel.angularPosition = m_state.angularPositionFR;
+			vehicle.rearAxle.leftWheel.angularPosition = m_state.angularPositionRL;
+			vehicle.rearAxle.rightWheel.angularPosition = m_state.angularPositionRR;
 
-			vehicle.frontAxle.leftWheel.UpdateVisualWheel(Time.deltaTime);
-			vehicle.frontAxle.rightWheel.UpdateVisualWheel(Time.deltaTime);
-			vehicle.rearAxle.leftWheel.UpdateVisualWheel(Time.deltaTime);
-			vehicle.rearAxle.rightWheel.UpdateVisualWheel(Time.deltaTime);
+			// Using deltaTime = 0 so the specified angular positions are preserved
+			// (not modified with any residual angular velocity).
+
+			vehicle.frontAxle.leftWheel.UpdateVisualWheel(0.0f);
+			vehicle.frontAxle.rightWheel.UpdateVisualWheel(0.0f);
+			vehicle.rearAxle.leftWheel.UpdateVisualWheel(0.0f);
+			vehicle.rearAxle.rightWheel.UpdateVisualWheel(0.0f);
 			}
 		}
 
@@ -184,12 +183,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 				m_state.headRotation = m_headTransform.rotation;
 				}
 
-			// Wheel angular velocities and positions
+			// Wheel steering angles and angular positions
 
-			m_state.angularVelocityFL = vehicle.frontAxle.leftWheel.angularVelocity;
-			m_state.angularVelocityFR = vehicle.frontAxle.rightWheel.angularVelocity;
-			m_state.angularVelocityRL = vehicle.rearAxle.leftWheel.angularVelocity;
-			m_state.angularVelocityRR = vehicle.rearAxle.rightWheel.angularVelocity;
+			m_state.steerAngleLeft = vehicle.frontAxle.leftWheel.steerAngle;
+			m_state.steerAngleRight = vehicle.frontAxle.rightWheel.steerAngle;
 
 			m_state.angularPositionFL = vehicle.frontAxle.leftWheel.angularPosition;
 			m_state.angularPositionFR = vehicle.frontAxle.rightWheel.angularPosition;
@@ -221,13 +218,6 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		if (m_headTransform != null)
 			m_headTransform.SetPositionAndRotation(state.headPosition, state.headRotation);
-
-		// Visual wheel updates
-
-		vehicle.frontAxle.leftWheel.angularVelocity = state.angularVelocityFL;
-		vehicle.frontAxle.rightWheel.angularVelocity = state.angularVelocityFR;
-		vehicle.rearAxle.leftWheel.angularVelocity = state.angularVelocityRL;
-		vehicle.rearAxle.rightWheel.angularVelocity = state.angularVelocityRR;
 
 		// We've received at least one state correctly
 
