@@ -13,9 +13,12 @@ namespace Perrinn424
 public class Perrinn424RenderClient : NetworkBehaviour
 	{
 	public Perrinn424CarController vehicle;
-	public Behaviour cameraController;
+	public VPVisualEffects visualEffects;
 	public Transform cave;
 	public Transform head;
+
+	public Behaviour cameraController;
+
 
 
 	// Convientent structs and methods to gather the visual states
@@ -86,6 +89,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public WheelPose wheelFR;
 		public WheelPose wheelRL;
 		public WheelPose wheelRR;
+
+		// Steering wheel pose
+
+		public VisualPose steeringWheel;
 		}
 
 
@@ -191,6 +198,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			m_state.wheelRL.SetFrom(vehicle.rearAxle.leftWheel);
 			m_state.wheelRR.SetFrom(vehicle.rearAxle.rightWheel);
 
+			// Retrieve steering wheel pose
+
+			if (visualEffects != null && visualEffects.steeringWheel != null)
+				m_state.steeringWheel.SetFrom(visualEffects.steeringWheel);
+
 			// Send state to clients
 
 			RpcUpdateVisualState(m_state);
@@ -223,6 +235,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		state.wheelFR.ApplyTo(vehicle.frontAxle.rightWheel);
 		state.wheelRL.ApplyTo(vehicle.rearAxle.leftWheel);
 		state.wheelRR.ApplyTo(vehicle.rearAxle.rightWheel);
+
+		// Apply steering wheel pose
+
+		if (visualEffects != null && visualEffects.steeringWheel != null)
+			state.steeringWheel.ApplyTo(visualEffects.steeringWheel);
 		}
 	}
 
