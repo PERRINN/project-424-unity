@@ -949,9 +949,10 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   vehicle: {fileID: 626402878}
-  cameraController: {fileID: 6905166632989773343}
+  visualEffects: {fileID: 1810276301}
   cave: {fileID: 3897279290908718372}
   head: {fileID: 1766672685383321443}
+  cameraController: {fileID: 6905166632989773343}
 --- !u!114 &1716988321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -969,6 +970,18 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
+--- !u!114 &1810276301 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2483877715511907565, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2483877715364263435}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -897142050, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2133505911
 GameObject:
   m_ObjectHideFlags: 0
@@ -1203,61 +1216,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[0].pointBase
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[0].stiffness
-      value: 500000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[1].pointBase
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[1].stiffness
-      value: 500000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[2].pointBase
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[3].pointBase
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[3].stiffness
-      value: 500000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[0].limitContactDepth
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[1].limitContactDepth
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[2].limitContactDepth
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2218053485607648859, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: contactPoints.Array.data[3].limitContactDepth
-      value: 0.05
-      objectReference: {fileID: 0}
     - target: {fileID: 2483877716221292736, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: m_Name
