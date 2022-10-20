@@ -127,7 +127,14 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Dashboard display states
 
-		public TextState speed;
+		public TextState speedMps;
+		public TextState speedKph;
+		public TextState gear;
+		public TextState power;
+		public TextState minCaption;
+		public TextState deltaTime;
+		public TextState batterySOC;
+		public TextState batteryCapacity;
 		}
 
 
@@ -233,9 +240,16 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 			m_state.steeringWheel.SetFrom(visualEffects.steeringWheel);
 
-			// Retrieve dashboard state
+			// Retrieve dashboard states
 
-			m_state.speed.SetFrom(dashboardDisplay.speedMps);
+			m_state.speedMps.SetFrom(dashboardDisplay.speedMps);
+			m_state.speedKph.SetFrom(dashboardDisplay.speedKph);
+			m_state.gear.SetFrom(dashboardDisplay.gear);
+			m_state.power.SetFrom(dashboardDisplay.totalElecPower);
+			m_state.minCaption.SetFrom(dashboardDisplay.minIndicator);
+			m_state.deltaTime.SetFrom(dashboardDisplay.timeDifference);
+			m_state.batterySOC.SetFrom(dashboardDisplay.batterySOC);
+			m_state.batteryCapacity.SetFrom(dashboardDisplay.batteryCapacity);
 
 			// Send state to clients
 
@@ -270,9 +284,16 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		state.steeringWheel.ApplyTo(visualEffects.steeringWheel);
 
-		// Apply dashboard state
+		// Apply dashboard states
 
-		state.speed.ApplyTo(dashboardDisplay.speedMps);
+		state.speedMps.ApplyTo(dashboardDisplay.speedMps);
+		state.speedKph.ApplyTo(dashboardDisplay.speedKph);
+		state.gear.ApplyTo(dashboardDisplay.gear);
+		state.power.ApplyTo(dashboardDisplay.totalElecPower);
+		state.minCaption.ApplyTo(dashboardDisplay.minIndicator);
+		state.deltaTime.ApplyTo(dashboardDisplay.timeDifference);
+		state.batterySOC.ApplyTo(dashboardDisplay.batterySOC);
+		state.batteryCapacity.ApplyTo(dashboardDisplay.batteryCapacity);
 		}
 	}
 
