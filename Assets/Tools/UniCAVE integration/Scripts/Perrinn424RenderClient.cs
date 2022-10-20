@@ -209,20 +209,20 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		{
 		// Apply vehicle and cave poses
 
-		m_state.vehicle.ApplyTo(m_vehicleTransform);
+		state.vehicle.ApplyTo(m_vehicleTransform);
 
 		if (m_caveTransform != null)
-			m_state.cave.ApplyTo(m_caveTransform);
+			state.cave.ApplyTo(m_caveTransform);
 
 		if (m_headTransform != null)
-			m_state.head.ApplyTo(m_headTransform);
+			state.head.ApplyTo(m_headTransform);
 
 		// Apply wheel poses
 
-		m_state.wheelFL.ApplyTo(vehicle.frontAxle.leftWheel);
-		m_state.wheelFR.ApplyTo(vehicle.frontAxle.rightWheel);
-		m_state.wheelRL.ApplyTo(vehicle.rearAxle.leftWheel);
-		m_state.wheelRR.ApplyTo(vehicle.rearAxle.rightWheel);
+		state.wheelFL.ApplyTo(vehicle.frontAxle.leftWheel);
+		state.wheelFR.ApplyTo(vehicle.frontAxle.rightWheel);
+		state.wheelRL.ApplyTo(vehicle.rearAxle.leftWheel);
+		state.wheelRR.ApplyTo(vehicle.rearAxle.rightWheel);
 		}
 	}
 
