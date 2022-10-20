@@ -83,8 +83,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	public struct TextState
 		{
-		public string text;
 		public bool enabled;
+		public string text;
 
 		public void SetFrom (Text uiText)
 			{
@@ -101,6 +101,31 @@ public class Perrinn424RenderClient : NetworkBehaviour
 				{
 				uiText.text = text;
 				uiText.enabled = enabled;
+				}
+			}
+		}
+
+
+	public struct ImageState
+		{
+		public bool enabled;
+		public Color color;
+
+		public void SetFrom (Image uiImage)
+			{
+			if (uiImage != null)
+				{
+				color = uiImage.color;
+				enabled = uiImage.enabled;
+				}
+			}
+
+		public void ApplyTo (Image uiImage)
+			{
+			if (uiImage != null)
+				{
+				uiImage.color = color;
+				uiImage.enabled = enabled;
 				}
 			}
 		}
@@ -135,6 +160,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public TextState deltaTime;
 		public TextState batterySOC;
 		public TextState batteryCapacity;
+		public ImageState drs;
+		public ImageState autopilot;
 		}
 
 
@@ -250,6 +277,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			m_state.deltaTime.SetFrom(dashboardDisplay.timeDifference);
 			m_state.batterySOC.SetFrom(dashboardDisplay.batterySOC);
 			m_state.batteryCapacity.SetFrom(dashboardDisplay.batteryCapacity);
+			m_state.drs.SetFrom(dashboardDisplay.drsImage);
+			m_state.autopilot.SetFrom(dashboardDisplay.autopilotImage);
 
 			// Send state to clients
 
@@ -294,6 +323,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		state.deltaTime.ApplyTo(dashboardDisplay.timeDifference);
 		state.batterySOC.ApplyTo(dashboardDisplay.batterySOC);
 		state.batteryCapacity.ApplyTo(dashboardDisplay.batteryCapacity);
+		state.drs.ApplyTo(dashboardDisplay.drsImage);
+		state.autopilot.ApplyTo(dashboardDisplay.autopilotImage);
 		}
 	}
 
