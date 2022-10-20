@@ -18,10 +18,74 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public Transform head;
 
 
+	public struct VisualPose
+		{
+		public Vector3 position;
+		public Quaternion rotation;
+
+		public void SetFrom (Transform transform)
+			{
+			position = transform.position;
+			rotation = transform.rotation;
+			}
+
+		public void ApplyTo (Transform transform)
+			{
+			transform.SetPositionAndRotation(position, rotation);
+			}
+		}
+
+
+	public struct WheelPose
+		{
+		public VisualPose suspension;
+		public VisualPose caliper;
+		public VisualPose wheel;
+
+		public void SetFrom (VPWheelCollider wheelCol)
+			{
+			if (wheelCol.suspensionTransform != null)
+				suspension.SetFrom(wheelCol.suspensionTransform);
+
+			if (wheelCol.caliperTransform != null)
+				suspension.SetFrom(wheelCol.caliperTransform);
+
+			if (wheelCol.wheelTransform != null)
+				suspension.SetFrom(wheelCol.wheelTransform);
+			}
+
+		public void ApplyTo (VPWheelCollider wheelCol)
+			{
+			if (wheelCol.suspensionTransform != null)
+				suspension.ApplyTo(wheelCol.suspensionTransform);
+
+			if (wheelCol.caliperTransform != null)
+				suspension.ApplyTo(wheelCol.caliperTransform);
+
+			if (wheelCol.wheelTransform != null)
+				suspension.ApplyTo(wheelCol.wheelTransform);
+			}
+		}
+
+
 	public struct VisualState
 		{
-		// Vehicle pose
+		// Vehicle and cave poses
 
+		public VisualPose vehicle;
+		public VisualPose cave;
+		public VisualPose head;
+
+		// Wheel poses
+
+		public WheelPose wheelFL;
+		public WheelPose wheelFR;
+		public WheelPose wheelRL;
+		public WheelPose wheelRR;
+
+
+
+		/*
 		public Vector3 vehiclePosition;
 		public Quaternion vehicleRotation;
 
@@ -33,17 +97,20 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public Vector3 headPosition;
 		public Quaternion headRotation;
 
-		// Wheel steering angles
+		// Wheel poses
 
-		public float steerAngleLeft;
-		public float steerAngleRight;
+		public Vector3 suspensionPositionFL;
+		public Vector3 wheelPositionFL;
+		public Quaternion wheelRotationFL;
 
-		// Wheel angular positions
 
-		public float angularPositionFL;
-		public float angularPositionFR;
-		public float angularPositionRL;
-		public float angularPositionRR;
+		public Vector3 wheelPositionFR;
+		public Quaternion wheelRotationFR;
+		public Vector3 wheelPositionRL;
+		public Quaternion wheelRotationRL;
+		public Vector3 wheelPositionRR;
+		public Quaternion wheelRotationRR;
+		*/
 		}
 
 
@@ -134,6 +201,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		{
 		if (!isServer && m_clientStateReceived)
 			{
+			/*
 			vehicle.frontAxle.leftWheel.steerAngle = m_state.steerAngleLeft;
 			vehicle.frontAxle.rightWheel.steerAngle = m_state.steerAngleRight;
 
@@ -149,6 +217,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			vehicle.frontAxle.rightWheel.UpdateVisualWheel(0.0f);
 			vehicle.rearAxle.leftWheel.UpdateVisualWheel(0.0f);
 			vehicle.rearAxle.rightWheel.UpdateVisualWheel(0.0f);
+			*/
 			}
 		}
 
@@ -164,10 +233,31 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		if (isServer)
 			{
+			// Retrieve vehicle and cave poses
+
+			m_state.vehicle.SetFrom(m_vehicleTransform);
+
+			if (m_caveTransform != null)
+				m_state.cave.SetFrom(m_caveTransform);
+
+			if (m_headTransform != null)
+				m_state.head.SetFrom(m_headTransform);
+
+			// Retrieve wheel poses
+
+			m_state.wheelFL.SetFrom(vehicle.frontAxle.leftWheel);
+			m_state.wheelFR.SetFrom(vehicle.frontAxle.rightWheel);
+			m_state.wheelRL.SetFrom(vehicle.rearAxle.leftWheel);
+			m_state.wheelRR.SetFrom(vehicle.rearAxle.rightWheel);
+
+
+			/*
 			// Vehicle pose
 
 			m_state.vehiclePosition = m_vehicleTransform.position;
 			m_state.vehicleRotation = m_vehicleTransform.rotation;
+
+			m_state.vehicle.position = m_vehicleTransform.position;
 
 			// UniCave poses
 
@@ -183,7 +273,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 				m_state.headRotation = m_headTransform.rotation;
 				}
 
-			// Wheel steering angles and angular positions
+			// Wheel poses
 
 			m_state.steerAngleLeft = vehicle.frontAxle.leftWheel.steerAngle;
 			m_state.steerAngleRight = vehicle.frontAxle.rightWheel.steerAngle;
@@ -192,6 +282,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			m_state.angularPositionFR = vehicle.frontAxle.rightWheel.angularPosition;
 			m_state.angularPositionRL = vehicle.rearAxle.leftWheel.angularPosition;
 			m_state.angularPositionRR = vehicle.rearAxle.rightWheel.angularPosition;
+			*/
 
 			RpcUpdateVisualState(m_state);
 			}
@@ -207,6 +298,26 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[ClientRpc]
 	void RpcUpdateVisualState (VisualState state)
 		{
+		// Apply vehicle and cave poses
+
+		m_state.vehicle.ApplyTo(m_vehicleTransform);
+
+		if (m_caveTransform != null)
+			m_state.cave.ApplyTo(m_caveTransform);
+
+		if (m_headTransform != null)
+			m_state.head.ApplyTo(m_headTransform);
+
+		// Apply wheel poses
+
+		m_state.wheelFL.ApplyTo(vehicle.frontAxle.leftWheel);
+		m_state.wheelFR.ApplyTo(vehicle.frontAxle.rightWheel);
+		m_state.wheelRL.ApplyTo(vehicle.rearAxle.leftWheel);
+		m_state.wheelRR.ApplyTo(vehicle.rearAxle.rightWheel);
+
+
+
+		/*
 		// Vehicle pose
 
 		m_vehicleTransform.SetPositionAndRotation(state.vehiclePosition, state.vehicleRotation);
@@ -221,7 +332,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// We've received at least one state correctly
 
+		m_state = state;
 		m_clientStateReceived = true;
+		*/
 		}
 	}
 
