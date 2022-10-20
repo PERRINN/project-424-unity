@@ -3,6 +3,7 @@
 
 
 using UnityEngine;
+using UnityEngine.UI;
 using VehiclePhysics;
 using Mirror;
 
@@ -14,6 +15,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	{
 	public Perrinn424CarController vehicle;
 	public VPVisualEffects visualEffects;
+	public SteeringScreen dashboardDisplay;
 	public Transform cave;
 	public Transform head;
 
@@ -32,13 +34,17 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		public void SetFrom (Transform transform)
 			{
-			position = transform.position;
-			rotation = transform.rotation;
+			if (transform != null)
+				{
+				position = transform.position;
+				rotation = transform.rotation;
+				}
 			}
 
 		public void ApplyTo (Transform transform)
 			{
-			transform.SetPositionAndRotation(position, rotation);
+			if (transform != null)
+				transform.SetPositionAndRotation(position, rotation);
 			}
 		}
 
@@ -75,6 +81,31 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		}
 
 
+	public struct TextState
+		{
+		public string text;
+		public bool enabled;
+
+		public void SetFrom (Text uiText)
+			{
+			if (uiText != null)
+				{
+				text = uiText.text;
+				enabled = uiText.enabled;
+				}
+			}
+
+		public void ApplyTo (Text uiText)
+			{
+			if (uiText != null)
+				{
+				uiText.text = text;
+				uiText.enabled = enabled;
+				}
+			}
+		}
+
+
 	public struct VisualState
 		{
 		// Vehicle and cave poses
@@ -93,6 +124,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Steering wheel pose
 
 		public VisualPose steeringWheel;
+
+		// Dashboard display states
+
+		public TextState speed;
 		}
 
 
@@ -184,12 +219,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			// Retrieve vehicle and cave poses
 
 			m_state.vehicle.SetFrom(m_vehicleTransform);
-
-			if (m_caveTransform != null)
-				m_state.cave.SetFrom(m_caveTransform);
-
-			if (m_headTransform != null)
-				m_state.head.SetFrom(m_headTransform);
+			m_state.cave.SetFrom(m_caveTransform);
+			m_state.head.SetFrom(m_headTransform);
 
 			// Retrieve wheel poses
 
@@ -200,8 +231,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 			// Retrieve steering wheel pose
 
-			if (visualEffects != null && visualEffects.steeringWheel != null)
-				m_state.steeringWheel.SetFrom(visualEffects.steeringWheel);
+			m_state.steeringWheel.SetFrom(visualEffects.steeringWheel);
+
+			// Retrieve dashboard state
+
+			m_state.speed.SetFrom(dashboardDisplay.speedMps);
 
 			// Send state to clients
 
@@ -222,12 +256,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Apply vehicle and cave poses
 
 		state.vehicle.ApplyTo(m_vehicleTransform);
-
-		if (m_caveTransform != null)
-			state.cave.ApplyTo(m_caveTransform);
-
-		if (m_headTransform != null)
-			state.head.ApplyTo(m_headTransform);
+		state.cave.ApplyTo(m_caveTransform);
+		state.head.ApplyTo(m_headTransform);
 
 		// Apply wheel poses
 
@@ -238,8 +268,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Apply steering wheel pose
 
-		if (visualEffects != null && visualEffects.steeringWheel != null)
-			state.steeringWheel.ApplyTo(visualEffects.steeringWheel);
+		state.steeringWheel.ApplyTo(visualEffects.steeringWheel);
+
+		// Apply dashboard state
+
+		state.speed.ApplyTo(dashboardDisplay.speedMps);
 		}
 	}
 
