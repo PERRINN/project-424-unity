@@ -1,6 +1,15 @@
 
 // Client renderer for cluster rendering setups
 
+// TODO: Sync ground effects. NetworkBehaviour in Ground Materials:
+//	- Create lists of effect components in the ground materials.
+//	- Assign the list indexes to the ID fields in VPGroundParticleEmitter and VPGroundMarksRenderer.
+//	- Server:
+//		- Subscribes to the events in each VPGroundParticleEmitter and VPGroundMarksRenderer available.
+//		- When the event is raised, RPC the client with the ID and the parameters.
+//	- Client:
+//		- Receives RPC and do the action in the corresponding ID with the parameters received.
+
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,9 +31,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public Behaviour cameraController;
 
 
-
-	// Convientent structs and methods to gather the visual states
-	// and apply them to their networked counterpart.
+	// Convientent structs and methods to gather the visual states and apply them to their networked counterpart
 
 
 	public struct VisualPose
@@ -129,6 +136,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 				}
 			}
 		}
+
+
+	// Complete visual state sent to clients
 
 
 	public struct VisualState
