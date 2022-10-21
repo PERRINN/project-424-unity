@@ -348,10 +348,6 @@ namespace UniCAVE
         {
             updatedViewports = false;
 
-            centerCam = null;
-            leftCam = null;
-            rightCam = null;
-
             if(loadSettingsAtRuntime)
             {
                 if (Mirror.NetworkManager.DebugInfoLevel >= 1) Debug.Log("Attempting to Load Settings for Display: " + gameObject.name);
@@ -535,6 +531,26 @@ namespace UniCAVE
                 }
             }
 #endif
+        }
+
+        /// <summary>
+        /// EDY: Clean our own poo. Ensure we don't left anything behind.
+        /// </summary>
+        void OnDisable ()
+        {
+            if (centerCam != null) Destroy(centerCam.gameObject);
+            if (leftCam != null) Destroy(leftCam.gameObject);
+            if (rightCam != null) Destroy(rightCam.gameObject);
+            Destroy(centerTex);
+            Destroy(leftTex);
+            Destroy(rightTex);
+
+            centerCam = null;
+            leftCam = null;
+            rightCam = null;
+            centerTex = null;
+            leftTex = null;
+            rightTex = null;
         }
 
         /// <summary>
