@@ -184,9 +184,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	// Order of execution & flags
 	//
-	// Server:	OnEnable, OnStartServer, Update								isServer: true, isClient: false
-	// Client:	OnEnable, OnStartClient, Update								isServer: false, isClient: true
-	// Host:	OnEnable, OnStartServer, Update, OnStartClient, Update		isServer: true, isClient: true
+	// Server:  OnEnable, OnStartServer, Update                             isServer: true, isClient: false
+	// Client:  OnEnable, OnStartClient, Update                             isServer: false, isClient: true
+	// Host:    OnEnable, OnStartServer, Update, OnStartClient, Update      isServer: true, isClient: true
 	//
 	// When the scene is loaded there may be an additional OnEnable just before Mirror disables the component.
 
