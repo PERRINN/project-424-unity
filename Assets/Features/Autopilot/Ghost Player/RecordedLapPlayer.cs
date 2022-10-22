@@ -29,6 +29,11 @@ public class RecordedLapPlayer : MonoBehaviour
         circularIndex = new CircularIndex(lap.Count);
     }
 
+    private void Start()
+    {
+        Play();
+    }
+
     public void SetPlayingTime(float time)
     {
         playingTime = time;
@@ -109,6 +114,7 @@ public class RecordedLapPlayer : MonoBehaviour
         if (GUI.changed)
         {
             SetPlayingTime(newPlayingTime);
+            Pause();
         }
     }
 }
