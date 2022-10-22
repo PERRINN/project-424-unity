@@ -1,6 +1,7 @@
 ﻿using Perrinn424.AutopilotSystem;
 using Perrinn424.Utilities;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class RecordedLapPlayer : MonoBehaviour
 {
@@ -48,7 +49,7 @@ public class RecordedLapPlayer : MonoBehaviour
         Set(s);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (isPlaying)
         {
@@ -91,5 +92,23 @@ public class RecordedLapPlayer : MonoBehaviour
     {
         Stop();
         Play();
+    }
+
+
+    public bool showGui;
+    public Rect guiPosition = new Rect(25, 25, 100, 30);
+    void OnGUI()
+    {
+        if (!showGui)
+        {
+            return;
+        }
+
+        float newPlayingTime = GUI.HorizontalSlider(guiPosition, playingTime, 0.0F, TotalTime);
+
+        if (GUI.changed)
+        {
+            SetPlayingTime(newPlayingTime);
+        }
     }
 }
