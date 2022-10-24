@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using EdyCommonTools;
 using Mirror;
+using Mirror.Discovery;
 
 
 namespace Perrinn424
@@ -24,15 +25,18 @@ public class NetworkMonitor : MonoBehaviour
 	[Header("On-screen widget")]
 	public bool debugInfo = false;
 	public GUITextBox.Settings debugWidget = new GUITextBox.Settings();
-
+	[Tooltip("Shows debug messages in the console whenever roles or states change")]
+	public bool debugConsole = false;
 
 	public enum Role { Undefined, Server, Client, Host }
 	public enum State { Undefined, Connecting, Connected }
 
+	// Private fields
 
 	NetworkManager m_manager;
+	NetworkDiscovery m_discovery;
 	Role m_currentRole = Role.Undefined;
-	State m_currentState = State.Undefined;
+	State m_clientState = State.Undefined;
 
 	GUITextBox m_textBox = new GUITextBox();
 	StringBuilder m_text = new StringBuilder(1024);
@@ -52,91 +56,113 @@ public class NetworkMonitor : MonoBehaviour
 	void OnEnable ()
 		{
 		m_manager = GetComponent<NetworkManager>();
+		m_discovery = GetComponent<NetworkDiscovery>();
 		m_textBox.settings = debugWidget;
 		m_textBox.header = "Connection status              \n";
 
 		m_currentRole = Role.Undefined;
-		m_currentState = State.Undefined;
+		m_clientState = State.Undefined;
 
 		// Disable all gameobjects
 
-		DisableList(serverOnly);
-		DisableList(clientOnly);
-		DisableList(clientConnecting);
-		DisableList(clientConnected);
+		SetListActive(serverOnly, false);
+		SetListActive(clientOnly, false);
+		SetListActive(clientConnecting, false);
+		SetListActive(clientConnected, false);
 		}
 
 
 	void OnDisable ()
 		{
 		m_currentRole = Role.Undefined;
-		m_currentState = State.Undefined;
+		m_clientState = State.Undefined;
 		}
 
 
 	void Update ()
 		{
-		// TODO:
-		// - Define role: undefined, server, client, host.
-		// - Monitor role changes.
-		// - Enable and/or disable serverOnly and clientOnly just once only when the state changes.
-
-		// TODO:
-		// - Define client connection state: undefined (in server), connecting, connected.
-		// - Monitor connection state changes.
-		// - Enable and/or disable clientConnecting and clientReady just once only when the state changes.
-
 		// Current network states
 
-		bool serverActive = NetworkServer.active;
-		bool clientActive = NetworkClient.active;
-		bool clientConnected = NetworkClient.isConnected;
-		bool clientReady = NetworkClient.ready;
+		bool isServerActive = NetworkServer.active;
+		bool isServerAdvertising = m_discovery != null? m_discovery.serverAdvertising : false;
 
-		// Define role
+		bool isClientActive = NetworkClient.active;
+		bool isClientSearching = m_discovery != null? m_discovery.clientSearching : false;
+		bool isClientConnected = NetworkClient.isConnected;
+		bool isClientReady = NetworkClient.ready;
 
-		if (serverActive && clientActive)
-			m_currentRole = Role.Host;
+		// TODO: Client connecting (NetworkClient.isConnecting)
+
+		// Define new role and state
+
+		Role newRole = Role.Undefined;
+		State newState = State.Undefined;
+
+		if (isServerActive && isClientActive)
+			newRole = Role.Host;
 		else
-		if (serverActive)
-			m_currentRole = Role.Server;
+		if (isServerActive)
+			newRole = Role.Server;
 		else
-		if (clientActive)
-			m_currentRole = Role.Client;
-		else
-			m_currentRole = Role.Undefined;
+		if (isClientActive)
+			newRole = Role.Client;
 
-		// Define state
-
-		if (clientActive)
+		if (isClientActive)
 			{
-
+			if (isClientReady)
+				newState = State.Connected;
+			else
+			if (isClientSearching)
+				newState = State.Connecting;
 			}
-		else
-			{
-			m_currentState = State.Undefined;
-			}
 
+		// Enable / disable the corresponding GameObjects
+		//
 		// GameObjects are enabled or disabled only once each time the state changes.
-		// This allows the GameObjects to take further actions. For example, a clientReady GameObject may
+		// This allows the GameObjects to take further actions. For example, a isClientReady GameObject may
 		// show the connection information (client id, transport, networkAddress, etc.) for some seconds
 		// and then disable itself to hide the information.
 
-		// TODO: Public event delegates: OnRoleChange, OnClientStateChange
+		if (newRole != m_currentRole)
+			{
+			SetListActive(serverOnly, newRole == Role.Server || newRole == Role.Host);
+			SetListActive(clientOnly, newRole == Role.Client);
 
+			if (debugConsole)
+				Debug.Log($"NetworkMonitor: Role changed: {m_currentRole} -> {newRole}");
+
+			m_currentRole = newRole;
+			}
+
+		if (newState != m_clientState)
+			{
+			SetListActive(clientConnecting, newState == State.Connecting);
+			SetListActive(clientConnected, newState == State.Connected);
+
+			if (debugConsole)
+				Debug.Log($"NetworkMonitor: State changed: {m_clientState} -> {newState}");
+
+			m_clientState = newState;
+			}
+
+		// On-screen widget
 
 		if (debugInfo)
 			{
 			m_text.Clear();
-			m_text.Append($"Server active:    {serverActive}\n\n");
-			m_text.Append($"Client active:    {clientActive}\n");
-			m_text.Append($"Client connected: {clientConnected}\n");
-			m_text.Append($"Client ready:     {clientReady}\n\n");
+			m_text.Append($"ROLE:               {m_currentRole}\n");
+			m_text.Append($"CLIENT:             {m_clientState}\n\n");
+			m_text.Append($"Server active:      {isServerActive}\n");
+			m_text.Append($"Server advertising: {isServerAdvertising}\n\n");
+			m_text.Append($"Client active:      {isClientActive}\n");
+			m_text.Append($"Client searching:   {isClientSearching}\n");
+			m_text.Append($"Client connected:   {isClientConnected}\n");
+			m_text.Append($"Client ready:       {isClientReady}\n\n");
 
 			string strLocalPlayer = NetworkClient.localPlayer != null? "yes" : "no";
-			m_text.Append($"Local player:     {strLocalPlayer}\n");
-			m_text.Append($"Network address:  {m_manager.networkAddress}\n");
-			m_text.Append($"Active transport: {Transport.activeTransport}");
+			m_text.Append($"Local player:       {strLocalPlayer}\n");
+			m_text.Append($"Network address:    {m_manager.networkAddress}\n");
+			m_text.Append($"Active transport:   {Transport.activeTransport}");
 
 			m_textBox.text = m_text.ToString();
 			}
@@ -150,17 +176,10 @@ public class NetworkMonitor : MonoBehaviour
 		}
 
 
-	void DisableList (GameObject[] list)
+	void SetListActive (GameObject[] list, bool active)
 		{
 		foreach (GameObject go in list)
-			go.SetActive(false);
-		}
-
-
-	void EnableList (GameObject[] list)
-		{
-		foreach (GameObject go in list)
-			go.SetActive(true);
+			go.SetActive(active);
 		}
 	}
 
