@@ -156,6 +156,15 @@ namespace UniCAVE
         }
 
         /// <summary>
+        /// Server: server stopped. Stop advertising, as clients won't be able to connect.
+        /// </summary>
+        public override void OnStopServer()
+        {
+            if (m_networkDiscovery != null)
+                m_networkDiscovery.StopDiscovery();
+        }
+
+        /// <summary>
         /// Server: client connected and ready. Raises the client connected flag.
         /// </summary>
         public override void OnServerReady(NetworkConnectionToClient conn)
@@ -174,7 +183,7 @@ namespace UniCAVE
             if (DebugInfoLevel >= 2) Debug.Log("UCNetworkManager OnClientDisconnect");
 
             base.OnClientDisconnect();
-            if (clientAutoConnect && !m_asForcedClient && m_networkDiscovery != null)
+            if (m_asClient && clientAutoConnect && !m_asForcedClient && m_networkDiscovery != null)
                 m_networkDiscovery.StartDiscovery();
         }
 
@@ -198,7 +207,7 @@ namespace UniCAVE
         }
 
         /// <summary>
-        /// Client: Server responded to client's server discovery. Connect to it immediately.
+        /// Client: A server responded to client's server discovery. Connect to it immediately.
         /// </summary>
         void OnDiscoveredServer(ServerResponse info)
         {
