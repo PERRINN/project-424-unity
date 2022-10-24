@@ -22,6 +22,10 @@ namespace Mirror.Discovery
         [Tooltip("Invoked when a server is found")]
         public ServerFoundUnityEvent OnServerFound;
 
+        // EDY: Exposing discovery states
+        public bool serverAdvertising => serverUdpClient != null;
+        public bool clientSearching => clientUdpClient != null;
+
         // EDY: Start is not called on disable/re-enable the component nor on hot script reload.
         bool m_startCalled;
 
