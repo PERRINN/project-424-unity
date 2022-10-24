@@ -88,10 +88,9 @@ public class NetworkMonitor : MonoBehaviour
 
 		bool isClientActive = NetworkClient.active;
 		bool isClientSearching = m_discovery != null? m_discovery.clientSearching : false;
+		bool isClientConnecing = NetworkClient.isConnecting;
 		bool isClientConnected = NetworkClient.isConnected;
 		bool isClientReady = NetworkClient.ready;
-
-		// TODO: Client connecting (NetworkClient.isConnecting)
 
 		// Define new role and state
 
@@ -112,7 +111,7 @@ public class NetworkMonitor : MonoBehaviour
 			if (isClientReady)
 				newState = State.Connected;
 			else
-			if (isClientSearching)
+			if (isClientSearching || isClientConnecing)
 				newState = State.Connecting;
 			}
 
@@ -140,7 +139,7 @@ public class NetworkMonitor : MonoBehaviour
 			SetListActive(clientConnected, newState == State.Connected);
 
 			if (debugConsole)
-				Debug.Log($"NetworkMonitor: State changed: {m_clientState} -> {newState}");
+				Debug.Log($"NetworkMonitor: Client state changed: {m_clientState} -> {newState}");
 
 			m_clientState = newState;
 			}
@@ -156,6 +155,7 @@ public class NetworkMonitor : MonoBehaviour
 			m_text.Append($"Server advertising: {isServerAdvertising}\n\n");
 			m_text.Append($"Client active:      {isClientActive}\n");
 			m_text.Append($"Client searching:   {isClientSearching}\n");
+			m_text.Append($"Client connecting:  {isClientConnecing}\n");
 			m_text.Append($"Client connected:   {isClientConnected}\n");
 			m_text.Append($"Client ready:       {isClientReady}\n\n");
 
