@@ -18,6 +18,8 @@ public class NetworkMonitor : MonoBehaviour
 	public GameObject[] serverOnly = new GameObject[0];
 	[Tooltip("These GameObjects will be enabled on clients. Always disabled on server and host.")]
 	public GameObject[] clientOnly = new GameObject[0];
+	[Tooltip("These GameObjects will be enabled on clients while they're not connected to a server. They will be disabled when the client is connected. Always disabled on server and host.")]
+	public GameObject[] clientDisconnected = new GameObject[0];
 	[Tooltip("These GameObjects will be enabled on clients when they're connecting to a server. They will be disabled when the client is connected. Always disabled on server and host.")]
 	public GameObject[] clientConnecting = new GameObject[0];
 	[Tooltip("These GameObjects will be enabled on clients once they're connected to a server. They will be disabled while the client is connecting. Always disabled on server and host.")]
@@ -29,7 +31,7 @@ public class NetworkMonitor : MonoBehaviour
 	public bool debugConsole = false;
 
 	public enum Role { Undefined, Server, Client, Host }
-	public enum State { Undefined, Connecting, Connected }
+	public enum State { Undefined, Disconnected, Connecting, Connected }
 
 	// Private fields
 
@@ -58,7 +60,7 @@ public class NetworkMonitor : MonoBehaviour
 		m_manager = GetComponent<NetworkManager>();
 		m_discovery = GetComponent<NetworkDiscovery>();
 		m_textBox.settings = debugWidget;
-		m_textBox.header = "Connection status              \n";
+		m_textBox.header = "Connection status                   \n";
 
 		m_currentRole = Role.Undefined;
 		m_clientState = State.Undefined;
@@ -111,8 +113,10 @@ public class NetworkMonitor : MonoBehaviour
 			if (isClientReady)
 				newState = State.Connected;
 			else
-			if (isClientSearching || isClientConnecing)
+			if (isClientSearching || isClientConnecing || isClientConnected)
 				newState = State.Connecting;
+			else
+				newState = State.Disconnected;
 			}
 
 		// Enable / disable the corresponding GameObjects
@@ -135,6 +139,7 @@ public class NetworkMonitor : MonoBehaviour
 
 		if (newState != m_clientState)
 			{
+			SetListActive(clientDisconnected, newState != State.Connected);
 			SetListActive(clientConnecting, newState == State.Connecting);
 			SetListActive(clientConnected, newState == State.Connected);
 
