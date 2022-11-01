@@ -87,6 +87,7 @@ public class NetworkMonitor : MonoBehaviour
 
 		bool isServerActive = NetworkServer.active;
 		bool isServerAdvertising = m_discovery != null? m_discovery.serverAdvertising : false;
+		int connectedClients = NetworkServer.connections.Count;
 
 		bool isClientActive = NetworkClient.active;
 		bool isClientSearching = m_discovery != null? m_discovery.clientSearching : false;
@@ -131,6 +132,13 @@ public class NetworkMonitor : MonoBehaviour
 			SetListActive(serverOnly, newRole == Role.Server || newRole == Role.Host);
 			SetListActive(clientOnly, newRole == Role.Client);
 
+			if (newRole == Role.Server)
+				{
+				SetListActive(clientDisconnected, false);
+				SetListActive(clientConnecting, false);
+				SetListActive(clientConnected, false);
+				}
+
 			if (debugConsole)
 				Debug.Log($"NetworkMonitor: Role changed: {m_currentRole} -> {newRole}");
 
@@ -154,20 +162,21 @@ public class NetworkMonitor : MonoBehaviour
 		if (debugInfo)
 			{
 			m_text.Clear();
-			m_text.Append($"ROLE:               {m_currentRole}\n");
-			m_text.Append($"CLIENT:             {m_clientState}\n\n");
-			m_text.Append($"Server active:      {isServerActive}\n");
-			m_text.Append($"Server advertising: {isServerAdvertising}\n\n");
-			m_text.Append($"Client active:      {isClientActive}\n");
-			m_text.Append($"Client searching:   {isClientSearching}\n");
-			m_text.Append($"Client connecting:  {isClientConnecing}\n");
-			m_text.Append($"Client connected:   {isClientConnected}\n");
-			m_text.Append($"Client ready:       {isClientReady}\n\n");
+			m_text.Append($"ROLE:                {m_currentRole}\n");
+			m_text.Append($"CLIENT:              {m_clientState}\n\n");
+			m_text.Append($"Server active:       {isServerActive}\n");
+			m_text.Append($"Server advertising:  {isServerAdvertising}\n");
+			m_text.Append($"Connected clients:   {connectedClients}\n\n");
+			m_text.Append($"Client active:       {isClientActive}\n");
+			m_text.Append($"Client searching:    {isClientSearching}\n");
+			m_text.Append($"Client connecting:   {isClientConnecing}\n");
+			m_text.Append($"Client connected:    {isClientConnected}\n");
+			m_text.Append($"Client ready:        {isClientReady}\n\n");
 
 			string strLocalPlayer = NetworkClient.localPlayer != null? "yes" : "no";
-			m_text.Append($"Local player:       {strLocalPlayer}\n");
-			m_text.Append($"Network address:    {m_manager.networkAddress}\n");
-			m_text.Append($"Active transport:   {Transport.activeTransport}");
+			m_text.Append($"Local player:        {strLocalPlayer}\n");
+			m_text.Append($"Network address:     {m_manager.networkAddress}\n");
+			m_text.Append($"Active transport:    {Transport.activeTransport}");
 
 			m_textBox.text = m_text.ToString();
 			}
