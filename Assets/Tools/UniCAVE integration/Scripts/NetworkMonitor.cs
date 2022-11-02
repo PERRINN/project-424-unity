@@ -4,7 +4,6 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
-using UnityEngine.UI;
 using EdyCommonTools;
 using Mirror;
 using Mirror.Discovery;
@@ -45,6 +44,8 @@ public class NetworkMonitor : MonoBehaviour
 
 	public Role currentRole => m_currentRole;
 	public State clientState => m_clientState;
+	public bool clientSearching => m_clientSearching;
+	public int connectedClients => m_connectedClients;
 
 	public string serverAddress => m_manager.networkAddress;
 	public string localAddress => m_localIP;
@@ -56,6 +57,8 @@ public class NetworkMonitor : MonoBehaviour
 	Role m_currentRole = Role.Undefined;
 	State m_clientState = State.Undefined;
 	string m_localIP = "127.0.0.1";
+	bool m_clientSearching = false;
+	int m_connectedClients = 0;
 
 	GUITextBox m_textBox = new GUITextBox();
 	StringBuilder m_text = new StringBuilder(1024);
@@ -77,11 +80,11 @@ public class NetworkMonitor : MonoBehaviour
 		m_manager = GetComponent<NetworkManager>();
 		m_discovery = GetComponent<NetworkDiscovery>();
 		m_textBox.settings = debugWidget;
-		m_textBox.header = "Connection status                   \n";
+		m_textBox.header = "Connection status                     \n";
 
 		m_currentRole = Role.Undefined;
 		m_clientState = State.Undefined;
-
+		m_clientSearching = false;
 		m_localIP = GetLocalIP();
 
 		// Disable all gameobjects
@@ -97,6 +100,8 @@ public class NetworkMonitor : MonoBehaviour
 		{
 		m_currentRole = Role.Undefined;
 		m_clientState = State.Undefined;
+		m_clientSearching = false;
+		m_connectedClients = 0;
 		}
 
 
@@ -108,7 +113,7 @@ public class NetworkMonitor : MonoBehaviour
 		bool isServerAdvertising = m_discovery != null? m_discovery.serverAdvertising : false;
 		int connectedClients = NetworkServer.connections.Count;
 
-		bool isClientSearching = m_discovery != null? m_discovery.clientSearching : false;
+		bool isClientSearching = m_discovery != null? m_discovery.clientSearching : false;;
 		bool isClientActive = NetworkClient.active;
 		bool isClientConnecing = NetworkClient.isConnecting;
 		bool isClientConnected = NetworkClient.isConnected;
@@ -118,6 +123,8 @@ public class NetworkMonitor : MonoBehaviour
 
 		Role newRole = Role.Undefined;
 		State newState = State.Undefined;
+		m_clientSearching = isClientSearching;
+		m_connectedClients = connectedClients;
 
 		if (isServerActive && isClientActive)
 			newRole = Role.Host;
