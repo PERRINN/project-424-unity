@@ -22,7 +22,7 @@ public class NetworkMonitor : MonoBehaviour
 	[Tooltip("These GameObjects will be enabled on clients. Always disabled on server and host.")]
 	public GameObject[] clientOnly = new GameObject[0];
 
-	[Tooltip("These GameObjects will be enabled on clients while they're not connected to a server. They will be disabled when the client is connected. Always disabled on server and host.")]
+	[Tooltip("These GameObjects will be enabled on clients while they're not connected to a server (disconnected or connecting). They will be disabled when the client is connected. Always disabled on server and host.")]
 	public GameObject[] clientDisconnected = new GameObject[0];
 
 	[Tooltip("These GameObjects will be enabled on clients when they're connecting to a server. They will be disabled when the client is connected. Always disabled on server and host.")]
