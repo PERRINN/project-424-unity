@@ -16,14 +16,19 @@ public class NetworkMonitor : MonoBehaviour
 	[Header("GameObjects")]
 	[Tooltip("These GameObjects will be enabled on servers and hosts. Always disabled on clients.")]
 	public GameObject[] serverOnly = new GameObject[0];
+
 	[Tooltip("These GameObjects will be enabled on clients. Always disabled on server and host.")]
 	public GameObject[] clientOnly = new GameObject[0];
+
 	[Tooltip("These GameObjects will be enabled on clients while they're not connected to a server. They will be disabled when the client is connected. Always disabled on server and host.")]
 	public GameObject[] clientDisconnected = new GameObject[0];
+
 	[Tooltip("These GameObjects will be enabled on clients when they're connecting to a server. They will be disabled when the client is connected. Always disabled on server and host.")]
 	public GameObject[] clientConnecting = new GameObject[0];
+
 	[Tooltip("These GameObjects will be enabled on clients once they're connected to a server. They will be disabled while the client is connecting. Always disabled on server and host.")]
 	public GameObject[] clientConnected = new GameObject[0];
+
 	[Header("On-screen widget")]
 	public bool debugInfo = false;
 	public GUITextBox.Settings debugWidget = new GUITextBox.Settings();
@@ -89,8 +94,8 @@ public class NetworkMonitor : MonoBehaviour
 		bool isServerAdvertising = m_discovery != null? m_discovery.serverAdvertising : false;
 		int connectedClients = NetworkServer.connections.Count;
 
-		bool isClientActive = NetworkClient.active;
 		bool isClientSearching = m_discovery != null? m_discovery.clientSearching : false;
+		bool isClientActive = NetworkClient.active;
 		bool isClientConnecing = NetworkClient.isConnecting;
 		bool isClientConnected = NetworkClient.isConnected;
 		bool isClientReady = NetworkClient.ready;
@@ -106,10 +111,10 @@ public class NetworkMonitor : MonoBehaviour
 		if (isServerActive)
 			newRole = Role.Server;
 		else
-		if (isClientActive)
+		if (isClientActive || isClientSearching)
 			newRole = Role.Client;
 
-		if (isClientActive)
+		if (isClientActive || isClientSearching)
 			{
 			if (isClientReady)
 				newState = State.Connected;
@@ -132,7 +137,7 @@ public class NetworkMonitor : MonoBehaviour
 			SetListActive(serverOnly, newRole == Role.Server || newRole == Role.Host);
 			SetListActive(clientOnly, newRole == Role.Client);
 
-			if (newRole == Role.Server)
+			if (newRole == Role.Server || newRole == Role.Undefined)
 				{
 				SetListActive(clientDisconnected, false);
 				SetListActive(clientConnecting, false);
@@ -147,7 +152,7 @@ public class NetworkMonitor : MonoBehaviour
 
 		if (newState != m_clientState)
 			{
-			SetListActive(clientDisconnected, newState != State.Connected);
+			SetListActive(clientDisconnected, newState != State.Connected && newState != State.Undefined);
 			SetListActive(clientConnecting, newState == State.Connecting);
 			SetListActive(clientConnected, newState == State.Connected);
 
@@ -167,8 +172,8 @@ public class NetworkMonitor : MonoBehaviour
 			m_text.Append($"Server active:       {isServerActive}\n");
 			m_text.Append($"Server advertising:  {isServerAdvertising}\n");
 			m_text.Append($"Connected clients:   {connectedClients}\n\n");
-			m_text.Append($"Client active:       {isClientActive}\n");
 			m_text.Append($"Client searching:    {isClientSearching}\n");
+			m_text.Append($"Client active:       {isClientActive}\n");
 			m_text.Append($"Client connecting:   {isClientConnecing}\n");
 			m_text.Append($"Client connected:    {isClientConnected}\n");
 			m_text.Append($"Client ready:        {isClientReady}\n\n");
