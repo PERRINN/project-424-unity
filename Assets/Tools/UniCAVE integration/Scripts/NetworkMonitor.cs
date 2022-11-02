@@ -155,15 +155,15 @@ public class NetworkMonitor : MonoBehaviour
 
 		if (newRole != m_currentRole)
 			{
-			SetListActive(serverOnly, newRole == Role.Server || newRole == Role.Host);
-			SetListActive(clientOnly, newRole == Role.Client);
-
 			if (newRole == Role.Server || newRole == Role.Undefined)
 				{
 				SetListActive(clientDisconnected, false);
 				SetListActive(clientConnecting, false);
 				SetListActive(clientConnected, false);
 				}
+
+			SetListActive(serverOnly, newRole == Role.Server || newRole == Role.Host);
+			SetListActive(clientOnly, newRole == Role.Client);
 
 			if (debugConsole)
 				Debug.Log($"NetworkMonitor: Role changed: {m_currentRole} -> {newRole}");

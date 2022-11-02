@@ -36,21 +36,21 @@ public class ConnectionInfo : MonoBehaviour
 				{
 				// Undefined state, most likely server or network not started
 
-				state = $"Disconnected.\nMachine name: {machineName}\nLocal IP: {m_monitor.localAddress}\nClient state: {m_monitor.clientState}";
+				state = $"Disconnected.\nMachine name: {machineName}\nLocal Address: {m_monitor.localAddress}\nClient state: {m_monitor.clientState}";
 				}
 			else
 			if (m_monitor.currentRole == NetworkMonitor.Role.Client)
 				{
 				// Client connection to server
 
-				state = $"Client: {machineName}\nLocal Address: {m_monitor.localAddress}\nState: ";
+				state = $"Client: {machineName}\nAddress: {m_monitor.localAddress}\nState: ";
 
 				if (m_monitor.clientState == NetworkMonitor.State.Connecting)
 					{
 					if (m_monitor.clientSearching)
 						state += "Waiting for server...";
 					else
-						state += $"Connecting to server at {m_monitor.serverAddress}...";
+						state += $"Connecting to server {m_monitor.serverAddress}...";
 					}
 				else
 				if (m_monitor.clientState == NetworkMonitor.State.Connected)
