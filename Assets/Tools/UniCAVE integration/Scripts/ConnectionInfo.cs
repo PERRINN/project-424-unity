@@ -22,6 +22,11 @@ public class ConnectionInfo : MonoBehaviour
 			enabled = false;
 			return;
 			}
+
+		// Remove any placeholder text
+
+		if (infoText != null)
+			infoText.text = "";
 		}
 
 

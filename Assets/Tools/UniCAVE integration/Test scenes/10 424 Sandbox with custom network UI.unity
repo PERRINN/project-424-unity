@@ -1809,6 +1809,7 @@ GameObject:
   - component: {fileID: 1568529571}
   - component: {fileID: 1568529570}
   - component: {fileID: 1568529569}
+  - component: {fileID: 1568529572}
   m_Layer: 0
   m_Name: Client Connected UI
   m_TagString: Untagged
@@ -1892,6 +1893,20 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 2
   m_TargetDisplay: 0
+--- !u!114 &1568529572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568529567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef1395bdb3147d94180419706ff3a939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeout: 15
+  unscaledTime: 1
 --- !u!224 &1585863549 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5696766541682042672, guid: 0e1be3f5a2f5eac4895bfe427e8e68d8,
