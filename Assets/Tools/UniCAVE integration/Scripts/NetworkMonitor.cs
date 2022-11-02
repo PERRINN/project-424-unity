@@ -1,5 +1,8 @@
 
+using System;
 using System.Text;
+using System.Net;
+using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.UI;
 using EdyCommonTools;
@@ -38,12 +41,21 @@ public class NetworkMonitor : MonoBehaviour
 	public enum Role { Undefined, Server, Client, Host }
 	public enum State { Undefined, Disconnected, Connecting, Connected }
 
+	// Public accessors
+
+	public Role currentRole => m_currentRole;
+	public State clientState => m_clientState;
+
+	public string serverAddress => m_manager.networkAddress;
+	public string localAddress => m_localIP;
+
 	// Private fields
 
 	NetworkManager m_manager;
 	NetworkDiscovery m_discovery;
 	Role m_currentRole = Role.Undefined;
 	State m_clientState = State.Undefined;
+	string m_localIP = "127.0.0.1";
 
 	GUITextBox m_textBox = new GUITextBox();
 	StringBuilder m_text = new StringBuilder(1024);
@@ -69,6 +81,8 @@ public class NetworkMonitor : MonoBehaviour
 
 		m_currentRole = Role.Undefined;
 		m_clientState = State.Undefined;
+
+		m_localIP = GetLocalIP();
 
 		// Disable all gameobjects
 
@@ -176,11 +190,12 @@ public class NetworkMonitor : MonoBehaviour
 			m_text.Append($"Client active:       {isClientActive}\n");
 			m_text.Append($"Client connecting:   {isClientConnecing}\n");
 			m_text.Append($"Client connected:    {isClientConnected}\n");
-			m_text.Append($"Client ready:        {isClientReady}\n\n");
+			m_text.Append($"Client ready:        {isClientReady}\n");
+			m_text.Append($"Server address:      {m_manager.networkAddress}\n\n");
 
 			string strLocalPlayer = NetworkClient.localPlayer != null? "yes" : "no";
 			m_text.Append($"Local player:        {strLocalPlayer}\n");
-			m_text.Append($"Network address:     {m_manager.networkAddress}\n");
+			m_text.Append($"Network address:     {m_localIP}\n");
 			m_text.Append($"Active transport:    {Transport.activeTransport}");
 
 			m_textBox.text = m_text.ToString();
@@ -199,6 +214,29 @@ public class NetworkMonitor : MonoBehaviour
 		{
 		foreach (GameObject go in list)
 			go.SetActive(active);
+		}
+
+
+	string GetLocalIP ()
+		{
+		// Source: https://stackoverflow.com/a/27376368/2519774
+
+		string localIP;
+
+		try {
+			using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+				{
+				socket.Connect("8.8.8.8", 53);
+				IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+				localIP = endPoint.Address.ToString();
+				}
+			}
+		catch (Exception)
+			{
+			localIP = "127.0.0.1";
+			}
+
+		return localIP;
 		}
 	}
 
