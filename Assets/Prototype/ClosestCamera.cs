@@ -18,20 +18,20 @@ public class ClosestCamera : MonoBehaviour
 
     private void Update()
     {
-        float minDistance = Mathf.Infinity;
-        CinemachineVirtualCamera nextCamera = null;
+        //float minDistance = Mathf.Infinity;
+        //CinemachineVirtualCamera nextCamera = null;
 
         foreach (var camera in cameras)
         {
-            camera.Priority = 0;
             float compareDistance = (target.transform.position - camera.transform.position).sqrMagnitude;
-            if (compareDistance < minDistance)
-            {
-                minDistance = compareDistance;
-                nextCamera = camera;
-            }
+            camera.Priority = Mathf.CeilToInt(100000f/compareDistance);
+            //if (compareDistance < minDistance)
+            //{
+            //    minDistance = compareDistance;
+            //    nextCamera = camera;
+            //}
         }
 
-        nextCamera.Priority = 10;
+        //nextCamera.Priority = 10;
     }
 }
