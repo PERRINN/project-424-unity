@@ -318,7 +318,6 @@ GameObject:
   - component: {fileID: 1080159637220524470}
   - component: {fileID: 1080159637220524466}
   - component: {fileID: 1080159637220524467}
-  - component: {fileID: 1080159637220524464}
   - component: {fileID: 1080159637220524465}
   m_Layer: 0
   m_Name: TV Camera
@@ -386,14 +385,6 @@ Camera:
   m_StereoSeparation: 0.022
 --- !u!124 &1080159637220524467
 Behaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1080159637220524471}
-  m_Enabled: 1
---- !u!81 &1080159637220524464
-AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -640,7 +631,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -738,7 +729,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -1021,7 +1012,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -2559,7 +2550,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -2657,7 +2648,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -2755,7 +2746,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -2853,7 +2844,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -2951,7 +2942,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -3049,7 +3040,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -3167,7 +3158,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -3236,6 +3227,12 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 5199561374454513854, guid: d7b3b781c5b06b04e8212c7f8f62db47, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d7b3b781c5b06b04e8212c7f8f62db47, type: 3}
+--- !u!4 &5104252875371534179 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
+    type: 3}
+  m_PrefabInstance: {fileID: 1080159638214498258}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5104252875371534178 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
@@ -3248,12 +3245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &5104252875371534179 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
-    type: 3}
-  m_PrefabInstance: {fileID: 1080159638214498258}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1080159638305841976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3265,7 +3256,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -3363,7 +3354,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -3461,7 +3452,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Priority
@@ -3564,7 +3555,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -3598,7 +3589,7 @@ PrefabInstance:
     - target: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.017831989
+      value: -0.01783198
       objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
@@ -3608,7 +3599,7 @@ PrefabInstance:
     - target: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.018054144
+      value: -0.018054133
       objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
@@ -3662,7 +3653,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 1080159637107008494}
+      objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -3696,17 +3687,17 @@ PrefabInstance:
     - target: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.018356727
+      value: -0.018356739
       objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.12576617
+      value: -0.12576614
       objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0023275379
+      value: -0.002327538
       objectReference: {fileID: 0}
     - target: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
         type: 3}
