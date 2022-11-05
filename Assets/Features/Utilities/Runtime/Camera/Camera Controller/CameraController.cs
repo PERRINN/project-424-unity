@@ -28,7 +28,7 @@ namespace Perrinn424.CameraSystem
 
 
         private CircularIterator<Mode> modeIterator;
-        public Vector3 microphoneLocalPosition;
+        public Transform microphoneAnchor;
         private GameObject microphone;
 
         private void Awake()
@@ -79,8 +79,7 @@ namespace Perrinn424.CameraSystem
         {
             var player = cinemachineVirtualCameraBase.LookAt;
             microphone = new GameObject("Microphone", new[] { typeof(AudioListener) });
-            microphone.transform.parent = player;
-            microphone.transform.localPosition = microphoneLocalPosition;
+            microphone.transform.SetParent(microphoneAnchor, false);
         }
 
         private void RemoveMicrophone()
