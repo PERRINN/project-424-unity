@@ -220,7 +220,10 @@ public class NetworkMonitor : MonoBehaviour
 	void SetListActive (GameObject[] list, bool active)
 		{
 		foreach (GameObject go in list)
-			go.SetActive(active);
+			{
+			if (go != null)
+				go.SetActive(active);
+			}
 		}
 
 
