@@ -50,6 +50,7 @@ public class VIOSOCamera : MonoBehaviour
     private Quaternion orig_rot = Quaternion.identity;
     private Vector3 orig_pos = Vector3.zero;
     private Dictionary<RenderTexture, IntPtr> texMap = new Dictionary<RenderTexture, IntPtr>();
+    private bool startCalled = false;
 
     public static void ScreenShot(string path)
     {
@@ -78,8 +79,15 @@ public class VIOSOCamera : MonoBehaviour
     }
 
 
+    private void OnEnable()
+    {
+        startCalled = false;
+    }
+
+
     private void Start()
     {
+        startCalled = true;
         cam = GetComponent<Camera>();
 
         orig_rot = cam.transform.localRotation;
@@ -109,9 +117,18 @@ public class VIOSOCamera : MonoBehaviour
         }
     }
 
+
+    private void Update()
+    {
+        if (!startCalled)
+        {
+            Start();
+        }
+    }
+
     private void OnDisable()
     {
-        if (-1 != viosoID)
+        if (viosoID != -1)
         {
             ERROR err = Destroy(viosoID);
             viosoID = -1;
@@ -120,7 +137,7 @@ public class VIOSOCamera : MonoBehaviour
 
     private void OnPreCull()
     {
-        if (-1 != viosoID)
+        if (viosoID != -1)
         {
             Vector3 pos = new Vector3(0, 0, 0);
             Vector3 rot = new Vector3(0, 0, 0);
@@ -145,7 +162,7 @@ public class VIOSOCamera : MonoBehaviour
     private void OnRenderImage( RenderTexture source, RenderTexture destination )
     {
         RenderTexture.active = destination;
-        if (-1 != viosoID)
+        if (viosoID != -1)
         {
             IntPtr dst;
             if (!texMap.TryGetValue(source, out dst))
