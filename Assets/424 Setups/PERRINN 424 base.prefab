@@ -1202,6 +1202,19 @@ MonoBehaviour:
   forceFeedbackEnabled: 1
   forceFeedbackModel: 0
   ffbTelemetry: 1
+  ffbSettingsV2:
+    longForceFactor: 0.32
+    latForceFactor: 0.28
+    vertForceFactor: 0.1
+    shaftTorqueFactor: 1.96
+    rackRatio: 0.0065
+    assistanceRatio: 0.5
+    assistanceMax: 50
+    simulatedTorqueRange: 14
+    zeroLoadDamper: 0.2
+    maxLoadDamper: 0.4
+    damperNonLinearBias: 0.7
+    maxNormalizedLoad: 6
   ffbSettingsV1:
     forceGain: 1
     steeringSensitivity: 0.3
@@ -1220,19 +1233,6 @@ MonoBehaviour:
     suspensionGain: 0.2
     suspensionCutSpeed: 0.5
     suspensionMaxSpeed: 5
-  ffbSettingsV2:
-    longForceFactor: 0.32
-    latForceFactor: 0.28
-    vertForceFactor: 0.1
-    shaftTorqueFactor: 1.96
-    rackRatio: 0.0065
-    assistanceRatio: 0.5
-    assistanceMax: 50
-    simulatedTorqueRange: 14
-    zeroLoadDamper: 0.2
-    maxLoadDamper: 0.4
-    damperNonLinearBias: 0.7
-    maxNormalizedLoad: 6
 --- !u!1 &2483877715507374421
 GameObject:
   m_ObjectHideFlags: 0
@@ -3085,7 +3085,7 @@ ReflectionProbe:
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 23
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
   m_HDR: 0
