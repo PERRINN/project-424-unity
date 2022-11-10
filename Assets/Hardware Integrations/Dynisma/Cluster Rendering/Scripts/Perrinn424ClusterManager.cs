@@ -4,6 +4,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using UniCAVE;
 using Mirror;
 
@@ -13,8 +14,14 @@ namespace Perrinn424
 
 public class Perrinn424ClusterManager : NetworkBehaviour
 	{
+	[Header("Stations")]
 	public Station server;
 	public Station[] clients = new Station[0];
+
+	[Header("UI")]
+	public Canvas[] serverCanvasList = new Canvas[0];
+	public Canvas[] clientCanvasList = new Canvas[0];
+	public Material uiMaterial;
 
 	[Header("Test Mode")]
 	public bool enableTestMode = false;
@@ -76,9 +83,9 @@ public class Perrinn424ClusterManager : NetworkBehaviour
 					testStation = (TestStation)clients.Length;
 
 				if (testStation == TestStation.Server)
-					SetActive(server, true);
+					SetActive(server, true, serverCanvasList);
 				else
-					SetActive(clients[(int)testStation - 1], true);
+					SetActive(clients[(int)testStation - 1], true, clientCanvasList);
 				}
 			else
 			if (m_testMode)
@@ -95,11 +102,46 @@ public class Perrinn424ClusterManager : NetworkBehaviour
 	//------------------------------------------------------------------------------------------------------
 
 
+	void SetActive (Station station, bool active, Canvas[] canvasList = null)
+		{
+		if (station != null && station.camera != null)
+			{
+			station.camera.gameObject.SetActive(active);
+
+			if (active && canvasList != null)
+				AssignCanvasList(station.camera, canvasList);
+			}
+		}
+
+
+	void AssignCanvasList (Camera camera, Canvas[] canvasList)
+		{
+		if (camera == null) return;
+
+		foreach (Canvas canvas in canvasList)
+			{
+			if (canvas == null) continue;
+
+			canvas.renderMode = RenderMode.ScreenSpaceCamera;
+			canvas.worldCamera = camera;
+			canvas.planeDistance = 1.0f;
+
+			if (uiMaterial != null)
+				{
+				Graphic[] graphics = canvas.gameObject.GetComponentsInChildren<Graphic>(true);
+
+				foreach (Graphic graphic in graphics)
+					graphic.material = uiMaterial;
+				}
+			}
+		}
+
+
 	void EnableNetworkStation (string machineName)
 		{
-		SetActive(server, ShouldBeActive(server, machineName));
+		SetActive(server, ShouldBeActive(server, machineName), serverCanvasList);
 		foreach (Station s in clients)
-			SetActive(s, ShouldBeActive(s, machineName));
+			SetActive(s, ShouldBeActive(s, machineName), clientCanvasList);
 		}
 
 
@@ -109,13 +151,6 @@ public class Perrinn424ClusterManager : NetworkBehaviour
 			return false;
 
 		return station.machineName.Name == machineName;
-		}
-
-
-	void SetActive (Station station, bool active)
-		{
-		if (station != null && station.camera != null)
-			station.camera.gameObject.SetActive(active);
 		}
 
 
