@@ -11,7 +11,7 @@ namespace UniCAVE
     {
         MachineName GetMachineName(SerializedProperty property)
         {
-            return fieldInfo.GetValue(property.serializedObject.targetObject) as MachineName;
+            return property.objectReferenceValue as MachineName;
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
