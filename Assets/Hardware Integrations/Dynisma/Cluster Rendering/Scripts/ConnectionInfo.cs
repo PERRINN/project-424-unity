@@ -48,14 +48,14 @@ public class ConnectionInfo : MonoBehaviour
 				{
 				// Client connection to server
 
-				state = $"Client: {machineName}\nAddress: {m_monitor.localAddress}\nState: ";
+				state = $"Client: {machineName}\nAddress: {m_monitor.localAddress}\n";
 
 				if (m_monitor.clientState == NetworkMonitor.State.Connecting)
 					{
 					if (m_monitor.clientSearching)
 						state += "Waiting for server...";
 					else
-						state += $"Connecting to server {m_monitor.serverAddress}...";
+						state += $"Server: {m_monitor.serverAddress}\nConnecting to server...";
 					}
 				else
 				if (m_monitor.clientState == NetworkMonitor.State.Connected)
