@@ -132,6 +132,10 @@ public class VIOSOCamera : MonoBehaviour
         {
             ERROR err = Destroy(viosoID);
             viosoID = -1;
+
+            cam.transform.localRotation = orig_rot;
+            cam.transform.localPosition = orig_pos;
+            cam.ResetProjectionMatrix();
         }
     }
 
