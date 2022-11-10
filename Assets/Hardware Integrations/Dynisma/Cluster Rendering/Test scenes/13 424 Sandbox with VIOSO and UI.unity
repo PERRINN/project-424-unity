@@ -2767,6 +2767,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1716988319}
   - component: {fileID: 1716988321}
+  - component: {fileID: 1716988322}
   - component: {fileID: 1716988320}
   m_Layer: 0
   m_Name: PERRINN Cluster Render Client
@@ -2826,6 +2827,36 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
+--- !u!114 &1716988322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716988318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21cbf468324717a48b66353bfaaebb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  server:
+    machineName: {fileID: 11400000, guid: 2b1fbe2f3792d5543aa2d071d192bdbc, type: 2}
+    camera: {fileID: 6905166632995050497}
+  clients:
+  - machineName: {fileID: 11400000, guid: 2852ff80f7f9fce4ba7208267ce91c6a, type: 2}
+    camera: {fileID: 858042973}
+  - machineName: {fileID: 11400000, guid: 6fa8563e1cef73945b348ea7e8758c06, type: 2}
+    camera: {fileID: 1504287684}
+  - machineName: {fileID: 11400000, guid: fd937e8664ce2ed49bfe575882620103, type: 2}
+    camera: {fileID: 1534629215624005149}
+  - machineName: {fileID: 11400000, guid: 1b66686d3f3307e48958652dc0bc4c0c, type: 2}
+    camera: {fileID: 364164810}
+  - machineName: {fileID: 11400000, guid: e49dc425bb2d05a43a21de2a8783decd, type: 2}
+    camera: {fileID: 605773859}
+  enableTestMode: 0
+  testStation: 0
 --- !u!114 &1810276301 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2483877715511907565, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
