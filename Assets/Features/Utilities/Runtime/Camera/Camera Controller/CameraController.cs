@@ -62,29 +62,26 @@ namespace Perrinn424.CameraSystem
                 case Mode.Orbit:
                 case Mode.LookAt:
                 case Mode.Free:
-                    cameraController.gameObject.SetActive(true);
-                    tvCameraSystem.gameObject.SetActive(false);
-                    RemoveMicrophone();
-                    cameraController.mode = (VPCameraController.Mode)modeIterator.Current;
+                    SetVPCamera((VPCameraController.Mode)modeIterator.Current);
                     break;
                 case Mode.Tv:
-                    cameraController.gameObject.SetActive(false);
-                    tvCameraSystem.gameObject.SetActive(true);
-                    CreateMicrophone();
+                    SetTVMode();
                     break;
             }
         }
 
-        private void CreateMicrophone()
+
+        private void SetVPCamera(VPCameraController.Mode mode)
         {
-            var player = cinemachineVirtualCameraBase.LookAt;
-            microphone = new GameObject("Microphone", new[] { typeof(AudioListener) });
-            microphone.transform.SetParent(microphoneAnchor, false);
+            cameraController.gameObject.SetActive(true);
+            tvCameraSystem.gameObject.SetActive(false);
+            cameraController.mode = mode;
         }
 
-        private void RemoveMicrophone()
+        private void SetTVMode()
         {
-            Destroy(microphone);
+            cameraController.gameObject.SetActive(false);
+            tvCameraSystem.gameObject.SetActive(true);
         }
     } 
 }

@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tvCameraSystem: {fileID: 1080159638493079283}
   cameraController: {fileID: 0}
-  microphoneLocalPosition: {x: 0, y: 0.805, z: -0.635}
+  microphoneAnchor: {fileID: 0}
 --- !u!1 &1080159637216163282
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,6 +319,7 @@ GameObject:
   - component: {fileID: 1080159637220524466}
   - component: {fileID: 1080159637220524467}
   - component: {fileID: 1080159637220524465}
+  - component: {fileID: 3460810809591110043}
   m_Layer: 0
   m_Name: TV Camera
   m_TagString: MainCamera
@@ -425,6 +426,14 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!81 &3460810809591110043
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080159637220524471}
+  m_Enabled: 1
 --- !u!1 &1080159637301389205
 GameObject:
   m_ObjectHideFlags: 0
@@ -3227,12 +3236,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 5199561374454513854, guid: d7b3b781c5b06b04e8212c7f8f62db47, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d7b3b781c5b06b04e8212c7f8f62db47, type: 3}
---- !u!4 &5104252875371534179 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
-    type: 3}
-  m_PrefabInstance: {fileID: 1080159638214498258}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5104252875371534178 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5199561374454513840, guid: d7b3b781c5b06b04e8212c7f8f62db47,
@@ -3245,6 +3248,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &5104252875371534179 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5199561374454513841, guid: d7b3b781c5b06b04e8212c7f8f62db47,
+    type: 3}
+  m_PrefabInstance: {fileID: 1080159638214498258}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1080159638305841976
 PrefabInstance:
   m_ObjectHideFlags: 0
