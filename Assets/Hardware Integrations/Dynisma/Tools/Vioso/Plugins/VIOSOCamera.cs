@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 
 public class VIOSOCamera : MonoBehaviour
 {
+    public Vector3 eyePointPos;
+    public Vector3 eyePointRot;
 
     public enum ERROR
     {
@@ -94,32 +96,33 @@ public class VIOSOCamera : MonoBehaviour
         orig_pos = cam.transform.localPosition;
 
         ERROR err = ERROR.FALSE;
-        err = Init(ref viosoID, cam.name );
-        if (ERROR.NONE == err)
+        err = Init(ref viosoID, cam.name);
+        if (err == ERROR.NONE)
         {
             GL.IssuePluginEvent(GetRenderEventFunc(), viosoID); // this will initialize warper in Unity Graphic Library context
             int err1 = 0;
             GetError(viosoID, ref err1);
             err = (ERROR)err1;
-            if (ERROR.NONE != err)
+            if (err != ERROR.NONE)
             {
-                Debug.Log("Initialization of warper failed.");
+                Debug.Log($"Initialization of warper failed. [{err}]");
             }
         }
         else
         {
-            Debug.Log(string.Format("Initialization attempt of warper failed with eror %i.", err ) );
+            Debug.Log($"Initialization attempt of warper failed with error [{err}].");
         }
 
-        if (ERROR.NONE != err)
+        if (err != ERROR.NONE)
         {
-            Debug.Log("Failed to init camera.");
+            Debug.Log($"Failed to init camera. [{err}]");
         }
     }
 
 
     private void Update()
     {
+        // Start is not called when disabling and re-enabling the component, nor when reloading the scripts in runtime.
         if (!startCalled)
         {
             Start();
@@ -131,8 +134,12 @@ public class VIOSOCamera : MonoBehaviour
         if (viosoID != -1)
         {
             ERROR err = Destroy(viosoID);
-            viosoID = -1;
+            if (err != ERROR.NONE)
+            {
+                Debug.Log($"Error [{err}] de-initializing VIOSO.");
+            }
 
+            viosoID = -1;
             cam.transform.localRotation = orig_rot;
             cam.transform.localPosition = orig_pos;
             cam.ResetProjectionMatrix();
@@ -143,13 +150,11 @@ public class VIOSOCamera : MonoBehaviour
     {
         if (viosoID != -1)
         {
-            Vector3 pos = new Vector3(0, 0, 0);
-            Vector3 rot = new Vector3(0, 0, 0);
+            // Vector3 pos = new Vector3(0, 0, 0);
+            // Vector3 rot = new Vector3(0, 0, 0);
             Matrix4x4 mV = Matrix4x4.identity;
-
-            Matrix4x4 mP = new Matrix4x4();
             FrustumPlanes pl = new FrustumPlanes();
-            if (ERROR.NONE == GetViewClip(viosoID, ref pos, ref rot, ref mV, ref pl))
+            if (GetViewClip(viosoID, ref eyePointPos, ref eyePointRot, ref mV, ref pl) == ERROR.NONE)
             {
                 mV = mV.transpose;
                 Quaternion q = mV.rotation;
@@ -157,8 +162,7 @@ public class VIOSOCamera : MonoBehaviour
                 cam.transform.localRotation = orig_rot * q;
                 cam.transform.localPosition = orig_pos + p;
 
-                mP = Matrix4x4.Frustum(pl);
-                cam.projectionMatrix = mP;
+                cam.projectionMatrix = Matrix4x4.Frustum(pl);
             }
         }
     }
