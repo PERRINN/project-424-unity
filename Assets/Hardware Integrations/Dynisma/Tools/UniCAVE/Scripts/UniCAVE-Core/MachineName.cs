@@ -17,7 +17,7 @@ namespace UniCAVE
         /// </summary>
         public string Name
         {
-            get => _name;
+            get => _name.ToUpper();
             set => _name = value;
         }
 
