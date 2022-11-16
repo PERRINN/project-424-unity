@@ -50,6 +50,16 @@ public class DynismaTester : MonoBehaviour
 		public bool downShift;
 		public byte button;				// 1 bit per button
 		public byte rotary;				// two 8-position rotaries on the wheel, split the uint8 into two 4-bit values
+
+		// Eye point position from motion platform
+		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
+
+		public double eyePointPosX;		// m
+		public double eyePointPosY;		// m
+		public double eyePointPosZ;		// m
+		public double eyePointRotX;		// rad
+		public double eyePointRotY;		// rad
+		public double eyePointRotZ;		// rad
 		}
 
 
@@ -214,6 +224,19 @@ public class DynismaTester : MonoBehaviour
 		int rotary0 = Mathf.Clamp(m_rotary0, 0, 15);
 		int rotary1 = Mathf.Clamp(m_rotary1, 0, 15);
 		m_inputData.rotary = (byte)((rotary1 << 4) | rotary0);
+
+		// Convert simulated motion platform pose to ISO 8855
+		// (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
+
+		Vector3 position = transform.localPosition;
+		Vector3 rotation = transform.localRotation.eulerAngles;
+
+		m_inputData.eyePointPosX = position.z;
+		m_inputData.eyePointPosY = -position.x;
+		m_inputData.eyePointPosZ = position.y;
+		m_inputData.eyePointRotX = -rotation.z;
+		m_inputData.eyePointRotY = rotation.x;
+		m_inputData.eyePointRotZ = -rotation.y;
 
 		m_sender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
 		}
