@@ -38,6 +38,8 @@ public class Perrinn424ClusterManager : NetworkBehaviour
 		{
         public MachineName machineName;
 		public Camera camera;
+
+		public string name => machineName != null? machineName.Name : "";
 		}
 
 
@@ -78,14 +80,11 @@ public class Perrinn424ClusterManager : NetworkBehaviour
 			{
 			if (enableTestMode)
 				{
-				DisableAll();
 				if ((int)testStation > clients.Length)
-					testStation = (TestStation)clients.Length;
+					testStation = TestStation.Server;
 
-				if (testStation == TestStation.Server)
-					SetActive(server, true, serverCanvasList);
-				else
-					SetActive(clients[(int)testStation - 1], true, clientCanvasList);
+				string stationName = testStation == TestStation.Server? server.name : clients[(int)testStation - 1].name;
+				EnableNetworkStation(stationName);
 				}
 			else
 			if (m_testMode)
