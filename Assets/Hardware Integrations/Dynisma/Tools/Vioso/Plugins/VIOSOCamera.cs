@@ -10,8 +10,18 @@ using System.Runtime.InteropServices;
 
 public class VIOSOCamera : MonoBehaviour
 {
-    public Vector3 eyePointPos;
-    public Vector3 eyePointRot;
+    // We have several VIOSOCamera components around, but there's only one eye point.
+    // DynismaInputDevice pass the values here directly as they come.
+
+    public static Vector3 eyePointPos;
+    public static Vector3 eyePointRot;
+
+    // Test mode for manually specifying the eye point values
+
+    public bool testMode = false;
+    public Vector3 testEyePointPos;
+    public Vector3 testEyePointRot;
+
 
     public enum ERROR
     {
@@ -150,8 +160,12 @@ public class VIOSOCamera : MonoBehaviour
     {
         if (viosoID != -1)
         {
-            // Vector3 pos = new Vector3(0, 0, 0);
-            // Vector3 rot = new Vector3(0, 0, 0);
+            if (testMode)
+            {
+                eyePointPos = testEyePointPos;
+                eyePointRot = testEyePointRot;
+            }
+
             Matrix4x4 mV = Matrix4x4.identity;
             FrustumPlanes pl = new FrustumPlanes();
             if (GetViewClip(viosoID, ref eyePointPos, ref eyePointRot, ref mV, ref pl) == ERROR.NONE)

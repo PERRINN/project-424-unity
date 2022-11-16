@@ -31,7 +31,18 @@ public class DynismaInputDevice : InputDevice
 		public bool downShift;
 		public byte button;				// 1 bit per button
 		public byte rotary;				// two 8-position rotaries on the wheel, split the uint8 into two 4-bit values
+
+		// Eye point position from motion platform
+		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
+
+		public double eyePointPosX;		// m
+		public double eyePointPosY;		// m
+		public double eyePointPosZ;		// m
+		public double eyePointRotX;		// rad
+		public double eyePointRotY;		// rad
+		public double eyePointRotZ;		// rad
 		}
+
 
 	UdpConnection m_listener = new UdpConnection();
 	UdpListenThread m_thread = new UdpListenThread();
@@ -172,6 +183,26 @@ public class DynismaInputDevice : InputDevice
 				m_state.button[43] = (byte)(rotary1 == 13? 1 : 0);
 				m_state.button[44] = (byte)(rotary1 == 14? 1 : 0);
 				m_state.button[45] = (byte)(rotary1 == 15? 1 : 0);
+
+				// Eyepoint data passed directly to all VIOSOCamera component instances.
+				// Values come in ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html).
+				// Convert to Unity coordinates.
+
+				VIOSOCamera.eyePointPos = new Vector3()
+					{
+					x = -(float)m_inputData.eyePointPosY,
+					y = (float)m_inputData.eyePointPosZ,
+					z = (float)m_inputData.eyePointPosX,
+					};
+
+				// For some reason VIOSO expects X and Z rotations with opposite sign, despite using the same rotation axes as Unity.
+
+				VIOSOCamera.eyePointRot = new Vector3()
+					{
+					x = -(float)m_inputData.eyePointRotY,
+					y = -(float)m_inputData.eyePointRotZ,
+					z = (float)m_inputData.eyePointRotX,
+					};
 
 				// Acknowledge new input data converted
 
