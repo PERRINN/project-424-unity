@@ -313,7 +313,7 @@ public class DynismaTester : MonoBehaviour
 		boxRect.x += boxRect.width - boxWidth - 8;
 		boxRect.width = boxWidth;
 		boxRect.xMin = boxRect.xMax - boxWidth;
-		boxRect.yMin = boxRect.yMax - 160;
+		boxRect.yMin = boxRect.yMax - 160 - m_textBox.style.lineHeight * 5;
 
 		GUILayout.BeginArea(boxRect);
 		m_steerInput = GUILayout.HorizontalScrollbar(m_steerInput, 0.2f, -1.0f, 1.2f);
@@ -408,6 +408,9 @@ public class DynismaTester : MonoBehaviour
 		int rotary1 = (m_inputData.rotary >> 4);
 		m_text.Append($"Rotary 1:              {rotary0}\n");
 		m_text.Append($"Rotary 2:              {rotary1}\n");
+		m_text.Append($"Eye Point Position:    {m_inputData.eyePointPosX,6:0.000}, {m_inputData.eyePointPosY,6:0.000}, {m_inputData.eyePointPosZ,6:0.000}  m\n");
+		m_text.Append($"Eye Point Rotation:    {m_inputData.eyePointRotX,6:0.000}, {m_inputData.eyePointRotY,6:0.000}, {m_inputData.eyePointRotZ,6:0.000}  rad\n");
+		m_text.Append("\nMove eye point with arrows, page up/down, and ctrl/shift.");
 
 		m_textBox.text = m_text.ToString();
 		}
