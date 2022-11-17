@@ -217,7 +217,7 @@ public class DynismaTester : MonoBehaviour
 		{
 		m_inputData.throttle = m_throttle;
 		m_inputData.brake = m_brake;
-		m_inputData.steerAngle = m_steerInput * steerAngleRange * 2;
+		m_inputData.steerAngle = m_steerInput * steerAngleRange / 2;
 		m_inputData.upShift = m_upShift;
 		m_inputData.downShift = m_downShift;
 
