@@ -239,14 +239,14 @@ public class DynismaTester : MonoBehaviour
 		// (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
 
 		Vector3 position = transform.localPosition;
-		Vector3 rotation = transform.localRotation.eulerAngles * Mathf.Deg2Rad;
+		Vector3 rotation = transform.localRotation.eulerAngles;
 
 		m_inputData.eyePointPosX = position.z;
 		m_inputData.eyePointPosY = -position.x;
 		m_inputData.eyePointPosZ = position.y;
-		m_inputData.eyePointRotX = -rotation.z;
-		m_inputData.eyePointRotY = rotation.x;
-		m_inputData.eyePointRotZ = -rotation.y;
+		m_inputData.eyePointRotX = -MathUtility.ClampAngle(rotation.z) * Mathf.Deg2Rad;
+		m_inputData.eyePointRotY = MathUtility.ClampAngle(rotation.x) * Mathf.Deg2Rad;
+		m_inputData.eyePointRotZ = -MathUtility.ClampAngle(rotation.y) * Mathf.Deg2Rad;
 
 		m_sender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
 		}
