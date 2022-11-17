@@ -13,7 +13,7 @@ using Mirror;
 namespace Perrinn424
 {
 
-public class Perrinn424ClusterManager : NetworkBehaviour
+public class Perrinn424ClusterManager : MonoBehaviour
 	{
 	[Header("Stations")]
 	public Station server;
@@ -59,20 +59,6 @@ public class Perrinn424ClusterManager : NetworkBehaviour
 
 		if (!enableTestMode)
 			EnableNetworkStation(Util.GetMachineName());
-		}
-
-
-	public override void OnStartServer ()
-		{
-		if (NetworkManager.DebugInfoLevel >= 2)
-			Debug.Log($"ClusterManager SERVER: {Util.GetMachineName()}");
-		}
-
-
-	public override void OnStartClient ()
-		{
-		if (NetworkManager.DebugInfoLevel >= 2)
-			Debug.Log($"RenderClient CLIENT: {Util.GetMachineName()}");
 		}
 
 

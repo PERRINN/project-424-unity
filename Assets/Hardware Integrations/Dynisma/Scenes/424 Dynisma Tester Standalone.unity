@@ -134,7 +134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 438260, guid: ce6971b64d43d604c9d3d0e1a95eccc0, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 438260, guid: ce6971b64d43d604c9d3d0e1a95eccc0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -468,9 +468,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 6905166632995543017}
-  - {fileID: 1301672129}
+  m_Children: []
   m_Father: {fileID: 6905166632995612195}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -676,7 +674,7 @@ Transform:
   m_Children:
   - {fileID: 1585863549}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &531594964
 MonoBehaviour:
@@ -1195,6 +1193,75 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &1017924550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1017924553}
+  - component: {fileID: 1017924552}
+  - component: {fileID: 1017924551}
+  m_Layer: 0
+  m_Name: PERRINN Render Client
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1017924551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017924550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc55d7b5827a674590f396228c2038d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  vehicle: {fileID: 626402878}
+  visualEffects: {fileID: 1810276301}
+  dashboardDisplay: {fileID: 396249270}
+  cave: {fileID: 427210188}
+  head: {fileID: 1301672129}
+  cameraController: {fileID: 6905166632989773343}
+--- !u!114 &1017924552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017924550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 4098138931
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
+--- !u!4 &1017924553
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017924550}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1079178280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1546,7 +1613,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301672128}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1555,8 +1622,8 @@ Transform:
   - {fileID: 7806840498084775106}
   - {fileID: 364164808}
   - {fileID: 605773857}
-  m_Father: {fileID: 427210188}
-  m_RootOrder: 1
+  m_Father: {fileID: 6905166632995612195}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1320894002
 GameObject:
@@ -1622,7 +1689,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1337927121
 GameObject:
@@ -2514,7 +2581,7 @@ PrefabInstance:
     - target: {fileID: 133138188459063582, guid: 3aef1e688b8b7cb4c9c6de3605887f33,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 133138188459063582, guid: 3aef1e688b8b7cb4c9c6de3605887f33,
         type: 3}
@@ -2842,9 +2909,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1716988319}
-  - component: {fileID: 1716988321}
   - component: {fileID: 1716988322}
-  - component: {fileID: 1716988320}
   m_Layer: 0
   m_Name: PERRINN Cluster Manager
   m_TagString: Untagged
@@ -2864,45 +2929,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1716988320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1716988318}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dc55d7b5827a674590f396228c2038d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  vehicle: {fileID: 626402878}
-  visualEffects: {fileID: 1810276301}
-  dashboardDisplay: {fileID: 396249270}
-  cave: {fileID: 427210188}
-  head: {fileID: 1301672129}
-  cameraController: {fileID: 6905166632989773343}
---- !u!114 &1716988321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1716988318}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 815233539
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
 --- !u!114 &1716988322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2915,8 +2943,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21cbf468324717a48b66353bfaaebb67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   server:
     machineName: {fileID: 11400000, guid: 2b1fbe2f3792d5543aa2d071d192bdbc, type: 2}
     camera: {fileID: 6905166632995050497}
@@ -2925,7 +2951,7 @@ MonoBehaviour:
     camera: {fileID: 858042973}
   - machineName: {fileID: 11400000, guid: 6fa8563e1cef73945b348ea7e8758c06, type: 2}
     camera: {fileID: 1504287684}
-  - machineName: {fileID: 11400000, guid: fd937e8664ce2ed49bfe575882620103, type: 2}
+  - machineName: {fileID: 11400000, guid: 143b3f327dc8e874b87e6038e9d48159, type: 2}
     camera: {fileID: 1534629215624005149}
   - machineName: {fileID: 11400000, guid: 1b66686d3f3307e48958652dc0bc4c0c, type: 2}
     camera: {fileID: 364164810}
@@ -3066,7 +3092,7 @@ Transform:
   - {fileID: 1568529568}
   - {fileID: 1675002270}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2107038510
 GameObject:
@@ -3267,7 +3293,7 @@ PrefabInstance:
     - target: {fileID: 2483877716221292743, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716221292743, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
@@ -3798,12 +3824,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6905166632995387959}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 427210188}
-  m_RootOrder: 0
+  m_Father: {fileID: 6905166632995612195}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &6905166632995612195
 Transform:
@@ -3817,8 +3843,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 427210188}
+  - {fileID: 6905166632995543017}
+  - {fileID: 1301672129}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &7806840498084775106
 Transform:
