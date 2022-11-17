@@ -1,12 +1,8 @@
+
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.EventSystems;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 public class VIOSOCamera : MonoBehaviour
 {
@@ -21,7 +17,6 @@ public class VIOSOCamera : MonoBehaviour
     public bool testMode = false;
     public Vector3 testEyePointPos;
     public Vector3 testEyePointRot;
-
 
     public enum ERROR
     {

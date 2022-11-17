@@ -5,6 +5,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using EdyCommonTools;
 using UniCAVE;
 using Mirror;
 
@@ -18,10 +19,11 @@ public class Perrinn424ClusterManager : NetworkBehaviour
 	public Station server;
 	public Station[] clients = new Station[0];
 
-	[Header("UI")]
+	[Header("UI Material")]
+	public Material uiMaterial;
+	[HelpBox("Canvases will be assigned to the corresponding camera and their components will use the given UI material. Activation state won't be changed here.")]
 	public Canvas[] serverCanvasList = new Canvas[0];
 	public Canvas[] clientCanvasList = new Canvas[0];
-	public Material uiMaterial;
 
 	[Header("Test Mode")]
 	public bool enableTestMode = false;
