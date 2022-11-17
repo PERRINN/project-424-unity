@@ -19,6 +19,12 @@ public class DynismaTester : MonoBehaviour
 	public int maxFrequency = 100;
 	public int steerAngleRange = 300;
 
+	[Header("Simulated Platform")]
+	public float maxDisplacement = 1.0f;
+	public float displacementRate = 1.0f;
+	public float maxRotation = 30.0f;
+	public float rotationRate = 30.0f;
+
 	[Header("Motion Data")]
 	public int listeningPort = 56236;
 
@@ -152,6 +158,10 @@ public class DynismaTester : MonoBehaviour
 
 		if (showWidget)
 			UpdateWidgetText();
+
+		// Update simulated motion platform position
+
+		UpdatePlatformPosition();
 		}
 
 
@@ -229,7 +239,7 @@ public class DynismaTester : MonoBehaviour
 		// (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
 
 		Vector3 position = transform.localPosition;
-		Vector3 rotation = transform.localRotation.eulerAngles;
+		Vector3 rotation = transform.localRotation.eulerAngles * Mathf.Deg2Rad;
 
 		m_inputData.eyePointPosX = position.z;
 		m_inputData.eyePointPosY = -position.x;
@@ -239,6 +249,44 @@ public class DynismaTester : MonoBehaviour
 		m_inputData.eyePointRotZ = -rotation.y;
 
 		m_sender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
+		}
+
+
+	void UpdatePlatformPosition ()
+		{
+		bool ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+		bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+		bool translate = !ctrl || shift;
+		bool rotate = ctrl || shift;
+
+		Vector3 targetPos = Vector3.zero;
+		if (translate)
+			{
+			if (Input.GetKey(KeyCode.LeftArrow)) targetPos.x = -1;
+			if (Input.GetKey(KeyCode.RightArrow)) targetPos.x = +1;
+			if (Input.GetKey(KeyCode.PageDown)) targetPos.y = -1;
+			if (Input.GetKey(KeyCode.PageUp)) targetPos.y = +1;
+			if (Input.GetKey(KeyCode.DownArrow)) targetPos.z = -1;
+			if (Input.GetKey(KeyCode.UpArrow)) targetPos.z = +1;
+			}
+
+		Vector3 targetAngles = Vector3.zero;
+		if (rotate)
+			{
+			if (Input.GetKey(KeyCode.LeftArrow)) targetAngles.y = -1;
+			if (Input.GetKey(KeyCode.RightArrow)) targetAngles.y = +1;
+			if (Input.GetKey(KeyCode.PageDown)) targetAngles.z = +1;
+			if (Input.GetKey(KeyCode.PageUp)) targetAngles.z = -1;
+			if (Input.GetKey(KeyCode.DownArrow)) targetAngles.x = -1;
+			if (Input.GetKey(KeyCode.UpArrow)) targetAngles.x = +1;
+			}
+
+		targetPos = targetPos.normalized * maxDisplacement;
+		transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPos, displacementRate * Time.deltaTime);
+
+		targetAngles = targetAngles * maxRotation;
+		Quaternion targetRot = Quaternion.Euler(targetAngles);
+		transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetRot, rotationRate * Time.deltaTime);
 		}
 
 
