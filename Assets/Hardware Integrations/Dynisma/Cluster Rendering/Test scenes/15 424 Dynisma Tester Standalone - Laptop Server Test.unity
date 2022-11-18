@@ -440,74 +440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10968d37f1acb20469b51382049f6f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &427210187
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 427210188}
-  - component: {fileID: 427210190}
-  - component: {fileID: 427210189}
-  m_Layer: 0
-  m_Name: Vioso CAVE
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &427210188
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427210187}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6905166632995612195}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &427210189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427210187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73411c8d62ce8b44d93837ed36c78500, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  head: {fileID: 0}
-  maxUpdateRate: 10
-  synchronizeTransforms: 0
-  synchronizeTime: 1
-  settingsToLoad: 
---- !u!114 &427210190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427210187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 895701980
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
 --- !u!1 &524481961
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,6 +1136,7 @@ GameObject:
   - component: {fileID: 1017924553}
   - component: {fileID: 1017924552}
   - component: {fileID: 1017924551}
+  - component: {fileID: 1017924554}
   m_Layer: 0
   m_Name: PERRINN Render Client
   m_TagString: Untagged
@@ -1228,8 +1161,7 @@ MonoBehaviour:
   vehicle: {fileID: 626402878}
   visualEffects: {fileID: 1810276301}
   dashboardDisplay: {fileID: 396249270}
-  cave: {fileID: 427210188}
-  head: {fileID: 1301672129}
+  view: {fileID: 1301672129}
   cameraController: {fileID: 6905166632989773343}
 --- !u!114 &1017924552
 MonoBehaviour:
@@ -1262,6 +1194,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1017924554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017924550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73411c8d62ce8b44d93837ed36c78500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  head: {fileID: 0}
+  maxUpdateRate: 10
+  synchronizeTransforms: 0
+  synchronizeTime: 1
+  settingsToLoad: 
 --- !u!114 &1079178280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1623,7 +1574,7 @@ Transform:
   - {fileID: 364164808}
   - {fileID: 605773857}
   m_Father: {fileID: 6905166632995612195}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1320894002
 GameObject:
@@ -3829,7 +3780,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6905166632995612195}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &6905166632995612195
 Transform:
@@ -3842,7 +3793,6 @@ Transform:
   m_LocalPosition: {x: -2.9181025, y: 1.7511439, z: 7.629786}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 427210188}
   - {fileID: 6905166632995543017}
   - {fileID: 1301672129}
   m_Father: {fileID: 0}

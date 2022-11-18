@@ -25,8 +25,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public Perrinn424CarController vehicle;
 	public VPVisualEffects visualEffects;
 	public SteeringScreen dashboardDisplay;
-	public Transform cave;
-	public Transform head;
+	[UnityEngine.Serialization.FormerlySerializedAs("head")]
+	public Transform view;
 
 	public Behaviour cameraController;
 
@@ -143,11 +143,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	public struct VisualState
 		{
-		// Vehicle and cave poses
+		// Vehicle and view poses
 
 		public VisualPose vehicle;
-		public VisualPose cave;
-		public VisualPose head;
+		public VisualPose view;
 
 		// Wheel poses
 
@@ -177,8 +176,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	bool m_firstUpdate;
 	Transform m_vehicleTransform;
-	Transform m_caveTransform;
-	Transform m_headTransform;
+	Transform m_viewTransform;
 	VisualState m_state;
 
 
@@ -205,8 +203,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		syncInterval = 0.016f;
 
 		m_vehicleTransform = vehicle.cachedTransform;
-		m_caveTransform = cave != null? cave.transform : null;
-		m_headTransform = head != null? head.transform : null;
+		m_viewTransform = view != null? view.transform : null;
 
 		m_state = new VisualState();
 		m_firstUpdate = false;
@@ -260,11 +257,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		if (isServer)
 			{
-			// Retrieve vehicle and cave poses
+			// Retrieve vehicle and view poses
 
 			m_state.vehicle.SetFrom(m_vehicleTransform);
-			m_state.cave.SetFrom(m_caveTransform);
-			m_state.head.SetFrom(m_headTransform);
+			m_state.view.SetFrom(m_viewTransform);
 
 			// Retrieve wheel poses
 
@@ -306,11 +302,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[ClientRpc]
 	void RpcUpdateVisualState (VisualState state)
 		{
-		// Apply vehicle and cave poses
+		// Apply vehicle and view poses
 
 		state.vehicle.ApplyTo(m_vehicleTransform);
-		state.cave.ApplyTo(m_caveTransform);
-		state.head.ApplyTo(m_headTransform);
+		state.view.ApplyTo(m_viewTransform);
 
 		// Apply wheel poses
 
