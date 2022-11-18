@@ -309,7 +309,7 @@ namespace Mirror.Discovery
         /// </summary>
         public void StopDiscovery()
         {
-            //Debug.Log("NetworkDiscoveryBase StopDiscovery");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log("NetworkDiscovery Stop Discovery");
             Shutdown();
         }
 

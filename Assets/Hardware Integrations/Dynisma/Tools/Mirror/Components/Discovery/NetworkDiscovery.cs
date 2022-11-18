@@ -75,6 +75,8 @@ namespace Mirror.Discovery
 
             try
             {
+                if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkDiscovery client request from: {endpoint.Address.ToString()}");
+
                 // this is an example reply message,  return your own
                 // to include whatever is relevant for your game
                 return new ServerResponse
@@ -127,7 +129,7 @@ namespace Mirror.Discovery
             };
             response.uri = realUri.Uri;
 
-            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkDiscovery Server Found. URI: {response.uri} ServerID: {response.serverId}");
+            if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkDiscovery server found. URI: {response.uri} ServerID: {response.serverId}");
             OnServerFound.Invoke(response);
         }
 
