@@ -75,7 +75,7 @@ namespace Mirror.Discovery
 
             try
             {
-                if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkDiscovery client request from: {endpoint.Address.ToString()}");
+                if (NetworkManager.DebugInfoLevel >= 2) Debug.Log($"NetworkDiscovery client request received: {endpoint.Address.ToString()}, Responding...");
 
                 // this is an example reply message,  return your own
                 // to include whatever is relevant for your game
