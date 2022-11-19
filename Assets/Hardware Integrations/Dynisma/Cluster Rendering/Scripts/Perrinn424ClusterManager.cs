@@ -16,7 +16,7 @@ namespace Perrinn424
 public class Perrinn424ClusterManager : MonoBehaviour
 	{
 	[Header("Stations")]
-	public Station server;
+	public Camera serverCamera;
 	public Station[] clients = new Station[0];
 
 	[Header("UI Material")]
@@ -28,11 +28,11 @@ public class Perrinn424ClusterManager : MonoBehaviour
 	[Header("Test Mode")]
 	public bool enableTestMode = false;
 	public TestStation testStation = TestStation.Server;
-
 	public enum TestStation { Server, Client1, Client2, Client3, Client4, Client5, Client6, Client7, Client8, Client9, Client10 }
 
 	bool m_testMode;
 	TestStation m_testStation;
+	Station m_serverStation = new Station();
 
 
 	[Serializable]
@@ -54,6 +54,17 @@ public class Perrinn424ClusterManager : MonoBehaviour
 
 	void OnEnable ()
 		{
+		UCNetworkManager networkManager = FindObjectOfType<UCNetworkManager>();
+		if (networkManager == null)
+			{
+			Debug.LogError("Perrinn424ClusterManager: Network Manager not found. Component disabled.");
+			enabled = false;
+			return;
+			}
+
+		m_serverStation.camera = serverCamera;
+		m_serverStation.machineName = networkManager.headMachineAsset;
+
 		m_testMode = false;
 		m_testStation = testStation;
 
@@ -71,7 +82,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 				if ((int)testStation > clients.Length)
 					testStation = TestStation.Server;
 
-				string stationName = testStation == TestStation.Server? server.name : clients[(int)testStation - 1].name;
+				string stationName = testStation == TestStation.Server? m_serverStation.name : clients[(int)testStation - 1].name;
 				EnableNetworkStation(stationName);
 				}
 			else
@@ -126,7 +137,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 
 	void EnableNetworkStation (string machineName)
 		{
-		SetActive(server, ShouldBeActive(server, machineName), serverCanvasList);
+		SetActive(m_serverStation, ShouldBeActive(m_serverStation, machineName), serverCanvasList);
 		foreach (Station s in clients)
 			SetActive(s, ShouldBeActive(s, machineName), clientCanvasList);
 		}
@@ -143,7 +154,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 
 	void DisableAll ()
 		{
-		SetActive(server, false);
+		SetActive(m_serverStation, false);
 		foreach (Station s in clients)
 			SetActive(s, false);
 		}
