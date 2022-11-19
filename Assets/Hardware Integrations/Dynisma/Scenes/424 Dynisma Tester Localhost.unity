@@ -3333,8 +3333,7 @@ MonoBehaviour:
   vehicle: {fileID: 626402878}
   visualEffects: {fileID: 1810276301}
   dashboardDisplay: {fileID: 396249270}
-  cave: {fileID: 427210188}
-  head: {fileID: 1301672129}
+  view: {fileID: 1301672129}
   cameraController: {fileID: 6905166632989773343}
 --- !u!114 &1716988321
 MonoBehaviour:
@@ -3365,11 +3364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21cbf468324717a48b66353bfaaebb67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  server:
-    machineName: {fileID: 11400000, guid: 143b3f327dc8e874b87e6038e9d48159, type: 2}
-    camera: {fileID: 6905166632995050497}
+  serverCamera: {fileID: 6905166632995050497}
   clients:
   - machineName: {fileID: 11400000, guid: 2852ff80f7f9fce4ba7208267ce91c6a, type: 2}
     camera: {fileID: 858042973}
@@ -3381,12 +3376,12 @@ MonoBehaviour:
     camera: {fileID: 364164810}
   - machineName: {fileID: 11400000, guid: e49dc425bb2d05a43a21de2a8783decd, type: 2}
     camera: {fileID: 605773859}
+  uiMaterial: {fileID: 2100000, guid: 0f3cb33ab2409c84fb42f2e1cad2f175, type: 2}
   serverCanvasList:
   - {fileID: 1675002273}
   clientCanvasList:
   - {fileID: 1209505861}
   - {fileID: 1568529571}
-  uiMaterial: {fileID: 2100000, guid: 0f3cb33ab2409c84fb42f2e1cad2f175, type: 2}
   enableTestMode: 0
   testStation: 0
 --- !u!114 &1810276301 stripped

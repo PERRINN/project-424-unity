@@ -511,14 +511,14 @@ MonoBehaviour:
   brakeBar: {fileID: 740783866}
   throttleBar: {fileID: 1170250146}
   gearSlider: {fileID: 2104492370}
-  drsBar: {fileID: 7773880984501109028}
   steeringSetup: {fileID: 1360238559}
   steeringRangeSetup: {fileID: 106901916852607341}
+  ffbForceGainSetup: {fileID: 0}
+  ffbDamperGainSetup: {fileID: 0}
   throttleSetup: {fileID: 1658840241}
   brakeSetup: {fileID: 1980375765}
   gearUpSetup: {fileID: 928427206}
   gearDownSetup: {fileID: 1370363890}
-  drsSetup: {fileID: 1804202570}
   defaultControlColor: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 1}
   activeControlColor: {r: 0, g: 0.78431374, b: 0.3254902, a: 1}
   inactiveControlColor: {r: 0.53333336, g: 0.53333336, b: 0.53333336, a: 1}
@@ -935,6 +935,9 @@ MonoBehaviour:
   updateDevicesAt: 1
   settings:
     physicalWheelRange: 300
+    forceFeedbackForceGain: 1
+    forceFeedbackDamperGain: 1
+    forceFeedbackEffectsGain: 1
     autoForwardAndReverse: 0
   fixedMappings: []
   unityStandardInput: 1
@@ -981,7 +984,7 @@ Transform:
   m_Children:
   - {fileID: 1585863549}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &531594964
 MonoBehaviour:
@@ -1365,7 +1368,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1337927121
 GameObject:
@@ -1494,11 +1497,15 @@ MonoBehaviour:
   host: 127.0.0.1
   port: 56234
   maxFrequency: 100
-  maxSteerAngle: 300
+  steerAngleRange: 300
+  maxDisplacement: 1
+  displacementRate: 1
+  maxRotation: 30
+  rotationRate: 30
   listeningPort: 56236
   showWidget: 1
   widget:
-    position: {x: 8, y: 300}
+    position: {x: 8, y: -90}
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 12
     fontColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1515,8 +1522,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1428899532}
-  m_RootOrder: 16
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1360238559 stripped
 MonoBehaviour:
@@ -1695,11 +1702,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0eae7d8f1a68f1488751daf73da1c12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  host: 127.0.0.1
-  port: 56236
-  maxTransferFrequency: 150
   motionEnabled: 1
-  maxSteeringTorque: 20
+  settings:
+    host: 127.0.0.1
+    port: 56236
+    maxTransferFrequency: 150
+    maxSteeringTorque: 20
   testModeEnabled: 0
   testData:
     accelerationX: 0
@@ -2370,18 +2378,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1721527825}
   m_CullTransparentMesh: 0
---- !u!114 &1804202570 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7322827628306836598, guid: 8e3a3654418a6b048a4707246e320c89,
-    type: 3}
-  m_PrefabInstance: {fileID: 1808799381}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9d26437eebc96e48bfdff587ab62460, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1806333444
 GameObject:
   m_ObjectHideFlags: 0
@@ -3440,6 +3436,7 @@ MonoBehaviour:
   slider: {fileID: 2392303473637790340}
   text: {fileID: 2392303474671231825}
   format: 0'0
+  multiplier: 1
 --- !u!224 &106901917319705156
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4118,7 +4115,7 @@ PrefabInstance:
     - target: {fileID: 2483877716221292743, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716221292743, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
