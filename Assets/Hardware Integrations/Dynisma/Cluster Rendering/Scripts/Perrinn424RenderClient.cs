@@ -200,7 +200,6 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			return;
 			}
 
-
 		syncInterval = 0.016f;
 
 		m_visualEffects = vehicle.GetComponentInChildren<VPVisualEffects>();

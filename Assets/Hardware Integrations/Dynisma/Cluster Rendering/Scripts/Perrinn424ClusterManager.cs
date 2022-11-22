@@ -25,12 +25,18 @@ public class Perrinn424ClusterManager : MonoBehaviour
 	public Canvas[] serverCanvasList = new Canvas[0];
 	public Canvas[] clientCanvasList = new Canvas[0];
 
+	[HelpBox("Keep these components and game objects enabled on unknown stations. They might have been disabled by other managers.")]
+	[Header("On unknown station")]
+	public Behaviour[] enableComponents = new Behaviour[0];
+	public GameObject[] enableGameObjects = new GameObject[0];
+
 	[Header("Test Mode")]
 	public bool enableTestMode = false;
 	public TestStation testStation = TestStation.Server;
 	public enum TestStation { Server, Client1, Client2, Client3, Client4, Client5, Client6, Client7, Client8, Client9, Client10 }
 
 	bool m_testMode;
+	bool m_unknownStation;
 	TestStation m_testStation;
 	Station m_serverStation = new Station();
 
@@ -75,6 +81,8 @@ public class Perrinn424ClusterManager : MonoBehaviour
 
 	void Update ()
 		{
+		// Handle test mode
+
 		if (enableTestMode != m_testMode || testStation != m_testStation)
 			{
 			if (enableTestMode)
@@ -94,10 +102,51 @@ public class Perrinn424ClusterManager : MonoBehaviour
 			m_testMode = enableTestMode;
 			m_testStation = testStation;
 			}
+
+		// Keep elements enabled on unknown stations
+
+		if (m_unknownStation)
+			{
+			foreach (Behaviour c in enableComponents)
+				{
+				if (!c.enabled) c.enabled = true;
+				}
+
+			foreach (GameObject g in enableGameObjects)
+				{
+				if (!g.activeSelf) g.SetActive(true);
+				}
+			}
 		}
 
 
 	//------------------------------------------------------------------------------------------------------
+
+
+	void EnableNetworkStation (string machineName)
+		{
+		bool serverActive = ShouldBeActive(m_serverStation, machineName);
+		SetActive(m_serverStation, serverActive, serverCanvasList);
+
+		bool anyStationActive = serverActive;
+		foreach (Station s in clients)
+			{
+			bool stationActive = ShouldBeActive(s, machineName);
+			anyStationActive |= stationActive;
+			SetActive(s, stationActive, clientCanvasList);
+			}
+
+		m_unknownStation = !anyStationActive;
+		}
+
+
+	bool ShouldBeActive (Station station, string machineName)
+		{
+		if (station == null && station.machineName == null)
+			return false;
+
+		return station.machineName.Name == machineName;
+		}
 
 
 	void SetActive (Station station, bool active, Canvas[] canvasList = null)
@@ -132,23 +181,6 @@ public class Perrinn424ClusterManager : MonoBehaviour
 					graphic.material = uiMaterial;
 				}
 			}
-		}
-
-
-	void EnableNetworkStation (string machineName)
-		{
-		SetActive(m_serverStation, ShouldBeActive(m_serverStation, machineName), serverCanvasList);
-		foreach (Station s in clients)
-			SetActive(s, ShouldBeActive(s, machineName), clientCanvasList);
-		}
-
-
-	bool ShouldBeActive (Station station, string machineName)
-		{
-		if (station == null && station.machineName == null)
-			return false;
-
-		return station.machineName.Name == machineName;
 		}
 
 
