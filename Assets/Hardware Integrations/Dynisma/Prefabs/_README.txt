@@ -1,3 +1,4 @@
+
 ">" represents references external to the prefab that must be set when using this prefab in a scene.
 
 
@@ -36,14 +37,18 @@ PERRINN Cluster Manager
 Enables / disables cameras based on the station running as server or client:
 	- In server stations enables the Server Camera.
 	- In client stations a specific camera is enabled based on the known client machine names.
-	(TODO: - In unknown clients enables the given camera and the list of specific GameObjects.)
+	- In unknown clients enables the given components and gameobjects.
+
+Does not enable or disable any other objects. Canvases are enabled/disabled by Network Monitor above.
 
 Also configures the UI elements to be shown properly in the corresponding cameras:
 	- UI material in all Graphic elements.
 	- Canvas > Render Mode to Screen Space Camera.
 	- Canvas > Render Camera to the enabled camera.
 
-Does not enable or disable any other objects. Canvases are enabled/disabled by Network Monitor above.
+Includes a test mode forcing the output of any of the server or client stations.
+
+> Enable Game Objects > Element 0: reserved for SceneTools (logo, text, time scale etc)
 
 
 PERRINN Render Client
