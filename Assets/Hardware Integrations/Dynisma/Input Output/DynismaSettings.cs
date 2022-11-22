@@ -27,10 +27,13 @@ public class DynismaSettings : MonoBehaviour
 
 	void Awake ()
 		{
-		// Ensure dynisma components are disabled beforehand
+		// Ensure dynisma components are disabled beforehand when this component is active
 
-		if (inputProvider != null) inputProvider.enabled = false;
-		if (motionPlatform != null) motionPlatform.enabled = false;
+		if (isActiveAndEnabled)
+			{
+			if (inputProvider != null) inputProvider.enabled = false;
+			if (motionPlatform != null) motionPlatform.enabled = false;
+			}
 		}
 
 
