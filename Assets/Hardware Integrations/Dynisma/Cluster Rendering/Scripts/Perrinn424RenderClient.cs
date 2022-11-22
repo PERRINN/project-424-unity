@@ -23,8 +23,6 @@ namespace Perrinn424
 public class Perrinn424RenderClient : NetworkBehaviour
 	{
 	public Perrinn424CarController vehicle;
-	public VPVisualEffects visualEffects;
-	public SteeringScreen dashboardDisplay;
 	[UnityEngine.Serialization.FormerlySerializedAs("head")]
 	public Transform view;
 
@@ -177,6 +175,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	bool m_firstUpdate;
 	Transform m_vehicleTransform;
 	Transform m_viewTransform;
+	VPVisualEffects m_visualEffects;
+	SteeringScreen m_dashboardDisplay;
 	VisualState m_state;
 
 
@@ -200,8 +200,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			return;
 			}
 
+
 		syncInterval = 0.016f;
 
+		m_visualEffects = vehicle.GetComponentInChildren<VPVisualEffects>();
+		m_dashboardDisplay = vehicle.GetComponentInChildren<SteeringScreen>();
 		m_vehicleTransform = vehicle.cachedTransform;
 		m_viewTransform = view != null? view.transform : null;
 
@@ -271,20 +274,20 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 			// Retrieve steering wheel pose
 
-			m_state.steeringWheel.SetFrom(visualEffects.steeringWheel);
+			m_state.steeringWheel.SetFrom(m_visualEffects.steeringWheel);
 
 			// Retrieve dashboard states
 
-			m_state.speedMps.SetFrom(dashboardDisplay.speedMps);
-			m_state.speedKph.SetFrom(dashboardDisplay.speedKph);
-			m_state.gear.SetFrom(dashboardDisplay.gear);
-			m_state.power.SetFrom(dashboardDisplay.totalElecPower);
-			m_state.minCaption.SetFrom(dashboardDisplay.minIndicator);
-			m_state.deltaTime.SetFrom(dashboardDisplay.timeDifference);
-			m_state.batterySOC.SetFrom(dashboardDisplay.batterySOC);
-			m_state.batteryCapacity.SetFrom(dashboardDisplay.batteryCapacity);
-			m_state.drs.SetFrom(dashboardDisplay.drsImage);
-			m_state.autopilot.SetFrom(dashboardDisplay.autopilotImage);
+			m_state.speedMps.SetFrom(m_dashboardDisplay.speedMps);
+			m_state.speedKph.SetFrom(m_dashboardDisplay.speedKph);
+			m_state.gear.SetFrom(m_dashboardDisplay.gear);
+			m_state.power.SetFrom(m_dashboardDisplay.totalElecPower);
+			m_state.minCaption.SetFrom(m_dashboardDisplay.minIndicator);
+			m_state.deltaTime.SetFrom(m_dashboardDisplay.timeDifference);
+			m_state.batterySOC.SetFrom(m_dashboardDisplay.batterySOC);
+			m_state.batteryCapacity.SetFrom(m_dashboardDisplay.batteryCapacity);
+			m_state.drs.SetFrom(m_dashboardDisplay.drsImage);
+			m_state.autopilot.SetFrom(m_dashboardDisplay.autopilotImage);
 
 			// Send state to clients
 
@@ -316,20 +319,20 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Apply steering wheel pose
 
-		state.steeringWheel.ApplyTo(visualEffects.steeringWheel);
+		state.steeringWheel.ApplyTo(m_visualEffects.steeringWheel);
 
 		// Apply dashboard states
 
-		state.speedMps.ApplyTo(dashboardDisplay.speedMps);
-		state.speedKph.ApplyTo(dashboardDisplay.speedKph);
-		state.gear.ApplyTo(dashboardDisplay.gear);
-		state.power.ApplyTo(dashboardDisplay.totalElecPower);
-		state.minCaption.ApplyTo(dashboardDisplay.minIndicator);
-		state.deltaTime.ApplyTo(dashboardDisplay.timeDifference);
-		state.batterySOC.ApplyTo(dashboardDisplay.batterySOC);
-		state.batteryCapacity.ApplyTo(dashboardDisplay.batteryCapacity);
-		state.drs.ApplyTo(dashboardDisplay.drsImage);
-		state.autopilot.ApplyTo(dashboardDisplay.autopilotImage);
+		state.speedMps.ApplyTo(m_dashboardDisplay.speedMps);
+		state.speedKph.ApplyTo(m_dashboardDisplay.speedKph);
+		state.gear.ApplyTo(m_dashboardDisplay.gear);
+		state.power.ApplyTo(m_dashboardDisplay.totalElecPower);
+		state.minCaption.ApplyTo(m_dashboardDisplay.minIndicator);
+		state.deltaTime.ApplyTo(m_dashboardDisplay.timeDifference);
+		state.batterySOC.ApplyTo(m_dashboardDisplay.batterySOC);
+		state.batteryCapacity.ApplyTo(m_dashboardDisplay.batteryCapacity);
+		state.drs.ApplyTo(m_dashboardDisplay.drsImage);
+		state.autopilot.ApplyTo(m_dashboardDisplay.autopilotImage);
 		}
 	}
 
