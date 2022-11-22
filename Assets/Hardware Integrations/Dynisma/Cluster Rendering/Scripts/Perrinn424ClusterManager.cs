@@ -142,7 +142,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 
 	bool ShouldBeActive (Station station, string machineName)
 		{
-		if (station == null && station.machineName == null)
+		if (station == null || station.machineName == null)
 			return false;
 
 		return station.machineName.Name == machineName;
