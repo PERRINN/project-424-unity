@@ -250,10 +250,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11431438, guid: 2cd00faae1c08854f97acb5a87bb5f0d, type: 3}
-      propertyPath: showText
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11431438, guid: 2cd00faae1c08854f97acb5a87bb5f0d, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
@@ -292,6 +288,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recenterKey: 104
+--- !u!114 &190246648 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 11431438, guid: 2cd00faae1c08854f97acb5a87bb5f0d,
+    type: 3}
+  m_PrefabInstance: {fileID: 190246643}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190246644}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -226696006, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &295459827 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2476090976206688042, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
@@ -10934,6 +10942,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 346719764958316064, guid: 1b3a46a0a740fd54197c7ec82402e00f,
         type: 3}
+      propertyPath: enableComponents.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 346719764958316064, guid: 1b3a46a0a740fd54197c7ec82402e00f,
+        type: 3}
+      propertyPath: enableComponents.Array.data[1]
+      value: 
+      objectReference: {fileID: 190246648}
+    - target: {fileID: 346719764958316064, guid: 1b3a46a0a740fd54197c7ec82402e00f,
+        type: 3}
       propertyPath: enableGameObjects.Array.data[0]
       value: 
       objectReference: {fileID: 190246644}
@@ -10977,12 +10995,6 @@ PrefabInstance:
       propertyPath: serverOnly.Array.data[7]
       value: 
       objectReference: {fileID: 1320894002}
-    - target: {fileID: 346719765022273742, guid: 1b3a46a0a740fd54197c7ec82402e00f,
-        type: 3}
-      propertyPath: headMachineAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 143b3f327dc8e874b87e6038e9d48159,
-        type: 2}
     - target: {fileID: 346719765033856543, guid: 1b3a46a0a740fd54197c7ec82402e00f,
         type: 3}
       propertyPath: m_IsActive
