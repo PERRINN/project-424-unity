@@ -15,12 +15,9 @@ namespace Perrinn424.UI
 
         private void OnEnable()
         {
-
-
             TimeFormatter timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"m\:ss\.fff", @"m\:ss\.fff");
-            string duration = timeFormatter.ToString(autopilot.CalculateDuration());
+            string duration = timeFormatter.ToString(autopilot.Duration);
             text.text = $"Ref {duration}";
-
         }
     } 
 }

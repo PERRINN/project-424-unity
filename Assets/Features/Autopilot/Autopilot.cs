@@ -7,12 +7,6 @@ namespace Perrinn424.AutopilotSystem
 {
     public class Autopilot : BaseAutopilot
     {
-        public enum InputType
-        {
-            Raw,
-            Processed
-        }
-
 
         [Header("References")]
         public RecordedLap recordedLap;
@@ -24,8 +18,6 @@ namespace Perrinn424.AutopilotSystem
         private PathDrawer pathDrawer;
 
         [Header("Setup")]
-
-        public InputType inputType;
 
         [SerializeField]
         private bool autoStart = false;
@@ -48,9 +40,13 @@ namespace Perrinn424.AutopilotSystem
 
         public Sample ReferenceSample { get; private set; }
         public float ReferenceSpeed { get; private set; }
-        public float PlayingTime { get; private set; }
-        //TODO use this value at dashboard
-        public float DeltaTime { get; private set; }
+        public override float PlayingTime => playingTime;
+        private float playingTime;
+
+        public override float DeltaTime => deltaTime;
+        private float deltaTime;
+
+        public override float Duration => recordedLap.lapTime;
 
         public override void OnEnableVehicle()
         {
@@ -80,8 +76,8 @@ namespace Perrinn424.AutopilotSystem
             autopilotSearcher.Search(vehicle.transform);
             ReferenceSample = GetInterpolatedNearestSample();
             ReferenceSpeed = ReferenceSample.speed;
-            PlayingTime = CalculatePlayingTime();
-            DeltaTime = timer.currentLapTime - PlayingTime;
+            playingTime = CalculatePlayingTime();
+            deltaTime = timer.currentLapTime - PlayingTime;
             pathDrawer.index = autopilotSearcher.StartIndex;
 
             if (IsOn)
@@ -121,8 +117,7 @@ namespace Perrinn424.AutopilotSystem
 
         }
 
-        //TODO make private and use Property PlayingTime
-        public override float CalculatePlayingTime()
+        private float CalculatePlayingTime()
         {
             float sampleIndex = (autopilotSearcher.StartIndex + autopilotSearcher.Ratio);
             float playingTimeBySampleIndex = sampleIndex / recordedLap.frequency;
@@ -175,28 +170,12 @@ namespace Perrinn424.AutopilotSystem
 
         private void WriteInput(Sample s)
         {
-            if (inputType == InputType.Raw)
-            {
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 0);
-                vehicle.data.Set(Channel.Input, InputData.Steer, s.rawSteer);
-                vehicle.data.Set(Channel.Input, InputData.Throttle, s.rawThrottle);
-                vehicle.data.Set(Channel.Input, InputData.Brake, s.rawBrake);
-                vehicle.data.Set(Channel.Input, InputData.AutomaticGear, s.automaticGear);
-            }
-            else
-            {
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 1);
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputDrsPosition, (int)(s.drsPosition*10.0f));
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputSteerAngle, (int)(s.steeringAngle * 10000.0f));
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputMguThrottle, (int)(s.throttle * 100.0f));
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePressure, (int)(s.brakePressure * 10000.0f));
-                vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, 1); //TODO
-            }
-        }
-
-        public override float CalculateDuration()
-        {
-            return recordedLap.lapTime;
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 1);
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputDrsPosition, (int)(s.drsPosition * 10.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputSteerAngle, (int)(s.steeringAngle * 10000.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputMguThrottle, (int)(s.throttle * 100.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePressure, (int)(s.brakePressure * 10000.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, s.gear); //TODO
         }
 
         private void OnDrawGizmos()

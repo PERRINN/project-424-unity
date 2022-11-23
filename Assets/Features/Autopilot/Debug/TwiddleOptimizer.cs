@@ -59,7 +59,7 @@ public class TwiddleOptimizer : VehicleBehaviour
             return;
         }
 
-        float error = lapTime - autopilot.CalculateDuration();
+        float error = lapTime - autopilot.Duration;
         error = Mathf.Abs(error);
         waitForNewError.SetError(error);
         //print(twiddleEnumerator.ToString());
