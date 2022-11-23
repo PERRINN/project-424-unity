@@ -327,6 +327,7 @@ public class Perrinn424CarController : VehicleBase
 
 		// Initialize internal data
 
+		disableSteerAngleFix = true;
 		forceRaycastIgnoreColliders = true;
 		m_gearMode = (int)Gearbox.AutomaticGear.N;
 		m_prevGearMode = (int)Gearbox.AutomaticGear.N;
