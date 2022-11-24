@@ -31,9 +31,6 @@ namespace Perrinn424.UI
         [SerializeField]
         private VehicleBase vehicle;
 
-        [SerializeField]
-        LapTimer m_lapTimer = null;
-
 
         private BaseAutopilot autopilot;
 
