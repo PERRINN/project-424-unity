@@ -8,25 +8,19 @@ namespace Perrinn424.Utilities
     {
 
         [Header("Height Adjustment")]
-        [SerializeField]
-        private KeyCode increaseHeight;
-        [SerializeField]
-        private KeyCode decreaseHeight;
+        public KeyCode increaseHeight;
+        public KeyCode decreaseHeight;
 
-        [SerializeField]
-        private Transform firstPersonCameraTarget;
+        public Transform firstPersonCameraTarget;
 
         public float heightStep = 0.025f;
         public float heightMax = 0.05f;
 
         [Header("FOV Adjustment")]
-        [SerializeField]
-        private KeyCode increaseFOV;
-        [SerializeField]
-        private KeyCode decreaseFOV;
+        public KeyCode increaseFOV;
+        public KeyCode decreaseFOV;
 
-        [SerializeField]
-        private VPCameraController firstPersonCamera;
+        public VPCameraController firstPersonCamera;
 
         public float fovStep = 5f;
         public float fovMin = 25f;
@@ -85,5 +79,5 @@ namespace Perrinn424.Utilities
 
             onSettingsChanged?.Invoke();
         }
-    } 
+    }
 }
