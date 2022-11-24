@@ -26,11 +26,15 @@ namespace Perrinn424.Utilities
         public float fovMin = 25f;
         public float fovMax = 45f;
 
+        [Header("View Damping")]
+        public KeyCode toggleViewDamping = KeyCode.N;
+        public VPHeadMotion headMotion;
 
         public event Action onSettingsChanged;
 
         public float Height => firstPersonCameraTarget.localPosition.y;
         public float FOV => firstPersonCamera.driverCameraFov;
+        public bool Damping => headMotion != null? headMotion.longitudinal.mode != VPHeadMotion.HorizontalMotion.Mode.Disabled : false;
 
         private void Update()
         {
@@ -50,6 +54,11 @@ namespace Perrinn424.Utilities
             else if (Input.GetKeyDown(decreaseFOV))
             {
                 SetCameraFovDelta(-fovStep);
+            }
+
+            if (Input.GetKeyDown(toggleViewDamping))
+            {
+                ToggleViewDamping();
             }
         }
 
@@ -78,6 +87,22 @@ namespace Perrinn424.Utilities
             firstPersonCamera.driverCameraFov = Mathf.Clamp(fov, fovMin, fovMax);
 
             onSettingsChanged?.Invoke();
+        }
+
+        private void ToggleViewDamping()
+        {
+            SetViewDamping(!Damping);
+        }
+
+        public void SetViewDamping(bool viewDamping)
+        {
+            if (headMotion != null)
+            {
+                headMotion.longitudinal.mode = viewDamping ? VPHeadMotion.HorizontalMotion.Mode.Tilt
+                    : VPHeadMotion.HorizontalMotion.Mode.Disabled;
+
+                onSettingsChanged?.Invoke();
+            }
         }
     }
 }

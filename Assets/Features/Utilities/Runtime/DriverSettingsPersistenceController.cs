@@ -12,7 +12,7 @@ namespace Perrinn424.Utilities
         [SerializeField]
         private SteeringWheelVisibilityController steeringWheelVisibilityController;
 
-        private readonly string filename = "driverSettings.json";
+        private readonly string filename = "DriverSettings.json";
 
         private string GetFullPath()
         {
@@ -44,7 +44,8 @@ namespace Perrinn424.Utilities
             {
                 height = driverCameraSettingsController.Height,
                 fov = driverCameraSettingsController.FOV,
-                steeringWheelVisibility = steeringWheelVisibilityController.VisibilityOption
+                damping = driverCameraSettingsController.Damping,
+                steeringWheelVisibility = steeringWheelVisibilityController.VisibilityOption,
             };
 
             WriteToFile(settings);
@@ -62,6 +63,7 @@ namespace Perrinn424.Utilities
 
                 driverCameraSettingsController.SetCameraFov(settings.fov);
                 driverCameraSettingsController.SetDriverHeight(settings.height);
+                driverCameraSettingsController.SetViewDamping(settings.damping);
                 steeringWheelVisibilityController.SetVisbilityOption(settings.steeringWheelVisibility);
             }
         }
