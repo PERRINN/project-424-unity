@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Perrinn424
 {
 
-public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
+public class Perrinn424Underfloor : VehicleBehaviour
 	{
 	[Serializable]
 	public class ContactPoint
@@ -39,35 +39,6 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 	[Header("Telemetry")]
 	[Tooltip("Telemetry assumes the first 4 contact points to be:\n 0  Splitter Left\n 1  Splitter Right\n 2  Floor Front\n 3  Floor Rear")]
 	public bool emitTelemetry = true;
-
-	[Header("Audio Effect")]
-	[Tooltip("Enable/Disable audio effects")]
-	public bool isAudioEnabled = true;
-
-	[Tooltip("Loopable audio clip with the underfloor drag effect")]
-	public AudioClip contactLoopClip;
-	[Tooltip("Unity audio mixer to send the audio effects to (optional)")]
-	public AudioMixerGroup output;
-
-	[Space(5)]
-	[Tooltip("The slightest contact is played at this volume")]
-	public float minVolume = 0.2f;
-	[Tooltip("Volume at the limit contact depth")]
-	public float maxVolume = 1.0f;
-
-	[Space(5)]
-	[Tooltip("Below this speed (m/s) volume and pitch are faded out to zero. Above this speed pitch is interpolated to maxPitch at maxSpeed")]
-	public float minSpeed = 50 / 3.6f;  // 50 km/h
-	[Tooltip("Pitch is interpolated between minSpeed and maxSpeed (m/s) from minPitch to maxPitch")]
-	public float maxSpeed = 100.0f;     // 360 km/h
-	[Tooltip("Minimum audio pitch at minSpeed")]
-	public float minPitch = 0.9f;
-	[Tooltip("Maximum audio pitch at maxSpeed and above")]
-	public float maxPitch = 1.1f;
-
-	[Header("3D Audio Settings")]
-	[Tooltip("Configuration of audio sources. Note: The Spatial Settings section is not applied. Modifying these settings in runtime requires disabling and re-enabling the component.")]
-	public AudioSourceSettings settings = new AudioSourceSettings();
 
 	[Header("On-screen widget")]
 	public bool showWidget = false;
@@ -97,10 +68,8 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 		public Vector3 verticalForce;
 		public Vector3 dragForce;
 
-		// Audio effect
+		// External use (audio effect)
 
-		public RuntimeAudio contactAudio;
-		public int lastPlayedContact;
 		public float maxContactDepth;
 
 		// Widget
@@ -112,19 +81,6 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 	ContactPointData[] m_contactPointData = new ContactPointData[0];
 
 	public IList<ContactPointData> contactPointData { get => Array.AsReadOnly<ContactPointData>(m_contactPointData); }
-
-
-	public Perrinn424Underfloor ()
-		{
-		// Configure default values in audio settings before deserialization
-
-		settings.minDistance = 2.0f;
-		settings.maxDistance = 400.0f;
-		settings.customRolloff = true;
-		settings.farDistance = 50.0f;
-		settings.farVolume = 0.03f;
-		settings.filterRatio = 0.82f;
-		}
 
 
 	// Initialize the values of new members of the array when its size changes
@@ -196,11 +152,6 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 		{
 		if (vehicle.paused) return;
 
-		// Update audio
-
-		for (int i = 0, c = m_contactPointData.Length; i < c; i++)
-			UpdateContactAudio(m_contactPointData[i]);
-
 		// Update widget
 
 		if (showWidget)
@@ -212,16 +163,6 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 				AppendContactPointText(m_text, m_contactPointData[i]);
 			m_textBox.text = m_text.ToString();
 			}
-		}
-
-
-	public override void OnEnterPause ()
-		{
-		// Note: If the scripts are reloaded while paused then OnEnterPause will be called _before_
-		// FixedUpdateVehicle. The runtime data will be empty.
-
-		for (int i = 0, c = m_contactPointData.Length; i < c; i++)
-			m_contactPointData[i].contactAudio.source.Stop();
 		}
 
 
@@ -276,8 +217,7 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 
 		vehicle.cachedRigidbody.AddForceAtPosition(cpData.verticalForce + cpData.dragForce, hitInfo.point);
 
-		// Audio effect:
-		// Store maximum registered contact depth.
+		// Store maximum registered contact depth. Will be reset externally (audio component).
 
 		if (contactDepth > cpData.maxContactDepth)
 			cpData.maxContactDepth = contactDepth;
@@ -295,7 +235,7 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 
 		ReleaseRuntimeData();
 
-		// Create new runtime data buffer and initialize new audio sources
+		// Create new runtime data buffer
 
 		m_contactPointData = new ContactPointData[contactPoints.Length];
 
@@ -303,11 +243,6 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 			{
 			ContactPointData cp = new ContactPointData();
 			cp.contactPoint = contactPoints[i];
-			if (cp.contactPoint.pointBase != null)
-				{
-				cp.contactAudio = new RuntimeAudio(cp.contactPoint.pointBase);
-				ConfigureAudioSource(cp.contactAudio);
-				}
 			m_contactPointData[i] = cp;
 			}
 		}
@@ -315,12 +250,6 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 
 	void ReleaseRuntimeData ()
 		{
-		for (int i = 0, c = m_contactPointData.Length; i < c; i++)
-			{
-			if (m_contactPointData[i].contactAudio != null)
-				m_contactPointData[i].contactAudio.Release();
-			}
-
 		m_contactPointData = new ContactPointData[0];
 		}
 
@@ -435,91 +364,11 @@ public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 		}
 
 
-	// Audio
-
-
-	private void ConfigureAudioSource (RuntimeAudio audio)
-		{
-		AudioSource source = audio.source;
-		source.clip = contactLoopClip;
-		source.outputAudioMixerGroup = output;
-		source.loop = true;
-		source.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
-
-		settings.Apply(source, audio.lowPassFilter, false, 1.0f);
-		}
-
-
-	void UpdateContactAudio (ContactPointData cpData)
-		{
-		RuntimeAudio audio = cpData.contactAudio;
-		if (audio == null)
-			return;
-
-		AudioSource source = audio.source;
-		if (!isAudioEnabled)
-			{
-			if (source.isPlaying) source.Stop();
-			return;
-			}
-
-		float absSpeed = MathUtility.FastAbs(vehicle.speed);
-		if (cpData.contactCount > cpData.lastPlayedContact && absSpeed > 0.005f)
-			{
-			if (!source.isPlaying) source.Play();
-
-			float attenuation = Mathf.Clamp01(absSpeed / minSpeed);
-			float intensity = Mathf.Clamp01(cpData.maxContactDepth / cpData.contactPoint.limitContactDepth);
-			source.volume = Mathf.Lerp(minVolume, maxVolume, intensity) * attenuation;
-
-			float speedFactor = Mathf.InverseLerp(minSpeed, maxSpeed, absSpeed);
-			source.pitch = Mathf.Lerp(minPitch, maxPitch, speedFactor) * (0.8f + 0.2f * attenuation);   // Reduce pitch 80%
-			MuteZeroPitch(source);
-
-			cpData.lastPlayedContact = cpData.contactCount;
-			cpData.maxContactDepth = 0.0f;
-			}
-		else
-			{
-			source.volume = 0.0f;
-			}
-		}
-
-	private void MuteZeroPitch (AudioSource audio)
-		{
-		// Moving the AudioListener around a source with zero or nearly-zero pitch causes artifacts.
-		// The audio source is muted in such chase to prevent that
-
-		float absPitch = MathUtility.FastAbs(audio.pitch);
-		if (absPitch < 0.05f)
-			{
-			audio.volume *= absPitch / 0.05f;
-			}
-		}
-
-
 	// The OnDrawGizmos method makes the component appear at the Scene view's Gizmos dropdown menu,
 	// Also causes the gizmo to be hidden if the component inspector is collapsed even in GizmoType.NonSelected mode.
 
 	void OnDrawGizmos ()
 		{
-		}
-
-
-	// -----------------------------------------------------------------------------------------------------
-	// IAudioSourceSettings interface
-
-
-	AudioSourceSettings IAudioSourceSettings.settings
-		{
-		get => settings;
-		set
-			{
-			settings = value;
-
-			foreach (ContactPointData cp in m_contactPointData)
-				ConfigureAudioSource(cp.contactAudio);
-			}
 		}
 	}
 
