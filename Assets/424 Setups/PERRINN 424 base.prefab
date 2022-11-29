@@ -3541,6 +3541,7 @@ GameObject:
   - component: {fileID: 2589160664546665118}
   - component: {fileID: 1518768132435231019}
   - component: {fileID: 4702314485555505614}
+  - component: {fileID: 7047852142483483559}
   m_Layer: 8
   m_Name: Audio
   m_TagString: Untagged
@@ -3591,7 +3592,7 @@ MonoBehaviour:
     rolloffShape: 0.6666667
     fadeoutShape: 0.33333334
     lowPassFilter: 0
-    filterRatio: 0.7
+    filterRatio: 0.78
     minSpatialDistance: 1
     minSpatialBlend: 0.1
     maxSpatialDistance: 5
@@ -3793,6 +3794,18 @@ MonoBehaviour:
     maxSpatialDistance: 5
     maxSpatialBlend: 1
     speakerSpread: 0
+--- !u!114 &7047852142483483559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4187773816611061094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd30740f59cc80438a17b701632c27a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4187796107157905784
 GameObject:
   m_ObjectHideFlags: 0
