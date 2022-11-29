@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6905166633232598312}
   - component: {fileID: 6905166633222581524}
   m_Layer: 0
-  m_Name: Camera Controller
+  m_Name: PERRINN Camera Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,8 +84,8 @@ MonoBehaviour:
     hotKey: 283
     distance: 10
     height: 3.5
-    heightMultiplier: 1
-    heightDamping: 4.25
+    heightMultiplier: 0.4
+    heightDamping: 9
     rotationDamping: 3
     followVelocity: 1
     velocityDamping: 5
@@ -118,7 +118,7 @@ MonoBehaviour:
     targetRadius: 5
     targetRadiusSpeed: 5
     adjustNearPlane: 1
-    nearPlaneAtMinFov: 8
+    nearPlaneAtMinFov: 2
     fovAxis: Mouse ScrollWheel
     enableMovement: 1
     movementSpeed: 10
