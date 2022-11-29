@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Perrinn424
 {
 
-public class Perrinn424Underfloor : VehicleBehaviour
+public class Perrinn424Underfloor : VehicleBehaviour, IAudioSourceSettings
 	{
 	[Serializable]
 	public class ContactPoint
@@ -65,15 +65,9 @@ public class Perrinn424Underfloor : VehicleBehaviour
 	[Tooltip("Maximum audio pitch at maxSpeed and above")]
 	public float maxPitch = 1.1f;
 
-	[Header("3D Audio Source")]
-	[Tooltip("Maximum volume under this distance")]
-	public float minDistance = 2.0f;
-	[Tooltip("Volume clipped beyond this distance")]
-	public float maxDistance = 400.0f;
-	[Tooltip("Volume attenuated progressively until this distance")]
-	public float attenuationDistance = 100.0f;
-	[Tooltip("This volume constant from Attenuation Distance to Max Distance")]
-	public float attenuatedVolume = 0.025f;
+	[Header("3D Audio Settings")]
+	[Tooltip("Configuration of audio sources. Note: The Spatial Settings section is not applied. Modifying these settings in runtime requires disabling and re-enabling the component.")]
+	public AudioSourceSettings settings = new AudioSourceSettings();
 
 	[Header("On-screen widget")]
 	public bool showWidget = false;
@@ -118,6 +112,19 @@ public class Perrinn424Underfloor : VehicleBehaviour
 	ContactPointData[] m_contactPointData = new ContactPointData[0];
 
 	public IList<ContactPointData> contactPointData { get => Array.AsReadOnly<ContactPointData>(m_contactPointData); }
+
+
+	public Perrinn424Underfloor ()
+		{
+		// Configure default values in audio settings before deserialization
+
+		settings.minDistance = 2.0f;
+		settings.maxDistance = 400.0f;
+		settings.customRolloff = true;
+		settings.farDistance = 50.0f;
+		settings.farVolume = 0.03f;
+		settings.filterRatio = 0.82f;
+		}
 
 
 	// Initialize the values of new members of the array when its size changes
@@ -313,6 +320,8 @@ public class Perrinn424Underfloor : VehicleBehaviour
 			if (m_contactPointData[i].contactAudio != null)
 				m_contactPointData[i].contactAudio.Release();
 			}
+
+		m_contactPointData = new ContactPointData[0];
 		}
 
 
@@ -434,11 +443,12 @@ public class Perrinn424Underfloor : VehicleBehaviour
 		AudioSource source = audio.source;
 		source.clip = contactLoopClip;
 		source.outputAudioMixerGroup = output;
-		source.spatialBlend = 1.0f;
 		source.loop = true;
 		source.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
-		RuntimeAudio.SetVolumeRolloff(source, minDistance, 1.0f, attenuationDistance, attenuatedVolume, maxDistance);
+
+		settings.Apply(source, audio.lowPassFilter, false, 1.0f);
 		}
+
 
 	void UpdateContactAudio (ContactPointData cpData)
 		{
@@ -487,11 +497,29 @@ public class Perrinn424Underfloor : VehicleBehaviour
 			}
 		}
 
+
 	// The OnDrawGizmos method makes the component appear at the Scene view's Gizmos dropdown menu,
 	// Also causes the gizmo to be hidden if the component inspector is collapsed even in GizmoType.NonSelected mode.
 
 	void OnDrawGizmos ()
 		{
+		}
+
+
+	// -----------------------------------------------------------------------------------------------------
+	// IAudioSourceSettings interface
+
+
+	AudioSourceSettings IAudioSourceSettings.settings
+		{
+		get => settings;
+		set
+			{
+			settings = value;
+
+			foreach (ContactPointData cp in m_contactPointData)
+				ConfigureAudioSource(cp.contactAudio);
+			}
 		}
 	}
 
