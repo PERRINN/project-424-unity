@@ -1,6 +1,5 @@
 ﻿using Perrinn424.Utilities;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +10,8 @@ public class RecordedLapPlayerEditor : Editor
     SerializedProperty lap;
     SerializedProperty reproductionSpeed;
     SerializedProperty reproductionType;
+    SerializedProperty showGui;
+    SerializedProperty guiPosition;
     private TimeFormatter timeFormatter;
 
     private void OnEnable()
@@ -19,20 +20,31 @@ public class RecordedLapPlayerEditor : Editor
         lap = serializedObject.FindProperty("lap");
         reproductionSpeed = serializedObject.FindProperty("reproductionSpeed");
         reproductionType = serializedObject.FindProperty("reproductionType");
+        showGui = serializedObject.FindProperty("showGui");
+        guiPosition = serializedObject.FindProperty("guiPosition");
         timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"m\:ss\.fff", @"m\:ss\.fff");
 
     }
 
     public override void OnInspectorGUI()
     {
+        DrawControls();
+        DrawInGameGUIOptions();
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    private void DrawControls()
+    {
         EditorGUILayout.PropertyField(lap);
         EditorGUILayout.PropertyField(reproductionType);
 
         EditorGUILayout.Slider(reproductionSpeed, 0f, 3f, $"{reproductionSpeed.floatValue}x");
 
+
         string duration = $"{timeFormatter.ToString(player.PlayingTime)}/{timeFormatter.ToString(player.TotalTime)}";
         EditorGUILayout.LabelField(duration);
-        
+
         EditorGUI.BeginChangeCheck();
         float time = EditorGUILayout.Slider(player.PlayingTime, 0f, player.TotalTime);
         if (EditorGUI.EndChangeCheck())
@@ -59,7 +71,14 @@ public class RecordedLapPlayerEditor : Editor
         {
             player.Restart();
         }
+    }
 
-        serializedObject.ApplyModifiedProperties();
+    private void DrawInGameGUIOptions()
+    {
+        EditorGUILayout.PropertyField(showGui, new GUIContent("Show Controls InGame"));
+        if (showGui.boolValue)
+        { 
+            EditorGUILayout.PropertyField(guiPosition);
+        }
     }
 }

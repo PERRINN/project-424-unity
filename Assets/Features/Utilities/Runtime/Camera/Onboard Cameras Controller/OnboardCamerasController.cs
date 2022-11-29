@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Perrinn424.Utilities;
+using UnityEngine;
 
-namespace Perrinn424.Utilities
+namespace Perrinn424.CameraSystem
 {
     internal class OnboardCamerasController : MonoBehaviour
     {
