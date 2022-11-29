@@ -19,27 +19,16 @@ namespace Perrinn424.CameraSystem
         }
 
 
-        [SerializeField]
-        private Transform tvCameraSystem;
-        private CinemachineVirtualCameraBase cinemachineVirtualCameraBase;
-
-        [SerializeField]
-        private VPCameraController cameraController;
+        public Transform tvCameraSystem;
+        public VPCameraController cameraController;
 
 
         private CircularIterator<Mode> modeIterator;
-        public Transform microphoneAnchor;
-        private GameObject microphone;
 
-        private void Awake()
-        {
-            cinemachineVirtualCameraBase = tvCameraSystem.GetComponentInChildren<CinemachineVirtualCameraBase>();
-            Assert.IsNotNull(cinemachineVirtualCameraBase);
-        }
 
         private void OnEnable()
         {
-            modeIterator = new CircularIterator<Mode>(new[] { Mode.Driver, Mode.SmoothFollow, Mode.Orbit, Mode.LookAt, Mode.Free, Mode.Tv });
+            modeIterator = new CircularIterator<Mode>(new[] { Mode.Driver, Mode.SmoothFollow, Mode.Orbit, Mode.Tv });
             UpdateMode();
         }
 
@@ -83,5 +72,5 @@ namespace Perrinn424.CameraSystem
             cameraController.gameObject.SetActive(false);
             tvCameraSystem.gameObject.SetActive(true);
         }
-    } 
+    }
 }
