@@ -20,6 +20,8 @@ public class RecordedLapPlayer : MonoBehaviour
     private bool isPlaying;
     public Type reproductionType;
     public float reproductionSpeed = 1f;
+    public float startTime = 0.0f;
+    public bool playOnStart = true;
 
     public float PlayingTime => playingTime;
     public float TotalTime => lap.Count * dt;
@@ -31,7 +33,9 @@ public class RecordedLapPlayer : MonoBehaviour
 
     private void Start()
     {
-        Play();
+        SetPlayingTime(startTime);
+        if (playOnStart)
+            Play();
     }
 
     public void SetPlayingTime(float time)

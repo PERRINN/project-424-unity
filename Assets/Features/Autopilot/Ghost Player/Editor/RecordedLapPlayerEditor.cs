@@ -10,6 +10,8 @@ public class RecordedLapPlayerEditor : Editor
     SerializedProperty lap;
     SerializedProperty reproductionSpeed;
     SerializedProperty reproductionType;
+    SerializedProperty startTime;
+    SerializedProperty playOnStart;
     SerializedProperty showGui;
     SerializedProperty guiPosition;
     private TimeFormatter timeFormatter;
@@ -20,6 +22,8 @@ public class RecordedLapPlayerEditor : Editor
         lap = serializedObject.FindProperty("lap");
         reproductionSpeed = serializedObject.FindProperty("reproductionSpeed");
         reproductionType = serializedObject.FindProperty("reproductionType");
+        startTime = serializedObject.FindProperty("startTime");
+        playOnStart = serializedObject.FindProperty("playOnStart");
         showGui = serializedObject.FindProperty("showGui");
         guiPosition = serializedObject.FindProperty("guiPosition");
         timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"m\:ss\.fff", @"m\:ss\.fff");
@@ -40,7 +44,8 @@ public class RecordedLapPlayerEditor : Editor
         EditorGUILayout.PropertyField(reproductionType);
 
         EditorGUILayout.Slider(reproductionSpeed, 0f, 3f, $"{reproductionSpeed.floatValue}x");
-
+        EditorGUILayout.PropertyField(startTime);
+        EditorGUILayout.PropertyField(playOnStart);
 
         string duration = $"{timeFormatter.ToString(player.PlayingTime)}/{timeFormatter.ToString(player.TotalTime)}";
         EditorGUILayout.LabelField(duration);
@@ -77,7 +82,7 @@ public class RecordedLapPlayerEditor : Editor
     {
         EditorGUILayout.PropertyField(showGui, new GUIContent("Show Controls InGame"));
         if (showGui.boolValue)
-        { 
+        {
             EditorGUILayout.PropertyField(guiPosition);
         }
     }
