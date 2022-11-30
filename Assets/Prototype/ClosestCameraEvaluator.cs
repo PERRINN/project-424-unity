@@ -16,7 +16,7 @@ public class ClosestCameraEvaluator : CinemachineExtension
         {
             if (state.HasLookAt)
             {
-                float distance = Vector3.Magnitude(state.ReferenceLookAt - state.FinalPosition);
+                float distance = Vector3.Distance(state.ReferenceLookAt, state.FinalPosition);
                 state.ShotQuality = Mathf.Lerp(state.ShotQuality / distance, 1f / distance, qualityVsDistance);
             }
         }

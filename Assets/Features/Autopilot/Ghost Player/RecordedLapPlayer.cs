@@ -3,6 +3,7 @@ using Perrinn424.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+[ExecuteAlways]
 public class RecordedLapPlayer : MonoBehaviour
 {
     public enum Type
