@@ -18,7 +18,7 @@ namespace Perrinn424.UI
 
         [SerializeField]
         private RectTransformToScreenCoordinates screenCoordinatesUtility;
-        
+
         [SerializeField]
         private VPTelemetryDisplay telemetryDisplay;
         [SerializeField]
@@ -96,7 +96,8 @@ namespace Perrinn424.UI
 
         protected override void OnCanvasHierarchyChanged()
         {
-            telemetryDisplay.showDisplay = Canvas.isActiveAndEnabled;
+            if (isActiveAndEnabled)
+                telemetryDisplay.showDisplay = Canvas.isActiveAndEnabled;
         }
 
         private void Update()
