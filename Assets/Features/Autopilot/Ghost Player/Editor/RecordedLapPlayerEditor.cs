@@ -58,6 +58,32 @@ public class RecordedLapPlayerEditor : Editor
             player.SetPlayingTime(time);
         }
 
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("<<<"))
+        {
+            player.SetPlayingTime(time - 10f);
+        }
+        if (GUILayout.Button("<<"))
+        {
+            player.SetPlayingTime(time - 1f);
+        }
+        if (GUILayout.Button("<"))
+        {
+            player.SetPlayingTime(time - 0.1f);
+        }
+        if (GUILayout.Button(">"))
+        {
+            player.SetPlayingTime(time + 0.1f);
+        }
+        if (GUILayout.Button(">>"))
+        {
+            player.SetPlayingTime(time + 1f);
+        }
+        if (GUILayout.Button(">>>"))
+        {
+            player.SetPlayingTime(time + 10f);
+        }
+        GUILayout.EndHorizontal();
 
 
         if (GUILayout.Button("Play"))

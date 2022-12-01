@@ -26,7 +26,8 @@ public class RecordedLapPlayer : MonoBehaviour
 
     public float PlayingTime => playingTime;
     public float TotalTime => lap.Count * dt;
-    private void Awake()
+
+    private void OnEnable()
     {
         dt = 1f / lap.frequency;
         circularIndex = new CircularIndex(lap.Count);
