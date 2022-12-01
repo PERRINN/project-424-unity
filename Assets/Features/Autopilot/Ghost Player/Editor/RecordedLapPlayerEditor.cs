@@ -44,14 +44,13 @@ public class RecordedLapPlayerEditor : Editor
         EditorGUILayout.PropertyField(reproductionType);
 
         EditorGUILayout.Slider(reproductionSpeed, 0f, 3f, $"{reproductionSpeed.floatValue}x");
-        EditorGUILayout.PropertyField(startTime);
         EditorGUILayout.PropertyField(playOnStart);
 
-        string duration = $"{timeFormatter.ToString(player.PlayingTime)}/{timeFormatter.ToString(player.TotalTime)}";
+        string duration = $"{timeFormatter.ToString(player.playingTime)}/{timeFormatter.ToString(player.TotalTime)}";
         EditorGUILayout.LabelField(duration);
 
         EditorGUI.BeginChangeCheck();
-        float time = EditorGUILayout.Slider(player.PlayingTime, 0f, player.TotalTime);
+        float time = EditorGUILayout.Slider(player.playingTime, 0f, player.TotalTime);
         if (EditorGUI.EndChangeCheck())
         {
             player.Stop();
