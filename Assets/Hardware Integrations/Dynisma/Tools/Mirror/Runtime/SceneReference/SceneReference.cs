@@ -593,5 +593,5 @@ public class SceneReferencePropertyDrawer : PropertyDrawer
         }
     }
 }
-}
 #endif
+}
