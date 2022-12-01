@@ -39,14 +39,14 @@ Enables / disables cameras based on the station running as server or client:
 	- In client stations a specific camera is enabled based on the known client machine names.
 	- In unknown clients enables the given components and gameobjects.
 
-Does not enable or disable any other objects. Canvases are enabled/disabled by Network Monitor above.
-
 Also configures the UI elements to be shown properly in the corresponding cameras:
 	- UI material in all Graphic elements.
 	- Canvas > Render Mode to Screen Space Camera.
 	- Canvas > Render Camera to the enabled camera.
 
 Includes a test mode forcing the output of any of the server or client stations.
+
+Also allows to force specific elements enabled on unknown clients, so they could work as spectator.
 
 > Enable Game Objects > Element 0: reserved for SceneTools (logo, text, time scale etc)
 
