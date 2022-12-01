@@ -20,7 +20,9 @@ namespace Perrinn424.CameraSystem
 
 
         public Transform tvCameraSystem;
-        public VPCameraController cameraController;
+
+        private VPCameraController m_vppController;
+        private CinemachineBrain m_cmController;
 
 
         private CircularIterator<Mode> modeIterator;
@@ -29,6 +31,8 @@ namespace Perrinn424.CameraSystem
         private void OnEnable()
         {
             modeIterator = new CircularIterator<Mode>(new[] { Mode.Driver, Mode.SmoothFollow, Mode.Orbit, Mode.Tv });
+            m_vppController = tvCameraSystem.GetComponent<VPCameraController>();
+            m_cmController = tvCameraSystem.GetComponent<CinemachineBrain>();
             UpdateMode();
         }
 
@@ -62,15 +66,15 @@ namespace Perrinn424.CameraSystem
 
         private void SetVPCamera(VPCameraController.Mode mode)
         {
-            cameraController.gameObject.SetActive(true);
-            tvCameraSystem.gameObject.SetActive(false);
-            cameraController.mode = mode;
+            m_cmController.enabled = false;
+            m_vppController.enabled = true;
+            m_vppController.mode = mode;
         }
 
         private void SetTVMode()
         {
-            cameraController.gameObject.SetActive(false);
-            tvCameraSystem.gameObject.SetActive(true);
+            m_vppController.enabled = false;
+            m_cmController.enabled = true;
         }
     }
 }
