@@ -42,8 +42,11 @@ namespace Perrinn424.CameraSystem
 
         public void NextMode()
         {
-            modeIterator.MoveNext();
-            UpdateMode();
+            if (isActiveAndEnabled)
+            {
+                modeIterator.MoveNext();
+                UpdateMode();
+            }
         }
 
         private void UpdateMode()
