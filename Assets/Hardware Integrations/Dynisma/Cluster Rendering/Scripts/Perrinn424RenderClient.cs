@@ -26,7 +26,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[UnityEngine.Serialization.FormerlySerializedAs("head")]
 	public Transform view;
 
-	public Behaviour cameraController;
+	[Space(5)]
+	public Behaviour[] disableOnClients = new Behaviour[0];
 
 
 	// Convientent structs and methods to gather the visual states and apply them to their networked counterpart
@@ -241,10 +242,13 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		vehicle.cachedRigidbody.interpolation = RigidbodyInterpolation.None;
 		vehicle.enabled = false;
 
-		// Disable camera controller
+		// Disable components in client
 
-		if (cameraController != null)
-			cameraController.enabled = false;
+		foreach (Behaviour b in disableOnClients)
+			{
+			if (b != null)
+				b.enabled = false;
+			}
 		}
 
 
