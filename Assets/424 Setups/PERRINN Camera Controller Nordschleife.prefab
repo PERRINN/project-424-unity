@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5167941505499205937}
   - component: {fileID: 5167941505499205936}
   - component: {fileID: 5167941505499205943}
+  - component: {fileID: 1690794016537322190}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -92,6 +93,31 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5167941505499205941}
   m_Enabled: 1
+--- !u!114 &1690794016537322190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5167941505499205941}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1043272640, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  fieldOfView: 50
+  mode: 2
+  targetSize: 2
+  targetSizeOffset: 0
+  damped: 1
+  damping: 4
+  clampedFov: 1
+  minFov: 4
+  maxFov: 64
+  clampedSize: 0
+  minSize: 0.1
+  maxSize: 2
 --- !u!1 &5167941506463346354
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,6 +313,7 @@ GameObject:
   - component: {fileID: 5167941506821221344}
   - component: {fileID: 5167941506821221346}
   - component: {fileID: 5167941506821221345}
+  - component: {fileID: 8637295612344945864}
   m_Layer: 0
   m_Name: PERRINN Camera Controller Nordschleife
   m_TagString: Untagged
@@ -323,6 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tvCameraSystem: {fileID: 5167941506463346355}
+  mainCamera: {fileID: 5167941505499205937}
 --- !u!114 &5167941506821221345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,6 +366,21 @@ MonoBehaviour:
   cameraController: {fileID: 5167941506821221346}
   VPCameraController: {fileID: 5167941506463346365}
   nextMode: 99
+--- !u!114 &8637295612344945864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5167941506821221351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d17b955ea52e05345880382281cecca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tvCameraSystem: {fileID: 5167941506463346355}
+  mainCamera: {fileID: 5167941505499205937}
+  debugLog: 1
 --- !u!1001 &3833788028068538158
 PrefabInstance:
   m_ObjectHideFlags: 0
