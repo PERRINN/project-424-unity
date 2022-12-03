@@ -92,9 +92,9 @@ public class TVCameraZoomController : MonoBehaviour
 
 			// Has changed?
 
-			if (activeCamera != m_currentCamera)
+			if (activeCamera != m_currentCamera && activeCamera != null)
 				{
-				if (debugLog && activeCamera != null)
+				if (debugLog)
 					Debug.Log($"TVCameraZoomController: Using camera [{activeCamera.Name}] (RefLookAtPos: {activeCamera.State.ReferenceLookAt} LookAt: {activeCamera.LookAt})");
 
 				m_currentCamera = activeCamera;
@@ -112,7 +112,7 @@ public class TVCameraZoomController : MonoBehaviour
 				// If the name contains a dash "-" it's fixed zoom.
 
 				m_fovController.enabled = m_currentCamera.Name.IndexOf('-') < 0;
-				m_fovController.target = activeCamera.LookAt;
+				m_fovController.target = m_currentCamera.LookAt;
 				}
 			}
 		}
