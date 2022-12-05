@@ -60,11 +60,11 @@ public class RecordedLapPlayerEditor : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("<<<"))
         {
-            player.SetPlayingTime(time - 5f);
+            player.SetPlayingTime(time - 2f);
         }
         if (GUILayout.Button("<<"))
         {
-            player.SetPlayingTime(time - 1f);
+            player.SetPlayingTime(time - 0.5f);
         }
         if (GUILayout.Button("<"))
         {
@@ -76,11 +76,11 @@ public class RecordedLapPlayerEditor : Editor
         }
         if (GUILayout.Button(">>"))
         {
-            player.SetPlayingTime(time + 1f);
+            player.SetPlayingTime(time + 0.5f);
         }
         if (GUILayout.Button(">>>"))
         {
-            player.SetPlayingTime(time + 5f);
+            player.SetPlayingTime(time + 2f);
         }
         GUILayout.EndHorizontal();
 
