@@ -170,6 +170,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public TextState batteryCapacity;
 		public ImageState drs;
 		public ImageState autopilot;
+
+		// Dynamic eyepoint
+
+		public Vector3 eyePointPos;
+		public Vector3 eyePointRot;
 		}
 
 
@@ -292,6 +297,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			m_state.drs.SetFrom(m_dashboardDisplay.drsImage);
 			m_state.autopilot.SetFrom(m_dashboardDisplay.autopilotImage);
 
+			// Retrieve latest eyepoint data
+
+			m_state.eyePointPos = VIOSOCamera.eyePointPos;
+			m_state.eyePointRot = VIOSOCamera.eyePointRot;
+
 			// Send state to clients
 
 			RpcUpdateVisualState(m_state);
@@ -336,6 +346,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		state.batteryCapacity.ApplyTo(m_dashboardDisplay.batteryCapacity);
 		state.drs.ApplyTo(m_dashboardDisplay.drsImage);
 		state.autopilot.ApplyTo(m_dashboardDisplay.autopilotImage);
+
+		// Apply dynamic eyepoint
+
+		VIOSOCamera.eyePointPos = state.eyePointPos;
+		VIOSOCamera.eyePointRot = state.eyePointRot;
 		}
 	}
 
