@@ -30,7 +30,7 @@ namespace Perrinn424.UI
         protected override void WriteDiffs()
         {
             float value = Mathf.Clamp(autopilot.DeltaTime, -99.99f, 99.99f);
-            referenceDiffText.text = value.ToString("+00.00;-00.00"); ;
+            referenceDiffText.text = value.ToString("+0.00;-0.00"); ;
         }
 
         private void WriteDRS()
