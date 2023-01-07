@@ -1,26 +1,20 @@
 ﻿using Perrinn424.AutopilotSystem;
-using Perrinn424.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 using VehiclePhysics;
-using VehiclePhysics.Timing;
 
 namespace Perrinn424.UI
 {
-    public class Dashboard : MonoBehaviour
+    public class Dashboard : BaseDashboard
     {
         [SerializeField]
         private Text drsText;
         [SerializeField]
         private Text autopilotText;
         [SerializeField]
-        private Text gearText;
-        [SerializeField]
         private Text speedMPSText;
         [SerializeField]
         private Text speedKPHText;
-        [SerializeField]
-        private Text referenceDiffText;
         [SerializeField]
         private Text totalPowerText;
         [SerializeField]
@@ -28,31 +22,15 @@ namespace Perrinn424.UI
         [SerializeField]
         private Text socText;
 
-        [SerializeField]
-        private VehicleBase vehicle;
 
-
-        private BaseAutopilot autopilot;
-
-        [SerializeField]
-        private RefreshHelper refreshHelper;
-
-        public void OnEnable()
+        protected override void UpdateValues()
         {
-            autopilot = vehicle.GetComponentInChildren<BaseAutopilot>();
-        }
-
-        public void Update()
-        {
-            if (refreshHelper.Update(Time.deltaTime))
-            {
-                WriteDRS();
-                WriteAutopilot();
-                WriteGear();
-                WriteSpeedInfo();
-                WriteDiffs();
-                WriteBatteryInfo();
-            }
+            WriteDRS();
+            WriteAutopilot();
+            WriteGear();
+            WriteSpeedInfo();
+            WriteDiffs();
+            WriteBatteryInfo();
         }
 
         private void WriteAutopilot()
@@ -63,39 +41,8 @@ namespace Perrinn424.UI
 
         private void WriteDRS()
         {
-            float drsPosition = vehicle.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
-            string drsFlag = drsPosition > 0f ? "ON" : "OFF";
+            string drsFlag = IsDrsOn() ? "ON" : "OFF";
             drsText.text = $"DRS {drsFlag}";
-        }
-
-        private void WriteGear()
-        {
-            int[] vehicleData = vehicle.data.Get(Channel.Vehicle);
-            int gearId = vehicleData[VehicleData.GearboxGear];
-            bool switchingGear = vehicleData[VehicleData.GearboxShifting] != 0;
-
-            if (gearId == 0)
-            {
-                gearText.text = switchingGear ? " " : "N";
-            }
-            else
-            {
-                if (gearId > 0)
-                {
-                    gearText.text = "D";
-                }
-                else
-                {
-                    if (gearId == -1)
-                    {
-                        gearText.text = "R";
-                    }
-                    else
-                    {
-                        gearText.text = "R" + (-gearId).ToString();
-                    }
-                }
-            }
         }
 
         private void WriteSpeedInfo()
@@ -105,7 +52,7 @@ namespace Perrinn424.UI
             speedKPHText.text = $"{speed*3.6f:F0} KPH";
         }
 
-        private void WriteDiffs()
+        protected override void WriteDiffs()
         {
             referenceDiffText.text = autopilot.DeltaTime.ToString("+0.00 SEC;-0.00 SEC"); ;
         }
