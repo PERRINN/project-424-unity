@@ -24,12 +24,13 @@ namespace Perrinn424.UI
         private void WriteSpeedInfo()
         {
             float speed = vehicle.data.Get(Channel.Vehicle, VehicleData.Speed) / 1000.0f;
-            speedText.text = $"{speed * 3.6f:F0}";
+            speedText.text = $"{speed:F0}";
         }
 
         protected override void WriteDiffs()
         {
-            referenceDiffText.text = autopilot.DeltaTime.ToString("+0.00;-0.00"); ;
+            float value = Mathf.Clamp(autopilot.DeltaTime, -99.99f, 99.99f);
+            referenceDiffText.text = value.ToString("+00.00;-00.00"); ;
         }
 
         private void WriteDRS()
