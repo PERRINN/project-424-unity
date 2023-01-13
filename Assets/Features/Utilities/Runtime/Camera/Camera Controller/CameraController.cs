@@ -71,7 +71,7 @@ namespace Perrinn424.CameraSystem
         }
 
 
-        private void SetVPCamera(VPCameraController.Mode mode)
+        public void SetVPCamera(VPCameraController.Mode mode)
         {
             // TV mode may have changed the camera FoV. Restore it here.
 
@@ -88,7 +88,7 @@ namespace Perrinn424.CameraSystem
                 m_fovController.enabled = false;
         }
 
-        private void SetTVMode()
+        public void SetTVMode()
         {
             // Save current camera FoV so TV mode may change it.
 

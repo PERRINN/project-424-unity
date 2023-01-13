@@ -12,8 +12,12 @@ namespace Perrinn424.CameraSystem
         [SerializeField]
         private VPCameraController VPCameraController;
 
-        [SerializeField]
-        private KeyCode nextMode = KeyCode.C;
+        public KeyCode nextMode = KeyCode.C;
+        public KeyCode driverMode = KeyCode.F1;
+        public KeyCode followMode = KeyCode.F2;
+        public KeyCode orbitMode = KeyCode.F3;
+        public KeyCode tvMode = KeyCode.F4;
+
 
         private KeyCode vpCameraControllerKey;
 
@@ -34,6 +38,26 @@ namespace Perrinn424.CameraSystem
             if (Input.GetKeyDown(nextMode))
             {
                 cameraController.NextMode();
+            }
+
+            if (Input.GetKeyDown(driverMode))
+            {
+                cameraController.SetVPCamera(VPCameraController.Mode.Driver);
+            }
+
+            if (Input.GetKeyDown(followMode))
+            {
+                cameraController.SetVPCamera(VPCameraController.Mode.SmoothFollow);
+            }
+
+            if (Input.GetKeyDown(orbitMode))
+            {
+                cameraController.SetVPCamera(VPCameraController.Mode.Orbit);
+            }
+
+            if (Input.GetKeyDown(tvMode))
+            {
+                cameraController.SetTVMode();
             }
         }
 
