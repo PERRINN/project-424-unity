@@ -15,7 +15,7 @@ One of the first tests in Monza:
 
 ## Requirements
 
-- Unity 2019.4 LTS (using 2019.4.18f1 at the time of writing this)
+- Unity 2021.3 LTS (using 2021.3.19f1 at the time of writing this)
 
 ## How to set up and open the project in Unity
 
@@ -31,7 +31,7 @@ NOTE: Don't copy the repository folder to an existing Unity project. The simulat
 2. Play the scene. The car is at the starting point.
 3. Press **Q** to enable the autopilot.
 
-All other features work normally: telemetry, cameras, time scale...
+All other features work normally: telemetry (T), cameras (C), time scale... (see left-bottom section of the UI for the feature list)
 
 ## How to drive the 424
 
@@ -60,5 +60,5 @@ Components must support the same operations supported by built-in Unity componen
 - Instance / destroy in runtime.
 - Instance / destroy prefabs using the component.
 - Modify the public properties in the inspector in runtime.
-- Modify the public properties from other scripts, both in editor and runtime.
-- Hot script reload.
+- Modify the public properties from other scripts, both in editor and runtime (use public fields instead of serializable private fields for the properties available in the inspector)
+- Hot script reload (use OnEnable/Ondisable instead of Start/Awake/OnDestroy unless it's specifically justified)
