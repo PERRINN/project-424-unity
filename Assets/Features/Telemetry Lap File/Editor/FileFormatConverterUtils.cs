@@ -189,25 +189,25 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             {
                 Sample sample = new Sample();
 
-                sample.speed = table[rowIndex, "SPEED"] / 3.6f; //km/h => m/s
+                sample.speed = table[rowIndex, "Speed"] / 3.6f; //km/h => m/s
 
-                float x = table[rowIndex, "POSITIONX"];
-                float y = table[rowIndex, "POSITIONY"];
-                float z = table[rowIndex, "POSITIONZ"];
+                float x = table[rowIndex, "PositionX"];
+                float y = table[rowIndex, "PositionY"];
+                float z = table[rowIndex, "PositionZ"];
 
-                float eulerX = table[rowIndex, "ROTATIONX"];
-                float eulerY = table[rowIndex, "ROTATIONY"];
-                float eulerZ = table[rowIndex, "ROTATIONZ"];
+                float eulerX = table[rowIndex, "RotationX"];
+                float eulerY = table[rowIndex, "RotationY"];
+                float eulerZ = table[rowIndex, "RotationZ"];
 
                 sample.position = new Vector3(x, y, z);
                 sample.rotation = Quaternion.Euler(eulerX, eulerY, eulerZ);
 
-                sample.gear = (int)table[rowIndex, "GEAR"];
-                sample.steeringAngle = table[rowIndex, "STEERINGANGLE"];
-                sample.throttle = table[rowIndex, "THROTTLE"];
-                sample.brakePressure = table[rowIndex, "BRAKEPRESSURE"];
+                sample.gear = (int)table[rowIndex, "Gear"];
+                sample.steeringAngle = table[rowIndex, "SteeringAngle"];
+                sample.throttle = table[rowIndex, "Throttle"];
+                sample.brakePressure = table[rowIndex, "BrakePressure"];
 
-                table.TryGetValue(rowIndex, "AERODRSPOSITION", out sample.drsPosition);
+                table.TryGetValue(rowIndex, "AeroDrsPosition", out sample.drsPosition);
 
                 samples.Add(sample);
             }
