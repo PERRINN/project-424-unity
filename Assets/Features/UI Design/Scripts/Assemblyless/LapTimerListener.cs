@@ -9,16 +9,9 @@ namespace Perrinn424.UI
         [SerializeField]
         private LapTimeTable lapTimeTable = default;
 
-        [SerializeField]
-        private TimeCell timeCell;
-
-        private void Awake()
-        {
-            lapTimer = FindObjectOfType<LapTimer>();
-        }
-
         private void OnEnable()
         {
+            lapTimer = FindObjectOfType<LapTimer>();
             if (lapTimer != null)
             {
                 lapTimer.onSector += OnSector;
@@ -41,7 +34,9 @@ namespace Perrinn424.UI
         private void Update()
         {
             if (lapTimer != null)
-                timeCell.SetTime(lapTimer.currentLapTime);
+            {
+                lapTimeTable.UpdateRollingTime(lapTimer.currentSectorTime, lapTimer.currentLapTime);
+            }
         }
     }
 }

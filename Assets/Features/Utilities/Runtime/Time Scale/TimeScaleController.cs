@@ -14,7 +14,7 @@ namespace Perrinn424.Utilities
 
         public event Action<float> onTimeScaleChanged;
 
-        private void Awake()
+        private void OnEnable()
         {
             CreateIterator();
         }
@@ -65,5 +65,5 @@ namespace Perrinn424.Utilities
             }
             return true;
         }
-    } 
+    }
 }

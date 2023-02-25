@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+
+﻿using Perrinn424.AutopilotSystem;
+using UnityEngine;
 using UnityEngine.UI;
+using VehiclePhysics;
 using VehiclePhysics.Timing;
 
 
-namespace VehiclePhysics.UI
+namespace Perrinn424
 {
     public class SteeringScreen : VehicleBehaviour
     {
@@ -36,17 +39,19 @@ namespace VehiclePhysics.UI
         //bool autopilotState = false;
 
         // TODO: Replace these static properties with proper component querying (example: LapTimer)
-        public static float bestTime { get; set; } //Autopilot.cs
-        public static bool autopilotState { get; set; } //Autopilot.cs
-        public static float batSOC { get; set; } //batteryModel.cs
-        public static float batCapacity { get; set; } //batteryModel.cs
+        //public static float bestTime { get; set; } //Autopilot.cs
+        //public static bool autopilotState { get; set; } //Autopilot.cs
+        public static float batSOC { get; set; } //BatteryModel.cs
+        public static float batCapacity { get; set; } //BatteryModel.cs
 
         float elapsed;
         LapTimer m_lapTimer = null;
+        private BaseAutopilot autopilot;
 
         public override void OnEnableVehicle ()
         {
             m_lapTimer = FindObjectOfType<LapTimer>();
+            autopilot = vehicle.GetComponentInChildren<BaseAutopilot>();
         }
 
         public override void UpdateVehicle ()
@@ -77,7 +82,7 @@ namespace VehiclePhysics.UI
                         minSpeed = speed;
                         StartTimer();
                         minSpdWindow = true;
-                        minIndicator.gameObject.SetActive(false);
+                        minIndicator.enabled = false;
                     }
 
                     if (maxSpeed < speed) { maxSpeed = speed; }
@@ -92,13 +97,13 @@ namespace VehiclePhysics.UI
                         }
                         else { speedMps.text = minSpeed.ToString("0"); }
 
-                        if (systemTime - minSpdTime > 0.02f) { minIndicator.gameObject.SetActive(true); }
+                        if (systemTime - minSpdTime > 0.02f) { minIndicator.enabled = true; }
                     }
                     else
                     {
                         minSpeed = maxSpeed - 1;
                         speedMps.text = speed.ToString("0");
-                        minIndicator.gameObject.SetActive(false);
+                        minIndicator.enabled = false;
                     }
                 }
 
@@ -142,11 +147,12 @@ namespace VehiclePhysics.UI
                 // AUTOPILOT signal
                 if (autopilotImage != null)
                 {
-                    autopilotImage.color = new Color32(255, 255, 255, 0);
-                    if (autopilotState)
-                    {
-                        autopilotImage.color = new Color32(255, 255, 255, 255);
-                    }
+                    byte alpha = (autopilot != null && autopilot.IsOn) ? (byte)255 : (byte)0;
+                    autopilotImage.color = new Color32(255, 255, 255, alpha);
+                    //if (autopilotState)
+                    //{
+                    //    autopilotImage.color = new Color32(255, 255, 255, 255);
+                    //}
                 }
 
 
@@ -195,11 +201,9 @@ namespace VehiclePhysics.UI
                 //}
 
                 // Time Difference with the Best Lap
-                if (timeDifference != null && m_lapTimer != null)
+                if (timeDifference != null && m_lapTimer != null && autopilot != null)
                 {
-                    float compare = m_lapTimer.currentLapTime - bestTime;
-
-                    timeDifference.text = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-0.00") : compare.ToString("+0.00");
+                    timeDifference.text = autopilot.DeltaTime.ToString("+0.00;-0.00");
                 }
 
                 // Battery SOC

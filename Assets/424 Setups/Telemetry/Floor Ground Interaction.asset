@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: Floor Ground Interaction
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Floor Ground Interaction
+    verticalRange: 9
+    channels:
+    - name: Speed
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 9
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: SplitterDepthLeft
+      displayName: Splitter Left Depth
+      labelOffset: 1
+      displayOrigin: 6
+      displayRange: 6
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+    - name: SplitterDepthRight
+      displayName: Splitter Right Depth
+      labelOffset: 0
+      displayOrigin: 6
+      displayRange: 6
+      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.69803923}
+    - name: FloorDepthFront
+      displayName: Floor Front Depth
+      labelOffset: -1
+      displayOrigin: 6
+      displayRange: 6
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
+    - name: FloorDepthRear
+      displayName: Floor Rear Depth
+      labelOffset: -2
+      displayOrigin: 6
+      displayRange: 6
+      displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.69803923}
+    - name: SplitterFzLeft
+      displayName: Splitter Left Fz
+      labelOffset: 1
+      displayOrigin: 3
+      displayRange: 2
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+    - name: SplitterFzRight
+      displayName: Splitter Right Fz
+      labelOffset: 0
+      displayOrigin: 3
+      displayRange: 2
+      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.69803923}
+    - name: FloorFzFront
+      displayName: Floor Front Fz
+      labelOffset: -1
+      displayOrigin: 3
+      displayRange: 2
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
+    - name: FloorFzRear
+      displayName: Floor Rear Fz
+      labelOffset: -2
+      displayOrigin: 3
+      displayRange: 2
+      displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.69803923}

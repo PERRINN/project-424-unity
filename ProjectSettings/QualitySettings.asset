@@ -18,7 +18,7 @@ QualitySettings:
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.19999999, z: 0.46666664}
     shadowmaskMode: 0
-    blendWeights: 4
+    skinWeights: 4
     textureQuality: 1
     anisotropicTextures: 2
     antiAliasing: 2
@@ -40,7 +40,10 @@ QualitySettings:
     asyncUploadBufferSize: 4
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
-    excludedTargetPlatforms: []
+    customRenderPipeline: {fileID: 0}
+    excludedTargetPlatforms:
+    - Standalone
+    - WebGL
   - serializedVersion: 2
     name: Good
     pixelLightCount: 2
@@ -53,7 +56,7 @@ QualitySettings:
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.19999999, z: 0.46666664}
     shadowmaskMode: 0
-    blendWeights: 2
+    skinWeights: 2
     textureQuality: 0
     anisotropicTextures: 2
     antiAliasing: 2
@@ -75,7 +78,10 @@ QualitySettings:
     asyncUploadBufferSize: 4
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
-    excludedTargetPlatforms: []
+    customRenderPipeline: {fileID: 0}
+    excludedTargetPlatforms:
+    - Standalone
+    - WebGL
   - serializedVersion: 2
     name: Fantastic
     pixelLightCount: 10
@@ -83,12 +89,12 @@ QualitySettings:
     shadowResolution: 3
     shadowProjection: 1
     shadowCascades: 4
-    shadowDistance: 1000
+    shadowDistance: 400
     shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
-    shadowCascade4Split: {x: 0.014464399, y: 0.06460039, z: 0.2643829}
+    shadowCascade4Split: {x: 0.04959951, y: 0.15005097, z: 0.40026104}
     shadowmaskMode: 0
-    blendWeights: 4
+    skinWeights: 4
     textureQuality: 0
     anisotropicTextures: 2
     antiAliasing: 8
@@ -110,6 +116,7 @@ QualitySettings:
     asyncUploadBufferSize: 4
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
+    customRenderPipeline: {fileID: 0}
     excludedTargetPlatforms: []
   - serializedVersion: 2
     name: Editor - No Vsync
@@ -123,7 +130,7 @@ QualitySettings:
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.19999999, z: 0.46666664}
     shadowmaskMode: 1
-    blendWeights: 4
+    skinWeights: 4
     textureQuality: 0
     anisotropicTextures: 2
     antiAliasing: 4
@@ -145,6 +152,7 @@ QualitySettings:
     asyncUploadBufferSize: 4
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
+    customRenderPipeline: {fileID: 0}
     excludedTargetPlatforms: []
   m_PerPlatformDefaultQuality:
     Android: 0

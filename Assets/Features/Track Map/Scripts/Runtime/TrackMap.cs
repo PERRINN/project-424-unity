@@ -1,95 +1,56 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace Perrinn424.TrackMapSystem
 {
-    [ExecuteInEditMode]
-    public class TrackMap : MonoBehaviour
+    public class TrackMap
     {
-        [Serializable]
-        public class TrackReference
+        public float scale;
+        public float rotation;
+        public float position;
+
+        public Matrix4x4 TransformationMatrix { get; private set; }
+
+        public Vector3 ScaleTransformationMatrix { get; private set; }
+        public Quaternion RotationTransformationMatrix { get; private set; }
+        public Vector3 TranslationTransformationMatrix { get; private set; }
+
+        public TrackMap(float scale, float rotation, float position)
         {
-            [SerializeField]
-            private Transform world = default;
-            [SerializeField]
-            private Image ui = default;
-
-            [SerializeField]
-            private Color color = default;
-
-            public TrackReference(Transform world, Image ui, Color color)
-            {
-                this.world = world;
-                this.ui = ui;
-                this.color = color;
-            }
-
-            public void WorldToCanvas(Matrix4x4 worldToLocalCircuit, Matrix4x4 localCircuitToCanvas)
-            {
-                Vector3 localCircuitPosition = worldToLocalCircuit.inverse.MultiplyPoint3x4(world.position);
-                Vector3 canvasLocalPosition = localCircuitToCanvas * localCircuitPosition;
-                ui.rectTransform.localPosition = canvasLocalPosition;
-                ui.color = color;
-            }
+            this.scale = scale;
+            this.rotation = rotation;
+            this.position = position;
         }
 
-        [SerializeField]
-        private Vector3 center = Vector3.zero;
-        [SerializeField]
-        private Vector3 size = Vector3.one;
 
-        [SerializeField]
-        private float rotation = 0;
-
-        [SerializeField]
-        private bool invertX = false;
-        [SerializeField]
-        private bool invertZ = false;
-
-        [SerializeField]
-        internal TrackReference[] trackReferences = default;
-
-        void Update()
+        /// <summary>
+        /// Creates a transformation matrix that translates from world position to canvas position
+        /// </summary>
+        /// <remarks>
+        /// First the position is scaled. Then, is rotated from the plane XZ (world plane), to the plane XY, which is the canvas plane
+        /// Finally, it is translated in local coordinates (pixels), to match exacly the image
+        /// </remarks>
+        /// <param name="rectTransform">The rect transfrom containing the track image</param>
+        public void CalculateTRS(RectTransform rectTransform)
         {
-            Matrix4x4 worldToCircuit = CalculateWorldToCircuitMatrix();
-            Matrix4x4 localCircuitToCanvas = CalculateCircuitToCanvasMatrix();
+            Rect rect = rectTransform.rect;
+            Vector2 pivot = rectTransform.pivot;
 
-            foreach (TrackReference trackReference in trackReferences)
-            {
-                trackReference.WorldToCanvas(worldToCircuit, localCircuitToCanvas);
-            }
+            // Scale takes into account the rectTransform dimensions
+            ScaleTransformationMatrix = new Vector3(rect.width, 0, rect.height) * scale;
+
+            // Rotation from XZ plane to XY plane =>Quaternion.AngleAxis(-90f, Vector3.right);
+            // Rotation in XY plane => Quaternion.AngleAxis(rotation, Vector3.forward)
+            RotationTransformationMatrix = Quaternion.AngleAxis(rotation, Vector3.forward) * Quaternion.AngleAxis(-90f, Vector3.right);
+
+            // Translation in local coordinates. Position is [0-1]. Pivot translation is applied also
+            TranslationTransformationMatrix = new Vector3((position - pivot.x) * rect.width, (position - pivot.y) * rect.height);
+
+            TransformationMatrix = Matrix4x4.TRS(TranslationTransformationMatrix, RotationTransformationMatrix, ScaleTransformationMatrix);
         }
 
-        private Matrix4x4 CalculateWorldToCircuitMatrix()
+        public Vector3 FromWorldPositionToLocalRectTransformPosition(Vector3 worldPosition)
         {
-            return Matrix4x4.Translate(center);
-        }
-
-        private Matrix4x4 CalculateCircuitToCanvasMatrix()
-        {
-            RectTransform rectTransform = (RectTransform)transform;
-            float xScale = rectTransform.rect.width / size.x;
-            xScale *= invertX ? -1 : 1;
-            float zScale = rectTransform.rect.height / size.z;
-            zScale *= invertZ ? -1 : 1;
-            Vector3 scale = new Vector3(xScale, 0f, zScale);
-
-            Quaternion q = Quaternion.AngleAxis(90f, Vector3.right); //Converting z axis into y axis in the canvas
-            q = q * Quaternion.AngleAxis(rotation, Vector3.up);
-            Matrix4x4 localCircuitToCanvas = Matrix4x4.TRS(Vector3.zero, q, scale);
-            return localCircuitToCanvas;
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Color c = Color.green;
-            c.a = 0.5f;
-            Gizmos.color = c;
-            Gizmos.DrawCube(center, size);
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(center, 15f);
+            return TransformationMatrix.MultiplyPoint3x4(worldPosition);
         }
     } 
 }

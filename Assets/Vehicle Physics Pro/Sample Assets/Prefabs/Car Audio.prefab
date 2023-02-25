@@ -849,10 +849,13 @@ MonoBehaviour:
   engine:
     audioSource: {fileID: 82658451614174186}
     audioBaseRpm: 1600
+    rpmScaling: 1
     volumeAtRest: 0.4
     volumeAtFullLoad: 1
     volumeChangeRateUp: 48
     volumeChangeRateDown: 16
+    keepVolumeAtIdleRpm: 0
+    idleRpm: 800
   engineExtras:
     turboAudioSource: {fileID: 82838061138449548}
     turboMinRpm: 3500
@@ -867,6 +870,11 @@ MonoBehaviour:
     transmissionMaxPitch: 1.1
     transmissionMinVolume: 0.1
     transmissionMaxVolume: 0.2
+    retarderAudioSource: {fileID: 0}
+    retarderMaxTorque: 5000
+    retarderMinPitch: 0.5
+    retarderMaxPitch: 1.1
+    retarderMaxVolume: 0.8
   wheels:
     skidAudioSource: {fileID: 82807704671967478}
     skidMinSlip: 0.2
@@ -897,8 +905,8 @@ MonoBehaviour:
     minPitch: 0.4
     maxPitch: 0.6
     randomPitch: 0.2
-    minVolume: 0.7
-    maxVolume: 1
+    minVolume: 0.3
+    maxVolume: 0.5
     randomVolume: 0.2
   drags:
     hardDragAudioSource: {fileID: 82097769819773674}
@@ -907,16 +915,16 @@ MonoBehaviour:
     maxSpeed: 20
     minPitch: 0.6
     maxPitch: 0.8
-    minVolume: 0.8
-    maxVolume: 1
+    minVolume: 0
+    maxVolume: 0
     scratchAudioClip: {fileID: 8300000, guid: b75c88da945e230429739740c8b1f102, type: 3}
     scratchRandomThreshold: 0.02
     scratchMinSpeed: 2
     scratchMinInterval: 0.2
     scratchMinPitch: 0.7
     scratchMaxPitch: 1.1
-    scratchMinVolume: 0.9
-    scratchMaxVolume: 1
+    scratchMinVolume: 0
+    scratchMaxVolume: 0
   wind:
     windAudioSource: {fileID: 82749586566495700}
     minSpeed: 3

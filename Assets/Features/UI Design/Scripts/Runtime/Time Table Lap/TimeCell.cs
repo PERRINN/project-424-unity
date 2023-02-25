@@ -12,7 +12,7 @@ namespace Perrinn424.UI
         private Image background = default;
 
         [SerializeField]
-        internal TimeFormatter timeFormatter;
+        public TimeFormatter timeFormatter;
 
         public void SetTime(float seconds)
         {
@@ -28,6 +28,7 @@ namespace Perrinn424.UI
         {
             text.color = format.textColor;
             background.color = format.backgroundColor;
+            background.sprite = format.backgroundSprite;
         }
 
         private void Reset()

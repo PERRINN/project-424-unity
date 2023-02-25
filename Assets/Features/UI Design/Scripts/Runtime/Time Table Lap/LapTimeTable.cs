@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Perrinn424.Utilities;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +15,8 @@ namespace Perrinn424.UI
         private FormatCell improvementFormat = default;
         [SerializeField]
         private FormatCell bestFormat = default;
+        [SerializeField]
+        private FormatCell idealFormat = default;
 
         [SerializeField]
         private LapRow lapUIPrefab = default;
@@ -25,20 +29,37 @@ namespace Perrinn424.UI
         [SerializeField]
         private int sectorCount = 3;
 
-        private List<LapRow> rowList;
-        private Perrinn424.LapTimeTable table;
+        [SerializeField]
+        private LapRow idealLapRow;
 
-        private void Awake()
+        private List<LapRow> uiRowList;
+        private Utilities.LapTimeTable timeTable;
+
+        private void OnEnable()
         {
-            table = new Perrinn424.LapTimeTable(sectorCount);
-            rowList = new List<LapRow>();
+            CleanTable();
+
+            timeTable = new Utilities.LapTimeTable(sectorCount);
+            uiRowList = new List<LapRow>();
             lapUIPrefab.gameObject.SetActive(false);
+            RefreshIdealLap();
+        }
+
+        private void CleanTable()
+        {
+            if (uiRowList != null && uiRowList.Count > 0)
+            {
+                foreach (LapRow row in uiRowList)
+                {
+                    GameObject.Destroy(row.gameObject);
+                }
+            }
         }
 
         public void AddLap(float[] sectors)
         {
             LapTime newLap = new LapTime(sectors);
-            table.AddLap(newLap);
+            timeTable.AddLap(newLap);
 
             AddRow();
 
@@ -47,28 +68,42 @@ namespace Perrinn424.UI
 
         public void AddSector(float sector)
         {
-            bool newLapAdded = table.AddSector(sector);
+            timeTable.AddSector(sector);
+            Refresh();
+        }
 
-            if (newLapAdded)
+        public void UpdateRollingTime(float sectorRollingTime, float lapRollingTime)
+        {
+            bool timeTableIsFull = timeTable.IsEmpty || timeTable[timeTable.LapCount - 1].IsCompleted;
+            bool needUIRow = timeTable.LapCount == uiRowList.Count && timeTableIsFull;
+            if (needUIRow)
             {
                 AddRow();
             }
 
-            Refresh();
+            int currentLapIndex = uiRowList.Count - 1;
+            int currentSector = timeTableIsFull ? 0 : timeTable[currentLapIndex].SectorsCompletedIndex;
+
+            LapRow currentRow = uiRowList[currentLapIndex];
+            currentRow.Refresh(currentSector, sectorRollingTime, normalFormat);
+            currentRow.Refresh(sectorCount, lapRollingTime, normalFormat);
         }
 
         private void AddRow()
         {
             LapRow newLapUI = Instantiate(lapUIPrefab, rowParent);
-            rowList.Add(newLapUI);
+            uiRowList.Add(newLapUI);
+            newLapUI.Refresh($"Lap {uiRowList.Count}", normalFormat, new LapTime(sectorCount), normalFormat);
             newLapUI.gameObject.SetActive(true);
+            newLapUI.gameObject.name = $"Lap {uiRowList.Count}";
         }
 
         private void Refresh()
         {
             RefreshTimes();
+            RefreshIdealLap();
 
-            if (table.LapCount < 2)
+            if (timeTable.LapCount < 2)
                 return;
 
             RefreshImprovements();
@@ -78,40 +113,41 @@ namespace Perrinn424.UI
             StartCoroutine(RefreshScroll());
         }
 
+
         private void RefreshTimes()
         {
-            for (int i = 0; i < table.LapCount; i++)
+            for (int i = 0; i < timeTable.LapCount; i++)
             {
-                LapTime lap = table[i];
-                LapRow rowUI = rowList[i];
-                rowUI.Refresh($"Lap {i + 1}", lap, normalFormat);
+                LapTime lap = timeTable[i];
+                LapRow rowUI = uiRowList[i];
+                rowUI.Refresh($"Lap {i + 1}", normalFormat, lap, normalFormat);
             }
         }
 
         private void RefreshImprovements()
         {
-            int[] improvedTimes = table.GetImprovedTimes();
+            int[] improvedTimes = timeTable.GetImprovedTimes();
 
             foreach (int improvedTimeIndex in improvedTimes)
             {
-                table.IndexToLapSector(improvedTimeIndex, out int lapIndex, out int sectorIndex);
-                rowList[lapIndex].ApplyFormat(sectorIndex, improvementFormat);
+                timeTable.IndexToLapSector(improvedTimeIndex, out int lapIndex, out int sectorIndex);
+                uiRowList[lapIndex].ApplyFormat(sectorIndex, improvementFormat);
             }
         }
 
         private void RefreshBestSectors()
         {
-            int[] bestSectors = table.GetBestLapForEachSector();
+            int[] bestSectors = timeTable.GetBestLapForEachSector();
 
-            //Special case. 
+            //Special case.
             // Best sectors should appears only when there are others sectors to be compared
             //In lap 1, there are never two sectors to compare
             //From 3 on, there are always two sectors to compare
             //Lap 2 is a special case, so we need to track the current sector and draw until there
             int GetColumnMax()
             {
-                int lapCount = table.LapCount;
-                LapTime lastLap = table[lapCount - 1];
+                int lapCount = timeTable.LapCount;
+                LapTime lastLap = timeTable[lapCount - 1];
                 if (lapCount == 2 && !lastLap.IsCompleted)
                 {
                     return lastLap.SectorsCompletedIndex;
@@ -125,8 +161,14 @@ namespace Perrinn424.UI
             for (int i = 0; i < columnMax; i++)
             {
                 int lapIndex = bestSectors[i];
-                rowList[lapIndex].ApplyFormat(i, bestFormat);
+                uiRowList[lapIndex].ApplyFormat(i, bestFormat);
             }
+        }
+
+        private void RefreshIdealLap()
+        {
+            var idealLap = timeTable.GetIdealLap();
+            idealLapRow.Refresh("Ideal Lap", normalFormat, idealLap, idealFormat);
         }
 
         private IEnumerator RefreshScroll()
@@ -134,5 +176,5 @@ namespace Perrinn424.UI
             yield return null;
             scrollRect.verticalNormalizedPosition = 0f;
         }
-    } 
+    }
 }

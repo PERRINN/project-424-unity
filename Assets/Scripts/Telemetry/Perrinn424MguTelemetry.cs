@@ -42,13 +42,13 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		{
 		public override int GetChannelCount ()
 			{
-			return 11;
+			return 13;
 			}
 
 
-		public override float GetPollFrequency ()
+		public override Telemetry.PollFrequency GetPollFrequency ()
 			{
-			return 50.0f;
+			return Telemetry.PollFrequency.Normal;
 			}
 
 
@@ -58,13 +58,15 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 			channelInfo[1].SetNameAndSemantic("MotorRpmRear", Telemetry.Semantic.EngineRpm);
 			channelInfo[2].SetNameAndSemantic("PowerElectricalFront", Telemetry.Semantic.EnginePower);
 			channelInfo[3].SetNameAndSemantic("PowerElectricalRear", Telemetry.Semantic.EnginePower);
-			channelInfo[4].SetNameAndSemantic("PowerBalance", Telemetry.Semantic.Ratio);
-			channelInfo[5].SetNameAndSemantic("EfficiencyFront", Telemetry.Semantic.Ratio);
-			channelInfo[6].SetNameAndSemantic("EfficiencyRear", Telemetry.Semantic.Ratio);
-			channelInfo[7].SetNameAndSemantic("TorqueMechanicalFront", Telemetry.Semantic.EngineTorque);
-			channelInfo[8].SetNameAndSemantic("TorqueMechanicalRear", Telemetry.Semantic.EngineTorque);
-			channelInfo[9].SetNameAndSemantic("TorqueRotorFront", Telemetry.Semantic.EngineTorque);
-			channelInfo[10].SetNameAndSemantic("TorqueRotorRear", Telemetry.Semantic.EngineTorque);
+			channelInfo[4].SetNameAndSemantic("PowerElectricalTotal", Telemetry.Semantic.EnginePower);
+			channelInfo[5].SetNameAndSemantic("PowerBalance", Telemetry.Semantic.Ratio);
+			channelInfo[6].SetNameAndSemantic("WheelTorqueBalance", Telemetry.Semantic.Ratio);
+			channelInfo[7].SetNameAndSemantic("EfficiencyFront", Telemetry.Semantic.Ratio);
+			channelInfo[8].SetNameAndSemantic("EfficiencyRear", Telemetry.Semantic.Ratio);
+			channelInfo[9].SetNameAndSemantic("TorqueMechanicalFront", Telemetry.Semantic.EngineTorque);
+			channelInfo[10].SetNameAndSemantic("TorqueMechanicalRear", Telemetry.Semantic.EngineTorque);
+			channelInfo[11].SetNameAndSemantic("TorqueRotorFront", Telemetry.Semantic.EngineTorque);
+			channelInfo[12].SetNameAndSemantic("TorqueRotorRear", Telemetry.Semantic.EngineTorque);
 			}
 
 
@@ -78,24 +80,28 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 			float frontElectricalPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
 			float frontMechanical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
 			float frontRotor = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.RotorTorque] / 1000.0f;
+			float frontWheels = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
 
 			float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
 			float rearEfficiency = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Efficiency] / 1000.0f;
 			float rearElectricalPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
 			float rearMechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
 			float rearRotor = custom[Perrinn424Data.RearMguBase + Perrinn424Data.RotorTorque] / 1000.0f;
+			float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
 
 			values[index+0] = frontRpm;
 			values[index+1] = rearRpm;
 			values[index+2] = frontElectricalPower;
 			values[index+3] = rearElectricalPower;
-			values[index+4] = frontElectricalPower / (frontElectricalPower + rearElectricalPower);
-			values[index+5] = frontEfficiency;
-			values[index+6] = rearEfficiency;
-			values[index+7] = frontMechanical;
-			values[index+8] = rearMechanical;
-			values[index+9] = frontRotor;
-			values[index+10] = rearRotor;
+			values[index+4] = frontElectricalPower + rearElectricalPower;
+			values[index+5] = GetBalance(frontElectricalPower, rearElectricalPower);
+			values[index+6] = GetBalance(frontWheels, rearWheels);
+			values[index+7] = frontEfficiency;
+			values[index+8] = rearEfficiency;
+			values[index+9] = frontMechanical;
+			values[index+10] = rearMechanical;
+			values[index+11] = frontRotor;
+			values[index+12] = rearRotor;
 			}
 		}
 
@@ -184,13 +190,21 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		}
 
 
-	string GetBalanceStr (float front, float rear)
+	static string GetBalanceStr (float front, float rear)
 		{
 		// This also covers front == rear == 0
 		if (front == rear) return "50.0";
 		if (front != 0.0f && rear != 0.0f && Mathf.Sign(front) != Mathf.Sign(rear)) return "-  ";
 
 		return (front / (front + rear) * 100).ToString("0.0");
+		}
+
+
+	static float GetBalance (float front, float rear)
+		{
+		if (front == rear) return 0.5f;
+		if (front != 0.0f && rear != 0.0f && Mathf.Sign(front) != Mathf.Sign(rear)) return float.NaN;
+		return front / (front + rear);
 		}
 
 

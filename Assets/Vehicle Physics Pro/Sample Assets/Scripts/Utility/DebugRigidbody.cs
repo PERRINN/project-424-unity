@@ -10,7 +10,6 @@ using EdyCommonTools;
 namespace VehiclePhysics.Utility
 {
 
-[RequireComponent(typeof(Rigidbody))]
 public class DebugRigidbody : MonoBehaviour
 	{
 	public bool showLabel = true;
@@ -24,7 +23,13 @@ public class DebugRigidbody : MonoBehaviour
 
 	void OnEnable ()
 		{
-		m_rigidbody = GetComponent<Rigidbody>();
+		m_rigidbody = GetComponentInParent<Rigidbody>();
+		if (m_rigidbody == null)
+			{
+			enabled = false;
+			return;
+			}
+
 		m_drawPosition = transform.TransformPoint(m_rigidbody.centerOfMass);
 		}
 
@@ -61,6 +66,7 @@ public class DebugRigidbody : MonoBehaviour
 					+ "\nM: " + m_rigidbody.mass
 					+ "\nI: " + m_rigidbody.inertiaTensor + " - " + m_rigidbody.inertiaTensor.magnitude.ToString("0.0")
 					+ "\nR: " + m_rigidbody.inertiaTensorRotation.eulerAngles
+					+ $"\nV: {m_rigidbody.velocity.ToString("0.000")}"
 					);
 				}
 

@@ -1,10 +1,10 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2021 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
-// Telemtry: modular telemetry system primarily for debug and diagnosis.
+// Telemetry: modular telemetry system primarily for debug and diagnosis.
 
 #if false
 
@@ -24,23 +24,45 @@ public class Telemetry
 		// Report the number of channels in this group
 
 		public virtual int GetChannelCount ()
+			{
+			return 0;
+			}
 
 		// Report the frequency the PollValues method should be called for this group of channels
 
-		public virtual float GetPollFrequency ()
+		public virtual PollFrequency GetPollFrequency ()
+			{
+			return PollFrequency.Normal;
+			}
 
 		// Return the information of each channel in this group for the given instance.
 		// Fill-in the public fields of each ChannelInfo class in the array.
 		// The length of the array will be the value returned by GetChannelCount.
 
 		public virtual void GetChannelInfo (ChannelInfo[] channelInfo, Object instance)
+			{
+			}
 
 		// Get the latest value in each channel for the given instance.
 		// Values must be filled starting in the position 'index' for the first channel.
 		// If no value is available for a channel, fill-in float.NaN.
 
 		public virtual void PollValues (float[] values, int index, Object instance)
+			{
+			}
 		}
+
+
+	// Frequency values for each channel group.
+	// Actual frequency values used by channels may vary up to ±50% depending on the FixedUpdate frequency.
+	//
+	//		VeryLow:	  1 Hz
+	//		Low:		 10 Hz
+	//		Normal:		 50 Hz	(default)
+	//		High:		100 Hz
+	//		Max:		Physics Frequency
+
+	public enum PollFrequency { VeryLow, Low, Normal, High, Max, Count }
 
 
 	// Nested classes and enums
@@ -57,11 +79,12 @@ public class Telemetry
 		Ratio,
 		SignedRatio,
 		Speed,
-		Gear,
 		Acceleration,
 		Weight,
+		Distance,
+		Gear,
 		BankAngle,
-		SteerAngle,
+		SteeringWheelAngle,
 		BrakePressure,
 		AngularVelocity,
 		EngineRpm,
@@ -72,6 +95,7 @@ public class Telemetry
 		WheelTorque,
 		SuspensionTravel,
 		SuspensionSpring,
+		SuspensionDamper,
 		SuspensionForce,
 		SuspensionSpeed,
 		SlipAngle,
@@ -105,6 +129,9 @@ public class Telemetry
 		public float range { get; }
 		public float rangeBoundary { get; }
 
+		public SemanticInfo ()
+		public SemanticInfo (SemanticInfo original)
+
 		public string FormatValue (float value)
 		public string FormatValueNoUnits (float value)
 		public string FormatValueAlt (float value)
@@ -112,10 +139,10 @@ public class Telemetry
 
 		// Shortcut methods
 
-		public void SetRangeAndFormat (float min, float max, string format, string unitsSuffix, float quantization = 0.1f, float multiplier = 1.0f, string alternateFormat = "")
+		public void SetRangeAndFormat (float min, float max, string format, string unitsSuffix, float quantization = 0.1f, float multiplier = 1.0f, string alternateFormat = "0")
 		public void SetUnits (string unitsSuffix, float multiplier = 1.0f)
 		public void SetRange (float min, float max)
-		public void SetFormat (string format, float quantization = 0.1f, string alternateFormat = "")
+		public void SetFormat (string format, float quantization = 0.1f, string alternateFormat = "0")
 		}
 
 
@@ -137,6 +164,7 @@ public class Telemetry
 		public float maxEngineFuelRate = 10.0f;					// g/s			// 10.0 g/s
 		public float maxSuspensionTravel = 0.25f;				// m			// 250 mm
 		public float maxSuspensionSpring = 55000.0f;			// N/m			// 50.0 kN/m
+		public float maxSuspensionDamper = 3000.0f;				// N/m/s		// 3.00 kN/m/s
 		public float maxWheelTorque = 2000.0f;					// Nm			// 2000 Nm
 		public float maxSuspensionLoad = 9.81f * 1000.0f;		// N			// 1000 kg
 		public float maxTireForce = 10000.0f;					// N			// 10000 N
@@ -162,7 +190,7 @@ public class Telemetry
 		// Shotcut methods
 
 		public void SetNameAndSemantic (string channelName, Semantic channelSemantic, SemanticInfo customChannelSemantic = null)
-		};
+		}
 
 
 	// ChannelGroupInfo
@@ -173,11 +201,12 @@ public class Telemetry
 		{
 		// Public information
 
-		public ChannelGroup channels { get ; }
-		public int channelCount { get ; }
-		public float expectedFrequency { get ; }
-		public float actualFrequency { get ; }
-		public int updateInterval { get ; }
+		public ChannelGroup channels { get; }
+		public int channelCount { get; }
+		public PollFrequency expectedFrequency { get; }
+		public float actualFrequency { get; }
+		public int updateInterval { get; }
+		public string updateFrequencyLabel { get; }
 
 		public int channelBaseIndex { get; }
 		public Object instance;
@@ -187,9 +216,9 @@ public class Telemetry
 		public int typeCount { get; }
 		public string typeName { get; }
 
-		public ChannelGroupInfo (ChannelGroup group, int baseIndex, float fixedUpdateFrequency, int groupTypeIndex)
+		public ChannelGroupInfo (Telemetry telemetry, ChannelGroup group, int baseIndex, int groupTypeIndex)
 
-		public void SetFixedUpdateFrequency (float fixedUpdateFrequency)
+		public void RefreshUpdateFrequency ()
 		public void SetTypeCount (int count)
 		}
 
@@ -209,6 +238,8 @@ public class Telemetry
 		public double totalDistance;
 		public int segmentNum;
 		public int markers;
+		public float markerTime;
+		public bool markerFlag;
 		public bool valuesUpdated;
 		public float[] values;		// Current values
 		public bool[] updated;		// Have the corresponding values been updated in this cycle?
@@ -254,23 +285,25 @@ public class Telemetry
 	// Public API
 	//----------------------------------------------------------------------------------------------
 
+
 	public Telemetry (float fixedUpdateFrequency = 50.0f)
 
 	public void SetStartPosition (Vector3 position)
 	public void SetFixedUpdateFrequency (float fixedUpdateFrequency)
 	public void Update (float fixedDeltaTime, Vector3 position, bool reposition, Vector3 positionOffset)
 
-	// Configure range and display format for the built-in semantics using the specificications
-
+	// Configure range and display format for the built-in semantics using the specifications
 	public void ApplySpecifications ()
 
 
 	// Register and unregister channels
-	//----------------------------------------------------------------------------------------------
 
 	public void Register<T> (Object instance) where T : ChannelGroup
 	public void Unregister<T> (Object instance) where T : ChannelGroup
 	public bool IsRegistered<T> (Object instance) where T : ChannelGroup
+
+	// Mostly used by channel group themselves
+	public int GetUpdateInterval (PollFrequency frequency)
 
 
 	// Channels
@@ -290,6 +323,7 @@ public class Telemetry
 	// Get formatted channel value and semantic info
 
 	public string FormatChannelValue (int channelIndex, SemanticInfo semantic = null)
+	public string FormatChannelValue (int channelIndex, float value, SemanticInfo semantic = null)
 	public SemanticInfo GetChannelSemmantic (int channelIndex)
 	public (float min, float max, float quantization) GetChannelRange (int channelIndex)
 
@@ -305,9 +339,9 @@ public class Telemetry
 	public void ResetTime (double offset = 0.0)
 	public void ResetDistance (double offset = 0.0)
 
-	// Set segment number (i.e. lap number)
+	// Segment number (i.e. lap number)
 
-	public void SetSegmentNum (int segmentNum)
+	public int segmentNumber { get; set; }
 
 
 	// Markers
@@ -351,8 +385,8 @@ public class Telemetry
 		// Events
 
 		Driver = 8,
-		Contact,
 		OffTrack,
+		Contact,
 		Impact,
 
 		// Last 16 markers available for custom use.
@@ -364,9 +398,16 @@ public class Telemetry
 
 	public void SetMarker (Marker marker)
 	public void SetMarker (int marker)
-	public bool IsMarker (int markerData, int marker)
-	public bool IsUniqueMarker (DataRow dataRow, int marker)
-	public int CustomMarker (int index)
+	public void SetMarkerTime (float time)
+	public void SetMarkerFlag (bool flag)
+
+	static public bool IsMarker (int markerData, Marker marker)
+	static public bool IsMarker (int markerData, int marker)
+	static public bool IsAnyMarker (int markerData, params Marker[] markers)
+	static public bool IsAnyMarker (int markerData, params int[] markers)
+	static public bool IsUniqueMarker (DataRow dataRow, int marker)
+
+	static public int CustomMarker (int index)
 	}
 
 }

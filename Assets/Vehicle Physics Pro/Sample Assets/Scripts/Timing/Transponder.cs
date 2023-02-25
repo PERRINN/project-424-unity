@@ -5,6 +5,8 @@
 //--------------------------------------------------------------
 
 using UnityEngine;
+using System;
+using EdyCommonTools;
 
 
 namespace VehiclePhysics.Timing
@@ -14,6 +16,17 @@ public class Transponder : VehicleBehaviour
 	{
 	public Transform detectionPoint;
 	public PhysicMaterial[] trackMaterials = new PhysicMaterial[0];
+
+	[Space(5)]
+	public bool debugGizmos = false;
+
+
+	// LapSectorMark uses these for preventing double-hits
+
+	[NonSerialized]
+	public Collider lastColliderHit = null;
+	[NonSerialized]
+	public float lastHitTime = -10.0f;
 
 
 	LapTimer m_lapTimer;
@@ -29,6 +42,16 @@ public class Transponder : VehicleBehaviour
 		{
 		if (m_lapTimer != null && !VerifyOnTrack())
 			m_lapTimer.InvalidateLap();
+		}
+
+
+	public override void UpdateVehicle ()
+		{
+		if (debugGizmos)
+			{
+			Vector3 point = detectionPoint != null?	point = detectionPoint.position : transform.position;
+			DebugUtility.DrawCrossMark(point, transform, GColor.orange);
+			}
 		}
 
 
