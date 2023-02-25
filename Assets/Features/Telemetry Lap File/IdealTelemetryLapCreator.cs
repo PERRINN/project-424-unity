@@ -101,12 +101,12 @@ namespace Perrinn424.TelemetryLapSystem
 
         private void ValidateHeaders()
         {
-            if (!headers.Contains("SECTOR"))
+            if (!headers.Contains("Sector"))
             {
                 throw new ArgumentException($"Headers must contain SECTOR field");
             }
 
-            if (!headers.Contains("TIME"))
+            if (!headers.Contains("Time"))
             {
                 throw new ArgumentException($"Headers must contain TIME field");
             }

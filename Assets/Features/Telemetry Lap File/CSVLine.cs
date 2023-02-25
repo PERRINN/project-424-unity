@@ -48,22 +48,22 @@ namespace Perrinn424.TelemetryLapSystem
             return headersIndex.HasHeader(header);
         }
 
-        public int Sector => (int)this["SECTOR"];
+        public int Sector => (int)this["Sector"];
         public float Time
         {
-            get => this["TIME"];
-            set => this["TIME"] = value;
+            get => this["Time"];
+            set => this["Time"] = value;
         }
 
         public float Distance
         {
-            get => this["DISTANCE"];
-            set => this["DISTANCE"] = value;
+            get => this["Distance"];
+            set => this["Distance"] = value;
         }
 
         public float Speed
         {
-            get => this["SPEED"];
+            get => this["Speed"];
         }
 
 

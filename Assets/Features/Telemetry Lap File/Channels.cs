@@ -114,7 +114,7 @@ namespace Perrinn424.TelemetryLapSystem
 
         public IEnumerable<string> GetHeaders()
         {
-            return channels.Select(c => c.ToUpper());
+            return channels;
         }
 
 
