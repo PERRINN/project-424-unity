@@ -1,14 +1,19 @@
 ﻿using Perrinn424.AutopilotSystem;
 using Perrinn424.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Perrinn424.UI
 {
-    public class ReferenceTime : MonoBehaviour
+    public class ReferenceInformation : MonoBehaviour
     {
         [SerializeField]
-        private Text text = default;
+        [FormerlySerializedAs("text")]
+        private Text time = default;
+
+        [SerializeField]
+        private Text date;
 
         [SerializeField]
         private BaseAutopilot autopilot;
@@ -17,7 +22,9 @@ namespace Perrinn424.UI
         {
             TimeFormatter timeFormatter = new TimeFormatter(TimeFormatter.Mode.MinutesAndSeconds, @"m\:ss\.fff", @"m\:ss\.fff");
             string duration = timeFormatter.ToString(autopilot.Duration);
-            text.text = $"Ref {duration}";
+            time.text = $"Ref {duration}";
+
+            date.text = "PlaceHolder";
         }
     } 
 }
