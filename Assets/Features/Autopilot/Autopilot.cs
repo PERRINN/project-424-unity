@@ -47,6 +47,7 @@ namespace Perrinn424.AutopilotSystem
         private float deltaTime;
 
         public override float Duration => recordedLap.lapTime;
+        public override long Timestamp => recordedLap.timestamp;
 
         public override void OnEnableVehicle()
         {

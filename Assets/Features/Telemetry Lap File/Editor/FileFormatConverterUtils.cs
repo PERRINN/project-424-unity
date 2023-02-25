@@ -179,6 +179,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
         {
             RecordedLap recordedLap = ScriptableObject.CreateInstance<RecordedLap>();
             TelemetryLapMetadata metadata = telemetryLap.metadata;
+            recordedLap.timestamp = metadata.timeStamp;
             recordedLap.frequency = metadata.frequency;
             recordedLap.lapTime = metadata.lapTime;
 

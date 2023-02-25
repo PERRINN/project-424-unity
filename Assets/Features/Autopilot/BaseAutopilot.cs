@@ -25,6 +25,7 @@ namespace Perrinn424.AutopilotSystem
         public abstract float DeltaTime { get;}
         public abstract float PlayingTime { get; }
         public abstract float Duration { get; }
+        public abstract long Timestamp { get; }
 
         public void ToggleStatus()
         {
