@@ -23,13 +23,13 @@ namespace Perrinn424.TelemetryLapSystem.Editor.Tests
         public void CreateFileTest()
         {
             lapFile.StartRecording();
-            Assert.That(File.Exists(lapFile.TempFullRelativePath), Is.True);
-            Assert.That(File.Exists(lapFile.FullRelativePath), Is.False);
-            Assert.That(File.Exists(lapFile.MetadataFullRelativePath), Is.False);
+            Assert.That(File.Exists(lapFile.TempFullPath), Is.True);
+            Assert.That(File.Exists(lapFile.FullPath), Is.False);
+            Assert.That(File.Exists(lapFile.MetadataFullPath), Is.False);
             lapFile.StopRecordingAndSaveFile(false, false, 0f);
             lapFile.WriteMetadata(new TelemetryLapMetadata());
-            Assert.That(File.Exists(lapFile.FullRelativePath), Is.True);
-            Assert.That(File.Exists(lapFile.MetadataFullRelativePath), Is.True);
+            Assert.That(File.Exists(lapFile.FullPath), Is.True);
+            Assert.That(File.Exists(lapFile.MetadataFullPath), Is.True);
         }
     } 
 }

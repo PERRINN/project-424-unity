@@ -159,14 +159,11 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                 {
                     position = replayFrame.position,
                     rotation = replayFrame.rotation,
-                    rawSteer = replayFrame.inputData[InputData.Steer],
-                    rawThrottle = replayFrame.inputData[InputData.Throttle],
-                    rawBrake = replayFrame.inputData[InputData.Brake],
-                    automaticGear = replayFrame.inputData[InputData.AutomaticGear],
                     gear = 0,
                     steeringAngle = float.NaN,
                     throttle = float.NaN,
-                    brakePressure = float.NaN
+                    brakePressure = float.NaN,
+                    speed = float.NaN
 
                 };
 
@@ -192,6 +189,8 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             {
                 Sample sample = new Sample();
 
+                sample.speed = table[rowIndex, "SPEED"] / 3.6f; //km/h => m/s
+
                 float x = table[rowIndex, "POSITIONX"];
                 float y = table[rowIndex, "POSITIONY"];
                 float z = table[rowIndex, "POSITIONZ"];
@@ -202,12 +201,6 @@ namespace Perrinn424.TelemetryLapSystem.Editor
 
                 sample.position = new Vector3(x, y, z);
                 sample.rotation = Quaternion.Euler(eulerX, eulerY, eulerZ);
-
-
-                sample.rawSteer = (int)(table[rowIndex, "RAWSTEER"]);
-                sample.rawThrottle = (int)(table[rowIndex, "RAWTHROTTLE"]);
-                sample.rawBrake = (int)(table[rowIndex, "RAWBRAKE"]);
-                sample.automaticGear = (int)(table[rowIndex, "AUTOMATICGEAR"]);
 
                 sample.gear = (int)table[rowIndex, "GEAR"];
                 sample.steeringAngle = table[rowIndex, "STEERINGANGLE"];

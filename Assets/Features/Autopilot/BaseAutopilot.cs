@@ -22,6 +22,9 @@ namespace Perrinn424.AutopilotSystem
         public abstract float MaxForceP { get; }
 
         public abstract float MaxForceD { get; }
+        public abstract float DeltaTime { get;}
+        public abstract float PlayingTime { get; }
+        public abstract float Duration { get; }
 
         public void ToggleStatus()
         {
@@ -33,9 +36,5 @@ namespace Perrinn424.AutopilotSystem
             IsOn = isOn;
             OnStatusChanged?.Invoke(IsOn);
         }
-
-        public abstract float CalculatePlayingTime();
-
-        public abstract float CalculateDuration();
     } 
 }

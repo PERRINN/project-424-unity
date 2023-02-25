@@ -28,16 +28,16 @@ public class InputSetupDialog : MonoBehaviour
 	public Image brakeBar;
 	public Image throttleBar;
 	public Slider gearSlider;
-	public Image drsBar;
 
 	[Space(5)]
 	public ButtonLabelGroup steeringSetup;
 	public SliderValueGroup steeringRangeSetup;
+	public SliderValueGroup ffbForceGainSetup;
+	public SliderValueGroup ffbDamperGainSetup;
 	public ButtonLabelGroup throttleSetup;
 	public ButtonLabelGroup brakeSetup;
 	public ButtonLabelGroup gearUpSetup;
 	public ButtonLabelGroup gearDownSetup;
-	public ButtonLabelGroup drsSetup;
 	[Space(5)]
 	public Color defaultControlColor = GColor.ParseColorHex("#CCCCCC");
 	public Color activeControlColor = GColor.lightGreenA700;
@@ -70,7 +70,10 @@ public class InputSetupDialog : MonoBehaviour
 
 		m_inputUser = new Perrinn424InputUser(carInputUser);
 		InputManager.instance.RegisterUser(m_inputUser);
-		UITools.SetValue(steeringRangeSetup, InputManager.instance.settings.physicalWheelRange / 10);
+
+		UITools.SetValue(steeringRangeSetup, InputManager.instance.settings.physicalWheelRange);
+		UITools.SetValue(ffbForceGainSetup, InputManager.instance.settings.forceFeedbackForceGain);
+		UITools.SetValue(ffbDamperGainSetup, InputManager.instance.settings.forceFeedbackDamperGain);
 
 		// Initialize UI
 
@@ -83,7 +86,6 @@ public class InputSetupDialog : MonoBehaviour
 		UITools.AddListener(brakeSetup, OnDetectBrake);
 		UITools.AddListener(gearUpSetup, OnDetectGearUp);
 		UITools.AddListener(gearDownSetup, OnDetectGearDown);
-		UITools.AddListener(drsSetup, OnDetectDrs);
 
 		// Ensure this dialog can be interacted with
 
@@ -114,7 +116,6 @@ public class InputSetupDialog : MonoBehaviour
 		UITools.RemoveListener(brakeSetup, OnDetectBrake);
 		UITools.RemoveListener(gearUpSetup, OnDetectGearUp);
 		UITools.RemoveListener(gearDownSetup, OnDetectGearDown);
-		UITools.RemoveListener(drsSetup, OnDetectDrs);
 		}
 
 
@@ -128,10 +129,16 @@ public class InputSetupDialog : MonoBehaviour
 
 		UpdateControlLabels();
 
-		// Apply settings so effects may be observed lively
+		// Apply global settings so effects may be observed lively
 
-		int wheelRange = InputManager.instance.settings.physicalWheelRange;
-		InputManager.instance.settings.physicalWheelRange = Mathf.RoundToInt(UITools.GetValue(steeringRangeSetup, defaultValue: wheelRange/10) * 10);
+		InputSettings inputSettings = InputManager.instance.settings;
+		int wheelRange = inputSettings.physicalWheelRange;
+		float forceGain = inputSettings.forceFeedbackForceGain;
+		float damperGain = inputSettings.forceFeedbackDamperGain;
+
+		inputSettings.physicalWheelRange = Mathf.RoundToInt(UITools.GetValue(steeringRangeSetup, defaultValue: wheelRange));
+		inputSettings.forceFeedbackForceGain = UITools.GetValue(ffbForceGainSetup, defaultValue: forceGain);
+		inputSettings.forceFeedbackDamperGain = UITools.GetValue(ffbDamperGainSetup, defaultValue: damperGain);
 
 		// Detect Esc
 
@@ -152,7 +159,7 @@ public class InputSetupDialog : MonoBehaviour
 
 		if (steeringWheelIcon != null)
 			{
-			float angle = -m_inputUser.steer.Value() * UITools.GetValue(steeringRangeSetup, defaultValue:18.0f) / 2 * 10;
+			float angle = -m_inputUser.steer.Value() * UITools.GetValue(steeringRangeSetup, defaultValue:180) / 2;
 			steeringWheelIcon.rotation = Quaternion.Euler(0, 0, angle);
 			}
 
@@ -166,10 +173,6 @@ public class InputSetupDialog : MonoBehaviour
 		int shiftUp = m_inputUser.gearUp.Pressed()? 1 : 0;
 		int shiftDown = m_inputUser.gearDown.Pressed()? -1 : 0;
 		UITools.SetValue(gearSlider, shiftUp + shiftDown);
-
-		// Update DRS
-
-		UITools.SetImageFill(drsBar, m_inputUser.drsEnable.Pressed()? 1.0f : 0.0f);
 		}
 
 
@@ -182,7 +185,6 @@ public class InputSetupDialog : MonoBehaviour
 		UpdateActionLabel(brakeSetup, m_inputUser.brake);
 		UpdateActionLabel(gearUpSetup, m_inputUser.gearUp);
 		UpdateActionLabel(gearDownSetup, m_inputUser.gearDown);
-		UpdateActionLabel(drsSetup, m_inputUser.drsEnable);
 
 		// Update colors
 
@@ -191,7 +193,6 @@ public class InputSetupDialog : MonoBehaviour
 		HightlightLabel(brakeSetup, m_inputUser.brake);
 		HightlightLabel(gearUpSetup, m_inputUser.gearUp);
 		HightlightLabel(gearDownSetup, m_inputUser.gearDown);
-		HightlightLabel(drsSetup, m_inputUser.drsEnable);
 		}
 
 
@@ -285,12 +286,6 @@ public class InputSetupDialog : MonoBehaviour
 	void OnDetectGearDown ()
 		{
 		StartCoroutine(DetectControl(buttonDetectDialog, m_inputUser.gearDown));
-		}
-
-
-	void OnDetectDrs ()
-		{
-		StartCoroutine(DetectControl(buttonDetectDialog, m_inputUser.drsEnable));
 		}
 
 

@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     templateName: Force Feedback
-    verticalRange: 10
+    verticalRange: 20
     channels:
     - name: Speed
       displayName: 
       labelOffset: 0
       displayOrigin: 0
-      displayRange: 10
+      displayRange: 20
       adjustToRange: 0
       mirror: 0
       displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
@@ -32,27 +32,59 @@ MonoBehaviour:
       adjustToRange: 0
       mirror: 0
       displayColor: {r: 0, g: 0.3903246, b: 1, a: 1}
-    - name: SteeringAngle
-      displayName: Steering Angle
-      labelOffset: 0
-      displayOrigin: 7
-      displayRange: -2
-      adjustToRange: 0
-      mirror: 0
-      displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.8}
-    - name: ForceFeedbackForceRatio
-      displayName: FFB Force
+    - name: FFBTrackroadLoadLeft
+      displayName: Trackroad Load Left
       labelOffset: -1
       displayOrigin: 7
       displayRange: 3
       adjustToRange: 0
       mirror: 0
-      displayColor: {r: 1, g: 0.6064061, b: 0, a: 0.8}
-    - name: SteeringRackLoad
-      displayName: Steering Rack Load
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+    - name: FFBTrackroadLoadRight
+      displayName: Trackroad Load Right
       labelOffset: -2
       displayOrigin: 7
+      displayRange: 3
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
+    - name: FFBSteeringRackLoad
+      displayName: Steering Rack Load
+      labelOffset: 0
+      displayOrigin: 7
+      displayRange: 3
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.7, g: 0.049411766, b: 0, a: 0.8}
+    - name: FFBSteeringColumnLoad
+      displayName: Steering Column Load
+      labelOffset: -1
+      displayOrigin: 12
       displayRange: 2
       adjustToRange: 0
       mirror: 0
-      displayColor: {r: 1, g: 0.07060647, b: 0, a: 0.8}
+      displayColor: {r: 0.57801414, g: 0.5, b: 1, a: 0.74509805}
+    - name: FFBSteeringWheelLoad
+      displayName: Steering Wheel Load
+      labelOffset: 0
+      displayOrigin: 12
+      displayRange: 2
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.7307761, g: 0.9622642, b: 0.7401292, a: 0.74509805}
+    - name: SteeringAngle
+      displayName: Steering Angle
+      labelOffset: -1
+      displayOrigin: 17
+      displayRange: -3
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.8}
+    - name: ForceFeedbackForceRatio
+      displayName: FFB Force
+      labelOffset: 0
+      displayOrigin: 17
+      displayRange: 3
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 1, g: 0.6064061, b: 0, a: 0.8}

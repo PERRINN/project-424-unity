@@ -1,10 +1,12 @@
+
 ﻿using Perrinn424.AutopilotSystem;
 using UnityEngine;
 using UnityEngine.UI;
+using VehiclePhysics;
 using VehiclePhysics.Timing;
 
 
-namespace VehiclePhysics.UI
+namespace Perrinn424
 {
     public class SteeringScreen : VehicleBehaviour
     {
@@ -80,7 +82,7 @@ namespace VehiclePhysics.UI
                         minSpeed = speed;
                         StartTimer();
                         minSpdWindow = true;
-                        minIndicator.gameObject.SetActive(false);
+                        minIndicator.enabled = false;
                     }
 
                     if (maxSpeed < speed) { maxSpeed = speed; }
@@ -95,13 +97,13 @@ namespace VehiclePhysics.UI
                         }
                         else { speedMps.text = minSpeed.ToString("0"); }
 
-                        if (systemTime - minSpdTime > 0.02f) { minIndicator.gameObject.SetActive(true); }
+                        if (systemTime - minSpdTime > 0.02f) { minIndicator.enabled = true; }
                     }
                     else
                     {
                         minSpeed = maxSpeed - 1;
                         speedMps.text = speed.ToString("0");
-                        minIndicator.gameObject.SetActive(false);
+                        minIndicator.enabled = false;
                     }
                 }
 
@@ -201,9 +203,7 @@ namespace VehiclePhysics.UI
                 // Time Difference with the Best Lap
                 if (timeDifference != null && m_lapTimer != null && autopilot != null)
                 {
-                    float compare = m_lapTimer.currentLapTime - autopilot.CalculatePlayingTime();
-
-                    timeDifference.text = Mathf.Sign(compare) == -1 ? Mathf.Abs(compare).ToString("-0.00") : compare.ToString("+0.00");
+                    timeDifference.text = autopilot.DeltaTime.ToString("+0.00;-0.00");
                 }
 
                 // Battery SOC

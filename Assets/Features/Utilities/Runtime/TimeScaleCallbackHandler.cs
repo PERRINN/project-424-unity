@@ -14,12 +14,12 @@ namespace Perrinn424.Utilities
         private GameObject[] gameObjectsActiveOnlyInRealTime;
 
         [SerializeField]
-        private Perrinn424Underfloor underfloor;
+        private Perrinn424UnderfloorAudio underfloorAudio;
 
         private void OnEnable()
         {
-            if (underfloor == null)
-                underfloor = FindObjectOfType<Perrinn424Underfloor>();
+            if (underfloorAudio == null)
+                underfloorAudio = FindObjectOfType<Perrinn424UnderfloorAudio>();
 
             timeScaleController.onTimeScaleChanged += OnTimeScaleChangedEventHandler;
         }
@@ -43,7 +43,7 @@ namespace Perrinn424.Utilities
                 go.SetActive(isRealTime);
             }
 
-            underfloor.isAudioEnabled = isRealTime;
+            underfloorAudio.audioEnabled = isRealTime;
         }
 
     }
