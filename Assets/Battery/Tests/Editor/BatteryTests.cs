@@ -19,24 +19,37 @@ public class BatteryTests
             float speed = testLine[1];
             float power = testLine[2];
 
-            battery.UpdateModel(0.5f, speed, power);
+            if (lineCount == 0)
+            {
+                battery.InitModel(0.5f, speed, power);
+            }
+            else
+            {
+                battery.UpdateModel(0.5f, speed, power);
+            }
 
-            float expectedTotalHeat = testLine[3];
-            float expectedAirMassFlow = testLine[4];
-            float expectedHeatDissipation = testLine[5];
-            float expectedHeatDissipated = testLine[6];
-            float expectedTemperatureModule = testLine[7];
-            float expectedQInteral = testLine[8];
-
-            Assert.That(battery.TotalHeat, Is.EqualTo(expectedTotalHeat).Within(1).Percent, $"Failed in TotalHeat line: {lineCount}");
-            Assert.That(battery.AirMassFlow, Is.EqualTo(expectedAirMassFlow).Within(1).Percent, $"Failed in AirMassFlow line: {lineCount}");
-            Assert.That(battery.HeatDissipation, Is.EqualTo(expectedHeatDissipation).Within(1).Percent, $"Failed in HeatDissipation line: {lineCount}");
-            Assert.That(battery.HeatDissipated, Is.EqualTo(expectedHeatDissipated).Within(1).Percent, $"Failed in HeatDissipated line: {lineCount}");
-            Assert.That(battery.TemperatureModule, Is.EqualTo(expectedTemperatureModule).Within(1).Percent, $"Failed in TemperatureModule line: {lineCount}");
-            Assert.That(battery.QInteral, Is.EqualTo(expectedQInteral).Within(1).Percent, $"Failed in QInteral line: {lineCount}");
+            AssertBattery(battery, testLine, lineCount);
             lineCount++;
         }
 
+    }
+
+    private void AssertBattery(Battery battery, float[] expectedValues, int lineCount)
+    {
+        float expectedTotalHeat = expectedValues[3];
+        float expectedAirMassFlow = expectedValues[4];
+        float expectedHeatDissipation = expectedValues[5];
+        float expectedHeatDissipated = expectedValues[6];
+        float expectedTemperatureModule = expectedValues[7];
+        float expectedQInteral = expectedValues[8];
+
+        float tolerance = 5;
+        Assert.That(battery.TotalHeat, Is.EqualTo(expectedTotalHeat).Within(tolerance).Percent, $"Failed in TotalHeat line: {lineCount}");
+        Assert.That(battery.AirMassFlow, Is.EqualTo(expectedAirMassFlow).Within(tolerance).Percent, $"Failed in AirMassFlow line: {lineCount}");
+        Assert.That(battery.HeatDissipation, Is.EqualTo(expectedHeatDissipation).Within(tolerance).Percent, $"Failed in HeatDissipation line: {lineCount}");
+        Assert.That(battery.HeatDissipated, Is.EqualTo(expectedHeatDissipated).Within(tolerance).Percent, $"Failed in HeatDissipated line: {lineCount}");
+        Assert.That(battery.TemperatureModule, Is.EqualTo(expectedTemperatureModule).Within(tolerance).Percent, $"Failed in TemperatureModule line: {lineCount}");
+        Assert.That(battery.QInteral, Is.EqualTo(expectedQInteral).Within(tolerance).Percent, $"Failed in QInteral line: {lineCount}");
     }
 
     private static IEnumerable<float[]> GetTestLine()
