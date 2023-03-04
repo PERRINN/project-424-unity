@@ -43,7 +43,7 @@ public class BatteryTests
         float expectedTemperatureModule = expectedValues[7];
         float expectedQInteral = expectedValues[8];
 
-        float tolerance = 5;
+        float tolerance = 1;
         Assert.That(battery.TotalHeat, Is.EqualTo(expectedTotalHeat).Within(tolerance).Percent, $"Failed in TotalHeat line: {lineCount}");
         Assert.That(battery.AirMassFlow, Is.EqualTo(expectedAirMassFlow).Within(tolerance).Percent, $"Failed in AirMassFlow line: {lineCount}");
         Assert.That(battery.HeatDissipation, Is.EqualTo(expectedHeatDissipation).Within(tolerance).Percent, $"Failed in HeatDissipation line: {lineCount}");
