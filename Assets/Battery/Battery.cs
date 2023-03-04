@@ -26,22 +26,51 @@ public class Battery
 
     public void InitModel(float dt, float speed, float power)
     {
-        TotalHeat = (1f - settings.Efficiency) * Mathf.Abs(power) * 1000f;
-        AirMassFlow = settings.RadMassFlowAt50MeterPerSeconds * Mathf.Pow(speed, settings.CarSpeedToRadMassFlowPower) / Mathf.Pow(50, settings.CarSpeedToRadMassFlowPower);
-        HeatDissipation = AirMassFlow * settings.AvNormalisedHeatDissipation / 2.5f;
+        TotalHeat = CaculateTotalHeat(power, settings.Efficiency);
+        AirMassFlow = CalculateAirMassFlow(speed, settings.RadMassFlowAt50MeterPerSeconds, settings.CarSpeedToRadMassFlowPower);
+        HeatDissipation = CalculateHeatDissipation(AirMassFlow, settings.AvNormalisedHeatDissipation);
         HeatDissipated = 0f;
-        TemperatureModule = 15f;
-        QInteral = TotalHeat * dt + HeatDissipated;
+        TemperatureModule = settings.AmbientTemperature;
+        QInteral = CalculateQInternal(TotalHeat, HeatDissipated, dt);
     }
 
     public void UpdateModel(float dt, float speed, float power)
     {
-        TotalHeat = (1f - settings.Efficiency) * Mathf.Abs(power) * 1000f;
-        AirMassFlow = settings.RadMassFlowAt50MeterPerSeconds * Mathf.Pow(speed, settings.CarSpeedToRadMassFlowPower) / Mathf.Pow(50, settings.CarSpeedToRadMassFlowPower);
-        HeatDissipation = AirMassFlow * settings.AvNormalisedHeatDissipation / 2.5f;
-        HeatDissipated = -HeatDissipation*dt*(TemperatureModule - settings.AmbientTemperature)*settings.ModuleToFluidExchangeEfficiency;
-        TemperatureModule = TemperatureModule + QInteral/(settings.CellOnlyModuleHeatCapacity*settings.NumberOfModules);
-        QInteral = TotalHeat * dt + HeatDissipated;
+        TotalHeat = CaculateTotalHeat(power, settings.Efficiency);
+        AirMassFlow = CalculateAirMassFlow(speed, settings.RadMassFlowAt50MeterPerSeconds, settings.CarSpeedToRadMassFlowPower);
+        HeatDissipation = CalculateHeatDissipation(AirMassFlow, settings.AvNormalisedHeatDissipation);
+        HeatDissipated = CalculateHeatDissipated(HeatDissipation, TemperatureModule, settings.AmbientTemperature, settings.ModuleToFluidExchangeEfficiency, dt);
+        TemperatureModule = CalculateTemperatureModule(TemperatureModule, QInteral, settings.CellOnlyModuleHeatCapacity, settings.NumberOfModules);
+        QInteral = CalculateQInternal(TotalHeat, HeatDissipated, dt);
+    }
 
+    private static float CaculateTotalHeat(float power, float efficiency)
+    {
+        return (1f - efficiency) * Mathf.Abs(power) * 1000f;
+    }
+
+    private static float CalculateAirMassFlow(float speed, float radMassFlowAt50MeterPerSeconds, float carSpeedToRadMassFlowPower)
+    {
+        return radMassFlowAt50MeterPerSeconds * Mathf.Pow(speed, carSpeedToRadMassFlowPower) / Mathf.Pow(50f, carSpeedToRadMassFlowPower);
+    }
+
+    private static float CalculateHeatDissipation(float airMassFlow, float avNormalisedHeatDissipation)
+    {
+        return airMassFlow * avNormalisedHeatDissipation / 2.5f;
+    }
+
+    private static float CalculateHeatDissipated(float heatDissipation, float temperatureModule, float ambientTemperature, float moduleToFluidExchangeEfficiency, float dt)
+    {
+        return -heatDissipation * dt * (temperatureModule - ambientTemperature) * moduleToFluidExchangeEfficiency;
+    }
+
+    private static float CalculateTemperatureModule(float temperatureModulePrevious, float qInternalPrevious, float cellOnlyModuleHeatCapacity, float numberOfModules)
+    {
+        return temperatureModulePrevious + qInternalPrevious / (cellOnlyModuleHeatCapacity * numberOfModules);
+    }
+
+    private static float CalculateQInternal(float totalHeat, float heatDissipated, float dt)
+    {
+        return heatDissipated + totalHeat * dt;
     }
 }
