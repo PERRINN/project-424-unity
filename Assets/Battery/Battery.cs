@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class Battery
 {
+    [Serializable]
     public class Settings
     {
         public float Efficiency = 0.85f;
@@ -32,6 +35,11 @@ public class Battery
         HeatDissipated = 0f;
         TemperatureModule = settings.AmbientTemperature;
         QInteral = CalculateQInternal(TotalHeat, HeatDissipated, dt);
+    }
+
+    public void Reset(float dt, float speed, float power)
+    {
+        InitModel(dt, speed, power);
     }
 
     public void UpdateModel(float dt, float speed, float power)

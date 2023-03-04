@@ -1,6 +1,7 @@
-﻿using VehiclePhysics;
-using VehiclePhysics.UI;
-
+﻿using System;
+using UnityEngine;
+using VehiclePhysics;
+using VehiclePhysics.Timing;
 
 namespace Perrinn424
 {
@@ -18,11 +19,33 @@ namespace Perrinn424
         float batteryVoltage;
 
 
+        [SerializeField]
+        private LapTimer lapTimer;
+
+        [SerializeField]
+        private Battery battery;
+
+
         private void Start()
         {
             batteryCapacity = 55;
             batterySOC = batteryCapacity;
             batteryDOD = 0;
+        }
+
+        public override void OnEnableVehicle()
+        {
+            lapTimer.onBeginLap += LapBeginEventHandler;
+        }
+
+        private void LapBeginEventHandler()
+        {
+            battery.Reset(Time.deltaTime, vehicle.speed, powerTotal);
+        }
+
+        public override void OnDisableVehicle()
+        {
+            lapTimer.onBeginLap -= LapBeginEventHandler;
         }
 
 
@@ -39,6 +62,8 @@ namespace Perrinn424
 
             batterySOC = (batteryCapacity / 55) * 100;
             batteryDOD = 100 - batterySOC;
+
+            battery.UpdateModel(Time.deltaTime, vehicle.speed, powerTotal);
         }
 
         public override void UpdateVehicle()
