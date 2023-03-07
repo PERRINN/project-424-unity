@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
 
@@ -23,7 +22,7 @@ namespace Perrinn424
         private LapTimer lapTimer;
 
         [SerializeField]
-        private Battery battery;
+        private BatteryTemperatureModel battery;
 
 
         private void Start()
