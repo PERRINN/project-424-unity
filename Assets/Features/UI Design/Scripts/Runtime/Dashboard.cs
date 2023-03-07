@@ -67,10 +67,10 @@ namespace Perrinn424.UI
             string totalStr = total.ToString("+0;-0");
             totalPowerText.text = $"{totalStr} KW";
 
-            float batSOC = BatteryModel.batterySOC;
+            float batSOC = Battery.batterySOC;
             socText.text = $"{batSOC:0.0} SOC";
 
-            float batCapacity = BatteryModel.batteryCapacity;
+            float batCapacity = Battery.batteryCapacity;
             capacityText.text = $"{55 - batCapacity:0.00} KWH";
         }
     }

@@ -5,7 +5,7 @@ using VehiclePhysics.Timing;
 
 namespace Perrinn424
 {
-    public class BatteryModel : VehicleBehaviour
+    public class Battery : VehicleBehaviour
     {
         public static float batteryCapacity;
         public static float batterySOC;
@@ -14,10 +14,7 @@ namespace Perrinn424
         public static float powerTotal;
 
 
-        float batteryTemprature;
         float batteryDOD;
-        float batteryVoltage;
-
 
         [SerializeField]
         private LapTimer lapTimer;

@@ -30,16 +30,11 @@ namespace Perrinn424
         public void UpdateModel(float frontPower, float rearPower)
         {
             Power = frontPower + rearPower;
-
-            BatteryCharge();
+            //60*60*500
+            // Capacity < 0 => Capacity = 0
+            Capacity = Mathf.Max(Capacity - Power / 1_800_000f, 0);
             StateOfCharge = Mathf.InverseLerp(0f, settings.capacity, Capacity);
-            //StateOfCharge = (Capacity / 55) * 100;
             DepthOfDischarge = 1f - StateOfCharge;
-        }
-
-        void BatteryCharge()
-        {
-            Capacity = Mathf.Max(Capacity - Power / 1_800_000f, 0); //60*60*500
         }
     } 
 }
