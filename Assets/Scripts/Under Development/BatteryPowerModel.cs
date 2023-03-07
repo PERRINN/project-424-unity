@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Perrinn424
 {
@@ -38,19 +39,7 @@ namespace Perrinn424
 
         void BatteryCharge()
         {
-            if (Power > 0)
-            {
-                Capacity -= ((Power / 60) / 60) / 500;
-            }
-            else if (Power < 0)
-            {
-                Capacity -= ((Power / 60) / 60) / 500;
-            }
-
-            if (Capacity < 0)
-            {
-                Capacity = 0;
-            }
+            Capacity = Mathf.Max(Capacity - Power / 1_800_000f, 0); //60*60*500
         }
     } 
 }
