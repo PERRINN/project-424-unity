@@ -32,9 +32,9 @@ namespace Perrinn424
             Power = frontPower + rearPower;
 
             BatteryCharge();
-
-            StateOfCharge = (Capacity / 55) * 100;
-            DepthOfDischarge = 100 - StateOfCharge;
+            StateOfCharge = Mathf.InverseLerp(0f, settings.capacity, Capacity);
+            //StateOfCharge = (Capacity / 55) * 100;
+            DepthOfDischarge = 1f - StateOfCharge;
         }
 
         void BatteryCharge()

@@ -73,10 +73,10 @@ namespace Perrinn424
 
             float error = Mathf.Abs(powerModel.Power - powerTotal);
             error += Mathf.Abs(powerModel.Capacity - batteryCapacity);
-            error += Mathf.Abs(powerModel.StateOfCharge - batterySOC);
-            error += Mathf.Abs(powerModel.DepthOfDischarge - batteryDOD);
+            error += Mathf.Abs(powerModel.StateOfCharge*100f - batterySOC);
+            error += Mathf.Abs(powerModel.DepthOfDischarge*100f - batteryDOD);
 
-            Assert.IsTrue(error < 1e-5f);
+            Assert.IsTrue(error < 1e-3f);
         }
 
         public override void UpdateVehicle()
