@@ -13,7 +13,6 @@ namespace Perrinn424
         public static float rearPower;
         public static float powerTotal;
 
-
         float batteryDOD;
 
         [SerializeField]
@@ -25,6 +24,9 @@ namespace Perrinn424
         private BatteryPowerModel powerModel;
 
 
+        public float Power => powerModel.Power;
+        public float StateOfCharge => powerModel.StateOfCharge;
+        public float WeirdInverseCalculation => powerModel.WeirdInverseCalculation;
 
         private void Start()
         {

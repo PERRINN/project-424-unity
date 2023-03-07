@@ -19,12 +19,16 @@ namespace Perrinn424
         public float StateOfCharge { get; private set; }  //SOC
         public float DepthOfDischarge { get; private set; } //DOD
 
+        public float WeirdInverseCalculation { get; private set; }
+
 
         public void InitModel()
         {
+            Power = 0f;
             Capacity = settings.capacity;
             StateOfCharge = Capacity;
             DepthOfDischarge = 0;
+            WeirdInverseCalculation = settings.capacity - Capacity;
         }
 
         public void UpdateModel(float frontPower, float rearPower)
@@ -35,6 +39,7 @@ namespace Perrinn424
             Capacity = Mathf.Max(Capacity - Power / 1_800_000f, 0);
             StateOfCharge = Mathf.InverseLerp(0f, settings.capacity, Capacity);
             DepthOfDischarge = 1f - StateOfCharge;
+            WeirdInverseCalculation = settings.capacity - Capacity;
         }
     } 
 }

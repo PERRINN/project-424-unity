@@ -173,7 +173,7 @@ namespace Perrinn424
                 //}
 
                 // Total Electrical Power
-                if (totalElecPower != null)
+                if (totalElecPower != null) //TODO
                 {
                     float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
                     float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;

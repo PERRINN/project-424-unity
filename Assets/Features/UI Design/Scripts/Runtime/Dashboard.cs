@@ -1,5 +1,5 @@
-﻿using Perrinn424.AutopilotSystem;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 using VehiclePhysics;
 
@@ -22,6 +22,14 @@ namespace Perrinn424.UI
         [SerializeField]
         private Text socText;
 
+
+        private Battery battery;
+
+        public new void OnEnable()
+        {
+            battery = vehicle.GetComponentInChildren<Battery>();
+            base.OnEnable();
+        }
 
         protected override void UpdateValues()
         {
@@ -64,14 +72,19 @@ namespace Perrinn424.UI
             float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
 
             float total = frontPower + rearPower;
+            Assert.IsTrue(total == battery.Power);
             string totalStr = total.ToString("+0;-0");
             totalPowerText.text = $"{totalStr} KW";
 
             float batSOC = Battery.batterySOC;
+            Assert.IsTrue(Mathf.Approximately(batSOC, battery.StateOfCharge*100f));
             socText.text = $"{batSOC:0.0} SOC";
 
             float batCapacity = Battery.batteryCapacity;
-            capacityText.text = $"{55 - batCapacity:0.00} KWH";
+            batCapacity = 55 - batCapacity;
+            Assert.IsTrue(Mathf.Approximately(batCapacity, battery.WeirdInverseCalculation));
+
+            capacityText.text = $"{batCapacity:0.00} KWH";
         }
     }
 }
