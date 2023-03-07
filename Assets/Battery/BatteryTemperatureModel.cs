@@ -9,14 +9,14 @@ namespace Perrinn424
         [Serializable]
         public class Settings
         {
-            public float Efficiency = 0.85f;
-            public float RadMassFlowAt50MeterPerSeconds = 2.1f; // kg/s
-            public float CarSpeedToRadMassFlowPower = 1.17f;
-            public float AvNormalisedHeatDissipation = 1692f; //W/degC
-            public float AmbientTemperature = 15f; //degC
-            public float ModuleToFluidExchangeEfficiency = 0.68f;
-            public float CellOnlyModuleHeatCapacity = 13675f;
-            public float NumberOfModules = 10f;
+            public float efficiency = 0.85f;
+            public float radMassFlowAt50MeterPerSeconds = 2.1f; // kg/s
+            public float carSpeedToRadMassFlowPower = 1.17f;
+            public float avNormalisedHeatDissipation = 1692f; //W/degC
+            public float ambientTemperature = 15f; //degC
+            public float moduleToFluidExchangeEfficiency = 0.68f;
+            public float cellOnlyModuleHeatCapacity = 13675f;
+            public float numberOfModules = 10f;
         }
 
         public Settings settings = new Settings();
@@ -31,11 +31,11 @@ namespace Perrinn424
 
         public void InitModel(float dt, float speed, float power)
         {
-            TotalHeat = CaculateTotalHeat(power, settings.Efficiency);
-            AirMassFlow = CalculateAirMassFlow(speed, settings.RadMassFlowAt50MeterPerSeconds, settings.CarSpeedToRadMassFlowPower);
-            HeatDissipation = CalculateHeatDissipation(AirMassFlow, settings.AvNormalisedHeatDissipation);
+            TotalHeat = CaculateTotalHeat(power, settings.efficiency);
+            AirMassFlow = CalculateAirMassFlow(speed, settings.radMassFlowAt50MeterPerSeconds, settings.carSpeedToRadMassFlowPower);
+            HeatDissipation = CalculateHeatDissipation(AirMassFlow, settings.avNormalisedHeatDissipation);
             HeatDissipated = 0f;
-            TemperatureModule = settings.AmbientTemperature;
+            TemperatureModule = settings.ambientTemperature;
             HeatInternal = CalculateHeatInternal(TotalHeat, HeatDissipated, dt);
         }
 
@@ -46,11 +46,11 @@ namespace Perrinn424
 
         public void UpdateModel(float dt, float speed, float power)
         {
-            TotalHeat = CaculateTotalHeat(power, settings.Efficiency);
-            AirMassFlow = CalculateAirMassFlow(speed, settings.RadMassFlowAt50MeterPerSeconds, settings.CarSpeedToRadMassFlowPower);
-            HeatDissipation = CalculateHeatDissipation(AirMassFlow, settings.AvNormalisedHeatDissipation);
-            HeatDissipated = CalculateHeatDissipated(HeatDissipation, TemperatureModule, settings.AmbientTemperature, settings.ModuleToFluidExchangeEfficiency, dt);
-            TemperatureModule = CalculateTemperatureModule(TemperatureModule, HeatInternal, settings.CellOnlyModuleHeatCapacity, settings.NumberOfModules);
+            TotalHeat = CaculateTotalHeat(power, settings.efficiency);
+            AirMassFlow = CalculateAirMassFlow(speed, settings.radMassFlowAt50MeterPerSeconds, settings.carSpeedToRadMassFlowPower);
+            HeatDissipation = CalculateHeatDissipation(AirMassFlow, settings.avNormalisedHeatDissipation);
+            HeatDissipated = CalculateHeatDissipated(HeatDissipation, TemperatureModule, settings.ambientTemperature, settings.moduleToFluidExchangeEfficiency, dt);
+            TemperatureModule = CalculateTemperatureModule(TemperatureModule, HeatInternal, settings.cellOnlyModuleHeatCapacity, settings.numberOfModules);
             HeatInternal = CalculateHeatInternal(TotalHeat, HeatDissipated, dt);
         }
 

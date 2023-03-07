@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
 
@@ -22,7 +23,10 @@ namespace Perrinn424
         private LapTimer lapTimer;
 
         [SerializeField]
-        private BatteryTemperatureModel battery;
+        private BatteryTemperatureModel temperatureModel;
+        [SerializeField]
+        private BatteryPowerModel powerModel;
+
 
 
         private void Start()
@@ -30,6 +34,8 @@ namespace Perrinn424
             batteryCapacity = 55;
             batterySOC = batteryCapacity;
             batteryDOD = 0;
+
+            powerModel.InitModel();
         }
 
         public override void OnEnableVehicle()
@@ -39,7 +45,7 @@ namespace Perrinn424
 
         private void LapBeginEventHandler()
         {
-            battery.Reset(Time.deltaTime, vehicle.speed, powerTotal);
+            temperatureModel.Reset(Time.deltaTime, vehicle.speed, powerTotal);
         }
 
         public override void OnDisableVehicle()
@@ -62,7 +68,15 @@ namespace Perrinn424
             batterySOC = (batteryCapacity / 55) * 100;
             batteryDOD = 100 - batterySOC;
 
-            battery.UpdateModel(Time.deltaTime, vehicle.speed, powerTotal);
+            powerModel.UpdateModel(frontPower, rearPower);
+            temperatureModel.UpdateModel(Time.deltaTime, vehicle.speed, powerTotal);
+
+            float error = Mathf.Abs(powerModel.Power - powerTotal);
+            error += Mathf.Abs(powerModel.Capacity - batteryCapacity);
+            error += Mathf.Abs(powerModel.StateOfCharge - batterySOC);
+            error += Mathf.Abs(powerModel.DepthOfDischarge - batteryDOD);
+
+            Assert.IsTrue(error < 1e-5f);
         }
 
         public override void UpdateVehicle()
