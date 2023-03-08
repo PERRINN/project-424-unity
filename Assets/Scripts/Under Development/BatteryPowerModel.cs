@@ -18,8 +18,6 @@ namespace Perrinn424
         public float Capacity { get; private set; } //kWh
         public float StateOfCharge { get; private set; }  //SOC
         public float DepthOfDischarge { get; private set; } //DOD
-
-        //Legacy calculation that was made on the UI elements.
         public float CapacityUsage { get; private set; }//kWh
 
 

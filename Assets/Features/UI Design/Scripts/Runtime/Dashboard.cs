@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.UI;
 using VehiclePhysics;
 
@@ -67,24 +66,9 @@ namespace Perrinn424.UI
 
         private void WriteBatteryInfo()
         {
-            int[] custom = vehicle.data.Get(Channel.Custom);
-            float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
-            float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
-
-            float total = frontPower + rearPower;
-            Assert.IsTrue(total == battery.Power);
-            string totalStr = total.ToString("+0;-0");
-            totalPowerText.text = $"{totalStr} KW";
-
-            float batSOC = Battery.batterySOC;
-            Assert.IsTrue(Mathf.Approximately(batSOC, battery.StateOfCharge*100f));
-            socText.text = $"{batSOC:0.0} SOC";
-
-            float batCapacity = Battery.batteryCapacity;
-            batCapacity = 55 - batCapacity;
-            Assert.IsTrue(Mathf.Approximately(batCapacity, battery.CapacityUsage));
-
-            capacityText.text = $"{batCapacity:0.00} KWH";
+            totalPowerText.text = $"{battery.Power:+0;-0} KW";
+            socText.text = string.Format("{0:0.0} SOC", battery.StateOfCharge * 100f);
+            capacityText.text = $"{battery.CapacityUsage:0.00} KWH";
         }
     }
 }

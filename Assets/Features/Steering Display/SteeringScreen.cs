@@ -38,11 +38,6 @@ namespace Perrinn424
         float drsPosition;
         //bool autopilotState = false;
 
-        // TODO: Replace these static properties with proper component querying (example: LapTimer)
-        //public static float bestTime { get; set; } //Autopilot.cs
-        //public static bool autopilotState { get; set; } //Autopilot.cs
-        public static float batSOC { get; set; } //BatteryModel.cs
-        public static float batCapacity { get; set; } //BatteryModel.cs
 
         float elapsed;
         LapTimer m_lapTimer = null;
@@ -151,58 +146,12 @@ namespace Perrinn424
                 {
                     byte alpha = (autopilot != null && autopilot.IsOn) ? (byte)255 : (byte)0;
                     autopilotImage.color = new Color32(255, 255, 255, alpha);
-                    //if (autopilotState)
-                    //{
-                    //    autopilotImage.color = new Color32(255, 255, 255, 255);
-                    //}
                 }
 
 
-                //// Front MGU rpm
-                //if (frontMGURpm != null)
-                //{
-                //    float frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
-
-                //    frontMGURpm.text = $"{frontRpm,5:0.}";
-                //}
-
-                //// Rear MGU rpm
-                //if (rearMGURpm != null)
-                //{
-                //    float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
-
-                //    rearMGURpm.text = $"{rearRpm,5:0.}";
-                //}
-
-                // Total Electrical Power
-                if (totalElecPower != null) //TODO
-                {
-                    //float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
-                    //float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
-
-                    //float total = frontPower + rearPower;
-                    //totalElecPower.text = total >= 0 ? total.ToString("+" + "0") : total.ToString("0");
-                    //string totalStr = battery.Power.ToString("+0;-0");
-                    totalElecPower.text = battery.Power.ToString("+0;-0");
-                }
-
-                //// Electrical Torque Balance
-                //if (elecTorqueBal != null)
-                //{
-                //    float frontElectrical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
-                //    float rearElectrical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalTorque] / 1000.0f;
-
-                //    elecTorqueBal.text = $"{GetBalanceStr(frontElectrical, rearElectrical),5}";
-                //}
-
-                //// Mechanical Torque Balance
-                //if (mechTorqueBal != null)
-                //{
-                //    float frontWheels = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
-                //    float rearWheels = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
-
-                //    mechTorqueBal.text = $"{ GetBalanceStr(frontWheels, rearWheels),5}";
-                //}
+                totalElecPower.text = battery.Power.ToString("+0;-0");
+                batterySOC.text = string.Format("{0:0.00}", battery.StateOfCharge * 100f);
+                batteryCapacity.text = battery.CapacityUsage.ToString("0.00");
 
                 // Time Difference with the Best Lap
                 if (timeDifference != null && m_lapTimer != null && autopilot != null)
@@ -210,19 +159,6 @@ namespace Perrinn424
                     timeDifference.text = autopilot.DeltaTime.ToString("+0.00;-0.00");
                 }
 
-                // Battery SOC
-                if (batterySOC != null)
-                {
-                    //batterySOC.text = batSOC.ToString("0.00");
-                    batterySOC.text = string.Format("{0:0.00}", battery.StateOfCharge * 100f);
-                }
-
-                // Battery Capacity
-                if (batteryCapacity != null)
-                {
-                    //batteryCapacity.text = (55 - batCapacity).ToString("0.00");
-                    batteryCapacity.text = battery.CapacityUsage.ToString("0.00");
-                }
             }
         }
 
