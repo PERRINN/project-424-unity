@@ -52,8 +52,6 @@ namespace Perrinn424
 				flagSemantic.SetRangeAndFormat(-1, 1, "True;False", "");
                 channelInfo[11].SetNameAndSemantic("Autopilot_IsOn", Telemetry.Semantic.Custom, flagSemantic);
                 channelInfo[12].SetNameAndSemantic("Autopilot_IsStartup", Telemetry.Semantic.Custom, flagSemantic);
-
-
             }
 
 			public override Telemetry.PollFrequency GetPollFrequency()
@@ -83,7 +81,6 @@ namespace Perrinn424
 				//https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings
 				values[index + 11] = autopilot.IsOn ? 1f : -1f;
 				values[index + 12] = autopilot.IsStartup ? 1f : -1f;
-
 			}
 		}
 	}

@@ -21,7 +21,6 @@ namespace Perrinn424.UI
         [SerializeField]
         private Text socText;
 
-
         private Battery battery;
 
         public new void OnEnable()

@@ -10,14 +10,23 @@ namespace Perrinn424
         private LapTimer lapTimer;
 
         [SerializeField]
-        private BatteryTemperatureModel temperatureModel;
-        [SerializeField]
         private BatteryPowerModel powerModel;
 
+        [SerializeField]
+        private BatteryTemperatureModel temperatureModel;
 
         public float Power => powerModel.Power;
         public float StateOfCharge => powerModel.StateOfCharge;
         public float CapacityUsage => powerModel.CapacityUsage;
+
+        public float TotalHeat => temperatureModel.TotalHeat; //W
+        public float AirMassFlow => temperatureModel.AirMassFlow; //kg/s
+        public float HeatDissipation => temperatureModel.HeatDissipation; //W/degC
+        public float HeatDissipated => temperatureModel.HeatDissipated; //J
+        public float TemperatureModule => temperatureModel.TemperatureModule; //degC
+        public float HeatInternal => temperatureModel.HeatInternal; //J
+
+
 
         private void Start()
         {
