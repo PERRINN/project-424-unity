@@ -26,7 +26,9 @@ namespace Perrinn424
 
         public float Power => powerModel.Power;
         public float StateOfCharge => powerModel.StateOfCharge;
-        public float WeirdInverseCalculation => powerModel.WeirdInverseCalculation;
+
+        //Legacy calculation that was made on the UI elements.
+        public float CapacityUsage => powerModel.CapacityUsage;
 
         private void Start()
         {

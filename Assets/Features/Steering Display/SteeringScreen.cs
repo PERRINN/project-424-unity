@@ -47,11 +47,13 @@ namespace Perrinn424
         float elapsed;
         LapTimer m_lapTimer = null;
         private BaseAutopilot autopilot;
+        private Battery battery;
 
         public override void OnEnableVehicle ()
         {
             m_lapTimer = FindObjectOfType<LapTimer>();
             autopilot = vehicle.GetComponentInChildren<BaseAutopilot>();
+            battery = vehicle.GetComponentInChildren<Battery>();
         }
 
         public override void UpdateVehicle ()
@@ -175,11 +177,13 @@ namespace Perrinn424
                 // Total Electrical Power
                 if (totalElecPower != null) //TODO
                 {
-                    float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
-                    float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
+                    //float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
+                    //float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
 
-                    float total = frontPower + rearPower;
-                    totalElecPower.text = total >= 0 ? total.ToString("+" + "0") : total.ToString("0");
+                    //float total = frontPower + rearPower;
+                    //totalElecPower.text = total >= 0 ? total.ToString("+" + "0") : total.ToString("0");
+                    //string totalStr = battery.Power.ToString("+0;-0");
+                    totalElecPower.text = battery.Power.ToString("+0;-0");
                 }
 
                 //// Electrical Torque Balance
@@ -209,13 +213,15 @@ namespace Perrinn424
                 // Battery SOC
                 if (batterySOC != null)
                 {
-                    batterySOC.text = batSOC.ToString("0.00");
+                    //batterySOC.text = batSOC.ToString("0.00");
+                    batterySOC.text = string.Format("{0:0.00}", battery.StateOfCharge * 100f);
                 }
 
                 // Battery Capacity
                 if (batteryCapacity != null)
                 {
-                    batteryCapacity.text = (55 - batCapacity).ToString("0.00");
+                    //batteryCapacity.text = (55 - batCapacity).ToString("0.00");
+                    batteryCapacity.text = battery.CapacityUsage.ToString("0.00");
                 }
             }
         }

@@ -82,7 +82,7 @@ namespace Perrinn424.UI
 
             float batCapacity = Battery.batteryCapacity;
             batCapacity = 55 - batCapacity;
-            Assert.IsTrue(Mathf.Approximately(batCapacity, battery.WeirdInverseCalculation));
+            Assert.IsTrue(Mathf.Approximately(batCapacity, battery.CapacityUsage));
 
             capacityText.text = $"{batCapacity:0.00} KWH";
         }
