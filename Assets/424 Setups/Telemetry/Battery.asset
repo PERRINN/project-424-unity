@@ -14,13 +14,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     templateName: Battery
-    verticalRange: 3
+    verticalRange: 12
     channels:
-    - name: BatteryTemperature
-      displayName: 
+    - name: BatteryTotalHeat
+      displayName: Total Heat
       labelOffset: 0
       displayOrigin: 0
-      displayRange: 3
+      displayRange: 2
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: BatteryAirMassFlow
+      displayName: Air Mass Flow
+      labelOffset: 0
+      displayOrigin: 2
+      displayRange: 2
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: BatteryHeatDissipation
+      displayName: Heat Dissipation
+      labelOffset: 0
+      displayOrigin: 4
+      displayRange: 2
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: BatteryHeatDissipated
+      displayName: Heat Dissipated
+      labelOffset: 0
+      displayOrigin: 6
+      displayRange: 2
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: BatteryTemperature
+      displayName: TModule
+      labelOffset: 1.16
+      displayOrigin: 0.3
+      displayRange: 7.28
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 1, g: 0, b: 0.8636856, a: 1}
+    - name: BatteryQInternal
+      displayName: QInternal
+      labelOffset: 0
+      displayOrigin: 8
+      displayRange: 2
       adjustToRange: 0
       mirror: 0
       displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
