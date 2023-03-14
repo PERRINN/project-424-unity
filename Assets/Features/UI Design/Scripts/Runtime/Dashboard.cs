@@ -67,7 +67,7 @@ namespace Perrinn424.UI
         {
             totalPowerText.text = $"{battery.Power:+0;-0} KW";
             socText.text = string.Format("{0:0.0} SOC", battery.StateOfCharge * 100f);
-            capacityText.text = $"{battery.CapacityUsage:0.00} KWH";
+            capacityText.text = $"{battery.NetEnergy:0.00} KWH";
         }
     }
 }

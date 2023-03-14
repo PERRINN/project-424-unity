@@ -151,7 +151,7 @@ namespace Perrinn424
 
                 totalElecPower.text = battery.Power.ToString("+0;-0");
                 batterySOC.text = string.Format("{0:0.00}", battery.StateOfCharge * 100f);
-                batteryCapacity.text = battery.CapacityUsage.ToString("0.00");
+                batteryCapacity.text = battery.NetEnergy.ToString("0.00");
 
                 // Time Difference with the Best Lap
                 if (timeDifference != null && m_lapTimer != null && autopilot != null)

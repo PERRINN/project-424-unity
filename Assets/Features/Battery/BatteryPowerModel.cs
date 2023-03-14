@@ -18,7 +18,7 @@ namespace Perrinn424
         public float Capacity { get; private set; } //kWh
         public float StateOfCharge { get; private set; }  //SOC
         public float DepthOfDischarge { get; private set; } //DOD
-        public float CapacityUsage { get; private set; }//kWh
+        public float NetEnergy { get; private set; }//kWh
 
 
         public void InitModel()
@@ -27,7 +27,12 @@ namespace Perrinn424
             Capacity = settings.capacity;
             StateOfCharge = Capacity;
             DepthOfDischarge = 0;
-            CapacityUsage = settings.capacity - Capacity;
+            NetEnergy = settings.capacity - Capacity;
+        }
+
+        public void Reset()
+        {
+            InitModel();
         }
 
         public void UpdateModel(float frontPower, float rearPower)
@@ -38,7 +43,7 @@ namespace Perrinn424
             Capacity = Mathf.Max(Capacity - Power / 1_800_000f, 0);
             StateOfCharge = Mathf.InverseLerp(0f, settings.capacity, Capacity);
             DepthOfDischarge = 1f - StateOfCharge;
-            CapacityUsage = settings.capacity - Capacity;
+            NetEnergy = settings.capacity - Capacity;
         }
     } 
 }

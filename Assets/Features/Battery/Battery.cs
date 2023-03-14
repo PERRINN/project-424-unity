@@ -17,7 +17,8 @@ namespace Perrinn424
 
         public float Power => powerModel.Power;
         public float StateOfCharge => powerModel.StateOfCharge;
-        public float CapacityUsage => powerModel.CapacityUsage;
+        public float NetEnergy => powerModel.NetEnergy; //Kwh
+        public float Capacity => powerModel.settings.capacity;
 
         public float TotalHeat => temperatureModel.TotalHeat; //W
         public float AirMassFlow => temperatureModel.AirMassFlow; //kg/s
@@ -40,6 +41,7 @@ namespace Perrinn424
 
         private void LapBeginEventHandler()
         {
+            powerModel.Reset();
             temperatureModel.Reset(Time.deltaTime, vehicle.speed, powerModel.Power);
         }
 

@@ -11,7 +11,7 @@ namespace Perrinn424
 
 			public override int GetChannelCount()
 			{
-				return 6;
+				return 7;
 			}
 
 			public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
@@ -40,6 +40,10 @@ namespace Perrinn424
                 channelInfo[4].SetNameAndSemantic("BatteryTemperature", Telemetry.Semantic.Custom, temperatureSemantic);
 
                 channelInfo[5].SetNameAndSemantic("BatteryQInternal", Telemetry.Semantic.Custom, heatSemantic);
+
+                Telemetry.SemanticInfo netEnergySemantic = new Telemetry.SemanticInfo();
+                netEnergySemantic.SetRangeAndFormat(0, battery.Capacity, "0.00", " kWh");
+                channelInfo[6].SetNameAndSemantic("BatteryNetEnergy", Telemetry.Semantic.Custom, netEnergySemantic);
             }
 
 			public override Telemetry.PollFrequency GetPollFrequency()
@@ -55,6 +59,7 @@ namespace Perrinn424
                 values[index + 3] = battery.HeatDissipated;
                 values[index + 4] = battery.TemperatureModule;
                 values[index + 5] = battery.HeatInternal;
+                values[index + 6] = battery.NetEnergy;
             }
 		}
     } 
