@@ -7,8 +7,8 @@ namespace Perrinn424
     public class Battery : VehicleBehaviour
     {
         public LapTimer lapTimer;
-        public BatteryPowerModel powerModel;
-        public BatteryTemperatureModel temperatureModel;
+        public BatteryPowerModel powerModel = new BatteryPowerModel();
+        public BatteryTemperatureModel temperatureModel = new BatteryTemperatureModel();
 
         public float Power => powerModel.Power;
         public float StateOfCharge => powerModel.StateOfCharge;
@@ -30,7 +30,7 @@ namespace Perrinn424
 
         public override void OnEnableVehicle()
         {
-            lapTimer.onBeginLap += LapBeginEventHandler;
+            if (lapTimer != null) lapTimer.onBeginLap += LapBeginEventHandler;
         }
 
         private void LapBeginEventHandler()
@@ -41,7 +41,7 @@ namespace Perrinn424
 
         public override void OnDisableVehicle()
         {
-            lapTimer.onBeginLap -= LapBeginEventHandler;
+            if (lapTimer != null) lapTimer.onBeginLap -= LapBeginEventHandler;
         }
 
 
