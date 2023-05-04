@@ -20,13 +20,13 @@ public class Perrinn424ClusterManager : MonoBehaviour
 	public Station[] clients = new Station[0];
 
 	[Header("UI Material")]
-	public Material uiMaterial;
 	[HelpBox("Canvases will be assigned to the corresponding camera and their components will use the given UI material. Activation state won't be changed here.")]
+	public Material uiMaterial;
 	public Canvas[] serverCanvasList = new Canvas[0];
 	public Canvas[] clientCanvasList = new Canvas[0];
 
-	[HelpBox("Keep these components and game objects enabled on unknown stations. They might have been disabled by other managers.")]
 	[Header("On unknown station")]
+	[HelpBox("Keep these components and game objects enabled on unknown stations. They might have been disabled by other managers.")]
 	public Behaviour[] enableComponents = new Behaviour[0];
 	public GameObject[] enableGameObjects = new GameObject[0];
 
