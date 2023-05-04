@@ -33,7 +33,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 	[Header("Test Mode")]
 	public bool enableTestMode = false;
 	public TestStation testStation = TestStation.Server;
-	public enum TestStation { Server, Client1, Client2, Client3, Client4, Client5, Client6, Client7, Client8, Client9, Client10 }
+	public enum TestStation { Server, AllClients, Client1, Client2, Client3, Client4, Client5, Client6, Client7, Client8, Client9, Client10 }
 
 	bool m_testMode;
 	bool m_unknownStation;
@@ -90,8 +90,16 @@ public class Perrinn424ClusterManager : MonoBehaviour
 				if ((int)testStation > clients.Length)
 					testStation = TestStation.Server;
 
-				string stationName = testStation == TestStation.Server? m_serverStation.name : clients[(int)testStation - 1].name;
-				EnableNetworkStation(stationName);
+				if (testStation == TestStation.AllClients)
+					{
+					foreach (Station s in clients)
+						SetActive(s, true, clientCanvasList);
+					}
+				else
+					{
+					string stationName = testStation == TestStation.Server? m_serverStation.name : clients[(int)testStation - 2].name;
+					EnableNetworkStation(stationName);
+					}
 				}
 			else
 			if (m_testMode)
