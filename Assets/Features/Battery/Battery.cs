@@ -6,14 +6,9 @@ namespace Perrinn424
 {
     public class Battery : VehicleBehaviour
     {
-        [SerializeField]
-        private LapTimer lapTimer;
-
-        [SerializeField]
-        private BatteryPowerModel powerModel;
-
-        [SerializeField]
-        private BatteryTemperatureModel temperatureModel;
+        public LapTimer lapTimer;
+        public BatteryPowerModel powerModel;
+        public BatteryTemperatureModel temperatureModel;
 
         public float Power => powerModel.Power;
         public float StateOfCharge => powerModel.StateOfCharge;
@@ -26,7 +21,6 @@ namespace Perrinn424
         public float HeatDissipated => temperatureModel.HeatDissipated; //J
         public float TemperatureModule => temperatureModel.TemperatureModule; //degC
         public float HeatInternal => temperatureModel.HeatInternal; //J
-
 
 
         private void Start()
