@@ -1,5 +1,4 @@
-﻿using Perrinn424.UI;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace Perrinn424.Utilities
@@ -7,7 +6,6 @@ namespace Perrinn424.Utilities
     public class SteeringWheelVisibilityController : MonoBehaviour
     {
         public KeyCode nextOptionKey;
-        public Dashboard dashboard;
         public GameObject steeringWheel;
         private CircularIndex visibilityOption;
 
@@ -18,7 +16,7 @@ namespace Perrinn424.Utilities
 
         private void OnEnable()
         {
-            visibilityOption = new CircularIndex(0, 3);
+            visibilityOption = new CircularIndex(0, 2);
             RefreshVisibility();
         }
 
@@ -42,22 +40,18 @@ namespace Perrinn424.Utilities
             switch (visibilityOption)
             {
                 case 0:
-                    SteeringWheelVisibility(true, false);
+                    SteeringWheelVisibility(true);
                     break;
                 case 1:
-                    SteeringWheelVisibility(false, true);
-                    break;
-                case 2:
-                    SteeringWheelVisibility(false, false);
+                    SteeringWheelVisibility(false);
                     break;
             }
 
         }
 
-        private void SteeringWheelVisibility(bool showSteeringWheel, bool showDashboard)
+        private void SteeringWheelVisibility(bool showSteeringWheel)
         {
             steeringWheel.SetActive(showSteeringWheel);
-            dashboard.gameObject.SetActive(showDashboard);
         }
     }
 }
