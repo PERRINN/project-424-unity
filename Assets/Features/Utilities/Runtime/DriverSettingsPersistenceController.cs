@@ -46,6 +46,7 @@ namespace Perrinn424.Utilities
                 fov = driverCameraSettingsController.FOV,
                 damping = driverCameraSettingsController.Damping,
                 steeringWheelVisibility = steeringWheelVisibilityController.VisibilityOption,
+                minidashboardHeight = driverCameraSettingsController.MinidashboardHeight
             };
 
             WriteToFile(settings);
@@ -65,6 +66,7 @@ namespace Perrinn424.Utilities
                 driverCameraSettingsController.SetDriverHeight(settings.height);
                 driverCameraSettingsController.SetViewDamping(settings.damping);
                 steeringWheelVisibilityController.SetVisbilityOption(settings.steeringWheelVisibility);
+                driverCameraSettingsController.SetMinidashboardHeight(settings.minidashboardHeight);
             }
         }
 

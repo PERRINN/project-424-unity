@@ -30,11 +30,18 @@ namespace Perrinn424.Utilities
         public KeyCode toggleViewDamping = KeyCode.N;
         public VPHeadMotion headMotion;
 
+        [Header("Minidashboard Adjustment")]
+        public KeyCode increaseminiDashboardHeight;
+        public KeyCode decreaseminiDashboardHeight;
+        public float minidashboardHeightStep = 0.01f;
+        public RectTransform minidashboard;
+
         public event Action onSettingsChanged;
 
         public float Height => firstPersonCameraTarget.localPosition.y;
         public float FOV => firstPersonCamera.driverCameraFov;
         public bool Damping => headMotion != null? headMotion.longitudinal.mode != VPHeadMotion.HorizontalMotion.Mode.Disabled : false;
+        public float MinidashboardHeight => minidashboard.anchoredPosition.y;
 
         private void Update()
         {
@@ -60,8 +67,16 @@ namespace Perrinn424.Utilities
             {
                 ToggleViewDamping();
             }
-        }
 
+            if (Input.GetKeyDown(increaseminiDashboardHeight))
+            {
+                SetMinidashboardHeightDelta(minidashboardHeightStep);
+            }
+            else if (Input.GetKeyDown(decreaseminiDashboardHeight))
+            {
+                SetMinidashboardHeightDelta(-minidashboardHeightStep);
+            }
+        }
         private void SetDriverHeightDelta(float delta)
         {
             Vector3 pos = firstPersonCameraTarget.localPosition;
@@ -103,6 +118,21 @@ namespace Perrinn424.Utilities
 
                 onSettingsChanged?.Invoke();
             }
+        }
+
+
+        private void SetMinidashboardHeightDelta(float delta)
+        {
+            SetMinidashboardHeight(MinidashboardHeight + delta);
+        }
+
+        public void SetMinidashboardHeight(float height)
+        {
+            Vector2 anchoredPosition = minidashboard.anchoredPosition;
+            anchoredPosition.y = height;
+            minidashboard.anchoredPosition = anchoredPosition;
+
+            onSettingsChanged?.Invoke();
         }
     }
 }
