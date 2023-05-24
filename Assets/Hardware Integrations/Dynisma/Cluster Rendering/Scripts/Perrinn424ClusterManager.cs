@@ -26,9 +26,11 @@ public class Perrinn424ClusterManager : MonoBehaviour
 	public Canvas[] clientCanvasList = new Canvas[0];
 
 	[Header("On unknown station")]
-	[HelpBox("Keep these components and game objects enabled on unknown stations. They might have been disabled by other managers.")]
+	[HelpBox("Keep these components and game objects enabled or disabled on unknown stations. They might have been modified by other managers.")]
 	public Behaviour[] enableComponents = new Behaviour[0];
 	public GameObject[] enableGameObjects = new GameObject[0];
+	public Behaviour[] disableComponents = new Behaviour[0];
+	public GameObject[] disableGameObjects = new GameObject[0];
 
 	[Header("Test Mode")]
 	public bool enableTestMode = false;
@@ -111,7 +113,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 			m_testStation = testStation;
 			}
 
-		// Keep elements enabled on unknown stations
+		// Keep elements enabled or disabled on unknown stations
 
 		if (m_unknownStation)
 			{
@@ -123,6 +125,16 @@ public class Perrinn424ClusterManager : MonoBehaviour
 			foreach (GameObject g in enableGameObjects)
 				{
 				if (!g.activeSelf) g.SetActive(true);
+				}
+
+			foreach (Behaviour c in disableComponents)
+				{
+				if (c.enabled) c.enabled = false;
+				}
+
+			foreach (GameObject g in disableGameObjects)
+				{
+				if (g.activeSelf) g.SetActive(false);
 				}
 			}
 		}
