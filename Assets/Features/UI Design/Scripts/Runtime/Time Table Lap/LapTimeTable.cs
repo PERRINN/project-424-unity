@@ -35,6 +35,8 @@ namespace Perrinn424.UI
         private List<LapRow> m_uiRowList;
         private Utilities.LapTimeTable m_timeTable;
 
+        public Utilities.LapTimeTable timeTable => m_timeTable;
+
         private void OnEnable()
         {
             CleanTable();
