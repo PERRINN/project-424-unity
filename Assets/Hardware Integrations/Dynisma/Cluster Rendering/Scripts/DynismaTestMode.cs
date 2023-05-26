@@ -1,4 +1,7 @@
 
+// Script to force this station to work as a server, as a client, or as displaying all clients.
+// Execution order must be set before default time so its Awake is called before the network initializes.
+
 
 using UnityEngine;
 using UniCAVE;
