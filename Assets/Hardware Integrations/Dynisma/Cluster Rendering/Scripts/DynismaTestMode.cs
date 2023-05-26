@@ -6,6 +6,7 @@
 using UnityEngine;
 using UniCAVE;
 using EdyCommonTools;
+using VehiclePhysics;
 
 
 namespace Perrinn424
@@ -18,6 +19,12 @@ public class DynismaTestMode : MonoBehaviour
 	[HelpBox("Makes the current station to work as server or client by modifying the corresponding components and properties accordingly. AllClients enables all cameras in separate displays. Test Modes work when launching the scene in the Editor only. Modifying the mode in runtime has no effect.", HelpBoxMessageType.Info)]
 
 	public TestMode testMode = TestMode.None;
+	public bool loadReplayInServer = false;
+	public VPReplayAsset replayAsset;
+
+
+	bool m_initializeReplay = false;
+	Perrinn424CarController m_carController;
 
 
 	void Awake ()
@@ -27,6 +34,8 @@ public class DynismaTestMode : MonoBehaviour
 		if (!Application.isEditor) return;
 
 		// Apply selected test mode, if any.
+
+		m_carController = FindObjectOfType<Perrinn424CarController>();
 
 		if (testMode == TestMode.Server)
 			{
@@ -39,6 +48,7 @@ public class DynismaTestMode : MonoBehaviour
 				MachineName currentMachine = ScriptableObject.CreateInstance<MachineName>();
 				currentMachine.Name = Util.GetMachineName();
 				networkManager.headMachineAsset = currentMachine;
+				m_initializeReplay = true;
 				}
 			else
 				{
@@ -67,6 +77,50 @@ public class DynismaTestMode : MonoBehaviour
 				{
 				clusterManager.enableTestMode = true;
 				clusterManager.testStation = Perrinn424ClusterManager.TestStation.Client1 + (int)(testMode - TestMode.Client1);
+				}
+			}
+		}
+
+
+	void Update ()
+		{
+		// Initialize replay if specified.
+
+		if (m_initializeReplay)
+			{
+			m_initializeReplay = false;
+
+			if (loadReplayInServer && replayAsset != null && m_carController != null)
+				{
+				if (m_carController.initialized)
+					{
+					VPReplay replay = m_carController.GetComponentInChildren<VPReplay>(true);
+					if (replay != null)
+						{
+						replay.LoadReplayFromAsset(replayAsset);
+						replay.onEnableAction = VPReplay.OnEnableAction.None;
+						replay.endOfPlayback = VPReplay.EndOfPlayback.Pause;
+						replay.gameObject.SetActive(true);
+						replay.enabled = true;
+						replay.Pause(VPReplay.PauseMode.AtBegin);
+						replay.Jump(1);
+						replay.Jump(0);
+						}
+
+					VPReplayController replayController = m_carController.GetComponentInChildren<VPReplayController>(true);
+					if (replayController != null)
+						{
+						replayController.enableShortcuts = true;
+						replayController.showPanel = true;
+						replayController.recordKey = KeyCode.None;
+						replayController.saveReplayKey = KeyCode.None;
+						}
+					}
+				else
+					{
+					// Everything in order but the car is not yet initialized. Keep trying.
+					m_initializeReplay = true;
+					}
 				}
 			}
 		}
