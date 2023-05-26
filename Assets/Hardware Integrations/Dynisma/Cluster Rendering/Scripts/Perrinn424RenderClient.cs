@@ -157,6 +157,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Steering wheel pose
 
 		public VisualPose steeringWheel;
+		public bool steeringWheelVisible;
 
 		// Dashboard display states
 
@@ -283,6 +284,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			// Retrieve steering wheel pose
 
 			m_state.steeringWheel.SetFrom(m_visualEffects.steeringWheel);
+
 
 			// Retrieve dashboard states
 

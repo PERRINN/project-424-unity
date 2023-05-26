@@ -94,12 +94,23 @@ public class Perrinn424ClusterManager : MonoBehaviour
 
 				if (testStation == TestStation.AllClients)
 					{
-					foreach (Station s in clients)
+					// Enable all stations and make them render in separate displays
+
+					for (int i = 0, c = clients.Length; i < c; i++)
+						{
+						Station s = clients[i];
 						SetActive(s, true, clientCanvasList);
+						s.camera.targetDisplay = i;
+						}
+
+					// Ensure UIs are displayed in the center display
+
+					int centerDisplay = clients.Length / 2;
+					SetActive(clients[centerDisplay], true, clientCanvasList);
 					}
 				else
 					{
-					string stationName = testStation == TestStation.Server? m_serverStation.name : clients[(int)testStation - 2].name;
+					string stationName = testStation == TestStation.Server? m_serverStation.name : clients[(int)(testStation - TestStation.Client1)].name;
 					EnableNetworkStation(stationName);
 					}
 				}

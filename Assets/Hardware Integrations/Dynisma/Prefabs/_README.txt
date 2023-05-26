@@ -11,7 +11,7 @@ Reads the input and motion settings (host, ports, etc) from json file. If the js
 
 > Input Provider: reference to the Dynisma Input Provider component, which handles the input remotely sent to the application from Dynisma via UDP.
 
-> Motion Platform: reference to the Dynisma Motion Platform component in the vehicle, which sents the motion information to Dynisma via UDP.
+> Motion Platform: reference to the Dynisma Motion Platform component in the vehicle, which sends the motion information to Dynisma via UDP.
 
 
 UniCAVE Network Manager
