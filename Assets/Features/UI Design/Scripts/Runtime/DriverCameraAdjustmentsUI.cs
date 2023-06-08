@@ -13,6 +13,9 @@ namespace Perrinn424.UI
         private Text fovText = default;
 
         [SerializeField]
+        private Text dampingText = default;
+
+        [SerializeField]
         private DriverCameraSettingsController adjustmentsController;
 
         private void OnEnable()
@@ -38,7 +41,9 @@ namespace Perrinn424.UI
         private void UpdateLabels()
         {
             heightText.text = string.Format("Height {0:+0.000;-0.000}", adjustmentsController.Height);
-            fovText.text = $"vFOV: {adjustmentsController.FOV}°";
+            fovText.text = $"FOV: {adjustmentsController.FOV}°";
+            string damping = adjustmentsController.Damping? "ON" : "OFF";
+            dampingText.text = $"View Damping: {damping}";
         }
-    } 
+    }
 }
