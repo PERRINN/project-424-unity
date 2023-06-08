@@ -284,7 +284,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			// Retrieve steering wheel pose
 
 			m_state.steeringWheel.SetFrom(m_visualEffects.steeringWheel);
-
+			if (m_visualEffects.steeringWheel != null)
+				m_state.steeringWheelVisible = m_visualEffects.steeringWheel.gameObject.activeSelf;
 
 			// Retrieve dashboard states
 
@@ -335,6 +336,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Apply steering wheel pose
 
 		state.steeringWheel.ApplyTo(m_visualEffects.steeringWheel);
+		if (m_visualEffects.steeringWheel != null)
+			m_visualEffects.steeringWheel.gameObject.SetActive(state.steeringWheelVisible);
 
 		// Apply dashboard states
 
