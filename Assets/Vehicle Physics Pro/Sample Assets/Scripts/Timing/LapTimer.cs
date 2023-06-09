@@ -16,43 +16,114 @@ namespace VehiclePhysics.Timing
 [Serializable]
 public struct LapDetails
 	{
-	public float time;
-	public readonly int sectorCount;
-	public readonly float[] sectorTime;		// Rename: sector
+	// Authority time is milliseconds
 
-	public LapDetails (float lapTime = 0.0f, int allSectors = 3)
+	int m_timeMs;
+	readonly int[] m_sectorMs;
+	readonly int m_sectors;
+
+	// Create Lap
+
+	public LapDetails (float time = 0.0f, int sectors = 3)
 		{
-		time = lapTime;
-		sectorCount = allSectors;
-		sectorTime = new float[allSectors];
+		if (sectors < 0) sectors = 0;
+
+		m_timeMs = TimeToMs(time);
+		m_sectorMs = new int[sectors];
+		m_sectors = sectors;
 		}
 
-	public void SetSectors (float[] sectors)
-		{
-		int c = Mathf.Min(sectorCount, sectors != null? sectors.Length : 0);
+	// Set lap data
 
-		for (int i = 0; i < c; i++)
-			sectorTime[i] = sectors[i];
+	public int SetTime (float time)
+		{
+		m_timeMs = TimeToMs(time);
+		return m_timeMs;
 		}
 
-	public void SetTimeFromSectors ()
+	public int SetSector (int s, float time)
 		{
-		float sum = 0.0f;
-
-		for (int i = 0; i < sectorCount; i++)
-			sum += sectorTime[i];
-
-		time = sum;
+		if (s >= 0 && s < m_sectors)
+			{
+			int ms = TimeToMs(time);
+			m_sectorMs[s] = ms;
+			return ms;
+			}
+		else
+			{
+			return 0;
+			}
 		}
+
+	public void ReadSectors (float[] sectors)
+		{
+		int c = Mathf.Min(m_sectors, sectors != null? sectors.Length : 0);
+
+		for (int s = 0; s < c; s++)
+			m_sectorMs[s] = TimeToMs(sectors[s]);
+		}
+
+	// Retrieve lap data
+
+	public float time => MsToTime(m_timeMs);
+	public int sectors => m_sectors;
+
+	public float Sector (int s)
+		{
+		if (s >= 0 && s < m_sectors)
+			return MsToTime(m_sectorMs[s]);
+		else
+			return 0.0f;
+		}
+
+	public bool isZero => m_timeMs == 0;
+
+	// Utility methods
+
+	public void ComputeTimeFromSectors ()
+		{
+		int timeMs = 0;
+
+		for (int s = 0; s < m_sectors; s++)
+			timeMs += m_sectorMs[s];
+
+		m_timeMs = timeMs;
+		}
+
+	public void ReadBestSectors (LapDetails otherLap)
+		{
+		int c = Mathf.Min(sectors, otherLap.sectors);
+
+		for (int s = 0; s < c; s++)
+			{
+			if (m_sectorMs[s] > 0 && otherLap.m_sectorMs[s] > 0
+				&& m_sectorMs[s] > otherLap.m_sectorMs[s])
+				m_sectorMs[s] = otherLap.m_sectorMs[s];
+			}
+		}
+
+	// Coversion methods
+
+	public static int TimeToMs (float time)
+		{
+		return Mathf.RoundToInt(time * 1000.0f);
+		}
+
+	public static float MsToTime (int timeMs)
+		{
+		return timeMs / 1000.0f;
+		}
+
+	// Formatting methods
 
 	public string FormatTime ()
 		{
 		return "wip"; //StringUtility.FormatTime(time, baseUnits: StringUtility.BaseUnits.Minutes);
 		}
 
-	public string FormatSector (int i)
+	public string FormatSector (int s)
 		{
-		if (i >= 0 && i < sectorCount)
+		if (s >= 0 && s < m_sectors)
 			return "wip"; //StringUtility.FormatTime(sectorTime[i], autoexpand:false);
 		else
 			return "";
@@ -183,8 +254,8 @@ public class LapTimer : MonoBehaviour
 			{
 			VPTelemetry.customData += $"\n{lap.time:0.000}   ";
 
-			for (int i = 0, c = lap.sectorCount; i < c; i++)
-				VPTelemetry.customData += $"{i}:{lap.sectorTime[i]:0.000}  ";
+			for (int i = 0, c = lap.sectors; i < c; i++)
+				VPTelemetry.customData += $"{i}:{lap.Sector(i):0.000}  ";
 			}
 
 		if (enableTestKeys)
@@ -269,36 +340,29 @@ public class LapTimer : MonoBehaviour
 		// Store new lap details
 
 		LapDetails newLap = new LapDetails(t, sectorCount);
-		newLap.SetSectors(m_sectors);
+		newLap.ReadSectors(m_sectors);
+
+		// AQUI / TODO:
+		// - m_sectors es el tiempo de la vuelta al pasar por cada sector, no el tiempo de cada sector en sí.
+		// - Al almacenar dos vueltas se guardan los mismos tiempos por cada sector, aunque el tiempo de vuelta sea diferente.
 
 		m_lapDetailsList.Add(newLap);
 		m_lastLapDetails = newLap;
 
 		// Is this best lap?
 
-		float bestLapTime = m_bestLapDetails.time;
-		if (bestLapTime == 0.0f || newLap.time < bestLapTime)
+		if (m_bestLapDetails.isZero || newLap.time < m_bestLapDetails.time)
 			m_bestLapDetails = newLap;
 
-		// Compute ideal lap: get best sector times
+		// Ideal lap: get best sector times and recompute ideal lap time
 
-		if (m_idealLapDetails.time == 0.0f)
+		if (m_idealLapDetails.isZero)
 			m_idealLapDetails = m_bestLapDetails;
 
 		foreach (LapDetails lap in m_lapDetailsList)
-			{
-			int c = Mathf.Min(lap.sectorCount, m_idealLapDetails.sectorCount);
+			m_idealLapDetails.ReadBestSectors(lap);
 
-			for (int i = 0; i < c; i++)
-				{
-				if (lap.sectorTime[i] < m_idealLapDetails.sectorTime[i])
-					lap.sectorTime[i] = m_idealLapDetails.sectorTime[i];
-				}
-			}
-
-		// Recompute ideal lap time
-
-		m_idealLapDetails.SetTimeFromSectors();
+		m_idealLapDetails.ComputeTimeFromSectors();
 		}
 
 
