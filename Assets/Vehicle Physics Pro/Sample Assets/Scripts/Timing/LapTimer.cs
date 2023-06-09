@@ -14,7 +14,7 @@ using EdyCommonTools;
 namespace VehiclePhysics.Timing
 {
 
-public struct LapDetails
+public struct LapTime
 	{
 	// Authority time is milliseconds
 
@@ -24,7 +24,7 @@ public struct LapDetails
 
 	// Create Lap
 
-	public LapDetails (float time = 0.0f, int sectors = 3)
+	public LapTime (float time = 0.0f, int sectors = 3)
 		{
 		if (sectors < 0) sectors = 0;
 
@@ -90,7 +90,7 @@ public struct LapDetails
 		m_timeMs = timeMs;
 		}
 
-	public void ReadBestSectors (LapDetails otherLap)
+	public void ReadBestSectors (LapTime otherLap)
 		{
 		int c = Mathf.Min(sectors, otherLap.sectors);
 
@@ -205,10 +205,10 @@ public class LapTimer : MonoBehaviour
 
 	// Lap details. TODO: To be used as standard lap info at some point (add currentLap etc)
 
-	List<LapDetails> m_lapDetailsList = new List<LapDetails>();
-	LapDetails m_lastLapDetails;
-	LapDetails m_bestLapDetails;
-	LapDetails m_idealLapDetails;
+	List<LapTime> m_lapDetailsList = new List<LapTime>();
+	LapTime m_lastLapDetails;
+	LapTime m_bestLapDetails;
+	LapTime m_idealLapDetails;
 
 	// Sector times
 
@@ -258,7 +258,7 @@ public class LapTimer : MonoBehaviour
 		{
 		VPTelemetry.customData = "";
 
-		foreach (LapDetails lap in m_lapDetailsList)
+		foreach (LapTime lap in m_lapDetailsList)
 			VPTelemetry.customData += $"\n{lap.Format()}";
 
 		if (enableTestKeys)
@@ -342,7 +342,7 @@ public class LapTimer : MonoBehaviour
 
 		// Store new lap details
 
-		LapDetails newLap = new LapDetails(t, sectorCount);
+		LapTime newLap = new LapTime(t, sectorCount);
 		newLap.ReadSectors(m_sectors);
 
 		// AQUI / TODO:
@@ -362,7 +362,7 @@ public class LapTimer : MonoBehaviour
 		if (m_idealLapDetails.isZero)
 			m_idealLapDetails = m_bestLapDetails;
 
-		foreach (LapDetails lap in m_lapDetailsList)
+		foreach (LapTime lap in m_lapDetailsList)
 			m_idealLapDetails.ReadBestSectors(lap);
 
 		m_idealLapDetails.ComputeTimeFromSectors();
