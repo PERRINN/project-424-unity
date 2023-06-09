@@ -8,12 +8,12 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using VehiclePhysics.UI;
+using EdyCommonTools;
 
 
 namespace VehiclePhysics.Timing
 {
 
-[Serializable]
 public struct LapDetails
 	{
 	// Authority time is milliseconds
@@ -118,21 +118,29 @@ public struct LapDetails
 
 	public string FormatTime ()
 		{
-		return "wip"; //StringUtility.FormatTime(time, baseUnits: StringUtility.BaseUnits.Minutes);
+		return StringUtility.FormatTime(time, baseUnits: StringUtility.BaseUnits.Minutes);
 		}
 
 	public string FormatSector (int s)
 		{
-		if (s >= 0 && s < m_sectors)
-			return "wip"; //StringUtility.FormatTime(sectorTime[i], autoexpand:false);
+		if (s >= 0 && s < sectors)
+			return StringUtility.FormatTime(MsToTime(m_sectorMs[s]), autoExpandFormat:false);
 		else
 			return "";
 		}
 
 	public string Format ()
 		{
-		// TODO: Lap time and sectors: "0:00.000  00.000 00.000 00.000"
-		return "TODO";
+		string str = FormatTime();
+
+		if (sectors > 0)
+			{
+			str += " ";
+			for (int s = 0; s < sectors; s++)
+				str += $" {FormatSector(s)}";
+			}
+
+		return str;
 		}
 	}
 
@@ -251,12 +259,7 @@ public class LapTimer : MonoBehaviour
 		VPTelemetry.customData = "";
 
 		foreach (LapDetails lap in m_lapDetailsList)
-			{
-			VPTelemetry.customData += $"\n{lap.time:0.000}   ";
-
-			for (int i = 0, c = lap.sectors; i < c; i++)
-				VPTelemetry.customData += $"{i}:{lap.Sector(i):0.000}  ";
-			}
+			VPTelemetry.customData += $"\n{lap.Format()}";
 
 		if (enableTestKeys)
 			{
