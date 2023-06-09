@@ -33,6 +33,14 @@ public struct LapTime
 		m_sectors = sectors;
 		}
 
+	public LapTime Copy ()
+		{
+		LapTime newLap = new LapTime(sectors: m_sectors);
+		newLap.m_timeMs = m_timeMs;
+		Array.Copy(m_sectorMs, newLap.m_sectorMs, m_sectors);
+		return newLap;
+		}
+
 	// Set lap data
 
 	public int SetTime (float time)
@@ -350,17 +358,17 @@ public class LapTimer : MonoBehaviour
 		// - Al almacenar dos vueltas se guardan los mismos tiempos por cada sector, aunque el tiempo de vuelta sea diferente.
 
 		m_lapDetailsList.Add(newLap);
-		m_lastLapDetails = newLap;
+		m_lastLapDetails = newLap.Copy();
 
 		// Is this best lap?
 
 		if (m_bestLapDetails.isZero || newLap.time < m_bestLapDetails.time)
-			m_bestLapDetails = newLap;
+			m_bestLapDetails = newLap.Copy();
 
 		// Ideal lap: get best sector times and recompute ideal lap time
 
 		if (m_idealLapDetails.isZero)
-			m_idealLapDetails = m_bestLapDetails;
+			m_idealLapDetails = m_bestLapDetails.Copy();
 
 		foreach (LapTime lap in m_lapDetailsList)
 			m_idealLapDetails.ReadBestSectors(lap);
@@ -424,8 +432,8 @@ public class LapTimer : MonoBehaviour
 
 					if (debugLog)
 						{
-						string dbg = m_invalidLap? $"[{FormatLapTime(lapTime)}] " : $" {FormatLapTime(lapTime)}  ";
-						for (int i = 0; i < m_sectors.Length; i++) dbg += $"S{i+1}:{FormatSectorTime(m_sectors[i], m_validSectors[i])} ";
+						string dbg = m_invalidLap? $"[{FormatLapTime(lapTime)}] " : $" {FormatLapTime(lapTime)}   ";
+						for (int i = 0; i < m_sectors.Length; i++) dbg += $"S{i+1}:{FormatSectorTime(m_sectors[i], m_validSectors[i])}  ";
 						Debug.Log(dbg);
 						}
 
@@ -510,14 +518,18 @@ public class LapTimer : MonoBehaviour
 					ClearSectors();
 					}
 
-				m_sectors[sector-1] = hitTime - m_sectorStartTime;
+				float sectorTime = hitTime - m_sectorStartTime;
+				m_sectors[sector-1] = sectorTime;
 				m_validSectors[sector-1] = !m_invalidSector;
-				onSector?.Invoke(sector, m_sectors[sector-1]);
+				onSector?.Invoke(sector, sectorTime);
 
 				vehicle.telemetry.SetMarkerFlag(m_invalidSector);
 
 				m_sectorStartTime = hitTime;
 				m_invalidSector = false;
+
+				if (debugLog)
+					Debug.Log("Sector time: " + FormatSectorTime(sectorTime, !m_invalidSector));
 				}
 			else
 				{
