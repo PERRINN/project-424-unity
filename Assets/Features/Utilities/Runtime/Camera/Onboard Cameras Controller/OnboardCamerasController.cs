@@ -5,32 +5,33 @@ namespace Perrinn424.CameraSystem
 {
     internal class OnboardCamerasController : MonoBehaviour
     {
-        private CircularIterator<Camera> iterator;
+        private CircularIterator<Transform> iterator;
+
+        [SerializeField]
+        private Camera onboardCamera;
+
+        [SerializeField]
+        private Transform[] pivots;
 
         private void OnEnable()
         {
-            Camera[] cameras = this.GetComponentsInChildren<Camera>(true);
-
-            foreach (Camera c in cameras)
-            {
-                c.gameObject.SetActive(false);
-            }
-
-            iterator = new CircularIterator<Camera>(cameras);
-
-            iterator.Current.gameObject.SetActive(true);
+            iterator = new CircularIterator<Transform>(pivots);
+            MoveCamera(iterator.Current);
         }
 
         public void NextCamera()
         {
-            iterator.Current.gameObject.SetActive(false);
-            iterator.MoveNext().gameObject.SetActive(true);
+            MoveCamera(iterator.MoveNext());
         }
 
         public void PreviousCamera()
         {
-            iterator.Current.gameObject.SetActive(false);
-            iterator.MovePrevious().gameObject.SetActive(true);
+            MoveCamera(iterator.MovePrevious());
+        }
+
+        private void MoveCamera(Transform pivot)
+        {
+            onboardCamera.transform.SetParent(pivot, false);
         }
     }
 }
