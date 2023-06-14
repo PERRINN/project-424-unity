@@ -74,19 +74,20 @@ public struct LapTime
 
 	// Retrieve lap data
 
+	public bool isZero => m_timeMs == 0;
 	public float time => MsToTime(m_timeMs);
 	public int timeMs => m_timeMs;
 	public int sectors => m_sectors;
 
-	public float Sector (int s)
+	public int SectorMs (int s)
 		{
 		if (s >= 0 && s < m_sectors)
-			return MsToTime(m_sectorMs[s]);
+			return m_sectorMs[s];
 		else
-			return 0.0f;
+			return 0;
 		}
 
-	public bool isZero => m_timeMs == 0;
+	public float Sector (int s) => MsToTime(SectorMs(s));
 
 	// Utility methods
 

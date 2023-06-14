@@ -138,6 +138,27 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		}
 
 
+	public struct LapTimeState
+		{
+		public int timeMs;
+		public int sector1ms;
+		public int sector2ms;
+		public int sector3ms;
+		public int sector4ms;
+		public int sector5ms;
+
+		public void SetFrom (LapTime lapTime)
+			{
+			timeMs = lapTime.timeMs;
+			sector1ms = lapTime.SectorMs(0);
+			sector2ms = lapTime.SectorMs(1);
+			sector3ms = lapTime.SectorMs(2);
+			sector4ms = lapTime.SectorMs(3);
+			sector5ms = lapTime.SectorMs(4);
+			}
+		}
+
+
 	// Complete visual state sent to clients
 
 
@@ -180,8 +201,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Ideal lap time
 
-		public LapTime idealLapTime;
-		public int idealLapTimeMs;
+		public LapTimeState idealLapTime;
 		}
 
 
@@ -192,6 +212,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	SteeringScreen m_dashboardDisplay;
 	VisualState m_state;
 	LapTimer m_lapTimer;
+
 
 	// Order of execution & flags
 	//
@@ -323,9 +344,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 			if (m_lapTimer != null)
 				{
-				m_state.idealLapTimeMs = m_lapTimer.idealLapTime.timeMs;
-				m_state.idealLapTime = m_lapTimer.idealLapTime.Copy();
-				Debug.Log($"Have a lap: {m_state.idealLapTime.Format()}, {m_state.idealLapTimeMs}");
+				m_state.idealLapTime.SetFrom(m_lapTimer.idealLapTime);
+				Debug.Log($"Have a lap: {m_state.idealLapTime.timeMs}");
 				}
 
 			// Send state to clients
@@ -382,8 +402,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Apply ideal lap time
 
-		// if (!state.idealLapTime.isZero)
-			Debug.Log($"Got a lap: {state.idealLapTime.Format()}, {state.idealLapTimeMs}");
+		Debug.Log($"Got a lap: {state.idealLapTime.timeMs} - {state.idealLapTime.sector1ms} {state.idealLapTime.sector2ms} {state.idealLapTime.sector3ms} {state.idealLapTime.sector4ms} {state.idealLapTime.sector5ms}");
 		}
 	}
 
