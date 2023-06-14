@@ -398,7 +398,8 @@ public class LapTimer : MonoBehaviour
 				if (m_idealLapTime.sectorCount < sectorCount)
 					m_idealLapTime = new LapTime(sectors: sectorCount);
 
-				m_idealLapTime.SetSector(sector-1, sectorTime);
+				if (m_idealLapTime.sectorMs[sector-1] == 0 || m_idealLapTime.Sector(sector-1) > sectorTime)
+					m_idealLapTime.SetSector(sector-1, sectorTime);
 
 				if (!m_idealLapTime.isZero)
 					m_idealLapTime.RecalculateFromSectors();
