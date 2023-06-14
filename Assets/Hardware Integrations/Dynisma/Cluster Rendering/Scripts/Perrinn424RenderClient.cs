@@ -14,6 +14,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using VehiclePhysics;
+using VehiclePhysics.Timing;
 using Mirror;
 
 
@@ -176,6 +177,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		public Vector3 eyePointPos;
 		public Vector3 eyePointRot;
+
+		// Ideal lap time
+
+		public LapTime idealLapTime;
 		}
 
 
@@ -185,7 +190,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	VPVisualEffects m_visualEffects;
 	SteeringScreen m_dashboardDisplay;
 	VisualState m_state;
-
+	LapTimer m_lapTimer;
 
 	// Order of execution & flags
 	//
@@ -213,6 +218,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		m_dashboardDisplay = vehicle.GetComponentInChildren<SteeringScreen>();
 		m_vehicleTransform = vehicle.cachedTransform;
 		m_viewTransform = view != null? view.transform : null;
+		m_lapTimer = FindObjectOfType<LapTimer>();
 
 		m_state = new VisualState();
 		m_firstUpdate = false;
@@ -305,6 +311,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			m_state.eyePointPos = VIOSOCamera.eyePointPos;
 			m_state.eyePointRot = VIOSOCamera.eyePointRot;
 
+			// Retrieve ideal lap time
+
+			if (m_lapTimer != null)
+				m_state.idealLapTime = m_lapTimer.idealLapTime.Copy();
+
 			// Send state to clients
 
 			RpcUpdateVisualState(m_state);
@@ -356,6 +367,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		VIOSOCamera.eyePointPos = state.eyePointPos;
 		VIOSOCamera.eyePointRot = state.eyePointRot;
+
+		// Apply ideal lap time
+
+		if (!state.idealLapTime.isZero)
+			Debug.Log(state.idealLapTime.Format());
 		}
 	}
 
