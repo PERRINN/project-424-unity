@@ -1,58 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &4084599790386495565
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2476090975454418218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c33ba5556b1bc554ea14161d7b99a925, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  emitTelemetry: 1
-  component: {fileID: 3662052850870299041}
---- !u!114 &7312595622897392818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2476090975454418218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5efeeb3070d02da478aa0e7c47fe0edc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  emitTelemetry: 1
-  component: {fileID: 0}
---- !u!114 &2366694805963099143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2476090976585966691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2ad0b628b3031c41b80ee4e5c5e9473, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  emitTelemetry: 1
-  speedLimiterSegments:
-  - segmentStart: 1700
-    segmentEnd: 2250
-    minimumLimiter: 0.833
-  - segmentStart: 14700
-    segmentEnd: 15300
-    minimumLimiter: 0.722
-  - segmentStart: 15300
-    segmentEnd: 15700
-    minimumLimiter: 0.736
-  limiterValue: 1
-  limiterEnabled: 0
 --- !u!1 &8368247291481045983
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2476090975396258038}
   m_RootOrder: 15
@@ -239,7 +187,7 @@ PrefabInstance:
     - target: {fileID: 2483877716263781661, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: screenPosition.y
-      value: -8
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781662, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
@@ -274,15 +222,68 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 10227660935106609}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2476090976585966691 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2483877715235533906, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-    type: 3}
-  m_PrefabInstance: {fileID: 10227660935106609}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2476090975454418218 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2483877716263781659, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
     type: 3}
   m_PrefabInstance: {fileID: 10227660935106609}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4084599790386495565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2476090975454418218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c33ba5556b1bc554ea14161d7b99a925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
+  component: {fileID: 3662052850870299041}
+--- !u!114 &7312595622897392818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2476090975454418218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5efeeb3070d02da478aa0e7c47fe0edc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
+  component: {fileID: 0}
+--- !u!1 &2476090976585966691 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2483877715235533906, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+    type: 3}
+  m_PrefabInstance: {fileID: 10227660935106609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2366694805963099143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2476090976585966691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2ad0b628b3031c41b80ee4e5c5e9473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
+  speedLimiterSegments:
+  - segmentStart: 1700
+    segmentEnd: 2250
+    minimumLimiter: 0.833
+  - segmentStart: 14700
+    segmentEnd: 15300
+    minimumLimiter: 0.722
+  - segmentStart: 15300
+    segmentEnd: 15700
+    minimumLimiter: 0.736
+  limiterValue: 1
+  limiterEnabled: 0

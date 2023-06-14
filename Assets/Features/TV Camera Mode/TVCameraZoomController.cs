@@ -43,6 +43,8 @@ public class TVCameraZoomController : MonoBehaviour
 
 	void OnEnable ()
 		{
+		BackupCameraSettings();
+
 		// All objects required, otherwise -> exceptions.
 
 		m_cinemachine = tvCameraSystem.GetComponent<CinemachineBrain>();

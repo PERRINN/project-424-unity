@@ -142,6 +142,10 @@ public class VIOSOCamera : MonoBehaviour
             if (err != ERROR.NONE)
             {
                 Debug.Log($"Error [{err}] de-initializing VIOSO.");
+                if (err == ERROR.PARAMETER)
+                {
+                    Debug.LogWarning("If warped cameras showed a black picture then the VIOSO calibration files are missing!");
+                }
             }
 
             viosoID = -1;

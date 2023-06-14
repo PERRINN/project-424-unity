@@ -14,7 +14,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using VehiclePhysics;
+using VehiclePhysics.Timing;
 using Mirror;
+using Perrinn424.UI;
 
 
 namespace Perrinn424
@@ -25,6 +27,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public Perrinn424CarController vehicle;
 	[UnityEngine.Serialization.FormerlySerializedAs("head")]
 	public Transform view;
+	public CaveLapTimeUI caveLapTimeUI;
 
 	[Space(5)]
 	public Behaviour[] disableOnClients = new Behaviour[0];
@@ -137,6 +140,37 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		}
 
 
+	public struct LapTimeState
+		{
+		public int timeMs;
+ 		public int[] sectorMs;
+
+		public void SetZero ()
+			{
+			timeMs = 0;
+			sectorMs = new int[0];
+			}
+
+		public void SetFrom (LapTime lapTime)
+			{
+			timeMs = lapTime.timeMs;
+			sectorMs = lapTime.sectorMs;
+
+			// null is not serialized! Causes connection error.
+			if (sectorMs == null)
+				sectorMs = new int[0];
+			}
+
+		public LapTime GetLapTime ()
+			{
+			LapTime lapTime = new LapTime(sectors: sectorMs.Length);
+			lapTime.timeMs = timeMs;
+			lapTime.SetSectorsMs(sectorMs);
+			return lapTime;
+			}
+		}
+
+
 	// Complete visual state sent to clients
 
 
@@ -157,6 +191,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Steering wheel pose
 
 		public VisualPose steeringWheel;
+		public bool steeringWheelVisible;
 
 		// Dashboard display states
 
@@ -175,6 +210,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		public Vector3 eyePointPos;
 		public Vector3 eyePointRot;
+
+		// Ideal lap time
+
+		public LapTimeState idealLapTime;
 		}
 
 
@@ -184,6 +223,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	VPVisualEffects m_visualEffects;
 	SteeringScreen m_dashboardDisplay;
 	VisualState m_state;
+	LapTimer m_lapTimer;
 
 
 	// Order of execution & flags
@@ -264,6 +304,14 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		{
 		if (m_firstUpdate && NetworkManager.DebugInfoLevel >= 2)
 			Debug.Log("RenderClient First LateUpdate");
+
+		if (m_firstUpdate)
+			{
+			// FindObjectOfType doesn't work from OnEnable or OnStartServer in NetworkBehaviours.
+			// Must be called here.
+			m_lapTimer = FindObjectOfType<LapTimer>();
+			}
+
 		m_firstUpdate = false;
 
 		if (isServer)
@@ -283,6 +331,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			// Retrieve steering wheel pose
 
 			m_state.steeringWheel.SetFrom(m_visualEffects.steeringWheel);
+			if (m_visualEffects.steeringWheel != null)
+				m_state.steeringWheelVisible = m_visualEffects.steeringWheel.gameObject.activeSelf;
 
 			// Retrieve dashboard states
 
@@ -301,6 +351,13 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 			m_state.eyePointPos = VIOSOCamera.eyePointPos;
 			m_state.eyePointRot = VIOSOCamera.eyePointRot;
+
+			// Retrieve ideal lap time
+
+			if (m_lapTimer != null)
+				m_state.idealLapTime.SetFrom(m_lapTimer.idealLapTime);
+			else
+				m_state.idealLapTime.SetZero();
 
 			// Send state to clients
 
@@ -333,6 +390,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Apply steering wheel pose
 
 		state.steeringWheel.ApplyTo(m_visualEffects.steeringWheel);
+		if (m_visualEffects.steeringWheel != null)
+			m_visualEffects.steeringWheel.gameObject.SetActive(state.steeringWheelVisible);
 
 		// Apply dashboard states
 
@@ -351,6 +410,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		VIOSOCamera.eyePointPos = state.eyePointPos;
 		VIOSOCamera.eyePointRot = state.eyePointRot;
+
+		// Apply ideal lap time
+
+		if (caveLapTimeUI != null)
+			caveLapTimeUI.SetLapTime(state.idealLapTime.GetLapTime());
 		}
 	}
 

@@ -32,24 +32,26 @@ namespace Perrinn424.UI
         [SerializeField]
         private LapRow idealLapRow;
 
-        private List<LapRow> uiRowList;
-        private Utilities.LapTimeTable timeTable;
+        private List<LapRow> m_uiRowList;
+        private Utilities.LapTimeTable m_timeTable;
+
+        public Utilities.LapTimeTable timeTable => m_timeTable;
 
         private void OnEnable()
         {
             CleanTable();
 
-            timeTable = new Utilities.LapTimeTable(sectorCount);
-            uiRowList = new List<LapRow>();
+            m_timeTable = new Utilities.LapTimeTable(sectorCount);
+            m_uiRowList = new List<LapRow>();
             lapUIPrefab.gameObject.SetActive(false);
             RefreshIdealLap();
         }
 
         private void CleanTable()
         {
-            if (uiRowList != null && uiRowList.Count > 0)
+            if (m_uiRowList != null && m_uiRowList.Count > 0)
             {
-                foreach (LapRow row in uiRowList)
+                foreach (LapRow row in m_uiRowList)
                 {
                     GameObject.Destroy(row.gameObject);
                 }
@@ -59,7 +61,7 @@ namespace Perrinn424.UI
         public void AddLap(float[] sectors)
         {
             LapTime newLap = new LapTime(sectors);
-            timeTable.AddLap(newLap);
+            m_timeTable.AddLap(newLap);
 
             AddRow();
 
@@ -68,23 +70,23 @@ namespace Perrinn424.UI
 
         public void AddSector(float sector)
         {
-            timeTable.AddSector(sector);
+            m_timeTable.AddSector(sector);
             Refresh();
         }
 
         public void UpdateRollingTime(float sectorRollingTime, float lapRollingTime)
         {
-            bool timeTableIsFull = timeTable.IsEmpty || timeTable[timeTable.LapCount - 1].IsCompleted;
-            bool needUIRow = timeTable.LapCount == uiRowList.Count && timeTableIsFull;
+            bool timeTableIsFull = m_timeTable.IsEmpty || m_timeTable[m_timeTable.LapCount - 1].IsCompleted;
+            bool needUIRow = m_timeTable.LapCount == m_uiRowList.Count && timeTableIsFull;
             if (needUIRow)
             {
                 AddRow();
             }
 
-            int currentLapIndex = uiRowList.Count - 1;
-            int currentSector = timeTableIsFull ? 0 : timeTable[currentLapIndex].SectorsCompletedIndex;
+            int currentLapIndex = m_uiRowList.Count - 1;
+            int currentSector = timeTableIsFull ? 0 : m_timeTable[currentLapIndex].SectorsCompletedIndex;
 
-            LapRow currentRow = uiRowList[currentLapIndex];
+            LapRow currentRow = m_uiRowList[currentLapIndex];
             currentRow.Refresh(currentSector, sectorRollingTime, normalFormat);
             currentRow.Refresh(sectorCount, lapRollingTime, normalFormat);
         }
@@ -92,10 +94,10 @@ namespace Perrinn424.UI
         private void AddRow()
         {
             LapRow newLapUI = Instantiate(lapUIPrefab, rowParent);
-            uiRowList.Add(newLapUI);
-            newLapUI.Refresh($"Lap {uiRowList.Count}", normalFormat, new LapTime(sectorCount), normalFormat);
+            m_uiRowList.Add(newLapUI);
+            newLapUI.Refresh($"Lap {m_uiRowList.Count}", normalFormat, new LapTime(sectorCount), normalFormat);
             newLapUI.gameObject.SetActive(true);
-            newLapUI.gameObject.name = $"Lap {uiRowList.Count}";
+            newLapUI.gameObject.name = $"Lap {m_uiRowList.Count}";
         }
 
         private void Refresh()
@@ -103,7 +105,7 @@ namespace Perrinn424.UI
             RefreshTimes();
             RefreshIdealLap();
 
-            if (timeTable.LapCount < 2)
+            if (m_timeTable.LapCount < 2)
                 return;
 
             RefreshImprovements();
@@ -116,28 +118,28 @@ namespace Perrinn424.UI
 
         private void RefreshTimes()
         {
-            for (int i = 0; i < timeTable.LapCount; i++)
+            for (int i = 0; i < m_timeTable.LapCount; i++)
             {
-                LapTime lap = timeTable[i];
-                LapRow rowUI = uiRowList[i];
+                LapTime lap = m_timeTable[i];
+                LapRow rowUI = m_uiRowList[i];
                 rowUI.Refresh($"Lap {i + 1}", normalFormat, lap, normalFormat);
             }
         }
 
         private void RefreshImprovements()
         {
-            int[] improvedTimes = timeTable.GetImprovedTimes();
+            int[] improvedTimes = m_timeTable.GetImprovedTimes();
 
             foreach (int improvedTimeIndex in improvedTimes)
             {
-                timeTable.IndexToLapSector(improvedTimeIndex, out int lapIndex, out int sectorIndex);
-                uiRowList[lapIndex].ApplyFormat(sectorIndex, improvementFormat);
+                m_timeTable.IndexToLapSector(improvedTimeIndex, out int lapIndex, out int sectorIndex);
+                m_uiRowList[lapIndex].ApplyFormat(sectorIndex, improvementFormat);
             }
         }
 
         private void RefreshBestSectors()
         {
-            int[] bestSectors = timeTable.GetBestLapForEachSector();
+            int[] bestSectors = m_timeTable.GetBestLapForEachSector();
 
             //Special case.
             // Best sectors should appears only when there are others sectors to be compared
@@ -146,8 +148,8 @@ namespace Perrinn424.UI
             //Lap 2 is a special case, so we need to track the current sector and draw until there
             int GetColumnMax()
             {
-                int lapCount = timeTable.LapCount;
-                LapTime lastLap = timeTable[lapCount - 1];
+                int lapCount = m_timeTable.LapCount;
+                LapTime lastLap = m_timeTable[lapCount - 1];
                 if (lapCount == 2 && !lastLap.IsCompleted)
                 {
                     return lastLap.SectorsCompletedIndex;
@@ -161,13 +163,13 @@ namespace Perrinn424.UI
             for (int i = 0; i < columnMax; i++)
             {
                 int lapIndex = bestSectors[i];
-                uiRowList[lapIndex].ApplyFormat(i, bestFormat);
+                m_uiRowList[lapIndex].ApplyFormat(i, bestFormat);
             }
         }
 
         private void RefreshIdealLap()
         {
-            var idealLap = timeTable.GetIdealLap();
+            var idealLap = m_timeTable.GetIdealLap();
             idealLapRow.Refresh("Ideal Lap", normalFormat, idealLap, idealFormat);
         }
 

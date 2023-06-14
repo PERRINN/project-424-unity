@@ -8,6 +8,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using VehiclePhysics.UI;
+using EdyCommonTools;
 
 
 namespace VehiclePhysics.Timing
@@ -51,6 +52,7 @@ public class LapTimer : MonoBehaviour
 	// Current sectors
 
 	public int currentSector => m_currentSector;
+	public int sectorCount => m_sectors.Length;
 	public IReadOnlyList<float> currentSectors => m_sectors;
 	public IReadOnlyList<bool> currentValidSectors => m_validSectors;
 
@@ -80,6 +82,22 @@ public class LapTimer : MonoBehaviour
 	GUIStyle m_style = new GUIStyle();
 	GUIStyle m_bigStyle = new GUIStyle();
 
+
+	// ---- New lap values. TODO: To be used as standard lap info at some point (add currentLap etc)
+
+	List<LapTime> m_lapTimeList = new List<LapTime>();
+	LapTime m_lastLapTime;
+	LapTime m_bestLapTime;
+	LapTime m_idealLapTime;
+
+	// Expose
+
+	IList<LapTime> lapTimeList => m_lapTimeList.AsReadOnly();
+	public LapTime lastLapTime => m_lastLapTime;
+	public LapTime bestLapTime => m_bestLapTime;
+	public LapTime idealLapTime => m_idealLapTime;
+
+	// ----
 
 
 	void OnValidate ()
@@ -116,6 +134,11 @@ public class LapTimer : MonoBehaviour
 
 	void Update ()
 		{
+		VPTelemetry.customData = "";
+
+		foreach (LapTime lap in m_lapTimeList)
+			VPTelemetry.customData += $"\n{lap.ToString()}";
+
 		if (enableTestKeys)
 			{
 			if (Input.GetKeyDown(KeyCode.Alpha1)) DebugOnTimerHit(0, Time.fixedTime, 0.0f);
@@ -194,6 +217,27 @@ public class LapTimer : MonoBehaviour
 			externalDisplay.lapTime = t;
 			externalDisplay.LapPass();
 			}
+
+		// Store new lap details
+
+		LapTime newLap = new LapTime(t, sectorCount);
+		newLap.SetSectors(m_sectors);
+
+		m_lapTimeList.Add(newLap);
+		m_lastLapTime = newLap.Copy();
+
+		// Is this best lap?
+
+		if (m_bestLapTime.isZero || newLap.time < m_bestLapTime.time)
+			m_bestLapTime = newLap.Copy();
+
+		// Ideal lap: get best sector times and recompute ideal lap time
+
+		if (m_idealLapTime.isZero)
+			m_idealLapTime = m_bestLapTime.Copy();
+
+		m_idealLapTime.MergeBestSectors(newLap);
+		m_idealLapTime.RecalculateFromSectors();
 		}
 
 
@@ -225,10 +269,8 @@ public class LapTimer : MonoBehaviour
 
 	public void OnTimerHit (VehicleBase vehicle, int sector, float hitTime, float hitDistance)
 		{
-		int sectorLen = m_sectors.Length;
-
 		if (!isActiveAndEnabled) return;
-		if (sector >= sectorLen) return;
+		if (sector >= sectorCount) return;
 
 		if (debugLog)
 			Debug.Log("Sector hit: " + sector);
@@ -240,22 +282,22 @@ public class LapTimer : MonoBehaviour
 			// Start line hit
 			// -------------------------------------------------------------------------------------
 
-			if (m_currentSector == sectorLen-1)
+			if (m_currentSector == sectorCount-1)
 				{
 				// Lap completed (previous hit was last sector)
 
 				if (lapTime > minLapTime)
 					{
-					m_sectors[sectorLen-1] = hitTime - m_sectorStartTime;
-					m_validSectors[sectorLen-1] = !m_invalidSector;
+					m_sectors[sectorCount-1] = hitTime - m_sectorStartTime;
+					m_validSectors[sectorCount-1] = !m_invalidSector;
 
-					onSector?.Invoke(sectorLen, m_sectors[sectorLen - 1]);
+					onSector?.Invoke(sectorCount, m_sectors[sectorCount - 1]);
 					onLap?.Invoke(lapTime, !m_invalidLap, m_sectors, m_validSectors);
 
 					if (debugLog)
 						{
-						string dbg = m_invalidLap? $"[{FormatLapTime(lapTime)}] " : $" {FormatLapTime(lapTime)}  ";
-						for (int i = 0; i < m_sectors.Length; i++) dbg += $"S{i+1}:{FormatSectorTime(m_sectors[i], m_validSectors[i])} ";
+						string dbg = m_invalidLap? $"[{FormatLapTime(lapTime)}] " : $" {FormatLapTime(lapTime)}   ";
+						for (int i = 0; i < m_sectors.Length; i++) dbg += $"S{i+1}:{FormatSectorTime(m_sectors[i], m_validSectors[i])}  ";
 						Debug.Log(dbg);
 						}
 
@@ -264,7 +306,7 @@ public class LapTimer : MonoBehaviour
 						// Okey - we have a lap time
 						// Report last sector and new lap
 
-						SectorPass(sectorLen, hitTime - m_trackStartTime);
+						SectorPass(sectorCount, hitTime - m_trackStartTime);
 						NewLap(lapTime);
 						}
 					else
@@ -340,14 +382,30 @@ public class LapTimer : MonoBehaviour
 					ClearSectors();
 					}
 
-				m_sectors[sector-1] = hitTime - m_sectorStartTime;
+				float sectorTime = hitTime - m_sectorStartTime;
+				m_sectors[sector-1] = sectorTime;
 				m_validSectors[sector-1] = !m_invalidSector;
-				onSector?.Invoke(sector, m_sectors[sector-1]);
+				onSector?.Invoke(sector, sectorTime);
 
 				vehicle.telemetry.SetMarkerFlag(m_invalidSector);
 
 				m_sectorStartTime = hitTime;
 				m_invalidSector = false;
+
+				// Apply this sector to the ideal lap and recalculate.
+				// If no lap is yet recorded, just add initialize and set the sector.
+
+				if (m_idealLapTime.sectorCount < sectorCount)
+					m_idealLapTime = new LapTime(sectors: sectorCount);
+
+				if (m_idealLapTime.sectorMs[sector-1] == 0 || m_idealLapTime.Sector(sector-1) > sectorTime)
+					m_idealLapTime.SetSector(sector-1, sectorTime);
+
+				if (!m_idealLapTime.isZero)
+					m_idealLapTime.RecalculateFromSectors();
+
+				if (debugLog)
+					Debug.Log("Sector time: " + FormatSectorTime(sectorTime, !m_invalidSector));
 				}
 			else
 				{
@@ -421,9 +479,7 @@ public class LapTimer : MonoBehaviour
 			currentTimeText += " " + FormatLapTime(t);
 			}
 
-		int sectorLen = m_sectors.Length;
-
-		if (sectorLen > 1)
+		if (sectorCount > 1)
 			{
 			for (int i=0, c=m_sectors.Length; i<c; i++)
 				{
@@ -436,7 +492,7 @@ public class LapTimer : MonoBehaviour
 		smallText += "\n";
 		smallText += "\n\nBest " + (m_bestTime > 0.0f ? FormatLapTime(m_bestTime) : "-") + "\n\n";
 
-		float heightDelta = (sectorLen - 3) * m_style.lineHeight;
+		float heightDelta = (sectorCount - 3) * m_style.lineHeight;
 		float boxWidth = 180;
 		float boxHeight = 180 + heightDelta;
 

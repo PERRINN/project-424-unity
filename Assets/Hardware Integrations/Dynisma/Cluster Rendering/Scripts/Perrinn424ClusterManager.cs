@@ -20,20 +20,22 @@ public class Perrinn424ClusterManager : MonoBehaviour
 	public Station[] clients = new Station[0];
 
 	[Header("UI Material")]
-	public Material uiMaterial;
 	[HelpBox("Canvases will be assigned to the corresponding camera and their components will use the given UI material. Activation state won't be changed here.")]
+	public Material uiMaterial;
 	public Canvas[] serverCanvasList = new Canvas[0];
 	public Canvas[] clientCanvasList = new Canvas[0];
 
-	[HelpBox("Keep these components and game objects enabled on unknown stations. They might have been disabled by other managers.")]
 	[Header("On unknown station")]
+	[HelpBox("Keep these components and game objects enabled or disabled on unknown stations. They might have been modified by other managers.")]
 	public Behaviour[] enableComponents = new Behaviour[0];
 	public GameObject[] enableGameObjects = new GameObject[0];
+	public Behaviour[] disableComponents = new Behaviour[0];
+	public GameObject[] disableGameObjects = new GameObject[0];
 
 	[Header("Test Mode")]
 	public bool enableTestMode = false;
 	public TestStation testStation = TestStation.Server;
-	public enum TestStation { Server, Client1, Client2, Client3, Client4, Client5, Client6, Client7, Client8, Client9, Client10 }
+	public enum TestStation { Server, AllClients, Client1, Client2, Client3, Client4, Client5, Client6, Client7, Client8, Client9, Client10 }
 
 	bool m_testMode;
 	bool m_unknownStation;
@@ -90,8 +92,27 @@ public class Perrinn424ClusterManager : MonoBehaviour
 				if ((int)testStation > clients.Length)
 					testStation = TestStation.Server;
 
-				string stationName = testStation == TestStation.Server? m_serverStation.name : clients[(int)testStation - 1].name;
-				EnableNetworkStation(stationName);
+				if (testStation == TestStation.AllClients)
+					{
+					// Enable all stations and make them render in separate displays
+
+					for (int i = 0, c = clients.Length; i < c; i++)
+						{
+						Station s = clients[i];
+						SetActive(s, true, clientCanvasList);
+						s.camera.targetDisplay = i;
+						}
+
+					// Ensure UIs are displayed in the center display
+
+					int centerDisplay = clients.Length / 2;
+					SetActive(clients[centerDisplay], true, clientCanvasList);
+					}
+				else
+					{
+					string stationName = testStation == TestStation.Server? m_serverStation.name : clients[(int)(testStation - TestStation.Client1)].name;
+					EnableNetworkStation(stationName);
+					}
 				}
 			else
 			if (m_testMode)
@@ -103,7 +124,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 			m_testStation = testStation;
 			}
 
-		// Keep elements enabled on unknown stations
+		// Keep elements enabled or disabled on unknown stations
 
 		if (m_unknownStation)
 			{
@@ -115,6 +136,16 @@ public class Perrinn424ClusterManager : MonoBehaviour
 			foreach (GameObject g in enableGameObjects)
 				{
 				if (!g.activeSelf) g.SetActive(true);
+				}
+
+			foreach (Behaviour c in disableComponents)
+				{
+				if (c.enabled) c.enabled = false;
+				}
+
+			foreach (GameObject g in disableGameObjects)
+				{
+				if (g.activeSelf) g.SetActive(false);
 				}
 			}
 		}
