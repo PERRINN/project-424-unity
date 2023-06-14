@@ -145,10 +145,28 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public int timeMs;
  		public int[] sectorMs;
 
+		public void SetZero ()
+			{
+			timeMs = 0;
+			sectorMs = new int[0];
+			}
+
 		public void SetFrom (LapTime lapTime)
 			{
 			timeMs = lapTime.timeMs;
 			sectorMs = lapTime.sectorMs;
+
+			// null is not serialized! Causes connection error.
+			if (sectorMs == null)
+				sectorMs = new int[0];
+			}
+
+		public LapTime GetLapTime ()
+			{
+			LapTime lapTime = new LapTime(sectors: sectorMs.Length);
+			lapTime.timeMs = timeMs;
+			lapTime.SetSectorsMs(sectorMs);
+			return lapTime;
 			}
 		}
 
@@ -336,8 +354,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 			// Retrieve ideal lap time
 
-			if (m_lapTimer != null && !m_lapTimer.idealLapTime.isZero)
+			if (m_lapTimer != null)
 				m_state.idealLapTime.SetFrom(m_lapTimer.idealLapTime);
+			else
+				m_state.idealLapTime.SetZero();
 
 			// Send state to clients
 
@@ -394,12 +414,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Apply ideal lap time
 
 		if (caveLapTimeUI != null)
-			{
-			LapTime lapTime = new LapTime(sectors: state.idealLapTime.sectorMs.Length);
-			lapTime.timeMs = state.idealLapTime.timeMs;
-			lapTime.SetSectorsMs(state.idealLapTime.sectorMs);
-			caveLapTimeUI.SetLapTime(lapTime);
-			}
+			caveLapTimeUI.SetLapTime(state.idealLapTime.GetLapTime());
 		}
 	}
 
