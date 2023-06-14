@@ -63,7 +63,7 @@ public struct LapTime
 			}
 		}
 
-	public void ReadSectors (float[] sectors)
+	public void SetSectors (float[] sectors)
 		{
 		int c = Mathf.Min(m_sectors, sectors != null? sectors.Length : 0);
 
@@ -98,7 +98,7 @@ public struct LapTime
 		m_timeMs = timeMs;
 		}
 
-	public void ReadBestSectors (LapTime otherLap)
+	public void MergeBestSectors (LapTime otherLap)
 		{
 		int c = Mathf.Min(sectors, otherLap.sectors);
 
@@ -211,13 +211,6 @@ public class LapTimer : MonoBehaviour
 	[NonSerialized] float m_lastTime = 0.0f;
 	float m_bestTime = 0.0f;
 
-	// Lap details. TODO: To be used as standard lap info at some point (add currentLap etc)
-
-	List<LapTime> m_lapDetailsList = new List<LapTime>();
-	LapTime m_lastLapDetails;
-	LapTime m_bestLapDetails;
-	LapTime m_idealLapDetails;
-
 	// Sector times
 
 	[NonSerialized] float[] m_sectors = new float[0];
@@ -228,6 +221,22 @@ public class LapTimer : MonoBehaviour
 	GUIStyle m_style = new GUIStyle();
 	GUIStyle m_bigStyle = new GUIStyle();
 
+
+	// ---- New lap values. TODO: To be used as standard lap info at some point (add currentLap etc)
+
+	List<LapTime> m_lapTimeList = new List<LapTime>();
+	LapTime m_lastLapTime;
+	LapTime m_bestLapTime;
+	LapTime m_idealLapTime;
+
+	// Expose
+
+	IList<LapTime> lapTimeList => m_lapTimeList.AsReadOnly();
+	public LapTime lastLapTime => m_lastLapTime;
+	public LapTime bestLapTime => m_bestLapTime;
+	public LapTime idealLapTime => m_idealLapTime;
+
+	// ----
 
 
 	void OnValidate ()
@@ -266,7 +275,7 @@ public class LapTimer : MonoBehaviour
 		{
 		VPTelemetry.customData = "";
 
-		foreach (LapTime lap in m_lapDetailsList)
+		foreach (LapTime lap in m_lapTimeList)
 			VPTelemetry.customData += $"\n{lap.Format()}";
 
 		if (enableTestKeys)
@@ -351,29 +360,29 @@ public class LapTimer : MonoBehaviour
 		// Store new lap details
 
 		LapTime newLap = new LapTime(t, sectorCount);
-		newLap.ReadSectors(m_sectors);
+		newLap.SetSectors(m_sectors);
 
 		// AQUI / TODO:
 		// - m_sectors es el tiempo de la vuelta al pasar por cada sector, no el tiempo de cada sector en sí.
 		// - Al almacenar dos vueltas se guardan los mismos tiempos por cada sector, aunque el tiempo de vuelta sea diferente.
 
-		m_lapDetailsList.Add(newLap);
-		m_lastLapDetails = newLap.Copy();
+		m_lapTimeList.Add(newLap);
+		m_lastLapTime = newLap.Copy();
 
 		// Is this best lap?
 
-		if (m_bestLapDetails.isZero || newLap.time < m_bestLapDetails.time)
-			m_bestLapDetails = newLap.Copy();
+		if (m_bestLapTime.isZero || newLap.time < m_bestLapTime.time)
+			m_bestLapTime = newLap.Copy();
 
 		// Ideal lap: get best sector times and recompute ideal lap time
 
-		if (m_idealLapDetails.isZero)
-			m_idealLapDetails = m_bestLapDetails.Copy();
+		if (m_idealLapTime.isZero)
+			m_idealLapTime = m_bestLapTime.Copy();
 
-		foreach (LapTime lap in m_lapDetailsList)
-			m_idealLapDetails.ReadBestSectors(lap);
+		foreach (LapTime lap in m_lapTimeList)
+			m_idealLapTime.MergeBestSectors(lap);
 
-		m_idealLapDetails.ComputeTimeFromSectors();
+		m_idealLapTime.ComputeTimeFromSectors();
 		}
 
 
