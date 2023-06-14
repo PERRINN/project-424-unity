@@ -25,7 +25,7 @@ public struct LapTime
 	public bool isZero => m_timeMs == 0;
 	public float time => MsToTime(m_timeMs);
 
-	// Exposed sectors and times in seconds
+	// Exposed sectors and sector times in seconds
 
 	public int sectorCount => m_sectorMs != null? m_sectorMs.Length : 0;
 	public float Sector (int s) => s >= 0 && s < sectorCount? MsToTime(m_sectorMs[s]) : 0.0f;

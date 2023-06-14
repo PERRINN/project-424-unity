@@ -147,7 +147,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public int sector4ms;
 		public int sector5ms;
 
-		public int[] sectors;
+		[SerializeField] int[] m_sectors;
+
+		public int[] sectors => m_sectors;
 
 		public void SetFrom (LapTime lapTime)
 			{
@@ -158,7 +160,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			sector4ms = lapTime.sectorMs[3];
 			sector5ms = lapTime.sectorMs[4];
 
-			sectors = new int[] { sector1ms, sector2ms, sector3ms, sector4ms, sector5ms };
+			m_sectors = new int[] { sector1ms, sector2ms, sector3ms, sector4ms, sector5ms };
 			}
 		}
 
@@ -346,7 +348,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 			// Retrieve ideal lap time
 
-			if (m_lapTimer != null)
+			if (m_lapTimer != null && !m_lapTimer.idealLapTime.isZero)
 				m_state.idealLapTime.SetFrom(m_lapTimer.idealLapTime);
 
 			// Send state to clients
