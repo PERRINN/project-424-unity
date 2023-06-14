@@ -237,7 +237,7 @@ public class LapTimer : MonoBehaviour
 			m_idealLapTime = m_bestLapTime.Copy();
 
 		m_idealLapTime.MergeBestSectors(newLap);
-		m_idealLapTime.ComputeTimeFromSectors();
+		m_idealLapTime.RecalculateFromSectors();
 		}
 
 
@@ -391,6 +391,17 @@ public class LapTimer : MonoBehaviour
 
 				m_sectorStartTime = hitTime;
 				m_invalidSector = false;
+
+				// Apply this sector to the ideal lap and recalculate.
+				// If no lap is yet recorded, just add initialize and set the sector.
+
+				if (m_idealLapTime.sectorCount < sectorCount)
+					m_idealLapTime = new LapTime(sectors: sectorCount);
+
+				m_idealLapTime.SetSector(sector-1, sectorTime);
+
+				if (!m_idealLapTime.isZero)
+					m_idealLapTime.RecalculateFromSectors();
 
 				if (debugLog)
 					Debug.Log("Sector time: " + FormatSectorTime(sectorTime, !m_invalidSector));

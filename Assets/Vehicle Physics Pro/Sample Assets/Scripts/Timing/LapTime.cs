@@ -88,7 +88,7 @@ public struct LapTime
 
 	// Utility methods
 
-	public void ComputeTimeFromSectors ()
+	public void RecalculateFromSectors ()
 		{
 		int timeMs = 0;
 
