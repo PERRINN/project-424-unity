@@ -16,6 +16,7 @@ using UnityEngine.UI;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
 using Mirror;
+using Perrinn424.UI;
 
 
 namespace Perrinn424
@@ -26,6 +27,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public Perrinn424CarController vehicle;
 	[UnityEngine.Serialization.FormerlySerializedAs("head")]
 	public Transform view;
+	public CaveLapTimeUI caveLapTimeUI;
 
 	[Space(5)]
 	public Behaviour[] disableOnClients = new Behaviour[0];
@@ -391,12 +393,12 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Apply ideal lap time
 
-		if (state.idealLapTime.timeMs > 0)
+		if (caveLapTimeUI != null)
 			{
 			LapTime lapTime = new LapTime(sectors: state.idealLapTime.sectorMs.Length);
-
-			// Debug.Log($"Got a lap: {state.idealLapTime.timeMs} - {state.idealLapTime.sectorMs[0]} {state.idealLapTime.sectorMs[1]} {state.idealLapTime.sectorMs[2]} {state.idealLapTime.sectorMs[3]} {state.idealLapTime.sectorMs[4]}");
-			Debug.Log($"Got a lap: {lapTime.ToString()}");
+			lapTime.timeMs = state.idealLapTime.timeMs;
+			lapTime.SetSectorsMs(state.idealLapTime.sectorMs);
+			caveLapTimeUI.SetLapTime(lapTime);
 			}
 		}
 	}

@@ -30,9 +30,9 @@ public struct LapTime
 	public int sectorCount => m_sectorMs != null? m_sectorMs.Length : 0;
 	public float Sector (int s) => s >= 0 && s < sectorCount? MsToTime(m_sectorMs[s]) : 0.0f;
 
-	// Exposed time and sectors in ms. Sectors are R/W.
+	// Exposed time and sectors in ms
 
-	public int timeMs => m_timeMs;
+	public int timeMs { get => m_timeMs; set { m_timeMs = value; } }
 	public int[] sectorMs => m_sectorMs;
 
 
@@ -75,6 +75,14 @@ public struct LapTime
 
 		for (int s = 0; s < c; s++)
 			m_sectorMs[s] = TimeToMs(sectors[s]);
+		}
+
+	public void SetSectorsMs (int[] sectors)
+		{
+		int c = Mathf.Min(sectorCount, sectors != null? sectors.Length : 0);
+
+		for (int s = 0; s < c; s++)
+			m_sectorMs[s] = sectors[s];
 		}
 
 
