@@ -362,10 +362,6 @@ public class LapTimer : MonoBehaviour
 		LapTime newLap = new LapTime(t, sectorCount);
 		newLap.SetSectors(m_sectors);
 
-		// AQUI / TODO:
-		// - m_sectors es el tiempo de la vuelta al pasar por cada sector, no el tiempo de cada sector en sí.
-		// - Al almacenar dos vueltas se guardan los mismos tiempos por cada sector, aunque el tiempo de vuelta sea diferente.
-
 		m_lapTimeList.Add(newLap);
 		m_lastLapTime = newLap.Copy();
 
@@ -379,9 +375,7 @@ public class LapTimer : MonoBehaviour
 		if (m_idealLapTime.isZero)
 			m_idealLapTime = m_bestLapTime.Copy();
 
-		foreach (LapTime lap in m_lapTimeList)
-			m_idealLapTime.MergeBestSectors(lap);
-
+		m_idealLapTime.MergeBestSectors(newLap);
 		m_idealLapTime.ComputeTimeFromSectors();
 		}
 
