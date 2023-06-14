@@ -147,14 +147,18 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public int sector4ms;
 		public int sector5ms;
 
+		public int[] sectors;
+
 		public void SetFrom (LapTime lapTime)
 			{
 			timeMs = lapTime.timeMs;
-			sector1ms = lapTime.SectorMs(0);
-			sector2ms = lapTime.SectorMs(1);
-			sector3ms = lapTime.SectorMs(2);
-			sector4ms = lapTime.SectorMs(3);
-			sector5ms = lapTime.SectorMs(4);
+			sector1ms = lapTime.sectorMs[0];
+			sector2ms = lapTime.sectorMs[1];
+			sector3ms = lapTime.sectorMs[2];
+			sector4ms = lapTime.sectorMs[3];
+			sector5ms = lapTime.sectorMs[4];
+
+			sectors = new int[] { sector1ms, sector2ms, sector3ms, sector4ms, sector5ms };
 			}
 		}
 
@@ -343,10 +347,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			// Retrieve ideal lap time
 
 			if (m_lapTimer != null)
-				{
 				m_state.idealLapTime.SetFrom(m_lapTimer.idealLapTime);
-				Debug.Log($"Have a lap: {m_state.idealLapTime.timeMs}");
-				}
 
 			// Send state to clients
 
@@ -402,7 +403,12 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Apply ideal lap time
 
-		Debug.Log($"Got a lap: {state.idealLapTime.timeMs} - {state.idealLapTime.sector1ms} {state.idealLapTime.sector2ms} {state.idealLapTime.sector3ms} {state.idealLapTime.sector4ms} {state.idealLapTime.sector5ms}");
+		// LapTime lapTime = new LapTime(sectors: 5);
+		if (state.idealLapTime.timeMs > 0)
+			{
+			Debug.Log($"Got a lap: {state.idealLapTime.timeMs} - {state.idealLapTime.sector1ms} {state.idealLapTime.sector2ms} {state.idealLapTime.sector3ms} {state.idealLapTime.sector4ms} {state.idealLapTime.sector5ms}");
+			Debug.Log($"{state.idealLapTime.sectors[0]} {state.idealLapTime.sectors[1]} {state.idealLapTime.sectors[2]} {state.idealLapTime.sectors[3]} {state.idealLapTime.sectors[4]}");
+			}
 		}
 	}
 
