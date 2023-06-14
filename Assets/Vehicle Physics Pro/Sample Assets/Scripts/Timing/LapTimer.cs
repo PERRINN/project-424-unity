@@ -137,7 +137,7 @@ public class LapTimer : MonoBehaviour
 		VPTelemetry.customData = "";
 
 		foreach (LapTime lap in m_lapTimeList)
-			VPTelemetry.customData += $"\n{lap.Format()}";
+			VPTelemetry.customData += $"\n{lap.ToString()}";
 
 		if (enableTestKeys)
 			{

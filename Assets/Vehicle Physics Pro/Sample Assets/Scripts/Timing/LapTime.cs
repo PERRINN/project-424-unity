@@ -131,7 +131,7 @@ public struct LapTime
 			return "";
 		}
 
-	public string Format ()
+	public override string ToString ()
 		{
 		string str = FormatTime();
 
