@@ -19,7 +19,7 @@ public struct LapTime
 	// Authority time is milliseconds
 
 	int m_timeMs;
-	readonly int[] m_sectorMs;
+	readonly int[] m_sectorMs;		// REVIEW: This is null in non-initialized variables! i.e. "LapTime myTime;"
 	readonly int m_sectors;
 
 	// Create Lap
@@ -37,7 +37,8 @@ public struct LapTime
 		{
 		LapTime newLap = new LapTime(sectors: m_sectors);
 		newLap.m_timeMs = m_timeMs;
-		Array.Copy(m_sectorMs, newLap.m_sectorMs, m_sectors);
+		if (m_sectorMs != null) // Constructor might not have been called yet.
+			Array.Copy(m_sectorMs, newLap.m_sectorMs, m_sectors);
 		return newLap;
 		}
 

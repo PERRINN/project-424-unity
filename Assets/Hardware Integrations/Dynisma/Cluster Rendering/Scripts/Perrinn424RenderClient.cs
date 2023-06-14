@@ -218,7 +218,6 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		m_dashboardDisplay = vehicle.GetComponentInChildren<SteeringScreen>();
 		m_vehicleTransform = vehicle.cachedTransform;
 		m_viewTransform = view != null? view.transform : null;
-		m_lapTimer = FindObjectOfType<LapTimer>();
 
 		m_state = new VisualState();
 		m_firstUpdate = false;
@@ -271,6 +270,14 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		{
 		if (m_firstUpdate && NetworkManager.DebugInfoLevel >= 2)
 			Debug.Log("RenderClient First LateUpdate");
+
+		if (m_firstUpdate)
+			{
+			// FindObjectOfType doesn't work from OnEnable or OnStartServer in NetworkBehaviours.
+			// Must be called here.
+			m_lapTimer = FindObjectOfType<LapTimer>();
+			}
+
 		m_firstUpdate = false;
 
 		if (isServer)
