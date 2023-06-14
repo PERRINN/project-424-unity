@@ -75,6 +75,7 @@ public struct LapTime
 	// Retrieve lap data
 
 	public float time => MsToTime(m_timeMs);
+	public int timeMs => m_timeMs;
 	public int sectors => m_sectors;
 
 	public float Sector (int s)

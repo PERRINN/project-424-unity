@@ -181,6 +181,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Ideal lap time
 
 		public LapTime idealLapTime;
+		public int idealLapTimeMs;
 		}
 
 
@@ -321,7 +322,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			// Retrieve ideal lap time
 
 			if (m_lapTimer != null)
+				{
+				m_state.idealLapTimeMs = m_lapTimer.idealLapTime.timeMs;
 				m_state.idealLapTime = m_lapTimer.idealLapTime.Copy();
+				Debug.Log($"Have a lap: {m_state.idealLapTime.Format()}, {m_state.idealLapTimeMs}");
+				}
 
 			// Send state to clients
 
@@ -377,8 +382,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Apply ideal lap time
 
-		if (!state.idealLapTime.isZero)
-			Debug.Log(state.idealLapTime.Format());
+		// if (!state.idealLapTime.isZero)
+			Debug.Log($"Got a lap: {state.idealLapTime.Format()}, {state.idealLapTimeMs}");
 		}
 	}
 
