@@ -14,6 +14,7 @@ public class DynismaSettings : MonoBehaviour
 	{
 	public DynismaInputProvider inputProvider;
 	public DynismaMotionPlatform motionPlatform;
+	public DynismaEyePointClient eyePointClient;
 	public string fileName = "DynismaSettings.json";
 
 
@@ -22,6 +23,7 @@ public class DynismaSettings : MonoBehaviour
 		{
 		public DynismaInputDevice.Settings inputSettings = new DynismaInputDevice.Settings();
 		public DynismaMotionPlatform.Settings motionSettings = new DynismaMotionPlatform.Settings();
+		public DynismaEyePointClient.Settings clientEyePointSettings = new DynismaEyePointClient.Settings();
 		}
 
 
@@ -71,6 +73,11 @@ public class DynismaSettings : MonoBehaviour
 				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaMotionPlatform.Settings>(settings.motionSettings, ref motionPlatform.settings);
 
 				motionPlatform.enabled = true;
+				}
+
+			if (eyePointClient != null)
+				{
+				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaEyePointClient.Settings>(settings.clientEyePointSettings, ref eyePointClient.settings);
 				}
 			}
 		}

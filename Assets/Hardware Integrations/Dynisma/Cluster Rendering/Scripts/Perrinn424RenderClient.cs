@@ -28,6 +28,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[UnityEngine.Serialization.FormerlySerializedAs("head")]
 	public Transform view;
 	public CaveLapTimeUI caveLapTimeUI;
+	public bool applyServerEyePointData = false;
 
 	[Space(5)]
 	public Behaviour[] disableOnClients = new Behaviour[0];
@@ -408,8 +409,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Apply dynamic eyepoint
 
-		VIOSOCamera.eyePointPos = state.eyePointPos;
-		VIOSOCamera.eyePointRot = state.eyePointRot;
+		if (applyServerEyePointData)
+			{
+			VIOSOCamera.eyePointPos = state.eyePointPos;
+			VIOSOCamera.eyePointRot = state.eyePointRot;
+			}
 
 		// Apply ideal lap time
 
