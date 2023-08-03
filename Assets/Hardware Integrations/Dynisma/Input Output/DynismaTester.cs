@@ -32,6 +32,7 @@ public class DynismaTester : MonoBehaviour
 	public float displacementRate = 1.0f;
 	public float maxRotation = 30.0f;
 	public float rotationRate = 30.0f;
+	public bool autoCenter = true;
 
 	[Header("Motion Data")]
 	public int listeningPort = 56236;
@@ -335,11 +336,15 @@ public class DynismaTester : MonoBehaviour
 			}
 
 		targetPos = targetPos.normalized * maxDisplacement;
-		transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPos, displacementRate * Time.deltaTime);
+		if (autoCenter || targetPos.magnitude > 0.0f)
+			transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPos, displacementRate * Time.deltaTime);
 
 		targetAngles = targetAngles * maxRotation;
-		Quaternion targetRot = Quaternion.Euler(targetAngles);
-		transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetRot, rotationRate * Time.deltaTime);
+		if (autoCenter || targetAngles.magnitude > 0.0f)
+			{
+			Quaternion targetRot = Quaternion.Euler(targetAngles);
+			transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetRot, rotationRate * Time.deltaTime);
+			}
 		}
 
 
