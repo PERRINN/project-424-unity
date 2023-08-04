@@ -24,7 +24,7 @@ public class DisableOnTimeout : MonoBehaviour
 		{
 		float time = unscaledTime? Time.unscaledTime : Time.time;
 
-		if (time - m_startTime >= 10.0f)
+		if (time - m_startTime >= timeout)
 			gameObject.SetActive(false);
 		}
 	}
