@@ -135,14 +135,14 @@ public class DynismaTester : MonoBehaviour
 
 		Debug.Log($"InputData: {Marshal.SizeOf(typeof(InputData))}  MotionData: {Marshal.SizeOf(typeof(MotionData))}  EyePointData: {Marshal.SizeOf(typeof(EyePointData))}");
 
-		// Initialize connections
-
-		Connect();
-
 		// Initialize widget
 
 		m_textBox.settings = widget;
 		m_textBox.title = "Dynisma Tester";
+
+		// Initialize connections
+
+		Connect();
 		}
 
 
@@ -211,20 +211,27 @@ public class DynismaTester : MonoBehaviour
         m_eyePointSender = new UdpSender(eyePointHost, eyePointPort);
 		m_skipCount = 0;
 
-		m_listener.StartConnection(listeningPort);
-		m_size = 0;
-		m_received = 0;
-		m_packetCount = 0;
-		m_packetCountTime = Time.time;
-		m_packetFrequency = 0.0f;
-		m_thread.Start(m_listener, () =>
+		try
 			{
-			lock (m_buffer)
+			m_listener.StartConnection(listeningPort);
+			m_size = 0;
+			m_received = 0;
+			m_packetCount = 0;
+			m_packetCountTime = Time.time;
+			m_packetFrequency = 0.0f;
+			m_thread.Start(m_listener, () =>
 				{
-				m_size = m_listener.GetMessageBinary(m_buffer);
-				m_received++;
-				}
-			});
+				lock (m_buffer)
+					{
+					m_size = m_listener.GetMessageBinary(m_buffer);
+					m_received++;
+					}
+				});
+			}
+		catch (System.Exception e)
+			{
+			Debug.LogWarning($"DynismaTester Connection error: Most likely the port {listeningPort} is already in use by other application.");
+			}
 		}
 
 
