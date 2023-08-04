@@ -7,11 +7,7 @@ namespace Perrinn424
 
 public class ViosoEyePointUICorrection : MonoBehaviour
 	{
-	public float displacementFactor = 0.295f;
-
-	[Header("Debug")]
-	public bool applyRotOffset = false;
-	public Vector3 rotOffset;
+	public float displacementFactor = 0.2953f;
 
 	void LateUpdate ()
 		{
@@ -20,13 +16,9 @@ public class ViosoEyePointUICorrection : MonoBehaviour
 		localRot.x = -localRot.x;
 		localRot.z = -localRot.z;
 
-		if (applyRotOffset) localRot += rotOffset;
-
 		transform.localRotation = Quaternion.Euler(localRot);
 		transform.localPosition = transform.localRotation * localPos;
 		}
-
-
-
 	}
+
 }
