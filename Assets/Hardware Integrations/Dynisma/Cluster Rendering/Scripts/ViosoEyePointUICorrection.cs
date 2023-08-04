@@ -1,4 +1,7 @@
 
+// Correct the position and rotation of the static UI based on the eye point data applied to VIOSO cameras.
+
+
 using UnityEngine;
 
 
@@ -8,6 +11,7 @@ namespace Perrinn424
 public class ViosoEyePointUICorrection : MonoBehaviour
 	{
 	public float displacementFactor = 0.2953f;
+	public bool debugInfo = false;
 
 	void LateUpdate ()
 		{
