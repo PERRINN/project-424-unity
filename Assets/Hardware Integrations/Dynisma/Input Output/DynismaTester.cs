@@ -32,6 +32,8 @@ public class DynismaTester : MonoBehaviour
 	public float displacementRate = 1.0f;
 	public float maxRotation = 30.0f;
 	public float rotationRate = 30.0f;
+	public bool autoCenter = true;
+	public bool autoLoop = false;
 
 	[Header("Motion Data")]
 	public int listeningPort = 56236;
@@ -127,6 +129,7 @@ public class DynismaTester : MonoBehaviour
 
 	UdpSender m_eyePointSender = null;
 	EyePointData m_eyePointData = new EyePointData();
+	int m_autoLoopDir = 1;
 
 
 	void OnValidate ()
@@ -323,6 +326,17 @@ public class DynismaTester : MonoBehaviour
 			if (Input.GetKey(KeyCode.UpArrow)) targetPos.z = +1;
 			}
 
+		if (autoLoop)
+			{
+			if (m_autoLoopDir == 1 && transform.localPosition.z >= 1)
+				m_autoLoopDir = -1;
+			else
+			if (m_autoLoopDir == -1 && transform.localPosition.z <= -1)
+				m_autoLoopDir = 1;
+
+			targetPos = new Vector3(0, 0, m_autoLoopDir);
+			}
+
 		Vector3 targetAngles = Vector3.zero;
 		if (rotate)
 			{
@@ -335,11 +349,15 @@ public class DynismaTester : MonoBehaviour
 			}
 
 		targetPos = targetPos.normalized * maxDisplacement;
-		transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPos, displacementRate * Time.deltaTime);
+		if (autoCenter || targetPos.magnitude > 0.0f)
+			transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPos, displacementRate * Time.deltaTime);
 
 		targetAngles = targetAngles * maxRotation;
-		Quaternion targetRot = Quaternion.Euler(targetAngles);
-		transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetRot, rotationRate * Time.deltaTime);
+		if (autoCenter || targetAngles.magnitude > 0.0f)
+			{
+			Quaternion targetRot = Quaternion.Euler(targetAngles);
+			transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetRot, rotationRate * Time.deltaTime);
+			}
 		}
 
 
