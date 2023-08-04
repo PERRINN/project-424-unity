@@ -66,16 +66,6 @@ public class DynismaTester : MonoBehaviour
 		public bool downShift;
 		public byte button;				// 1 bit per button
 		public byte rotary;				// two 8-position rotaries on the wheel, split the uint8 into two 4-bit values
-
-		// Eye point position from motion platform
-		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
-
-		public double eyePointPosX;		// m
-		public double eyePointPosY;		// m
-		public double eyePointPosZ;		// m
-		public double eyePointRotX;		// rad
-		public double eyePointRotY;		// rad
-		public double eyePointRotZ;		// rad
 		}
 
 
@@ -143,7 +133,7 @@ public class DynismaTester : MonoBehaviour
 		{
 		// Show runtime byte sizes of each struct
 
-		Debug.Log($"InputData: {Marshal.SizeOf(new InputData())} MotionData: {Marshal.SizeOf(new MotionData())}");
+		Debug.Log($"InputData: {Marshal.SizeOf(typeof(InputData))}  MotionData: {Marshal.SizeOf(typeof(MotionData))}  EyePointData: {Marshal.SizeOf(typeof(EyePointData))}");
 
 		// Initialize connections
 
@@ -272,19 +262,6 @@ public class DynismaTester : MonoBehaviour
 		int rotary1 = Mathf.Clamp(m_rotary1, 0, 15);
 		m_inputData.rotary = (byte)((rotary1 << 4) | rotary0);
 
-		// Convert simulated motion platform pose to ISO 8855
-		// (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
-
-		Vector3 position = transform.localPosition;
-		Vector3 rotation = transform.localRotation.eulerAngles;
-
-		m_inputData.eyePointPosX = position.z;
-		m_inputData.eyePointPosY = -position.x;
-		m_inputData.eyePointPosZ = position.y;
-		m_inputData.eyePointRotX = -MathUtility.ClampAngle(rotation.z) * Mathf.Deg2Rad;
-		m_inputData.eyePointRotY = MathUtility.ClampAngle(rotation.x) * Mathf.Deg2Rad;
-		m_inputData.eyePointRotZ = -MathUtility.ClampAngle(rotation.y) * Mathf.Deg2Rad;
-
 		m_inputSender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
 		}
 
@@ -384,7 +361,7 @@ public class DynismaTester : MonoBehaviour
 		boxRect.x += boxRect.width - boxWidth - 8;
 		boxRect.width = boxWidth;
 		boxRect.xMin = boxRect.xMax - boxWidth;
-		boxRect.yMin = boxRect.yMax - 160 - m_textBox.style.lineHeight * 11;
+		boxRect.yMin = boxRect.yMax - 160 - m_textBox.style.lineHeight * 6;
 
 		GUILayout.BeginArea(boxRect);
 		m_steerInput = GUILayout.HorizontalScrollbar(m_steerInput, 0.2f, -1.0f, 1.2f);
@@ -472,7 +449,7 @@ public class DynismaTester : MonoBehaviour
 		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
 		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
 
-		m_text.Append("\n\nInput Data (Sent)\n\n");
+		m_text.Append("\nInput Data (Sent)\n\n");
 		m_text.Append($"Steer Angle:          {m_inputData.steerAngle,8:0.000}\n");
 		m_text.Append($"Throttle:             {m_inputData.throttle,8:0.000}\n");
 		m_text.Append($"Brake:                {m_inputData.brake,8:0.000}\n");
@@ -488,10 +465,8 @@ public class DynismaTester : MonoBehaviour
 		int rotary1 = (m_inputData.rotary >> 4);
 		m_text.Append($"Rotary 1:              {rotary0}\n");
 		m_text.Append($"Rotary 2:              {rotary1}\n");
-		m_text.Append($"Eye Point Position:    {m_inputData.eyePointPosX,6:0.000}, {m_inputData.eyePointPosY,6:0.000}, {m_inputData.eyePointPosZ,6:0.000}  m\n");
-		m_text.Append($"Eye Point Rotation:    {m_inputData.eyePointRotX,6:0.000}, {m_inputData.eyePointRotY,6:0.000}, {m_inputData.eyePointRotZ,6:0.000}  rad\n");
 
-		m_text.Append("\n\nEye Point Data (Sent)\n\n");
+		m_text.Append("\nEye Point Data (Sent)\n\n");
 		m_text.Append($"Eye Point Position:    {m_eyePointData.eyePointPosX,6:0.000}, {m_eyePointData.eyePointPosY,6:0.000}, {m_eyePointData.eyePointPosZ,6:0.000}  m\n");
 		m_text.Append($"Eye Point Rotation:    {m_eyePointData.eyePointRotX,6:0.000}, {m_eyePointData.eyePointRotY,6:0.000}, {m_eyePointData.eyePointRotZ,6:0.000}  rad\n");
 
