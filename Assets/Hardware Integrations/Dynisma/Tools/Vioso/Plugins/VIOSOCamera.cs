@@ -18,6 +18,13 @@ public class VIOSOCamera : MonoBehaviour
     public Vector3 testEyePointPos;
     public Vector3 testEyePointRot;
 
+    // Debug
+
+    public static Matrix4x4 lastMatrix;
+    public static FrustumPlanes lastFrustum;
+
+    // VIOSO API
+
     public enum ERROR
     {
         NONE = 0,         /// No error, we succeeded
@@ -176,6 +183,9 @@ public class VIOSOCamera : MonoBehaviour
                 cam.transform.localPosition = orig_pos + p;
 
                 cam.projectionMatrix = Matrix4x4.Frustum(pl);
+
+                lastMatrix = mV;
+                lastFrustum = pl;
             }
         }
     }
