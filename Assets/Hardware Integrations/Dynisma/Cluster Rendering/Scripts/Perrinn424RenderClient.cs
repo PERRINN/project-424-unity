@@ -263,6 +263,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		m_vehicleTransform = vehicle.cachedTransform;
 		m_viewTransform = view != null? view.transform : null;
 
+		// Client overlay starts hidden
+		if (clientOverlay != null)
+			clientOverlay.SetActive(false);
+
 		m_state = new VisualState();
 		m_firstUpdate = false;
 		}
