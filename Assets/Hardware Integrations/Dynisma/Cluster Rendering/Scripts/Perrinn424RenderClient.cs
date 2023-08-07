@@ -28,6 +28,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[UnityEngine.Serialization.FormerlySerializedAs("head")]
 	public Transform view;
 	public CaveLapTimeUI caveLapTimeUI;
+	public GameObject clientOverlay;
 	public bool applyServerEyePointData = false;
 
 	[Space(5)]
@@ -215,6 +216,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Ideal lap time
 
 		public LapTimeState idealLapTime;
+
+		// Client
+
+		public bool clientOverlayVisible;
 		}
 
 
@@ -360,6 +365,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			else
 				m_state.idealLapTime.SetZero();
 
+			// Client overlay
+
+			m_state.clientOverlayVisible = clientOverlay != null? clientOverlay.activeSelf : false;
+
 			// Send state to clients
 
 			RpcUpdateVisualState(m_state);
@@ -419,6 +428,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		if (caveLapTimeUI != null)
 			caveLapTimeUI.SetLapTime(state.idealLapTime.GetLapTime());
+
+		// Apply client overlay visibility
+
+		if (clientOverlay != null)
+			clientOverlay.SetActive(state.clientOverlayVisible);
 		}
 	}
 
