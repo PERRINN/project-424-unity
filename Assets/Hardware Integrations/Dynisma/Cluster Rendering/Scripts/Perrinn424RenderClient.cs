@@ -32,6 +32,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	[Header("Client Overlay")]
 	public GameObject clientOverlay;
+	public Text packetsPerSecondText;
 	public bool enableToggleKey = false;
 	public KeyCode toggleKey = KeyCode.R;
 
@@ -228,6 +229,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 
 	bool m_firstUpdate;
+	int m_packets;
+	float m_timer;
+	float m_packetsPerSecond;
+
 	Transform m_vehicleTransform;
 	Transform m_viewTransform;
 	VPVisualEffects m_visualEffects;
@@ -277,6 +282,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		if (NetworkManager.DebugInfoLevel >= 2)
 			Debug.Log($"RenderClient SERVER - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
 		m_firstUpdate = true;
+
+		m_packets = 0;
+		m_timer = Time.unscaledTime;
 		}
 
 
@@ -285,6 +293,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		if (NetworkManager.DebugInfoLevel >= 2)
 			Debug.Log($"RenderClient CLIENT - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
 		m_firstUpdate = true;
+
+		m_packets = 0;
+		m_timer = Time.unscaledTime;
 
 		// Host mode. Ignore client initialization.
 
@@ -316,6 +327,20 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		if (enableToggleKey && Input.GetKeyDown(toggleKey) && clientOverlay != null)
 			{
 			clientOverlay.SetActive(!clientOverlay.activeSelf);
+			}
+
+		// Update packets per second
+
+		if (Time.unscaledTime > m_timer + 1.0f)
+			{
+			m_packetsPerSecond = m_packets;
+			m_packets = 0;
+			m_timer = Time.unscaledTime;
+			}
+
+		if (packetsPerSecondText != null && packetsPerSecondText.isActiveAndEnabled)
+			{
+			packetsPerSecondText.text = $"Network: {m_packetsPerSecond:F0} PPS";
 			}
 		}
 
@@ -389,6 +414,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			// Send state to clients
 
 			RpcUpdateVisualState(m_state);
+			m_packets++;
 			}
 		}
 
@@ -402,6 +428,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[ClientRpc]
 	void RpcUpdateVisualState (VisualState state)
 		{
+		m_packets++;
+
 		// Apply vehicle and view poses
 
 		state.vehicle.ApplyTo(m_vehicleTransform);
