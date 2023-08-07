@@ -221,7 +221,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		public LapTimeState idealLapTime;
 
-		// Client
+		// Client overlay
 
 		public bool clientOverlayVisible;
 		}
