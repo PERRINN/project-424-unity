@@ -307,6 +307,15 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		}
 
 
+	void Update ()
+		{
+		if (enableToggleKey && Input.GetKeyDown(toggleKey) && clientOverlay != null)
+			{
+			clientOverlay.SetActive(!clientOverlay.activeSelf);
+			}
+		}
+
+
 	// Server LateUpdate executed _after_ the default time to get the latest position from the camera
 	// and the latest visual values.
 
