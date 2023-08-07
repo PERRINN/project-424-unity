@@ -28,8 +28,12 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[UnityEngine.Serialization.FormerlySerializedAs("head")]
 	public Transform view;
 	public CaveLapTimeUI caveLapTimeUI;
-	public GameObject clientOverlay;
 	public bool applyServerEyePointData = false;
+
+	[Header("Client Overlay")]
+	public GameObject clientOverlay;
+	public bool enableToggleKey = false;
+	public KeyCode toggleKey = KeyCode.R;
 
 	[Space(5)]
 	public Behaviour[] disableOnClients = new Behaviour[0];
@@ -431,7 +435,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Apply client overlay visibility
 
-		if (clientOverlay != null)
+		if (clientOverlay != null && clientOverlay.activeSelf != state.clientOverlayVisible)
 			clientOverlay.SetActive(state.clientOverlayVisible);
 		}
 	}
