@@ -230,7 +230,7 @@ public class DynismaTester : MonoBehaviour
 			}
 		catch (System.Exception e)
 			{
-			Debug.LogWarning($"DynismaTester Connection error: Most likely the port {listeningPort} is already in use by other application.");
+			Debug.LogWarning($"DynismaTester Connection error: Most likely the port {listeningPort} is already in use by other application.\n{e.Message}");
 			}
 		}
 
