@@ -41,7 +41,7 @@ namespace Perrinn424.Utilities
         public float Height => firstPersonCameraTarget.localPosition.y;
         public float FOV => firstPersonCamera.driverCameraFov;
         public bool Damping => headMotion != null? headMotion.longitudinal.mode != VPHeadMotion.HorizontalMotion.Mode.Disabled : false;
-        public float MinidashboardHeight => minidashboard.anchoredPosition.y;
+        public float MinidashboardHeight => minidashboard != null? minidashboard.anchoredPosition.y : 0.0f;
 
         private void Update()
         {
@@ -128,11 +128,14 @@ namespace Perrinn424.Utilities
 
         public void SetMinidashboardHeight(float height)
         {
-            Vector2 anchoredPosition = minidashboard.anchoredPosition;
-            anchoredPosition.y = height;
-            minidashboard.anchoredPosition = anchoredPosition;
+            if (minidashboard != null)
+            {
+                Vector2 anchoredPosition = minidashboard.anchoredPosition;
+                anchoredPosition.y = height;
+                minidashboard.anchoredPosition = anchoredPosition;
 
-            onSettingsChanged?.Invoke();
+                onSettingsChanged?.Invoke();
+            }
         }
     }
 }

@@ -21,13 +21,13 @@ namespace Perrinn424
 
         public void Update()
         {
-            count++;
             if (Time.unscaledTime > timer + refreshRate)
             {
                 Current = count / refreshRate;
                 count = 0;
                 timer = Time.unscaledTime;
             }
+            count++;
         }
     }
 }

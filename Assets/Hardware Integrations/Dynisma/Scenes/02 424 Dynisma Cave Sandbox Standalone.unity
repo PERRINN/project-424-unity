@@ -834,14 +834,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac776934fff74ad47af9c4fb2ffbbd2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  host: 127.0.0.1
-  port: 56234
-  maxFrequency: 100
+  maxSendFrequency: 100
+  inputHost: 127.0.0.1
+  inputPort: 56234
   steerAngleRange: 720
+  eyePointHost: 127.0.0.1
+  eyePointPort: 56232
   maxDisplacement: 1
   displacementRate: 1
   maxRotation: 30
   rotationRate: 30
+  autoCenter: 1
+  autoLoop: 0
   listeningPort: 56236
   showWidget: 1
   widget:
@@ -1104,6 +1108,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 346719764958316064, guid: 1b3a46a0a740fd54197c7ec82402e00f,
+        type: 3}
+      propertyPath: clientCanvasList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 346719764958316064, guid: 1b3a46a0a740fd54197c7ec82402e00f,
         type: 3}
       propertyPath: enableGameObjects.Array.data[0]
