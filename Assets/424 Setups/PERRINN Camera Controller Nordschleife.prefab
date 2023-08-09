@@ -30,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5167941506463346355}
   m_RootOrder: 0
@@ -146,6 +147,7 @@ Transform:
   m_LocalRotation: {x: -0.013146298, y: 0.9489111, z: -0.03988881, w: -0.31273606}
   m_LocalPosition: {x: 346.29205, y: 133.60085, z: 2339.8257}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5167941505499205942}
   m_Father: {fileID: 5167941506821221344}
@@ -211,6 +213,7 @@ MonoBehaviour:
   orbit:
     hotKey: 0
     distance: 14
+    targetRelative: 0
     minVerticalAngle: -10
     maxVerticalAngle: 70
     horizontalSpeed: 5
@@ -220,7 +223,7 @@ MonoBehaviour:
     maxDistance: 50
     distanceSpeed: 10
     distanceDamping: 4
-    requireKeyPressed: 0
+    requireKeyPressed: 1
     requiredKey: 324
     horizontalAxis: Mouse X
     verticalAxis: Mouse Y
@@ -331,6 +334,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5167941506463346355}
   - {fileID: 5167941505374172385}
@@ -366,6 +370,10 @@ MonoBehaviour:
   cameraController: {fileID: 5167941506821221346}
   VPCameraController: {fileID: 5167941506463346365}
   nextMode: 99
+  driverMode: 282
+  followMode: 283
+  orbitMode: 284
+  tvMode: 285
 --- !u!114 &8637295612344945864
 MonoBehaviour:
   m_ObjectHideFlags: 0
