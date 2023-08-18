@@ -16,13 +16,14 @@ using VehiclePhysics;
 
 public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EXAMPLE
 	{
-	public const int ThrottleInput				= 0;		// Throttle applied to MGUs				ratio		1000			1000 = 1.0 = 100%
-	public const int BrakePressure				= 1;		// Brake circuit pressure				bar			1000			30500 = 30.5 bar
+	public const int ThrottlePosition			= 0;		// Throttle pedal position				ratio		1000			1000 = 1.0 = 100%
+	public const int BrakePosition				= 1;		// Brake Pedal Position					ratio		1000			1000 = 1.0 = 100%
 	public const int SteeringWheelAngle			= 2;		// Angle in the steering column			deg			1000			12420 = 12.42 degrees
-	public const int DrsPosition				= 3;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
+	public const int EngagedGear				= 3;		// Engaged gear 						-			-				-1 Reverse, 0 Neutral, 1 Drive
+	public const int DrsPosition				= 4;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
 
-	public const int FrontDiffFriction			= 4;		// Front differential friction			Nm			1000			50000 = 50 Nm
-	public const int RearDiffFriction			= 5;		// Rear differential friction			Nm			1000			50000 = 50 Nm
+	public const int FrontDiffFriction			= 5;		// Front differential friction			Nm			1000			50000 = 50 Nm
+	public const int RearDiffFriction			= 6;		// Rear differential friction			Nm			1000			50000 = 50 Nm
 
 	public const int FrontRideHeight			= 10;		// Front ride height					m			1000			230 = 0.23 m = 230 mm
 	public const int FrontRollAngle				= 11;		// Front roll angle (signed)			deg			1000			2334 = 2.345 degrees
@@ -53,8 +54,8 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 
 	public const int EnableProcessedInput		= 50;		// If non-zero, use the processed input data below. Otherwise, use standard Input channel.
 
-	public const int InputMguThrottle			= 51;		// Throttle to be sent to the MGUs		ratio		10000			5000 = 0.5 = 50%
-	public const int InputBrakePressure			= 52;		// Brake pressure in the circuit		bar			10000			305000 = 30.5 bar
+	public const int InputThrottlePosition		= 51;		// Throttle pedal position				ratio		10000			5000 = 0.5 = 50%
+	public const int InputBrakePosition			= 52;		// Brake pedal position					ratio		10000			5000 = 0.5 = 50%
 	public const int InputSteerAngle			= 53;		// Steer angle for the steering column	deg			10000			155000 = 15.5 degrees
 	public const int InputGear					= 54;		// Gear (forward / neutral / reverse)				0 = Neutral, 1 = Forward, -1 = Reverse
 	public const int InputDrsPosition			= 55;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
@@ -77,10 +78,9 @@ public class Perrinn424CarController : VehicleBase
 
 	// Powertrain and dynamics
 
-	[UnityEngine.Serialization.FormerlySerializedAs("input")]
-	public PedalSetup pedals = new PedalSetup();
-	public MotorGeneratorUnit.Settings frontMgu = new MotorGeneratorUnit.Settings();
-	public MotorGeneratorUnit.Settings rearMgu = new MotorGeneratorUnit.Settings();
+	public DualMguTorqueMapContainerBase torqueMap;
+	[Range(0,1)]
+	public float reverseGearLimiter = 0.05f;
 
 	public Differential.Settings frontDifferential = new Differential.Settings();
 	public Differential.Settings rearDifferential = new Differential.Settings();
@@ -106,15 +106,15 @@ public class Perrinn424CarController : VehicleBase
 	[System.NonSerialized]
 	public float gearChangeMaxSpeed = 1.0f;
 
-	// Motor input is ignored when brake pressure is beyond this value
+	// Motor input is ignored when brake position is beyond this value
 
 	[System.NonSerialized]
-	public float brakePressureThreshold = 3.0f;
+	public float brakePressureThreshold = 0.03f;
 
 	// Internal values exposed
 
-	public float throttleInput => m_throttleInput;
-	public float brakePressure => m_brakePressure;
+	public float throttlePosition => m_throttlePosition;
+	public float brakePosition => m_brakePosition;
 	public float steerAngle => m_steerAngle;
 	public int gear => m_gear;
 
@@ -129,8 +129,8 @@ public class Perrinn424CarController : VehicleBase
 	Inertia m_inertia;
 	Steering m_steering;
 
-	float m_throttleInput;
-	float m_brakePressure;
+	float m_throttlePosition;
+	float m_brakePosition;
 	float m_steerAngle;
 	int m_gearMode;
 	int m_prevGearMode;
@@ -144,7 +144,7 @@ public class Perrinn424CarController : VehicleBase
 
 	class Powertrain
 		{
-		public MotorGeneratorUnit mgu;
+		public MguCore mgu;
 		public Differential differential;
 
 		Wheel m_leftWheel;
@@ -153,7 +153,7 @@ public class Perrinn424CarController : VehicleBase
 
 		public Powertrain (Wheel leftWheelBlock, Wheel rightWheelBlock)
 			{
-			mgu = new MotorGeneratorUnit();
+			mgu = new MguCore();
 			differential = new Differential();
 
 			Block.Connect(leftWheelBlock, differential, 0);
@@ -165,18 +165,18 @@ public class Perrinn424CarController : VehicleBase
 			}
 
 
-		public void SetInputs (int gearInput, float throttleInput, float brakePressure, float limiter)
+		public void SetInputs (int gearInput, float throttleInput, float brakeInput, float limiter)
 			{
 			// MGU
 
 			mgu.gearInput = gearInput;
 			mgu.throttleInput = throttleInput;
-			mgu.brakePressure = brakePressure;
+			mgu.brakeInput = brakeInput;
 			mgu.limiterInput = Mathf.Clamp01(limiter);
 
 			// Wheel brakes
 
-			float brakeTorque = mgu.GetWheelBrakeTorque(brakePressure);
+			float brakeTorque = mgu.GetHydraulicTorquePerWheel();
 			m_leftWheel.AddBrakeTorque(brakeTorque);
 			m_rightWheel.AddBrakeTorque(brakeTorque);
 			}
@@ -187,7 +187,7 @@ public class Perrinn424CarController : VehicleBase
 			channel[baseId + Perrinn424Data.Rpm] = (int)(mgu.sensorRpm * 1000);
 			channel[baseId + Perrinn424Data.Load] = (int)(mgu.sensorLoad * 1000);
 			channel[baseId + Perrinn424Data.Efficiency] = (int)(mgu.sensorEfficiency * 1000);
-			channel[baseId + Perrinn424Data.ElectricalPower] = (int)(mgu.sensorElectricalPower * 1000);
+			channel[baseId + Perrinn424Data.ElectricalPower] = (int)(mgu.sensorElectricalPower);
 			channel[baseId + Perrinn424Data.ElectricalTorque] = (int)(mgu.sensorElectricalTorque * 1000);
 			channel[baseId + Perrinn424Data.MechanicalTorque] = (int)(mgu.sensorMechanicalTorque * 1000);
 			channel[baseId + Perrinn424Data.StatorTorque] = (int)(mgu.sensorStatorTorque * 1000);
@@ -311,14 +311,20 @@ public class Perrinn424CarController : VehicleBase
 		ConfigureAxle(frontAxle, 0, 1, frontTires.GetTireFriction());
 		ConfigureAxle(rearAxle, 2, 3, rearTires.GetTireFriction());
 
-		// Configure an independent powertrain per axle
+		// Configure an independent powertrain per axle.
+		// Use a default torque map unset.
+
+		if (torqueMap == null)
+			DebugLogWarning("Torque maps not set - using default.");
+
+		DualMguTorqueMapBase dualTorqueMap = torqueMap != null? torqueMap.GetDualMguTorqueMap() : new DualMguTorqueMap();
 
         m_frontPowertrain = new Powertrain(wheels[0], wheels[1]);
-		m_frontPowertrain.mgu.settings = frontMgu;
+		m_frontPowertrain.mgu.provider = dualTorqueMap.TorqueProviderFront();
 		m_frontPowertrain.differential.settings = frontDifferential;
 
         m_rearPowertrain = new Powertrain(wheels[2], wheels[3]);
-		m_rearPowertrain.mgu.settings = rearMgu;
+		m_rearPowertrain.mgu.provider = dualTorqueMap.TorqueProviderRear();
 		m_rearPowertrain.differential.settings = rearDifferential;
 
 		// Configure ground tracking
@@ -444,8 +450,8 @@ public class Perrinn424CarController : VehicleBase
 
 			// Mgu throttle and brake pressure
 
-			m_throttleInput = Mathf.Clamp01(customData[Perrinn424Data.InputMguThrottle] / 10000.0f);
-			m_brakePressure = customData[Perrinn424Data.InputBrakePressure] / 10000.0f;
+			m_throttlePosition = Mathf.Clamp01(customData[Perrinn424Data.InputThrottlePosition] / 10000.0f);
+			m_brakePosition = customData[Perrinn424Data.InputBrakePosition] / 10000.0f;
 
 			// Steering angle to steer position
 
@@ -480,18 +486,13 @@ public class Perrinn424CarController : VehicleBase
 
 			m_gear = m_gearMode - (int)Gearbox.AutomaticGear.N;
 
-			// Throttle: apply speed limit / cruise control
-
-			throttlePosition = SpeedControl.GetThrottle(speedControl, inputData, data.Get(Channel.Vehicle));
-
 			// Process inputs
 
-			// Input settings are configured in the car independently of the torque maps.
-			// Being in a separate class allows all intermediate steps to be traced separately
-			// (pedal > mgu throttle > electrical torque > mechanical torque > wheel torque)
+			// Throttle: apply speed limit / cruise control
+			throttlePosition = SpeedControl.GetThrottle(speedControl, inputData, data.Get(Channel.Vehicle));
 
-			m_throttleInput = pedals.GetThrottleInput(throttlePosition);
-			m_brakePressure = pedals.GetBrakePressure(brakePosition);
+			m_throttlePosition = throttlePosition;
+			m_brakePosition = brakePosition;
 
 			// Process steering
 
@@ -504,13 +505,19 @@ public class Perrinn424CarController : VehicleBase
 
 		int ignitionInput = inputData[InputData.Key];
 		if (ignitionInput < 0)
-			m_throttleInput = 0.0f;
+			m_throttlePosition = 0.0f;
+
+		// Limiter in Reverse mode
+
+		float effectiveLimiter = mguLimiter;
+		if (m_gear < 0)
+			effectiveLimiter = Mathf.Min(mguLimiter, reverseGearLimiter);
 
 		// Apply received inputs to car elements
 
-		if (m_brakePressure > brakePressureThreshold) m_throttleInput = 0.0f;
-		m_frontPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure, mguLimiter);
-		m_rearPowertrain.SetInputs(m_gear, m_throttleInput, m_brakePressure, mguLimiter);
+		if (m_brakePosition > brakePressureThreshold) m_throttlePosition = 0.0f;
+		m_frontPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter);
+		m_rearPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter);
 
 		m_steering.steerInput = m_steerAngle / steering.steeringWheelRange * 2.0f;
 		m_steering.DoUpdate();
@@ -587,7 +594,7 @@ public class Perrinn424CarController : VehicleBase
 		// Engine Power: sum of the powers of both motors
 
 		float enginePower = m_frontPowertrain.mgu.sensorElectricalPower + m_rearPowertrain.mgu.sensorElectricalPower;
-		vehicleData[VehicleData.EnginePower] = (int)(enginePower * 1000.0f);
+		vehicleData[VehicleData.EnginePower] = (int)(enginePower);
 
         // Engine Load: average of the loads of both motors
 		// Negative means regenerative braking.
@@ -617,9 +624,10 @@ public class Perrinn424CarController : VehicleBase
 		// Fill the custom data bus
 
 		int[] customData = data.Get(Channel.Custom);
-		customData[Perrinn424Data.ThrottleInput] = (int)(m_throttleInput * 1000.0f);
-		customData[Perrinn424Data.BrakePressure] = (int)(m_brakePressure * 1000.0f);
+		customData[Perrinn424Data.ThrottlePosition] = (int)(m_throttlePosition * 1000.0f);
+		customData[Perrinn424Data.BrakePosition] = (int)(m_brakePosition * 1000.0f);
 		customData[Perrinn424Data.SteeringWheelAngle] = (int)(m_steerAngle * 1000.0f);
+		customData[Perrinn424Data.EngagedGear] = m_gear;
 		customData[Perrinn424Data.FrontDiffFriction] = (int)(m_frontPowertrain.differential.frictionTorque * 1000.0f);
 		customData[Perrinn424Data.RearDiffFriction] = (int)(m_rearPowertrain.differential.frictionTorque * 1000.0f);
 

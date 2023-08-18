@@ -21,7 +21,7 @@ namespace Perrinn424.AutopilotSystem
 
         [SerializeField]
         private bool autoStart = false;
-        
+
         [SerializeField]
         private AutopilotStartup startup;
 
@@ -165,7 +165,7 @@ namespace Perrinn424.AutopilotSystem
             Sample end = recordedLap[autopilotSearcher.EndIndex];
             float t = autopilotSearcher.Ratio;
             Sample interpolatedSample = Sample.Lerp(start, end, t);
-            
+
             return interpolatedSample;
         }
 
@@ -174,8 +174,8 @@ namespace Perrinn424.AutopilotSystem
             vehicle.data.Set(Channel.Custom, Perrinn424Data.EnableProcessedInput, 1);
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputDrsPosition, (int)(s.drsPosition * 10.0f));
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputSteerAngle, (int)(s.steeringAngle * 10000.0f));
-            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputMguThrottle, (int)(s.throttle * 100.0f));
-            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePressure, (int)(s.brakePressure * 10000.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputThrottlePosition, (int)(s.throttle * 100.0f));
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePosition, (int)(s.brake * 100.0f));
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, s.gear); //TODO
         }
 

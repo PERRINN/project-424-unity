@@ -138,13 +138,10 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		{
 		// Gather all data
 
-		int[] input = vehicle.data.Get(Channel.Input);
 		int[] custom = vehicle.data.Get(Channel.Custom);
 
-		float throttlePosition = input[InputData.Throttle] / 10000.0f;
-		float brakePosition = input[InputData.Brake] / 10000.0f;
-		float throttleInput = custom[Perrinn424Data.ThrottleInput] / 1000.0f;
-		float brakePressure = custom[Perrinn424Data.BrakePressure] / 1000.0f;
+		float throttlePosition = custom[Perrinn424Data.ThrottlePosition] / 1000.0f;
+		float brakePosition = custom[Perrinn424Data.BrakePosition] / 1000.0f;
 
 		float frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
 		float frontLoad = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Load] / 1000.0f;
@@ -172,8 +169,7 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 
 		m_text.Clear();
 		m_text.Append("                    Throttle      Brake    \n");
-		m_text.Append($"Pedal Position        {throttlePosition*100,3:0.} %        {brakePosition*100,3:0.} %   \n");
-		m_text.Append($"Input                 {throttleInput*100,3:0.} %      {brakePressure,5:0.0} bar \n\n");
+		m_text.Append($"Pedal Position        {throttlePosition*100,3:0.} %        {brakePosition*100,3:0.} %   \n\n");
 		m_text.Append("                    MGU Front    MGU Rear    Balance (%)\n");
 		m_text.Append($"Rpm                  {frontRpm,6:0.}      {rearRpm,6:0.}        {GetBalanceStr(frontRpm, rearRpm),5}\n");
 		m_text.Append($"Load (%)             {frontLoad*100,6:0.0}      {rearLoad*100,6:0.0}        {GetBalanceStr(frontLoad, rearLoad),5}\n\n");

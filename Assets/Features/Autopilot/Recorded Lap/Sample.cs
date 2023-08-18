@@ -13,7 +13,8 @@ namespace Perrinn424.AutopilotSystem
         public int gear;
         public float steeringAngle;
         public float throttle;
-        public float brakePressure;
+        [UnityEngine.Serialization.FormerlySerializedAs("brakePressure")]
+        public float brake;
 
         public float drsPosition;
 
@@ -25,10 +26,10 @@ namespace Perrinn424.AutopilotSystem
                 speed = Mathf.Lerp(a.speed, b.speed, t),
                 position = Vector3.Lerp(a.position, b.position, t),
                 rotation = Quaternion.Lerp(a.rotation, b.rotation, t),
-                               
+
                 steeringAngle = Mathf.Lerp(a.steeringAngle, b.steeringAngle, t),
                 throttle = Mathf.Lerp(a.throttle, b.throttle, t),
-                brakePressure = Mathf.Lerp(a.brakePressure, b.brakePressure, t),
+                brake = Mathf.Lerp(a.brake, b.brake, t),
                 gear = a.gear,
 
                 drsPosition = Mathf.Lerp(a.drsPosition, b.drsPosition, t),
@@ -42,14 +43,14 @@ namespace Perrinn424.AutopilotSystem
                 speed = Mathf.LerpUnclamped(a.speed, b.speed, t),
                 position = Vector3.LerpUnclamped(a.position, b.position, t),
                 rotation = Quaternion.LerpUnclamped(a.rotation, b.rotation, t),
-                               
+
                 steeringAngle = Mathf.LerpUnclamped(a.steeringAngle, b.steeringAngle, t),
                 throttle = Mathf.LerpUnclamped(a.throttle, b.throttle, t),
-                brakePressure = Mathf.LerpUnclamped(a.brakePressure, b.brakePressure, t),
+                brake = Mathf.LerpUnclamped(a.brake, b.brake, t),
                 gear = a.gear,
-                
+
                 drsPosition = Mathf.LerpUnclamped(a.drsPosition, b.drsPosition, t),
             };
         }
-    } 
+    }
 }

@@ -1197,6 +1197,9 @@ MonoBehaviour:
     suspensionGain: 0.2
     suspensionCutSpeed: 0.5
     suspensionMaxSpeed: 5
+  externalThrottle: 0
+  externalBrake: 0
+  externalSteer: 0
 --- !u!1 &2483877715507374421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1778,25 +1781,11 @@ MonoBehaviour:
     layerMask:
       serializedVersion: 2
       m_Bits: 4294967291
-  pedals:
-    throttleShape: 1.6
-    brakeShape: 1.25
-    brakePedalGain: 1
-  frontMgu:
-    torqueMap: {fileID: 11400000, guid: 05ff9bb249be3ec4caa5acdf502661fc, type: 2}
-    inertia: 0.008
-    mu1: 1
-    mu2: 0
-    mu3: 0
-  rearMgu:
-    torqueMap: {fileID: 11400000, guid: 6ae7b46e44b181742b578c816f9865ee, type: 2}
-    inertia: 0.016
-    mu1: 1
-    mu2: 0
-    mu3: 0
+  torqueMap: {fileID: 11400000, guid: 1f8e8551a140aea4998f3607b9aeaffc, type: 2}
+  reverseGearLimiter: 0.06
   frontDifferential:
     type: 3
-    gearRatio: 7.35
+    gearRatio: 1
     preload: 0
     powerStiffness: 0.2
     coastStiffness: 0.2
@@ -1809,7 +1798,7 @@ MonoBehaviour:
     coastRatio: 5
   rearDifferential:
     type: 3
-    gearRatio: 7.35
+    gearRatio: 1
     preload: 50
     powerStiffness: 0.2
     coastStiffness: 0.2
@@ -2066,7 +2055,7 @@ MonoBehaviour:
   emitTelemetry: 1
   showWidget: 0
   widget:
-    position: {x: 8, y: 8}
+    position: {x: 8, y: 300}
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 12
     fontColor: {r: 1, g: 1, b: 1, a: 1}
@@ -3731,13 +3720,13 @@ MonoBehaviour:
     basePitch: 0
     baseVolume: 0.2
     trqGain: 0.003
-    rpmGain: 0.001
+    rpmGain: 0.007
   rearMGU:
     audioSource: {fileID: 6058073175760964403}
     basePitch: 0
     baseVolume: 0.2
     trqGain: 0.003
-    rpmGain: 0.001
+    rpmGain: 0.007
 --- !u!114 &4702314485555505614
 MonoBehaviour:
   m_ObjectHideFlags: 0

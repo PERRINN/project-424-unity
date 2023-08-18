@@ -169,14 +169,14 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	//  This function calculates the DRS position
 	//
 	//	 [IN]	throttlePos: 0 to 1 [-]
-	//	 [IN]	brakePressure: [bar]
+	//	 [IN]	brakePos:    0 to 1 [-]
 	//	 [IN]	DRSpos:      0 to 1 [-]
 	//
 	//	 [OUT]	DRSpos:      0 to 1 [-]
 
-	float CalcDRSPosition(float throttlePos, float brakePressure, float DRSpos, bool DRSbutton, bool DRSdisabled)
+	float CalcDRSPosition(float throttlePos, float brakePos, float DRSpos, int gear, bool DRSbutton, bool DRSdisabled)
 	{
-		if (throttlePos == 1 && brakePressure < 1 && !DRSclosing && !DRSdisabled)
+		if (throttlePos == 1 && brakePos < 0.01f && gear > 0 && !DRSclosing && !DRSdisabled)
 		{
 			if (DRSbutton == true)
 				DRSopenButton = true;
@@ -246,11 +246,12 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			raceInput[RaceInputData.Drs] = 0;
 
 			// Raw inputs from the 424 data
-			float throttleInput = customData[Perrinn424Data.ThrottleInput] / 1000.0f;
-			float brakePressure = customData[Perrinn424Data.BrakePressure] / 1000.0f;
+			float throttlePosition = customData[Perrinn424Data.ThrottlePosition] / 1000.0f;
+			float brakePosition = customData[Perrinn424Data.BrakePosition] / 1000.0f;
+			int gear = customData[Perrinn424Data.EngagedGear];
 
 			// Calculating DRS position
-			DRS = CalcDRSPosition(throttleInput, brakePressure, DRS, drsPressed, drsDisabled);
+			DRS = CalcDRSPosition(throttlePosition, brakePosition, DRS, gear, drsPressed, drsDisabled);
 		//	}
 
 		// Feeding DRS position to the car data bus
