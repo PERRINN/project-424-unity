@@ -38,6 +38,14 @@ public class Perrinn424Input : VehicleBehaviour
 	public bool rumbleEnabled = false;
 	public ForceFeedbackModelV1.RumbleSettings ffbRumbleV1 = new ForceFeedbackModelV1.RumbleSettings();
 
+	[Header("External Input")]
+	[Range(0,1)]
+	public float externalThrottle;
+	[Range(0,1)]
+	public float externalBrake;
+	[Range(-1,1)]
+	public float externalSteer;
+
 
 	// Private fields
 
@@ -102,12 +110,15 @@ public class Perrinn424Input : VehicleBehaviour
 
 		// Throttle, brake
 
-		inputData[InputData.Throttle] = (int)(m_input.throttle.Value() * 10000);
-		inputData[InputData.Brake] = (int)(m_input.brake.Value() * 10000);
+		float throttleInput = Mathf.Clamp01(m_input.throttle.Value() + externalThrottle);
+		float brakeInput = Mathf.Clamp01(m_input.brake.Value() + externalBrake);
+
+		inputData[InputData.Throttle] = (int)(throttleInput * 10000);
+		inputData[InputData.Brake] = (int)(brakeInput * 10000);
 
 		// Apply steer based in the physical and logical steering wheel ranges
 
-		float steerInput = m_input.steer.Value();
+		float steerInput = m_input.steer.Value() + externalSteer;
 		float physicalWheelRange = InputManager.instance.settings.physicalWheelRange;
 
 		if (m_steeringSettings != null && m_steeringSettings.steeringWheelRange > 0.0f && physicalWheelRange > 0.0f)
@@ -120,7 +131,6 @@ public class Perrinn424Input : VehicleBehaviour
 		if (m_input.gearUp.PressedThisFrame()) inputData[InputData.AutomaticGear]++;
 		if (m_input.gearDown.PressedThisFrame()) inputData[InputData.AutomaticGear]--;
 		}
-
 
 
 	public override void FixedUpdateVehicle ()

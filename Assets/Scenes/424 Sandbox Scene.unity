@@ -192,6 +192,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c6735671d9ee149bf9ba4508c8534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &443393497 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 188128, guid: 2cd00faae1c08854f97acb5a87bb5f0d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1270587121}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &443393502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443393497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46d10eb4a385c164f9b450923b016ee9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceObject: {fileID: 1680117802}
+  threshold: 2000
+  use2DDistance: 1
+  UpdateAllScenes: 1
+  UpdateParticles: 1
+  UpdateTrailRenderers: 1
+  UpdateLineRenderers: 1
 --- !u!1 &531594961
 GameObject:
   m_ObjectHideFlags: 0
@@ -831,6 +856,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1648630302}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1680117802 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6905166633232598312, guid: f67f11fd176aacd40b543b5bef4279c3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1914757899}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1914757899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1089,12 +1120,22 @@ PrefabInstance:
     - target: {fileID: 2483877716263781649, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: currentTemplate
-      value: 17
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483877716263781660, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: showWidget
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781661, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: showTelemetry
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441876987297680215, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: torqueMaps
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5836138189955798097, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}

@@ -49,8 +49,8 @@ namespace Perrinn424
         {
             int[] custom = vehicle.data.Get(Channel.Custom);
 
-            float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
-            float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.ElectricalPower] / 1000.0f;
+            float frontPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.PreEfficiencyPower] / 1000.0f;
+            float rearPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.PreEfficiencyPower] / 1000.0f;
 
             powerModel.UpdateModel(frontPower, rearPower);
             temperatureModel.UpdateModel(Time.deltaTime, vehicle.speed, powerModel.Power);
