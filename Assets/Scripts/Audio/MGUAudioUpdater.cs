@@ -35,9 +35,9 @@ namespace Perrinn424
 
             int[] custom = vehicle.data.Get(Channel.Custom);
             frontMGU.rpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
-            frontMGU.mechanical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
+            frontMGU.mechanical = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.MguTorque] / 1000.0f;
             rearMGU.rpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
-            rearMGU.mechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MechanicalTorque] / 1000.0f;
+            rearMGU.mechanical = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MguTorque] / 1000.0f;
 
             // Update the MGU audios
 

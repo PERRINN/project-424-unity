@@ -42,11 +42,11 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	public const int Rpm						= 0;		// Motor rpm							rpm			1000			1200000 = 1200 rpm
 	public const int Load						= 1;		// Motor load. Negative = renerative	ratio		1000			900 = 0.9 = 90%
 	public const int Efficiency					= 2;		// Efficiency							ratio		1000			945 = 0.945
-	public const int ElectricalPower			= 3;		// Generated electrical power			kW			1000			250000 = 250 kW
-	public const int ElectricalTorque			= 4;		// Generated electrical torque			Nm			1000			50000 = 50 Nm
-	public const int MechanicalTorque			= 5;		// Generated mechanical torque			Nm			1000			50000 = 50 Nm
-	public const int StatorTorque				= 6;		// Pre-inertia torque					Nm			1000			55000 = 55 Nm
-	public const int RotorTorque				= 7;		// Final torque in the mgu rotor		Nm			1000			50600 = 50.6 Nm
+	public const int PreEfficiencyPower			= 3;		// Pre-efficiency power					kW			1000			250000 = 250 kW
+	public const int PreEfficiencyTorque		= 4;		// Pre-efficiency torque				Nm			1000			50000 = 50 Nm
+	public const int MguTorque					= 5;		// Post-efficiency torque				Nm			1000			50000 = 50 Nm
+	public const int MguStatorTorque			= 6;		// Pre-inertia torque					Nm			1000			55000 = 55 Nm
+	public const int MguRotorTorque				= 7;		// Final torque in the mgu rotor		Nm			1000			50600 = 50.6 Nm
 	public const int ShaftsTorque				= 8;		// Sum of torques at drive shafts		Nm			1000			150600 = 150.6 Nm
 	public const int WheelsTorque				= 9;		// Sum of torques at wheels				Nm			1000			150600 = 150.6 Nm
 
@@ -187,11 +187,11 @@ public class Perrinn424CarController : VehicleBase
 			channel[baseId + Perrinn424Data.Rpm] = (int)(mgu.sensorRpm * 1000);
 			channel[baseId + Perrinn424Data.Load] = (int)(mgu.sensorLoad * 1000);
 			channel[baseId + Perrinn424Data.Efficiency] = (int)(mgu.sensorEfficiency * 1000);
-			channel[baseId + Perrinn424Data.ElectricalPower] = (int)(mgu.sensorElectricalPower);
-			channel[baseId + Perrinn424Data.ElectricalTorque] = (int)(mgu.sensorElectricalTorque * 1000);
-			channel[baseId + Perrinn424Data.MechanicalTorque] = (int)(mgu.sensorMechanicalTorque * 1000);
-			channel[baseId + Perrinn424Data.StatorTorque] = (int)(mgu.sensorStatorTorque * 1000);
-			channel[baseId + Perrinn424Data.RotorTorque] = (int)(mgu.sensorRotorTorque * 1000);
+			channel[baseId + Perrinn424Data.PreEfficiencyPower] = (int)(mgu.sensorPreEfficiencyPower);
+			channel[baseId + Perrinn424Data.PreEfficiencyTorque] = (int)(mgu.sensorPreEfficiencyTorque * 1000);
+			channel[baseId + Perrinn424Data.MguTorque] = (int)(mgu.sensorMguTorque * 1000);
+			channel[baseId + Perrinn424Data.MguStatorTorque] = (int)(mgu.sensorStatorTorque * 1000);
+			channel[baseId + Perrinn424Data.MguRotorTorque] = (int)(mgu.sensorRotorTorque * 1000);
 			channel[baseId + Perrinn424Data.ShaftsTorque] = (int)((m_leftWheel.driveTorque + m_rightWheel.driveTorque) * 1000);
 
 			float leftWheelTorque = m_leftWheel.driveTorque + m_leftWheel.brakeTorque * Mathf.Sign(-m_leftWheel.contact.localVelocity.y);
@@ -202,7 +202,7 @@ public class Perrinn424CarController : VehicleBase
 
 		public string GetDebutStr ()
 			{
-			float power = mgu.sensorRpm * Block.RpmToW * mgu.sensorElectricalTorque;
+			float power = mgu.sensorRpm * Block.RpmToW * mgu.sensorPreEfficiencyTorque;
 			return $"{power/1000:0.0} kW";
 			}
 
@@ -593,7 +593,7 @@ public class Perrinn424CarController : VehicleBase
 
 		// Engine Power: sum of the powers of both motors
 
-		float enginePower = m_frontPowertrain.mgu.sensorElectricalPower + m_rearPowertrain.mgu.sensorElectricalPower;
+		float enginePower = m_frontPowertrain.mgu.sensorPreEfficiencyPower + m_rearPowertrain.mgu.sensorPreEfficiencyPower;
 		vehicleData[VehicleData.EnginePower] = (int)(enginePower);
 
         // Engine Load: average of the loads of both motors
