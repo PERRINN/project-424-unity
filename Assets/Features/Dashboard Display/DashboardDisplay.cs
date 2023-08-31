@@ -30,86 +30,84 @@ namespace Perrinn424
         public Text batterySOC;
         public Text batteryCapacity;
 
-        float maxSpeed = float.MinValue;
-        float minSpeed = float.MaxValue;
-        float minSpdTime;
-        bool minSpdWindow = false;
-        bool setMinSpdTrigger = false;
-        float drsPosition;
-        //bool autopilotState = false;
 
+        float m_maxSpeed = float.MinValue;
+        float m_minSpeed = float.MaxValue;
+        float m_minSpdTime;
+        bool m_minSpdWindow = false;
+        bool m_setMinSpdTrigger = false;
 
-        float elapsed;
-        LapTimer m_lapTimer = null;
-        private BaseAutopilot autopilot;
-        private Battery battery;
+        float m_elapsed;
+        // LapTimer m_lapTimer = null;
+        BaseAutopilot m_autopilot;
+        Battery m_battery;
 
         public override void OnEnableVehicle ()
         {
-            m_lapTimer = FindObjectOfType<LapTimer>();
-            autopilot = vehicle.GetComponentInChildren<BaseAutopilot>();
-            battery = vehicle.GetComponentInChildren<Battery>();
+            // m_lapTimer = FindObjectOfType<LapTimer>();
+            m_autopilot = vehicle.GetComponentInChildren<BaseAutopilot>();
+            m_battery = vehicle.GetComponentInChildren<Battery>();
         }
 
         public override void UpdateVehicle ()
         {
-            elapsed += Time.deltaTime;
-            if (elapsed > 1 / screenFPS)
+            m_elapsed += Time.deltaTime;
+            if (m_elapsed > 1 / screenFPS)
             {
-                elapsed = 0;
+                m_elapsed = 0;
 
                 int[] vehicleData = vehicle.data.Get(Channel.Vehicle);
                 int[] custom = vehicle.data.Get(Channel.Custom);
                 float speed = vehicleData[VehicleData.Speed] / 1000.0f;
 
-                if (speed > setMinSpeed) { setMinSpdTrigger = true; }
+                if (speed > setMinSpeed) { m_setMinSpdTrigger = true; }
                 else
                 {
-                    setMinSpdTrigger = false;
-                    minSpdWindow = false;
-                    maxSpeed = float.MinValue;
-                    minSpeed = float.MaxValue;
+                    m_setMinSpdTrigger = false;
+                    m_minSpdWindow = false;
+                    m_maxSpeed = float.MinValue;
+                    m_minSpeed = float.MaxValue;
                 }
 
                 // Speed in m/s & minimum speed window
-                if (speedMps != null)
+                if (IsAvailable(speedMps))
                 {
-                    if (minSpeed > speed && setMinSpdTrigger)
+                    if (m_minSpeed > speed && m_setMinSpdTrigger)
                     {
-                        minSpeed = speed;
+                        m_minSpeed = speed;
                         StartTimer();
-                        minSpdWindow = true;
+                        m_minSpdWindow = true;
                         minIndicator.enabled = false;
                     }
 
-                    if (maxSpeed < speed) { maxSpeed = speed; }
+                    if (m_maxSpeed < speed) { m_maxSpeed = speed; }
 
-                    if (minSpdWindow)
+                    if (m_minSpdWindow)
                     {
                         float systemTime = Time.time;
-                        if (systemTime - minSpdTime > windowSeconds)
+                        if (systemTime - m_minSpdTime > windowSeconds)
                         {
-                            minSpdWindow = false;
-                            maxSpeed = float.MinValue;
+                            m_minSpdWindow = false;
+                            m_maxSpeed = float.MinValue;
                         }
-                        else { speedMps.text = minSpeed.ToString("0"); }
+                        else { speedMps.text = m_minSpeed.ToString("0"); }
 
-                        if (systemTime - minSpdTime > 0.02f) { minIndicator.enabled = true; }
+                        if (systemTime - m_minSpdTime > 0.02f) { minIndicator.enabled = true; }
                     }
                     else
                     {
-                        minSpeed = maxSpeed - 1;
+                        m_minSpeed = m_maxSpeed - 1;
                         speedMps.text = speed.ToString("0");
                         minIndicator.enabled = false;
                     }
                 }
 
                 // Speed in kph
-                if (speedKph != null) // km/hour
+                if (IsAvailable(speedKph)) // km/hour
                     speedKph.text = (speed * 3.6f).ToString("0");
 
                 // Gear
-                if (gear != null)
+                if (IsAvailable(gear))
                 {
                     int gearId = vehicleData[VehicleData.GearboxGear];
                     bool switchingGear = vehicleData[VehicleData.GearboxShifting] != 0;
@@ -129,42 +127,51 @@ namespace Perrinn424
                 }
 
                 // DRS signal
-                drsPosition = vehicle.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
 
-                if (drsImage != null)
+                if (IsAvailable(drsImage))
                 {
-                    drsImage.color = new Color32(255, 255, 255, 0);
-                    // drsImage.color = new Color32(255, 255, 255, (byte) (drsPosition * 255));
+                    // drsImage.color = new Color32(255, 255, 255, (byte) (m_drsPosition * 255));
+                    float drsPosition = vehicle.data.Get(Channel.Custom, Perrinn424Data.DrsPosition) / 1000.0f;
                     if (drsPosition > 0f)
-                    {
                         drsImage.color = new Color32(255, 255, 255, 255);
-                    }
+                    else
+                        drsImage.color = new Color32(255, 255, 255, 0);
                 }
 
                 // AUTOPILOT signal
-                if (autopilotImage != null)
+                if (IsAvailable(autopilotImage) && m_autopilot != null)
                 {
-                    byte alpha = (autopilot != null && autopilot.IsOn) ? (byte)255 : (byte)0;
+                    byte alpha = (m_autopilot != null && m_autopilot.IsOn) ? (byte)255 : (byte)0;
                     autopilotImage.color = new Color32(255, 255, 255, alpha);
                 }
 
-
-                totalElecPower.text = battery.Power.ToString("+0;-0");
-                batterySOC.text = string.Format("{0:0.00}", battery.StateOfCharge * 100f);
-                batteryCapacity.text = battery.NetEnergy.ToString("0.00");
-
-                // Time Difference with the Best Lap
-                if (timeDifference != null && m_lapTimer != null && autopilot != null)
+                // Power and battery data
+                if (m_battery != null)
                 {
-                    timeDifference.text = autopilot.DeltaTime.ToString("+0.00;-0.00");
+                    if (IsAvailable(totalElecPower))
+                        totalElecPower.text = m_battery.Power.ToString("+0;-0");
+
+                    if (IsAvailable(batterySOC))
+                        batterySOC.text = string.Format("{0:0.00}", m_battery.StateOfCharge * 100f);
+
+                    if (IsAvailable(batteryCapacity))
+                        batteryCapacity.text = m_battery.NetEnergy.ToString("0.00");
                 }
 
+                // Time Difference with the Best Lap
+                if (IsAvailable(timeDifference))
+                {
+                    if (m_autopilot != null)
+                        timeDifference.text = m_autopilot.DeltaTime.ToString("+0.00;-0.00");
+                    else
+                        timeDifference.text = "--.--";
+                }
             }
         }
 
         void StartTimer()
         {
-            minSpdTime = Time.time;
+            m_minSpdTime = Time.time;
         }
 
         string GetBalanceStr(float front, float rear)
@@ -174,6 +181,11 @@ namespace Perrinn424
             if (front != 0.0f && rear != 0.0f && Mathf.Sign(front) != Mathf.Sign(rear)) return "-  ";
 
             return (front / (front + rear) * 100).ToString("0.0");
+        }
+
+        static bool IsAvailable(Behaviour element)
+        {
+            return element != null && element.isActiveAndEnabled;
         }
     }
 
