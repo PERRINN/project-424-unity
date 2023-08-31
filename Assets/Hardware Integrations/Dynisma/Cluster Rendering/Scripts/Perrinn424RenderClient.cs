@@ -236,7 +236,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	Transform m_vehicleTransform;
 	Transform m_viewTransform;
 	VPVisualEffects m_visualEffects;
-	SteeringScreen m_dashboardDisplay;
+	DashboardDisplay m_dashboardDisplay;
 	VisualState m_state;
 	LapTimer m_lapTimer;
 
@@ -264,7 +264,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		syncInterval = 0.016f;
 
 		m_visualEffects = vehicle.GetComponentInChildren<VPVisualEffects>();
-		m_dashboardDisplay = vehicle.GetComponentInChildren<SteeringScreen>();
+		m_dashboardDisplay = vehicle.GetComponentInChildren<DashboardDisplay>();
 		m_vehicleTransform = vehicle.cachedTransform;
 		m_viewTransform = view != null? view.transform : null;
 

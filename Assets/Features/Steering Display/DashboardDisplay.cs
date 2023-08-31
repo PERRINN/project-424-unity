@@ -8,7 +8,7 @@ using VehiclePhysics.Timing;
 
 namespace Perrinn424
 {
-    public class SteeringScreen : VehicleBehaviour
+    public class DashboardDisplay : VehicleBehaviour
     {
         public float windowSeconds = 4.0f;
         public float setMinSpeed = 10.0f;
