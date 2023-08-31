@@ -31,17 +31,17 @@ namespace Perrinn424.Utilities
         public VPHeadMotion headMotion;
 
         [Header("Minidashboard Adjustment")]
-        public KeyCode increaseminiDashboardHeight;
-        public KeyCode decreaseminiDashboardHeight;
-        public float minidashboardHeightStep = 0.01f;
-        public RectTransform minidashboard;
+        public KeyCode increaseMiniDashboardPosition = KeyCode.Alpha5;
+        public KeyCode decreaseMiniDashboardPosition = KeyCode.Alpha4;
+        public float miniDashboardHeightStep = 0.0025f;
+        public Transform miniDashboard;
 
         public event Action onSettingsChanged;
 
         public float Height => firstPersonCameraTarget.localPosition.y;
         public float FOV => firstPersonCamera.driverCameraFov;
         public bool Damping => headMotion != null? headMotion.longitudinal.mode != VPHeadMotion.HorizontalMotion.Mode.Disabled : false;
-        public float MinidashboardHeight => minidashboard != null? minidashboard.anchoredPosition.y : 0.0f;
+        public float MiniDashboardPosition => miniDashboard != null? miniDashboard.localPosition.y : 0.0f;
 
         private void Update()
         {
@@ -68,13 +68,13 @@ namespace Perrinn424.Utilities
                 ToggleViewDamping();
             }
 
-            if (Input.GetKeyDown(increaseminiDashboardHeight))
+            if (Input.GetKeyDown(increaseMiniDashboardPosition))
             {
-                SetMinidashboardHeightDelta(minidashboardHeightStep);
+                SetMiniDashboardPositionDelta(miniDashboardHeightStep);
             }
-            else if (Input.GetKeyDown(decreaseminiDashboardHeight))
+            else if (Input.GetKeyDown(decreaseMiniDashboardPosition))
             {
-                SetMinidashboardHeightDelta(-minidashboardHeightStep);
+                SetMiniDashboardPositionDelta(-miniDashboardHeightStep);
             }
         }
         private void SetDriverHeightDelta(float delta)
@@ -121,19 +121,18 @@ namespace Perrinn424.Utilities
         }
 
 
-        private void SetMinidashboardHeightDelta(float delta)
+        private void SetMiniDashboardPositionDelta(float delta)
         {
-            SetMinidashboardHeight(MinidashboardHeight + delta);
+            SetMiniDashboardPosition(MiniDashboardPosition + delta);
         }
 
-        public void SetMinidashboardHeight(float height)
+        public void SetMiniDashboardPosition(float position)
         {
-            if (minidashboard != null)
+            if (miniDashboard != null)
             {
-                Vector2 anchoredPosition = minidashboard.anchoredPosition;
-                anchoredPosition.y = height;
-                minidashboard.anchoredPosition = anchoredPosition;
-
+                Vector3 localPos = miniDashboard.localPosition;
+                localPos.y = position;
+                miniDashboard.localPosition = localPos;
                 onSettingsChanged?.Invoke();
             }
         }

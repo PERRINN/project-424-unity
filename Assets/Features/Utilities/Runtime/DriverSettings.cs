@@ -9,6 +9,6 @@ namespace Perrinn424.Utilities
         public float fov;
         public bool damping = true;
         public int steeringWheelVisibility;
-        public float minidashboardHeight = 0.7f;
+        public float miniDashboardPosition;
     }
 }
