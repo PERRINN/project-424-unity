@@ -60,7 +60,10 @@ namespace Perrinn424
                 int[] custom = vehicle.data.Get(Channel.Custom);
                 float speed = vehicleData[VehicleData.Speed] / 1000.0f;
 
-                if (speed > setMinSpeed) { m_setMinSpdTrigger = true; }
+                if (speed > setMinSpeed)
+                {
+                    m_setMinSpdTrigger = true;
+                }
                 else
                 {
                     m_setMinSpdTrigger = false;
@@ -77,10 +80,15 @@ namespace Perrinn424
                         m_minSpeed = speed;
                         StartTimer();
                         m_minSpdWindow = true;
-                        minIndicator.enabled = false;
+
+                        if (minIndicator != null)
+                            minIndicator.enabled = false;
                     }
 
-                    if (m_maxSpeed < speed) { m_maxSpeed = speed; }
+                    if (m_maxSpeed < speed)
+                    {
+                        m_maxSpeed = speed;
+                    }
 
                     if (m_minSpdWindow)
                     {
@@ -90,15 +98,23 @@ namespace Perrinn424
                             m_minSpdWindow = false;
                             m_maxSpeed = float.MinValue;
                         }
-                        else { speedMps.text = m_minSpeed.ToString("0"); }
+                        else
+                        {
+                            speedMps.text = m_minSpeed.ToString("0");
+                        }
 
-                        if (systemTime - m_minSpdTime > 0.02f) { minIndicator.enabled = true; }
+                        if (systemTime - m_minSpdTime > 0.02f)
+                        {
+                            if (minIndicator != null)
+                                minIndicator.enabled = true;
+                        }
                     }
                     else
                     {
                         m_minSpeed = m_maxSpeed - 1;
                         speedMps.text = speed.ToString("0");
-                        minIndicator.enabled = false;
+                        if (minIndicator != null)
+                            minIndicator.enabled = false;
                     }
                 }
 
