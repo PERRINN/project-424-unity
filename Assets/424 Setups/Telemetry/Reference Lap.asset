@@ -22,6 +22,7 @@ MonoBehaviour:
       displayOrigin: 5
       displayRange: 5
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
     - name: Autopilot_Reference_Speed
       displayName: Reference Speed
@@ -29,6 +30,7 @@ MonoBehaviour:
       displayOrigin: 5
       displayRange: 5
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.7360222, g: 1, b: 0.4245283, a: 0.5019608}
     - name: Throttle
       displayName: 
@@ -36,6 +38,7 @@ MonoBehaviour:
       displayOrigin: 0
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.3372549, g: 0.9607844, b: 0.36862746, a: 1}
     - name: Autopilot_Reference_Throttle
       displayName: Reference Throttle
@@ -43,20 +46,23 @@ MonoBehaviour:
       displayOrigin: 0
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.3372549, g: 0.9607844, b: 0.36862746, a: 0.5019608}
-    - name: BrakePressure
+    - name: Brake
       displayName: 
       labelOffset: -1.5
       displayOrigin: 0
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.9568628, g: 0.2627451, b: 0.21176472, a: 1}
-    - name: Autopilot_Reference_BrakePressure
+    - name: Autopilot_Reference_Brake
       displayName: Reference Brake Pressure
       labelOffset: -0.5
       displayOrigin: 0
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.9568628, g: 0.2627451, b: 0.21176472, a: 0.5019608}
     - name: SteeringAngle
       displayName: 
@@ -64,6 +70,7 @@ MonoBehaviour:
       displayOrigin: 2.5
       displayRange: -1.5
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 1}
     - name: Autopilot_Reference_SteeringAngle
       displayName: Reference Steering Angle
@@ -71,6 +78,7 @@ MonoBehaviour:
       displayOrigin: 2.5
       displayRange: -1.5
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.5019608}
     - name: Autopilot_Delta_Time
       displayName: Delta Time
@@ -78,6 +86,7 @@ MonoBehaviour:
       displayOrigin: 4
       displayRange: 10
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.007843137, g: 0.30496502, b: 1, a: 0.6509804}
     - name: AeroDrsPosition
       displayName: DRS
@@ -85,6 +94,7 @@ MonoBehaviour:
       displayOrigin: 6.5
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 1, g: 0.10470843, b: 0, a: 1}
     - name: Autopilot_Reference_DRS
       displayName: Reference DRS
@@ -92,6 +102,7 @@ MonoBehaviour:
       displayOrigin: 6.5
       displayRange: 1
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 1, g: 0.10588236, b: 0, a: 0.5019608}
     - name: Autopilot_IsStartup
       displayName: Autopilot Startup
@@ -99,6 +110,7 @@ MonoBehaviour:
       displayOrigin: 10
       displayRange: 0.25
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 1, g: 0, b: 0.70634127, a: 1}
     - name: Autopilot_IsOn
       displayName: Autopilot On
@@ -106,4 +118,5 @@ MonoBehaviour:
       displayOrigin: 10
       displayRange: 0.25
       adjustToRange: 0
+      mirror: 0
       displayColor: {r: 0.24743211, g: 1, b: 0, a: 1}

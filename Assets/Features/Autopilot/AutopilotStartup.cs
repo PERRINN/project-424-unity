@@ -17,6 +17,7 @@ namespace Perrinn424.AutopilotSystem
         private VehicleBase vehicle;
 
         public bool isStartUp = true;
+
         public void Init(VehicleBase vehicle)
         {
             this.vehicle = vehicle;
@@ -38,17 +39,18 @@ namespace Perrinn424.AutopilotSystem
 
             return isStartUp;
         }
+
         public Sample Correct(Sample sample)
         {
 
             rotationCorrector.Correct(sample.rotation);
 
             Sample startupSample = sample;
-            
-            startupSample.brakePressure = 0;
+
+            startupSample.brake = 0;
             startupSample.throttle = (int)(100 * throttle);
 
             return startupSample;
         }
-    } 
+    }
 }

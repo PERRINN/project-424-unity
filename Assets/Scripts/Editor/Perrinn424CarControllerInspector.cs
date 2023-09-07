@@ -28,17 +28,33 @@ public class Perrinn424CarControllerInspector : VPInspector
 		DrawProperty("frontAxle");
 		DrawProperty("rearAxle");
 		Space();
-		DrawProperty("frontTires");
-		DrawProperty("rearTires");
+
+		// Front tires
+		bool editPressed;
+		var tireAsset = DrawEditableProperty("frontTires", out editPressed).objectReferenceValue as TireDataContainerBase;
+		if (editPressed && tireAsset != null)
+			TireEditorWindow.OpenAsset(tireAsset);
+
+		// Rear tires
+		tireAsset = DrawEditableProperty("rearTires", out editPressed).objectReferenceValue as TireDataContainerBase;
+		if (editPressed && tireAsset != null)
+			TireEditorWindow.OpenAsset(tireAsset);
+
 		GUI.enabled = true;
 		Space();
 		DrawProperty("groundTracking");
 
-		DrawHeader("Powertrain and dynamics");
+		// Torque maps
 
-		DrawProperty("pedals");
-		DrawProperty("frontMgu");
-		DrawProperty("rearMgu");
+		DrawHeader("Powertrain and dynamics");
+		if (CommonEditorTools.IsActiveAndPlaying((MonoBehaviour)target))
+			GUI.enabled = false;
+		var torqueMapAsset = DrawEditableProperty("torqueMap", out editPressed).objectReferenceValue as DualMguTorqueMapContainerBase;
+		if (editPressed && torqueMapAsset != null)
+			DualMguTorqueMapEditorWindow.OpenAsset(torqueMapAsset);
+		GUI.enabled = true;
+		DrawProperty("reverseGearLimiter");
+
 		Space();
 		DrawProperty("frontDifferential");
 		DrawProperty("rearDifferential");
@@ -69,7 +85,6 @@ public class Perrinn424CarControllerInspector : VPInspector
 		if (!advancedSuspension) GUI.enabled = false;
 		DrawProperty("suspensionDamperLimitFactor");
 		GUI.enabled = true;
-
 		}
 
 

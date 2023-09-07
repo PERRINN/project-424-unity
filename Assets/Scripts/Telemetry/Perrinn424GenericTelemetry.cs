@@ -29,8 +29,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxEngineRpm = 21000.0f;
 		vehicle.telemetry.specs.maxEnginePowerKw = 500.0f;
 		vehicle.telemetry.specs.minEnginePowerKw = -500.0f;
-		vehicle.telemetry.specs.maxEngineTorque = 650.0f;
-		vehicle.telemetry.specs.minEngineTorque = -650.0f;
+		vehicle.telemetry.specs.maxEngineTorque = 4400.0f;
+		vehicle.telemetry.specs.minEngineTorque = -4400.0f;
 
 		vehicle.telemetry.ApplySpecifications();
 
@@ -122,7 +122,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			channelInfo[0].SetNameAndSemantic("Gear", Telemetry.Semantic.Gear);
 			channelInfo[1].SetNameAndSemantic("SteeringAngle", Telemetry.Semantic.SteeringWheelAngle);
 			channelInfo[2].SetNameAndSemantic("Throttle", Telemetry.Semantic.Ratio);
-			channelInfo[3].SetNameAndSemantic("BrakePressure", Telemetry.Semantic.BrakePressure);
+			channelInfo[3].SetNameAndSemantic("Brake", Telemetry.Semantic.Ratio);
 			channelInfo[4].SetNameAndSemantic("Speed", Telemetry.Semantic.Speed);
 			}
 
@@ -131,8 +131,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			{
 			values[index+0] = m_controller.gear;
 			values[index+1] = m_controller.steerAngle;
-			values[index+2] = m_controller.throttleInput;
-			values[index+3] = m_controller.brakePressure;
+			values[index+2] = m_controller.throttlePosition;
+			values[index+3] = m_controller.brakePosition;
 			values[index+4] = m_vehicle.speed;
 			}
 		}

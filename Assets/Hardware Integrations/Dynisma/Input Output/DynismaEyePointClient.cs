@@ -31,6 +31,8 @@ public class DynismaEyePointClient : MonoBehaviour
 		public double eyePointRotX;		// rad
 		public double eyePointRotY;		// rad
 		public double eyePointRotZ;		// rad
+
+		// 48 bytes
 		}
 
 	UdpConnection m_listener = new UdpConnection();

@@ -34,7 +34,7 @@ namespace VehiclePhysics.EditorTools
 public class DllProjectUtility
 	{
 	static string dllPath = @"Assets\Vehicle Physics Pro\Sdk\VehiclePhysics.dll";
-	static string sdkPath = @"Assets\Vehicle Physics Pro\Sdk\VehiclePhysicsPro sdk-v10-alpha.csv";
+	static string sdkPath = @"Assets\Vehicle Physics Pro\Sdk\VehiclePhysicsPro.csv";
 
 
 	struct Class
@@ -329,12 +329,21 @@ public class DllProjectUtility
 
 		if (string.IsNullOrEmpty(GUID))
 			{
+			// Try reading it from a txt file
+
+			GUID = File.ReadAllText(Path.ChangeExtension(dllPath, "txt"));
+			if (string.IsNullOrEmpty(GUID))
+				{
+				throw new Exception("Dll or Txt file not found (" + dllPath + "). Aborted.");
+				}
+			/*
 			#if DEBUG_MODE
 			GUID = "XXINVALIDGUIDXX";
 			#else
 			// GUID = "c22152d75ab87b646a3cce92fe8e232b";
 			throw new Exception("Dll file not found (" + dllPath + "). Aborted.");
 			#endif
+			*/
 			}
 
 		return GUID;

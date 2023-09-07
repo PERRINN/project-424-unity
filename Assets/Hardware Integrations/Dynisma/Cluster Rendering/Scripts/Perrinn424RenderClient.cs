@@ -30,6 +30,12 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public CaveLapTimeUI caveLapTimeUI;
 	public bool applyServerEyePointData = false;
 
+	[Header("Client Overlay")]
+	public GameObject clientOverlay;
+	public Text packetsPerSecondText;
+	public bool enableToggleKey = false;
+	public KeyCode toggleKey = KeyCode.R;
+
 	[Space(5)]
 	public Behaviour[] disableOnClients = new Behaviour[0];
 
@@ -215,14 +221,22 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		// Ideal lap time
 
 		public LapTimeState idealLapTime;
+
+		// Client overlay
+
+		public bool clientOverlayVisible;
 		}
 
 
 	bool m_firstUpdate;
+	int m_packets;
+	float m_timer;
+	float m_packetsPerSecond;
+
 	Transform m_vehicleTransform;
 	Transform m_viewTransform;
 	VPVisualEffects m_visualEffects;
-	SteeringScreen m_dashboardDisplay;
+	DashboardDisplay m_dashboardDisplay;
 	VisualState m_state;
 	LapTimer m_lapTimer;
 
@@ -250,9 +264,13 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		syncInterval = 0.016f;
 
 		m_visualEffects = vehicle.GetComponentInChildren<VPVisualEffects>();
-		m_dashboardDisplay = vehicle.GetComponentInChildren<SteeringScreen>();
+		m_dashboardDisplay = vehicle.GetComponentInChildren<DashboardDisplay>();
 		m_vehicleTransform = vehicle.cachedTransform;
 		m_viewTransform = view != null? view.transform : null;
+
+		// Client overlay starts hidden
+		if (clientOverlay != null)
+			clientOverlay.SetActive(false);
 
 		m_state = new VisualState();
 		m_firstUpdate = false;
@@ -264,6 +282,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		if (NetworkManager.DebugInfoLevel >= 2)
 			Debug.Log($"RenderClient SERVER - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
 		m_firstUpdate = true;
+
+		m_packets = 0;
+		m_timer = Time.unscaledTime;
 		}
 
 
@@ -272,6 +293,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		if (NetworkManager.DebugInfoLevel >= 2)
 			Debug.Log($"RenderClient CLIENT - IsServer: {isServer} IsClient: {isClient} IsServerOnly: {isServerOnly} IsClientOnly: {isClientOnly}");
 		m_firstUpdate = true;
+
+		m_packets = 0;
+		m_timer = Time.unscaledTime;
 
 		// Host mode. Ignore client initialization.
 
@@ -294,6 +318,29 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			{
 			if (b != null)
 				b.enabled = false;
+			}
+		}
+
+
+	void Update ()
+		{
+		if (enableToggleKey && Input.GetKeyDown(toggleKey) && clientOverlay != null)
+			{
+			clientOverlay.SetActive(!clientOverlay.activeSelf);
+			}
+
+		// Update packets per second
+
+		if (Time.unscaledTime > m_timer + 1.0f)
+			{
+			m_packetsPerSecond = m_packets;
+			m_packets = 0;
+			m_timer = Time.unscaledTime;
+			}
+
+		if (packetsPerSecondText != null && packetsPerSecondText.isActiveAndEnabled)
+			{
+			packetsPerSecondText.text = $"Network: {m_packetsPerSecond:F0} PPS";
 			}
 		}
 
@@ -360,9 +407,14 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			else
 				m_state.idealLapTime.SetZero();
 
+			// Client overlay
+
+			m_state.clientOverlayVisible = clientOverlay != null? clientOverlay.activeSelf : false;
+
 			// Send state to clients
 
 			RpcUpdateVisualState(m_state);
+			m_packets++;
 			}
 		}
 
@@ -376,6 +428,8 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[ClientRpc]
 	void RpcUpdateVisualState (VisualState state)
 		{
+		m_packets++;
+
 		// Apply vehicle and view poses
 
 		state.vehicle.ApplyTo(m_vehicleTransform);
@@ -419,6 +473,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		if (caveLapTimeUI != null)
 			caveLapTimeUI.SetLapTime(state.idealLapTime.GetLapTime());
+
+		// Apply client overlay visibility
+
+		if (clientOverlay != null && clientOverlay.activeSelf != state.clientOverlayVisible)
+			clientOverlay.SetActive(state.clientOverlayVisible);
 		}
 	}
 

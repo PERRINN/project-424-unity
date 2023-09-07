@@ -193,7 +193,7 @@ public class MotionSystemsPlatform : VehicleBehaviour
 		// Vehicle input
 
 		m_motionData.gear = m_controller.gear;
-		m_motionData.brakePressure = m_controller.brakePressure;
+		m_motionData.brakePressure = m_controller.brakePosition * 100;
 
 		// Coordinate system is ISO 8855
 		// https://www.mathworks.com/help/driving/ug/coordinate-systems.html

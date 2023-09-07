@@ -13,17 +13,27 @@ namespace Perrinn424
 
 public class DynismaTester : MonoBehaviour
 	{
+	[UnityEngine.Serialization.FormerlySerializedAs("maxFrequency")]
+	public int maxSendFrequency = 100;
+
 	[Header("Input Data")]
-	public string host = "127.0.0.1";
-	public int port = 56234;
-	public int maxFrequency = 100;
+	[UnityEngine.Serialization.FormerlySerializedAs("host")]
+	public string inputHost = "127.0.0.1";
+	[UnityEngine.Serialization.FormerlySerializedAs("port")]
+	public int inputPort = 56234;
 	public int steerAngleRange = 300;
+
+	[Header("Eye Point Data")]
+	public string eyePointHost = "127.0.0.1";
+	public int eyePointPort = 56232;
 
 	[Header("Simulated Platform")]
 	public float maxDisplacement = 1.0f;
 	public float displacementRate = 1.0f;
 	public float maxRotation = 30.0f;
 	public float rotationRate = 30.0f;
+	public bool autoCenter = true;
+	public bool autoLoop = false;
 
 	[Header("Motion Data")]
 	public int listeningPort = 56236;
@@ -56,7 +66,11 @@ public class DynismaTester : MonoBehaviour
 		public bool downShift;
 		public byte button;				// 1 bit per button
 		public byte rotary;				// two 8-position rotaries on the wheel, split the uint8 into two 4-bit values
+		}
 
+
+	struct EyePointData
+		{
 		// Eye point position from motion platform
 		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
 
@@ -89,7 +103,7 @@ public class DynismaTester : MonoBehaviour
 
 	// Send input data
 
-	UdpSender m_sender = null;
+	UdpSender m_inputSender = null;
 	InputData m_inputData = new InputData();
 	int m_skipCount = 0;
 	float m_throttle = 0.0f;
@@ -100,6 +114,12 @@ public class DynismaTester : MonoBehaviour
 	bool[] m_button = new bool[8];
 	int m_rotary0 = 0;
 	int m_rotary1 = 0;
+
+	// Send eye point data
+
+	UdpSender m_eyePointSender = null;
+	EyePointData m_eyePointData = new EyePointData();
+	int m_autoLoopDir = 1;
 
 
 	void OnValidate ()
@@ -113,16 +133,16 @@ public class DynismaTester : MonoBehaviour
 		{
 		// Show runtime byte sizes of each struct
 
-		Debug.Log($"InputData: {Marshal.SizeOf(new InputData())} MotionData: {Marshal.SizeOf(new MotionData())}");
-
-		// Initialize connections
-
-		Connect();
+		Debug.Log($"InputData: {Marshal.SizeOf(typeof(InputData))}  MotionData: {Marshal.SizeOf(typeof(MotionData))}  EyePointData: {Marshal.SizeOf(typeof(EyePointData))}");
 
 		// Initialize widget
 
 		m_textBox.settings = widget;
 		m_textBox.title = "Dynisma Tester";
+
+		// Initialize connections
+
+		Connect();
 		}
 
 
@@ -170,12 +190,16 @@ public class DynismaTester : MonoBehaviour
 		// Send input data limited by the maximum frequency specified
 
 		float fixedUpdateFrequency = 1.0f / Time.fixedDeltaTime;
-		int sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxFrequency);
+		int sendInterval = Mathf.CeilToInt(fixedUpdateFrequency / maxSendFrequency);
 
 		m_skipCount++;
-		if (m_sender != null && m_skipCount >= sendInterval)
+		if (m_skipCount >= sendInterval)
 			{
-			SendInputData();
+			if (m_inputSender != null)
+				SendInputData();
+			if (m_eyePointSender != null)
+				SendEyePointData();
+
 			m_skipCount = 0;
 			}
 		}
@@ -183,33 +207,43 @@ public class DynismaTester : MonoBehaviour
 
 	void Connect ()
 		{
-        m_sender = new UdpSender(host, port);
+        m_inputSender = new UdpSender(inputHost, inputPort);
+        m_eyePointSender = new UdpSender(eyePointHost, eyePointPort);
 		m_skipCount = 0;
 
-		m_listener.StartConnection(listeningPort);
-		m_size = 0;
-		m_received = 0;
-		m_packetCount = 0;
-		m_packetCountTime = Time.time;
-		m_packetFrequency = 0.0f;
-		m_thread.Start(m_listener, () =>
+		try
 			{
-			lock (m_buffer)
+			m_listener.StartConnection(listeningPort);
+			m_size = 0;
+			m_received = 0;
+			m_packetCount = 0;
+			m_packetCountTime = Time.time;
+			m_packetFrequency = 0.0f;
+			m_thread.Start(m_listener, () =>
 				{
-				m_size = m_listener.GetMessageBinary(m_buffer);
-				m_received++;
-				}
-			});
+				lock (m_buffer)
+					{
+					m_size = m_listener.GetMessageBinary(m_buffer);
+					m_received++;
+					}
+				});
+			}
+		catch (System.Exception e)
+			{
+			Debug.LogWarning($"DynismaTester Connection error: Most likely the port {listeningPort} is already in use by other application.\n{e.Message}");
+			}
 		}
 
 
 	void Disconnect ()
 		{
-		m_sender.Close();
+		m_inputSender.Close();
+		m_eyePointSender.Close();
 		m_thread.Stop();
 		m_listener.StopConnection();
 
-		m_sender = null;
+		m_inputSender = null;
+		m_eyePointSender = null;
 		}
 
 
@@ -235,20 +269,26 @@ public class DynismaTester : MonoBehaviour
 		int rotary1 = Mathf.Clamp(m_rotary1, 0, 15);
 		m_inputData.rotary = (byte)((rotary1 << 4) | rotary0);
 
+		m_inputSender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
+		}
+
+
+	void SendEyePointData ()
+		{
 		// Convert simulated motion platform pose to ISO 8855
 		// (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
 
 		Vector3 position = transform.localPosition;
 		Vector3 rotation = transform.localRotation.eulerAngles;
 
-		m_inputData.eyePointPosX = position.z;
-		m_inputData.eyePointPosY = -position.x;
-		m_inputData.eyePointPosZ = position.y;
-		m_inputData.eyePointRotX = -MathUtility.ClampAngle(rotation.z) * Mathf.Deg2Rad;
-		m_inputData.eyePointRotY = MathUtility.ClampAngle(rotation.x) * Mathf.Deg2Rad;
-		m_inputData.eyePointRotZ = -MathUtility.ClampAngle(rotation.y) * Mathf.Deg2Rad;
+		m_eyePointData.eyePointPosX = position.z;
+		m_eyePointData.eyePointPosY = -position.x;
+		m_eyePointData.eyePointPosZ = position.y;
+		m_eyePointData.eyePointRotX = -MathUtility.ClampAngle(rotation.z) * Mathf.Deg2Rad;
+		m_eyePointData.eyePointRotY = MathUtility.ClampAngle(rotation.x) * Mathf.Deg2Rad;
+		m_eyePointData.eyePointRotZ = -MathUtility.ClampAngle(rotation.y) * Mathf.Deg2Rad;
 
-		m_sender.SendSync(ObjectUtility.GetBytesFromStruct<InputData>(m_inputData));
+		m_eyePointSender.SendSync(ObjectUtility.GetBytesFromStruct<EyePointData>(m_eyePointData));
 		}
 
 
@@ -270,6 +310,17 @@ public class DynismaTester : MonoBehaviour
 			if (Input.GetKey(KeyCode.UpArrow)) targetPos.z = +1;
 			}
 
+		if (autoLoop)
+			{
+			if (m_autoLoopDir == 1 && transform.localPosition.z >= 1)
+				m_autoLoopDir = -1;
+			else
+			if (m_autoLoopDir == -1 && transform.localPosition.z <= -1)
+				m_autoLoopDir = 1;
+
+			targetPos = new Vector3(0, 0, m_autoLoopDir);
+			}
+
 		Vector3 targetAngles = Vector3.zero;
 		if (rotate)
 			{
@@ -282,11 +333,15 @@ public class DynismaTester : MonoBehaviour
 			}
 
 		targetPos = targetPos.normalized * maxDisplacement;
-		transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPos, displacementRate * Time.deltaTime);
+		if (autoCenter || targetPos.magnitude > 0.0f)
+			transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPos, displacementRate * Time.deltaTime);
 
 		targetAngles = targetAngles * maxRotation;
-		Quaternion targetRot = Quaternion.Euler(targetAngles);
-		transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetRot, rotationRate * Time.deltaTime);
+		if (autoCenter || targetAngles.magnitude > 0.0f)
+			{
+			Quaternion targetRot = Quaternion.Euler(targetAngles);
+			transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetRot, rotationRate * Time.deltaTime);
+			}
 		}
 
 
@@ -313,7 +368,7 @@ public class DynismaTester : MonoBehaviour
 		boxRect.x += boxRect.width - boxWidth - 8;
 		boxRect.width = boxWidth;
 		boxRect.xMin = boxRect.xMax - boxWidth;
-		boxRect.yMin = boxRect.yMax - 160 - m_textBox.style.lineHeight * 5;
+		boxRect.yMin = boxRect.yMax - 160 - m_textBox.style.lineHeight * 6;
 
 		GUILayout.BeginArea(boxRect);
 		m_steerInput = GUILayout.HorizontalScrollbar(m_steerInput, 0.2f, -1.0f, 1.2f);
@@ -361,10 +416,17 @@ public class DynismaTester : MonoBehaviour
 		GUILayout.BeginArea(rect);
 		GUILayout.Label("Listen to motion data at (port):", m_textBox.style);
 		int.TryParse(GUILayout.TextField(listeningPort.ToString(), m_inputFieldStyle, GUILayout.Width(fieldSize/2)), out listeningPort);
+
 		GUILayout.Label("Send input to (host, port):", m_textBox.style);
 		GUILayout.BeginHorizontal();
-		host = GUILayout.TextField(host, m_inputFieldStyle, GUILayout.Width(fieldSize));
-		int.TryParse(GUILayout.TextField(port.ToString(), m_inputFieldStyle, GUILayout.Width(fieldSize/2)), out port);
+		inputHost = GUILayout.TextField(inputHost, m_inputFieldStyle, GUILayout.Width(fieldSize));
+		int.TryParse(GUILayout.TextField(inputPort.ToString(), m_inputFieldStyle, GUILayout.Width(fieldSize/2)), out inputPort);
+		GUILayout.EndHorizontal();
+
+		GUILayout.Label("Send eye point data to (host, port):", m_textBox.style);
+		GUILayout.BeginHorizontal();
+		eyePointHost = GUILayout.TextField(eyePointHost, m_inputFieldStyle, GUILayout.Width(fieldSize));
+		int.TryParse(GUILayout.TextField(eyePointPort.ToString(), m_inputFieldStyle, GUILayout.Width(fieldSize/2)), out eyePointPort);
 		GUILayout.EndHorizontal();
 		GUILayout.EndArea();
 
@@ -384,7 +446,8 @@ public class DynismaTester : MonoBehaviour
 	void UpdateWidgetText ()
 		{
 		m_text.Clear();
-		m_text.Append("\n\n\n\n\n\n\n\n");
+		m_text.Append("\n\n\n\n\n\n\n\n\n\n");
+
 		m_text.Append("Motion Platform Data (Received)\n\n");
 		m_text.Append($"Packets:               {m_received}  ({m_packetFrequency:0.} Hz)\n");
 		m_text.Append($"Acceleration:          X:{m_motionData.accelerationX,10:0.000000}  Y:{m_motionData.accelerationY,10:0.000000}  Z:{m_motionData.accelerationZ,10:0.000000}  m/s2\n");
@@ -392,7 +455,8 @@ public class DynismaTester : MonoBehaviour
 		m_text.Append($"Steering Torque:      {m_motionData.steeringTorque,11:0.000000}  Nm\n");
 		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
 		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
-		m_text.Append("\n\nInput Data (Sent)\n\n");
+
+		m_text.Append("\nInput Data (Sent)\n\n");
 		m_text.Append($"Steer Angle:          {m_inputData.steerAngle,8:0.000}\n");
 		m_text.Append($"Throttle:             {m_inputData.throttle,8:0.000}\n");
 		m_text.Append($"Brake:                {m_inputData.brake,8:0.000}\n");
@@ -408,8 +472,11 @@ public class DynismaTester : MonoBehaviour
 		int rotary1 = (m_inputData.rotary >> 4);
 		m_text.Append($"Rotary 1:              {rotary0}\n");
 		m_text.Append($"Rotary 2:              {rotary1}\n");
-		m_text.Append($"Eye Point Position:    {m_inputData.eyePointPosX,6:0.000}, {m_inputData.eyePointPosY,6:0.000}, {m_inputData.eyePointPosZ,6:0.000}  m\n");
-		m_text.Append($"Eye Point Rotation:    {m_inputData.eyePointRotX,6:0.000}, {m_inputData.eyePointRotY,6:0.000}, {m_inputData.eyePointRotZ,6:0.000}  rad\n");
+
+		m_text.Append("\nEye Point Data (Sent)\n\n");
+		m_text.Append($"Eye Point Position:    {m_eyePointData.eyePointPosX,6:0.000}, {m_eyePointData.eyePointPosY,6:0.000}, {m_eyePointData.eyePointPosZ,6:0.000}  m\n");
+		m_text.Append($"Eye Point Rotation:    {m_eyePointData.eyePointRotX,6:0.000}, {m_eyePointData.eyePointRotY,6:0.000}, {m_eyePointData.eyePointRotZ,6:0.000}  rad\n");
+
 		m_text.Append("\nMove eye point with arrows, page up/down, and ctrl/shift.");
 
 		m_textBox.text = m_text.ToString();

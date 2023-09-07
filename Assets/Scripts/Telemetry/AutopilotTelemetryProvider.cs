@@ -43,7 +43,7 @@ namespace Perrinn424
                 channelInfo[6].SetNameAndSemantic("Autopilot_Delta_Time", Telemetry.Semantic.Custom, timeSemantic);
 
                 channelInfo[7].SetNameAndSemantic("Autopilot_Reference_Throttle", Telemetry.Semantic.Ratio);
-				channelInfo[8].SetNameAndSemantic("Autopilot_Reference_BrakePressure", Telemetry.Semantic.BrakePressure);
+				channelInfo[8].SetNameAndSemantic("Autopilot_Reference_Brake", Telemetry.Semantic.Ratio);
 				channelInfo[9].SetNameAndSemantic("Autopilot_Reference_SteeringAngle", Telemetry.Semantic.SteeringWheelAngle);
 				channelInfo[10].SetNameAndSemantic("Autopilot_Reference_DRS", Telemetry.Semantic.Ratio);
 
@@ -72,7 +72,7 @@ namespace Perrinn424
 				values[index + 5] = autopilot.ReferenceSpeed;
 				values[index + 6] = autopilot.DeltaTime;
 				values[index + 7] = autopilot.ReferenceSample.throttle/100f;
-				values[index + 8] = autopilot.ReferenceSample.brakePressure;
+				values[index + 8] = autopilot.ReferenceSample.brake/100f;
 				values[index + 9] = autopilot.ReferenceSample.steeringAngle;
 				values[index + 10] = autopilot.ReferenceSample.drsPosition/100;
 

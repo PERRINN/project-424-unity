@@ -162,7 +162,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     gear = 0,
                     steeringAngle = float.NaN,
                     throttle = float.NaN,
-                    brakePressure = float.NaN,
+                    brake = float.NaN,
                     speed = float.NaN
 
                 };
@@ -206,7 +206,10 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                 sample.gear = (int)table[rowIndex, "Gear"];
                 sample.steeringAngle = table[rowIndex, "SteeringAngle"];
                 sample.throttle = table[rowIndex, "Throttle"];
-                sample.brakePressure = table[rowIndex, "BrakePressure"];
+
+                // Assume old format if there's no BrakePressure header
+                if (!table.TryGetValue(rowIndex, "Brake", out sample.brake))
+                    sample.brake = table[rowIndex, "BrakePressure"];
 
                 table.TryGetValue(rowIndex, "AeroDrsPosition", out sample.drsPosition);
 

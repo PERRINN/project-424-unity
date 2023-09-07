@@ -89,7 +89,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 			{
 			if (enableTestMode)
 				{
-				if ((int)testStation > clients.Length)
+				if (((int)testStation - (int)TestStation.Client1) >= clients.Length)
 					testStation = TestStation.Server;
 
 				if (testStation == TestStation.AllClients)

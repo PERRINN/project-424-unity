@@ -42,22 +42,25 @@ namespace Perrinn424.CameraSystem
 
             if (Input.GetKeyDown(driverMode))
             {
-                cameraController.SetVPCamera(VPCameraController.Mode.Driver);
+                cameraController.SetMode(CameraController.Mode.Driver);
             }
 
             if (Input.GetKeyDown(followMode))
             {
-                cameraController.SetVPCamera(VPCameraController.Mode.SmoothFollow);
+                cameraController.SetMode(CameraController.Mode.SmoothFollow);
             }
 
             if (Input.GetKeyDown(orbitMode))
             {
-                cameraController.SetVPCamera(VPCameraController.Mode.Orbit);
+                if (VPCameraController.orbit.targetRelative)
+                    cameraController.SetMode(CameraController.Mode.OrbitFixed);
+                else
+                    cameraController.SetMode(CameraController.Mode.Orbit);
             }
 
             if (Input.GetKeyDown(tvMode))
             {
-                cameraController.SetTVMode();
+                cameraController.SetMode(CameraController.Mode.Tv);
             }
         }
 

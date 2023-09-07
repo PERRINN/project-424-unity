@@ -5,11 +5,9 @@ namespace Perrinn424.UI
 {
     public class FPSCounter : MonoBehaviour
     {
-        [SerializeField]
-        private Text text = default;
-
-        [SerializeField]
-        private float refreshRate = 1.0f;
+        public Text text = default;
+        public float refreshRate = 1.0f;
+        public string prepend = "";
 
         private Perrinn424.FPSCounter counter;
 
@@ -27,7 +25,7 @@ namespace Perrinn424.UI
 
         private void Refresh()
         {
-            text.text = $"{counter.Current:F0} FPS";
+            text.text = $"{prepend}{counter.Current:F0} FPS";
         }
     }
 }
