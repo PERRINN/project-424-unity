@@ -334,6 +334,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     listeningPort: 56234
+--- !u!1 &632695475 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2483877716221292736, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2483877715364263435}
+  m_PrefabAsset: {fileID: 0}
 --- !u!850595691 &778345178
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -636,6 +642,35 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2483877715364263435}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1428899533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632695475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fec123d005c7ea489b96faa25ddb4a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setup:
+    comZLocation: 0
+    packTorqueOverrun: 0
+    powerBalanceDrive: 0
+    powerBalanceOverrun: 0
+    powerBalanceRegen: 0
+    throttlePedalShape: 0
+    brakePedalShape: 0
+    hydraulicBrakeGain: 0
+    hydraulicBrakeBalance: 0
+    frontFlapAngleStatic: 0
+    frontFlapAngleDRS: 0
+    frontFlapSczAtZeroDeg: 0
+    frontFlapSczPerDeg: 0
+    frontFlapDeflectionPreload: 0
+    frontFlapDeflectionStiffness: 0
+    frontFlapDeflectionMax: 0
 --- !u!1 &1480321974
 GameObject:
   m_ObjectHideFlags: 0
