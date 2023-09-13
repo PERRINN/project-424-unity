@@ -130,6 +130,17 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		}
 
 
+	/*
+	ApplySetupFileToTheVehicle
+	- Get current setup from vehicle
+	- Read the file and apply to the setup
+	- Apply the setup to the vehicle
+	*/
+
+
+
+
+
 	void ReadSetupFromVehicle (Setup setup)
 		{
 		if (m_target.centerOfMass != null)
