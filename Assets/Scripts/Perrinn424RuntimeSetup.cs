@@ -43,7 +43,7 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		public float frontFlapDeflectionStiffness;
 		public float frontFlapDeflectionMax;
 
-		// Convert current setup to a key-value list
+		// Convert current setup to a text file
 
 		public string ToSetupFile ()
 			{
@@ -70,7 +70,7 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 			return str;
 			}
 
-		// Parse a setup file and assign the valid values to this setup
+		// Load a setup file and assign the valid values to the current setup
 
 		public int FromSetupFile (string setupFile)
 			{
@@ -205,7 +205,7 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		}
 
 
-	[ContextMenu("Read From Text File")]
+	[ContextMenu("Debug: Read From Text File")]
 	void ReadAndApplySetupFile ()
 		{
 		string setupFile = "";
@@ -228,7 +228,7 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		}
 
 
-	[ContextMenu("Write Setup To Text File")]
+	[ContextMenu("Debug: Write Setup To Text File")]
 	void WriteSetupToTextFile ()
 		{
 		string setupFile = setup.ToSetupFile();
@@ -243,21 +243,21 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		}
 
 
-	[ContextMenu("Read From Vehicle")]
+	[ContextMenu("Debug: Read From Vehicle")]
 	void ReadFromVehicle ()
 		{
 		if (vehicle != null) ReadSetupFromVehicle(setup);
 		}
 
 
-	[ContextMenu("Write To Vehicle")]
+	[ContextMenu("Debug: Write To Vehicle")]
 	void WriteToVehicle ()
 		{
 		if (vehicle != null) WriteSetupToVehicle(setup);
 		}
 
 
-	[ContextMenu("Debug Setup File in Console")]
+	[ContextMenu("Debug: Debug Setup File in Console")]
 	void DebugSetupFileInConsole ()
 		{
 		string setupFile = setup.ToSetupFile();
