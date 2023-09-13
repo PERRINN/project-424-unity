@@ -2,6 +2,9 @@
 using UnityEngine;
 using VehiclePhysics;
 using System;
+using System.IO;
+using System.Reflection;
+using System.Globalization;
 using System.Collections.Generic;
 
 
@@ -11,7 +14,12 @@ namespace Perrinn424
 
 public class Perrinn424RuntimeSetup : VehicleBehaviour
 	{
+	[Tooltip("File is expected in the folder \"My Documents > PERRINN 424\"")]
+	public string fileName = "RuntimeCarSetup.txt";
+
+	[Space(5)]
 	public Setup setup = new Setup();
+
 
 	[Serializable]
 	public class Setup
@@ -34,6 +42,80 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		public float frontFlapDeflectionPreload;
 		public float frontFlapDeflectionStiffness;
 		public float frontFlapDeflectionMax;
+
+		// Convert current setup to a key-value list
+
+		public string ToSetupFile ()
+			{
+			// Convert current setup to a list of key=value pairs
+
+			List<(string key, string value)> keyValuePairs = new List<(string key, string value)>();
+			FieldInfo[] fields = Array.FindAll(this.GetType().GetFields(), f => f.MemberType == MemberTypes.Field && f.IsPublic && f.FieldType == typeof(float));
+
+			foreach (FieldInfo field in fields)
+				{
+				string valueStr = ((float)field.GetValue(this)).ToString("0.000", CultureInfo.InvariantCulture);
+				keyValuePairs.Add((field.Name, valueStr));
+				}
+
+			// Convert the pair to the lines of a setup file
+
+			string str = "";
+			foreach ((string key, string value) in keyValuePairs)
+				{
+				str += $"{key} = {value}".TrimEnd('0').TrimEnd('.');
+				str += '\n';
+				}
+
+			return str;
+			}
+
+		// Parse a setup file and assign the valid values to this setup
+
+		public int FromSetupFile (string setupFile)
+			{
+			int valuesSet = 0;
+
+			// Convert the text to a list of key=value pairs
+
+			List<(string key, string value)> keyValuePairs = new List<(string key, string value)>();
+
+			string[] pairs = setupFile.Split('\n');
+			foreach (string pair in pairs)
+				{
+				string pairRaw = pair.Trim();
+				if (pairRaw != "")
+					{
+					string[] pairParts = pair.Split('=');
+					if (pairParts.Length == 2)
+						{
+						string key = pairParts[0].Trim();
+						string value = pairParts[1].Trim();
+						if (key != "" && key[0] != '#' && value != "")
+							keyValuePairs.Add((key, value));
+						}
+					}
+				}
+
+			// For each pair, find the corresponding field and assign the value
+
+			FieldInfo[] fields = Array.FindAll(this.GetType().GetFields(), f => f.MemberType == MemberTypes.Field && f.IsPublic && f.FieldType == typeof(float));
+
+			foreach ((string key, string value) in keyValuePairs)
+				{
+				FieldInfo field = Array.Find(fields, f => f.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
+				if (field == null) continue;
+
+				float v;
+				if (float.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out v))
+					{
+					field.SetValue(this, v);
+					valuesSet++;
+					}
+				}
+
+			return valuesSet;
+			}
 		}
 
 
@@ -116,16 +198,70 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		}
 
 
+	string GetFullFilePath ()
+		{
+		string myDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+		return Path.Combine(myDocumentsFolder, "PERRINN 424", fileName);
+		}
+
+
+	[ContextMenu("Read From Text File")]
+	void ReadAndApplySetupFile ()
+		{
+		string setupFile = "";
+
+		try
+			{
+			setupFile = File.ReadAllText(GetFullFilePath());
+			}
+		catch (Exception)
+			{
+			return;
+			}
+
+		int values = setup.FromSetupFile(setupFile);
+		if (vehicle != null)
+			{
+			WriteSetupToVehicle(setup);
+			Debug.Log($"Perrinn424RuntimeSetup: applying {values} value(s) from [{fileName}]");
+			}
+		}
+
+
+	[ContextMenu("Write Setup To Text File")]
+	void WriteSetupToTextFile ()
+		{
+		string setupFile = setup.ToSetupFile();
+		try
+			{
+			File.WriteAllText(GetFullFilePath(), setupFile);
+			}
+		catch (Exception e)
+			{
+			Debug.LogWarning($"Error writing setup file: {e.Message}");
+			}
+		}
+
+
 	[ContextMenu("Read From Vehicle")]
-	void ReadFromVehicle()
+	void ReadFromVehicle ()
 		{
 		if (vehicle != null) ReadSetupFromVehicle(setup);
 		}
 
+
 	[ContextMenu("Write To Vehicle")]
-	void WriteToVehicle()
+	void WriteToVehicle ()
 		{
 		if (vehicle != null) WriteSetupToVehicle(setup);
+		}
+
+
+	[ContextMenu("Debug Setup File in Console")]
+	void DebugSetupFileInConsole ()
+		{
+		string setupFile = setup.ToSetupFile();
+		Debug.Log(setupFile);
 		}
 	}
 
