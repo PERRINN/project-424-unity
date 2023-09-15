@@ -17,6 +17,9 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 	[Tooltip("File is expected in the folder \"My Documents > PERRINN 424\"")]
 	public string fileName = "RuntimeCarSetup.txt";
 
+	[Tooltip("Take a backup of the setup and restore it when the component is disabled")]
+	public bool backupSetup = true;
+
 	[Space(5)]
 	public Setup setup = new Setup();
 
@@ -121,12 +124,30 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 
 	Perrinn424CarController m_target;
 	Perrinn424Aerodynamics m_aero;
+	Setup m_backup = null;
 
 
 	public override void OnEnableComponent ()
 		{
 		m_target = vehicle as Perrinn424CarController;
 		m_aero = GetComponentInChildren<Perrinn424Aerodynamics>();
+
+		if (backupSetup)
+			{
+			m_backup = new Setup();
+			ReadSetupFromVehicle(m_backup);
+			}
+		else
+			{
+			m_backup = null;
+			}
+		}
+
+
+	public override void OnDisableComponent ()
+		{
+		if (m_backup != null)
+			WriteSetupToVehicle(m_backup);
 		}
 
 
