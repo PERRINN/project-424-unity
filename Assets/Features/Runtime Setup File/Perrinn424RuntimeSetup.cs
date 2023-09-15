@@ -20,7 +20,10 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 	[Tooltip("Take a backup of the setup and restore it when the component is disabled")]
 	public bool backupSetup = true;
 
-	[Space(5)]
+	public KeyCode hotKeyApply = KeyCode.R;
+	public bool ctrlModifier = true;
+
+	[Header("Debug"), Tooltip("When reading the setup from file, the combined values applied to the vehicle will show here")]
 	public Setup setup = new Setup();
 
 
@@ -151,19 +154,42 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		}
 
 
-	/*
-	ApplySetupFileToTheVehicle
-	- Get current setup from vehicle
-	- Read the file and apply to the setup
-	- Apply the setup to the vehicle
-	*/
+	public override void UpdateVehicle ()
+		{
+		if (Input.GetKeyDown(hotKeyApply) && ctrlModifier == Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+			{
+			ReadAndApplySetupFile();
+			}
+		}
 
 
+	[ContextMenu("Read Setup From Text File and Apply")]
+	public void ReadAndApplySetupFile ()
+		{
+		if (vehicle == null) return;
 
+		string setupFile = "";
+
+		try
+			{
+			setupFile = File.ReadAllText(GetFullFilePath());
+			}
+		catch (Exception)
+			{
+			return;
+			}
+
+		ReadSetupFromVehicle(setup);
+		int values = setup.FromSetupFile(setupFile);
+		WriteSetupToVehicle(setup);
+		Debug.Log($"Perrinn424RuntimeSetup: applied {values} value(s) from [{fileName}]");
+		}
 
 
 	void ReadSetupFromVehicle (Setup setup)
 		{
+		if (vehicle == null) return;
+
 		if (m_target.centerOfMass != null)
 			setup.comZLocation = m_target.centerOfMass.localPosition.z;
 
@@ -196,6 +222,8 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 
 	void WriteSetupToVehicle (Setup setup)
 		{
+		if (vehicle == null) return;
+
 		if (m_target.centerOfMass != null)
 			{
 			Vector3 localCom = m_target.centerOfMass.localPosition;
@@ -237,30 +265,7 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		}
 
 
-	[ContextMenu("Debug: Read From Text File")]
-	void ReadAndApplySetupFile ()
-		{
-		string setupFile = "";
-
-		try
-			{
-			setupFile = File.ReadAllText(GetFullFilePath());
-			}
-		catch (Exception)
-			{
-			return;
-			}
-
-		int values = setup.FromSetupFile(setupFile);
-		if (vehicle != null)
-			{
-			WriteSetupToVehicle(setup);
-			Debug.Log($"Perrinn424RuntimeSetup: applying {values} value(s) from [{fileName}]");
-			}
-		}
-
-
-	[ContextMenu("Debug: Write Setup To Text File")]
+	[ContextMenu("Debug: Write Debug Setup To Text File")]
 	void WriteSetupToTextFile ()
 		{
 		string setupFile = setup.ToSetupFile();
@@ -275,21 +280,21 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		}
 
 
-	[ContextMenu("Debug: Read From Vehicle")]
+	[ContextMenu("Debug: From Vehicle To Debug Setup")]
 	void ReadFromVehicle ()
 		{
-		if (vehicle != null) ReadSetupFromVehicle(setup);
+		ReadSetupFromVehicle(setup);
 		}
 
 
-	[ContextMenu("Debug: Write To Vehicle")]
+	[ContextMenu("Debug: Debug Setup To Vehicle")]
 	void WriteToVehicle ()
 		{
-		if (vehicle != null) WriteSetupToVehicle(setup);
+		WriteSetupToVehicle(setup);
 		}
 
 
-	[ContextMenu("Debug: Debug Setup File in Console")]
+	[ContextMenu("Debug: Send Debug Setup to Console")]
 	void DebugSetupFileInConsole ()
 		{
 		string setupFile = setup.ToSetupFile();
