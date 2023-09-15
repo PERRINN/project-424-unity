@@ -1,12 +1,12 @@
 
 using UnityEngine;
 using VehiclePhysics;
+using EdyCommonTools;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Globalization;
 using System.Collections.Generic;
-
 
 
 namespace Perrinn424
@@ -17,8 +17,8 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 	[Tooltip("File is expected in the folder \"My Documents > PERRINN 424\"")]
 	public string fileName = "RuntimeCarSetup.txt";
 
-	[Tooltip("Take a backup of the setup and restore it when the component is disabled")]
-	public bool backupSetup = true;
+	[Tooltip("Read the setup file and apply the changes when the component is enabled")]
+	public bool applyOnEnable = true;
 
 	public KeyCode hotKeyApply = KeyCode.R;
 	public bool ctrlModifier = true;
@@ -135,22 +135,21 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 		m_target = vehicle as Perrinn424CarController;
 		m_aero = GetComponentInChildren<Perrinn424Aerodynamics>();
 
-		if (backupSetup)
-			{
-			m_backup = new Setup();
-			ReadSetupFromVehicle(m_backup);
-			}
-		else
-			{
-			m_backup = null;
-			}
+		m_backup = new Setup();
+		ReadSetupFromVehicle(m_backup);
+		}
+
+
+	public override void OnEnableVehicle ()
+		{
+		if (applyOnEnable)
+			ReadAndApplySetupFile();
 		}
 
 
 	public override void OnDisableComponent ()
 		{
-		if (m_backup != null)
-			WriteSetupToVehicle(m_backup);
+		WriteSetupToVehicle(m_backup);
 		}
 
 
@@ -179,7 +178,10 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 			return;
 			}
 
-		ReadSetupFromVehicle(setup);
+		// Take the initial setup as base, then apply the modifications.
+		// No modifications restore the initial values.
+
+		ObjectUtility.CopyObjectOverwrite<Setup>(m_backup, ref setup);
 		int values = setup.FromSetupFile(setupFile);
 		WriteSetupToVehicle(setup);
 		Debug.Log($"Perrinn424RuntimeSetup: applied {values} value(s) from [{fileName}]");
