@@ -467,7 +467,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			m_visualEffects.steeringWheel.gameObject.SetActive(state.steeringWheelVisible);
 
 		if (miniDashboard != null)
-			m_state.miniDashboard.ApplyTo(miniDashboard);
+			state.miniDashboard.ApplyTo(miniDashboard);
 
 		// Apply dashboard states
 
