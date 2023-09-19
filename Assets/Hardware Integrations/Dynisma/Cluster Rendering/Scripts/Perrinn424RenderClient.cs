@@ -33,8 +33,12 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	[Header("Client Overlay")]
 	public GameObject clientOverlay;
 	public Text packetsPerSecondText;
-	public bool enableToggleKey = false;
-	public KeyCode toggleKey = KeyCode.R;
+	public bool enableOverlayToggleKey = false;
+	public KeyCode overlayToggleKey = KeyCode.R;
+
+	[Header("Top Panel")]
+	public GameObject clientTopPanel;
+	public KeyCode topPanelToggleKey = KeyCode.P;
 
 	[Space(5)]
 	public Behaviour[] disableOnClients = new Behaviour[0];
@@ -222,9 +226,10 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		public LapTimeState idealLapTime;
 
-		// Client overlay
+		// Client overlay Visibility
 
 		public bool clientOverlayVisible;
+		public bool clientTopPanelVisible;
 		}
 
 
@@ -324,9 +329,14 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	void Update ()
 		{
-		if (enableToggleKey && Input.GetKeyDown(toggleKey) && clientOverlay != null)
+		if (enableOverlayToggleKey && Input.GetKeyDown(overlayToggleKey) && clientOverlay != null)
 			{
 			clientOverlay.SetActive(!clientOverlay.activeSelf);
+			}
+
+		if (Input.GetKeyDown(topPanelToggleKey) && clientTopPanel != null)
+			{
+			clientTopPanel.SetActive(!clientTopPanel.activeSelf);
 			}
 
 		// Update packets per second
@@ -410,6 +420,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			// Client overlay
 
 			m_state.clientOverlayVisible = clientOverlay != null? clientOverlay.activeSelf : false;
+			m_state.clientTopPanelVisible = clientTopPanel != null? clientTopPanel.activeSelf : false;
 
 			// Send state to clients
 
@@ -474,10 +485,13 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		if (caveLapTimeUI != null)
 			caveLapTimeUI.SetLapTime(state.idealLapTime.GetLapTime());
 
-		// Apply client overlay visibility
+		// Apply client elements visibility
 
 		if (clientOverlay != null && clientOverlay.activeSelf != state.clientOverlayVisible)
 			clientOverlay.SetActive(state.clientOverlayVisible);
+
+		if (clientTopPanel != null && clientTopPanel.activeSelf != state.clientTopPanelVisible)
+			clientTopPanel.SetActive(state.clientTopPanelVisible);
 		}
 	}
 
