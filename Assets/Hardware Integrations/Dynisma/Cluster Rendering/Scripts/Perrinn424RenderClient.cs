@@ -40,6 +40,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public GameObject clientTopPanel;
 	public KeyCode topPanelToggleKey = KeyCode.P;
 
+	[Header("Other")]
+	public Transform miniDashboard;
+
 	[Space(5)]
 	public Behaviour[] disableOnClients = new Behaviour[0];
 
@@ -201,8 +204,9 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		// Steering wheel pose
 
-		public VisualPose steeringWheel;
 		public bool steeringWheelVisible;
+		public VisualPose steeringWheel;
+		public VisualPose miniDashboard;
 
 		// Dashboard display states
 
@@ -386,11 +390,14 @@ public class Perrinn424RenderClient : NetworkBehaviour
 			m_state.wheelRL.SetFrom(vehicle.rearAxle.leftWheel);
 			m_state.wheelRR.SetFrom(vehicle.rearAxle.rightWheel);
 
-			// Retrieve steering wheel pose
+			// Retrieve steering wheel and mini dashboard poses
 
 			m_state.steeringWheel.SetFrom(m_visualEffects.steeringWheel);
 			if (m_visualEffects.steeringWheel != null)
 				m_state.steeringWheelVisible = m_visualEffects.steeringWheel.gameObject.activeSelf;
+
+			if (miniDashboard != null)
+				m_state.miniDashboard.SetFrom(miniDashboard);
 
 			// Retrieve dashboard states
 
@@ -453,11 +460,14 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		state.wheelRL.ApplyTo(vehicle.rearAxle.leftWheel);
 		state.wheelRR.ApplyTo(vehicle.rearAxle.rightWheel);
 
-		// Apply steering wheel pose
+		// Apply steering wheel amd mini dashboard poses
 
 		state.steeringWheel.ApplyTo(m_visualEffects.steeringWheel);
 		if (m_visualEffects.steeringWheel != null)
 			m_visualEffects.steeringWheel.gameObject.SetActive(state.steeringWheelVisible);
+
+		if (miniDashboard != null)
+			m_state.miniDashboard.ApplyTo(miniDashboard);
 
 		// Apply dashboard states
 

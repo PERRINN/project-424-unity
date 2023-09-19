@@ -182,10 +182,10 @@ MonoBehaviour:
   fovMax: 45
   toggleViewDamping: 110
   headMotion: {fileID: 773184388}
-  increaseminiDashboardHeight: 0
-  decreaseminiDashboardHeight: 0
-  minidashboardHeightStep: 0.01
-  minidashboard: {fileID: 0}
+  increaseMiniDashboardPosition: 53
+  decreaseMiniDashboardPosition: 52
+  miniDashboardHeightStep: 0.0025
+  miniDashboard: {fileID: 1149563274}
 --- !u!114 &180212505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextOptionKey: 101
-  steeringWheel: {fileID: 1853323986}
+  steeringWheel: {fileID: 2005107639}
 --- !u!114 &180212506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10483,6 +10483,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 470636970}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1149563274 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3090598901750655882, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+    type: 3}
+  m_PrefabInstance: {fileID: 773184381}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1290832887 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4095416709289502212, guid: 053ed87021a547747897c16a9cbf1e1b,
@@ -10867,10 +10873,20 @@ PrefabInstance:
       propertyPath: vehicle
       value: 
       objectReference: {fileID: 773184384}
+    - target: {fileID: 346719766117475397, guid: 58563bf5b9261da45862a1687bc5dd5d,
+        type: 3}
+      propertyPath: miniDashboard
+      value: 
+      objectReference: {fileID: 1149563274}
     - target: {fileID: 346719766117475402, guid: 58563bf5b9261da45862a1687bc5dd5d,
         type: 3}
       propertyPath: sceneId
       value: 1024811420
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031328173285856991, guid: 58563bf5b9261da45862a1687bc5dd5d,
+        type: 3}
+      propertyPath: testMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3516838942046347373, guid: 58563bf5b9261da45862a1687bc5dd5d,
         type: 3}
@@ -10970,17 +10986,17 @@ PrefabInstance:
     - target: {fileID: 3516838942254043629, guid: 58563bf5b9261da45862a1687bc5dd5d,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.025417723
+      value: -0.025417734
       objectReference: {fileID: 0}
     - target: {fileID: 3516838942254043629, guid: 58563bf5b9261da45862a1687bc5dd5d,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.08853507
+      value: 0.08853508
       objectReference: {fileID: 0}
     - target: {fileID: 3516838942254043629, guid: 58563bf5b9261da45862a1687bc5dd5d,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0022599734
+      value: 0.0022599746
       objectReference: {fileID: 0}
     - target: {fileID: 3516838942264741607, guid: 58563bf5b9261da45862a1687bc5dd5d,
         type: 3}
@@ -11999,12 +12015,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2292733907632866181}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1853323986 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7116994524547747782, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
-    type: 3}
-  m_PrefabInstance: {fileID: 773184381}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1857842939 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3729228130261064863, guid: 58563bf5b9261da45862a1687bc5dd5d,
@@ -12208,6 +12218,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e1be3f5a2f5eac4895bfe427e8e68d8, type: 3}
+--- !u!1 &2005107639 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4186588384145481614, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+    type: 3}
+  m_PrefabInstance: {fileID: 773184381}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2046142270
 PrefabInstance:
   m_ObjectHideFlags: 0
