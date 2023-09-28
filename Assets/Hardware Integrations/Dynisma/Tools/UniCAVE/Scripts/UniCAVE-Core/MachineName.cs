@@ -27,10 +27,10 @@ namespace UniCAVE
         public static string GetMachineName(string deprecatedMachineName, MachineName machineNameAsset)
         {
             //prioritize the machine name stored in the asset
-            if(machineNameAsset) return machineNameAsset.Name;
+            if(machineNameAsset) return machineNameAsset.Name.ToUpper();
 
             //otherwise, return the old machine name string
-            if(!string.IsNullOrEmpty(deprecatedMachineName)) return deprecatedMachineName;
+            if(!string.IsNullOrEmpty(deprecatedMachineName)) return deprecatedMachineName.ToUpper();
             else return string.Empty;
         }
 

@@ -32,7 +32,7 @@ namespace UniCAVE
             string overridden = GetArg("overrideMachineName");
             if(overridden != null)
             {
-                return overridden;
+                return overridden.ToUpper();
             }
             else
             {

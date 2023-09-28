@@ -176,7 +176,7 @@ public class Perrinn424ClusterManager : MonoBehaviour
 		if (station == null || station.machineName == null)
 			return false;
 
-		return station.machineName.Name == machineName;
+		return station.machineName.Name == machineName.ToUpper();
 		}
 
 

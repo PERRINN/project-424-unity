@@ -1197,7 +1197,7 @@ MonoBehaviour:
   m_Script: {fileID: 163649085, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateMode: 2
+  updateMode: 1
   longitudinal:
     mode: 1
     springRate: 5
@@ -1261,6 +1261,7 @@ Transform:
   - {fileID: 2483877715211310776}
   - {fileID: 4861219997565480786}
   - {fileID: 4397584537829769748}
+  - {fileID: 6611051989778264180}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3873,6 +3874,84 @@ AudioLowPassFilter:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!1 &7733069672857150506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6611051989778264180}
+  - component: {fileID: 7125089967652458897}
+  - component: {fileID: 6981771551158905988}
+  m_Layer: 8
+  m_Name: Motion Platforms
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6611051989778264180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7733069672857150506}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2483877716221292743}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7125089967652458897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7733069672857150506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0eae7d8f1a68f1488751daf73da1c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionEnabled: 1
+  settings:
+    host: 127.0.0.1
+    port: 56236
+    maxTransferFrequency: 150
+    maxSteeringTorque: 20
+  testModeEnabled: 0
+  testData:
+    accelerationX: 0
+    accelerationY: 0
+    accelerationZ: 0
+    angularAccelerationX: 0
+    angularAccelerationY: 0
+    angularAccelerationZ: 0
+    steeringTorque: 0
+    carSpeed: 0
+--- !u!114 &6981771551158905988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7733069672857150506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298ae3d56fd64964c91091a021af6a9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionEnabled: 1
+  settings:
+    host: 127.0.0.1
+    port: 42477
+    maxTransferFrequency: 150
 --- !u!1 &7858371211814414405
 GameObject:
   m_ObjectHideFlags: 0
