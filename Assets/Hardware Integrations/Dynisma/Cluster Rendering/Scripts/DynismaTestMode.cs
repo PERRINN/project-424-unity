@@ -16,7 +16,7 @@ public class DynismaTestMode : MonoBehaviour
 	{
 	public enum TestMode { None, Server, AllClients, Client1, Client2, Client3, Client4, Client5 };
 
-	[HelpBox("Makes the current station to work as server or client by modifying the corresponding components and properties accordingly. AllClients enables all cameras in separate displays. Test Modes work when launching the scene in the Editor only. Modifying the mode in runtime has no effect.", HelpBoxMessageType.Info)]
+	[HelpBox("Makes the current station to work as server or client by modifying the corresponding components and properties accordingly. AllClients enables all cameras in separate displays.", HelpBoxMessageType.Info)]
 
 	public TestMode testMode = TestMode.None;
 	public bool loadReplayInServer = false;
@@ -31,7 +31,7 @@ public class DynismaTestMode : MonoBehaviour
 		{
 		// Test modes are enabled while in Editor only
 
-		if (!Application.isEditor) return;
+		// if (!Application.isEditor) return;
 
 		// Apply selected test mode, if any.
 
