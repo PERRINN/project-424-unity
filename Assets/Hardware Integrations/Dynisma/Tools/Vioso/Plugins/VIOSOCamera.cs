@@ -41,7 +41,6 @@ public class VIOSOCamera : MonoBehaviour
         FALSE = -16,        /// No error, but nothing has been done
     };
 
-    //private const string dllLoc = "GfxPlugin_VIOSO64";// @"D:\Unity\1st\Assets\Plugins\GfxPlugin_VIOSO64.dll";
     [DllImport("VIOSO_Plugin64")]
     private static extern IntPtr GetRenderEventFunc();
     [DllImport("VIOSO_Plugin64")]
@@ -65,6 +64,7 @@ public class VIOSOCamera : MonoBehaviour
     private Vector3 orig_pos = Vector3.zero;
     private Dictionary<RenderTexture, IntPtr> texMap = new Dictionary<RenderTexture, IntPtr>();
     private bool startCalled = false;
+    private bool loopError = false;
 
     public static void ScreenShot(string path)
     {
@@ -96,6 +96,7 @@ public class VIOSOCamera : MonoBehaviour
     private void OnEnable()
     {
         startCalled = false;
+        loopError = false;
     }
 
 
@@ -117,17 +118,17 @@ public class VIOSOCamera : MonoBehaviour
             err = (ERROR)err1;
             if (err != ERROR.NONE)
             {
-                Debug.Log($"Initialization of warper failed. [{err}]");
+                Debug.Log($"VIOSO Initialization of warper failed [{err}]. See VIOSO_Plugin64.log for details.");
             }
         }
         else
         {
-            Debug.Log($"Initialization attempt of warper failed with error [{err}].");
+            Debug.Log($"VIOSO Initialization attempt of warper failed with error [{err}]. See VIOSO_Plugin64.log for details.");
         }
 
         if (err != ERROR.NONE)
         {
-            Debug.Log($"Failed to init camera. [{err}]");
+            Debug.Log($"VIOSO Failed to init camera [{err}]. See VIOSO_Plugin64.log for details.");
         }
     }
 
@@ -148,10 +149,10 @@ public class VIOSOCamera : MonoBehaviour
             ERROR err = Destroy(viosoID);
             if (err != ERROR.NONE)
             {
-                Debug.Log($"Error [{err}] de-initializing VIOSO.");
+                Debug.Log($"VIOSO Error [{err}] de-initializing. See VIOSO_Plugin64.log for details.");
                 if (err == ERROR.PARAMETER)
                 {
-                    Debug.LogWarning("If warped cameras showed a black picture then the VIOSO calibration files are missing!");
+                    Debug.LogWarning("VIOSO If picture was missing check that VIOSOWarpBlend.ini and VWF files are present.");
                 }
             }
 
@@ -174,7 +175,8 @@ public class VIOSOCamera : MonoBehaviour
 
             Matrix4x4 mV = Matrix4x4.identity;
             FrustumPlanes pl = new FrustumPlanes();
-            if (GetViewClip(viosoID, ref eyePointPos, ref eyePointRot, ref mV, ref pl) == ERROR.NONE)
+            ERROR err = GetViewClip(viosoID, ref eyePointPos, ref eyePointRot, ref mV, ref pl);
+            if (err == ERROR.NONE)
             {
                 mV = mV.transpose;
                 Quaternion q = mV.rotation;
@@ -186,6 +188,14 @@ public class VIOSOCamera : MonoBehaviour
 
                 lastMatrix = mV;
                 lastFrustum = pl;
+            }
+            else
+            {
+                if (!loopError)
+                {
+                    Debug.Log($"VIOSO Error [{err}] getting view clip. Check that VIOSOWarpBlend.ini and VWF files are present. See VIOSO_Plugin64.log for details.");
+                    loopError = true;
+                }
             }
         }
     }
@@ -201,7 +211,12 @@ public class VIOSOCamera : MonoBehaviour
                 dst = source.GetNativeTexturePtr();
                 texMap[source] = dst;
             }
-            UpdateTex(viosoID, dst, IntPtr.Zero);
+            ERROR err = UpdateTex(viosoID, dst, IntPtr.Zero);
+            if (err != ERROR.NONE && !loopError)
+            {
+                Debug.Log($"VIOSO Error [{err}] updating texture. See VIOSO_Plugin64.log for details.");
+                loopError = true;
+            }
             SetTimeFromUnity(Time.timeSinceLevelLoad);
             GL.IssuePluginEvent(GetRenderEventFunc(), viosoID);
         }
