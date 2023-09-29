@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: -0.042385604, y: -0.94231206, z: 0.13087067, w: -0.30516273}
   m_LocalPosition: {x: -2.9181025, y: 1.7511439, z: 7.629786}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6905166633232544994}
   m_Father: {fileID: 0}
@@ -92,8 +93,10 @@ MonoBehaviour:
   orbit:
     hotKey: 284
     distance: 14
-    minVerticalAngle: -10
-    maxVerticalAngle: 70
+    targetRelative: 0
+    resetMode: 1
+    minVerticalAngle: -90
+    maxVerticalAngle: 90
     horizontalSpeed: 5
     verticalSpeed: 2.5
     orbitDamping: 4
@@ -101,11 +104,21 @@ MonoBehaviour:
     maxDistance: 50
     distanceSpeed: 10
     distanceDamping: 4
-    requireKeyPressed: 0
+    requireKeyPressed: 1
     requiredKey: 324
+    alternateKey: 308
+    enablePanning: 1
+    panningKey: 325
+    panningAlternateKey: 304
+    panningSpeed: 0.1
+    panningForwardSpeed: 3
+    panningDamping: 10
+    panningBounds: {x: 2.5, y: 1.4, z: 5}
+    resetPanningOnEnable: 0
     horizontalAxis: Mouse X
     verticalAxis: Mouse Y
     distanceAxis: Mouse ScrollWheel
+    debugTargetGizmo: 0
   lookAt:
     hotKey: 285
     damping: 8
@@ -178,6 +191,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6905166633232598312}
   m_RootOrder: 0
