@@ -192,18 +192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c6735671d9ee149bf9ba4508c8534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &396249270 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 117512441796713819, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-    type: 3}
-  m_PrefabInstance: {fileID: 2483877715364263435}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10968d37f1acb20469b51382049f6f79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &531594961
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,66 +383,6 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_PVRTiledBaking: 0
---- !u!1 &782968560
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 782968561}
-  - component: {fileID: 782968562}
-  m_Layer: 8
-  m_Name: Dynisma Motion Platform
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &782968561
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782968560}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1428899532}
-  m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &782968562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782968560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0eae7d8f1a68f1488751daf73da1c12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  motionEnabled: 1
-  settings:
-    host: 127.0.0.1
-    port: 56236
-    maxTransferFrequency: 150
-    maxSteeringTorque: 20
-  testModeEnabled: 0
-  testData:
-    accelerationX: 0
-    accelerationY: 0
-    accelerationZ: 0
-    angularAccelerationX: 0
-    angularAccelerationY: 0
-    angularAccelerationZ: 0
-    steeringTorque: 0
-    carSpeed: 0
 --- !u!1001 &1270587121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1157,7 +1085,7 @@ PrefabInstance:
         type: 3}
       propertyPath: motionPlatform
       value: 
-      objectReference: {fileID: 782968562}
+      objectReference: {fileID: 2483877715364263436}
     - target: {fileID: 346719765063234738, guid: 1b3a46a0a740fd54197c7ec82402e00f,
         type: 3}
       propertyPath: m_RootOrder
@@ -1190,6 +1118,11 @@ PrefabInstance:
       objectReference: {fileID: 626402878}
     - target: {fileID: 346719766117475397, guid: 1b3a46a0a740fd54197c7ec82402e00f,
         type: 3}
+      propertyPath: miniDashboard
+      value: 
+      objectReference: {fileID: 2483877715364263437}
+    - target: {fileID: 346719766117475397, guid: 1b3a46a0a740fd54197c7ec82402e00f,
+        type: 3}
       propertyPath: visualEffects
       value: 
       objectReference: {fileID: 1810276301}
@@ -1197,7 +1130,7 @@ PrefabInstance:
         type: 3}
       propertyPath: dashboardDisplay
       value: 
-      objectReference: {fileID: 396249270}
+      objectReference: {fileID: 0}
     - target: {fileID: 346719766117475402, guid: 1b3a46a0a740fd54197c7ec82402e00f,
         type: 3}
       propertyPath: sceneId
@@ -1309,6 +1242,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c2bc6b582ebcdb4e8baff52cef5108f, type: 3}
+--- !u!114 &2483877715364263436 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7125089967652458897, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2483877715364263435}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0eae7d8f1a68f1488751daf73da1c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2483877715364263437 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2694915474738998607, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2483877715364263435}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5696766543133654093
 PrefabInstance:
   m_ObjectHideFlags: 0
