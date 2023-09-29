@@ -35,26 +35,24 @@ public class CaveLapTimeUI : MonoBehaviour
 
 	void UpdateTimeLabel (Text label, LapTime lapTime)
 		{
-		if (label != null && lapTime.timeMs > 0)
-			{
-			label.text = lapTime.FormatTime();
-			}
-		else
-			{
-			label.text = emptyLapText;
+		if (label != null)
+		 	{
+			if (lapTime.timeMs > 0)
+				label.text = lapTime.FormatTime();
+			else
+				label.text = emptyLapText;
 			}
 		}
 
 
 	void UpdateSectorLabel (Text label, LapTime lapTime, int sector)
 		{
-		if (label != null && sector < lapTime.sectorMs.Length && lapTime.sectorMs[sector] > 0)
+		if (label != null)
 			{
-			label.text = lapTime.FormatSector(sector);
-			}
-		else
-			{
-			label.text = emptySectorText;
+			if (sector < lapTime.sectorMs.Length && lapTime.sectorMs[sector] > 0)
+				label.text = lapTime.FormatSector(sector);
+			else
+				label.text = emptySectorText;
 			}
 		}
 	}
