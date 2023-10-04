@@ -41,15 +41,32 @@ namespace Perrinn424
         bool m_setMinSpdTrigger = false;
 
         float m_elapsed;
-        // LapTimer m_lapTimer = null;
+        bool m_lapStarted;
+        LapTimer m_lapTimer = null;
         BaseAutopilot m_autopilot;
         Battery m_battery;
 
         public override void OnEnableVehicle ()
         {
-            // m_lapTimer = FindObjectOfType<LapTimer>();
+            m_lapTimer = FindObjectOfType<LapTimer>();
             m_autopilot = vehicle.GetComponentInChildren<BaseAutopilot>();
             m_battery = vehicle.GetComponentInChildren<Battery>();
+
+            if (m_lapTimer != null)
+            {
+                m_lapTimer.onBeginLap += BeginLap;
+                m_lapStarted = false;
+            }
+            else
+            {
+                m_lapStarted = true;
+            }
+        }
+
+        public override void OnDisableVehicle ()
+        {
+            if (m_lapTimer != null)
+                m_lapTimer.onBeginLap -= BeginLap;
         }
 
         public override void UpdateVehicle ()
@@ -180,11 +197,18 @@ namespace Perrinn424
                 // Time Difference with the Best Lap
                 if (IsAvailable(timeDifference))
                 {
-                    float deltaTime = Mathf.Clamp(m_autopilot.DeltaTime, -42.4f, 42.4f);
-                    if (m_autopilot != null)
-                        timeDifference.text = deltaTime.ToString("+0.00;-0.00");
+                    if (m_lapStarted)
+                    {
+                        float deltaTime = Mathf.Clamp(m_autopilot.DeltaTime, -42.4f, 42.4f);
+                        if (m_autopilot != null)
+                            timeDifference.text = deltaTime.ToString("+0.00;-0.00");
+                        else
+                            timeDifference.text = "--.--";
+                    }
                     else
-                        timeDifference.text = "--.--";
+                    {
+                        timeDifference.text = " 0.00";
+                    }
                 }
             }
         }
@@ -192,6 +216,11 @@ namespace Perrinn424
         void StartTimer()
         {
             m_minSpdTime = Time.time;
+        }
+
+        void BeginLap ()
+        {
+            m_lapStarted = true;
         }
 
         string GetBalanceStr(float front, float rear)
