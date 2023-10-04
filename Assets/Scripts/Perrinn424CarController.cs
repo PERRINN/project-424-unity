@@ -136,6 +136,7 @@ public class Perrinn424CarController : VehicleBase
 	int m_prevGearMode;
 	int m_gear;
 	float m_understeerAngle;
+	bool m_drivingStarted;
 
 	GroundTracker m_groundTracker = new GroundTracker();
 
@@ -338,6 +339,7 @@ public class Perrinn424CarController : VehicleBase
 		m_gearMode = (int)Gearbox.AutomaticGear.N;
 		m_prevGearMode = (int)Gearbox.AutomaticGear.N;
 		data.Set(Channel.Input, InputData.AutomaticGear, m_gearMode);
+		m_drivingStarted = false;
 		}
 
 
@@ -457,6 +459,10 @@ public class Perrinn424CarController : VehicleBase
 
 			float steeringHalfRange = steering.steeringWheelRange;
 			m_steerAngle = Mathf.Clamp(customData[Perrinn424Data.InputSteerAngle] / 10000.0f, -steeringHalfRange, steeringHalfRange);
+
+			// Assume driving not started so disabling autopilot engages brakes
+
+			m_drivingStarted = false;
 			}
 		else
 			{
@@ -466,6 +472,17 @@ public class Perrinn424CarController : VehicleBase
 			float brakePosition = Mathf.Clamp01(inputData[InputData.Brake] / 10000.0f);
 			float steerPosition = Mathf.Clamp(inputData[InputData.Steer] / 10000.0f, -1.0f, 1.0f);
 			int automaticGearInput = inputData[InputData.AutomaticGear];
+
+			// Car automatically applies brakes on startup until any pedal is pressed beyond 10%.
+			// 50% brakes is more than enough to stop the car in place.
+
+			if (!m_drivingStarted)
+				{
+				if (brakePosition > 0.1f || throttlePosition > 0.1f)
+					m_drivingStarted = true;
+				else
+					brakePosition = 0.5f;
+				}
 
 			// Process gear mode preventing direction changes when the vehicle is not stopped
 
