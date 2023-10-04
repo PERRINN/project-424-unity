@@ -10,9 +10,12 @@ namespace Perrinn424
 {
     public class DashboardDisplay : VehicleBehaviour
     {
+        public float screenFPS = 5f;
+
+        [Header("Min Speed Display")]
+        public bool enableMinSpeedDisplay = false;
         public float windowSeconds = 4.0f;
         public float setMinSpeed = 10.0f;
-        public float screenFPS = 5f;
 
         [Header("Display Channel")]
         public Text speedMps;
@@ -90,7 +93,7 @@ namespace Perrinn424
                         m_maxSpeed = speed;
                     }
 
-                    if (m_minSpdWindow)
+                    if (m_minSpdWindow && enableMinSpeedDisplay)
                     {
                         float systemTime = Time.time;
                         if (systemTime - m_minSpdTime > windowSeconds)
