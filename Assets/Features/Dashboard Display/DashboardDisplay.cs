@@ -180,8 +180,9 @@ namespace Perrinn424
                 // Time Difference with the Best Lap
                 if (IsAvailable(timeDifference))
                 {
+                    float deltaTime = Mathf.Clamp(m_autopilot.DeltaTime, -42.4f, 42.4f);
                     if (m_autopilot != null)
-                        timeDifference.text = m_autopilot.DeltaTime.ToString("+0.00;-0.00");
+                        timeDifference.text = deltaTime.ToString("+0.00;-0.00");
                     else
                         timeDifference.text = "--.--";
                 }
