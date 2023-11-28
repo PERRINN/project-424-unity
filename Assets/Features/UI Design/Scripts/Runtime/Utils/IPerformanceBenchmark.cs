@@ -1,6 +1,6 @@
 ﻿namespace Perrinn424
 {
-    public interface IPerformanceBenchmarkData
+    public interface IPerformanceBenchmark
     {
         float Time { get; } //[s]
         float TimeDiff { get; } //[s]

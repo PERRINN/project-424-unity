@@ -1,19 +1,25 @@
-﻿using VehiclePhysics;
+﻿using UnityEngine;
+using VehiclePhysics;
 
 namespace Perrinn424
 {
     public class PerformanceBenchmarkController : VehicleBehaviour
     {
+        [SerializeField]
+        private PerformanceBenchmarkData porsche919Data;
+        [SerializeField]
+        private PerformanceBenchmarkData idrData;
+
         private PerformanceBenchmark porsche919;
         private PerformanceBenchmark idr;
 
-        public IPerformanceBenchmarkData Porsche919 { get => porsche919; }
-        public IPerformanceBenchmarkData IDR { get => idr; } 
+        public IPerformanceBenchmark Porsche919 { get => porsche919; }
+        public IPerformanceBenchmark IDR { get => idr; } 
 
         public override void OnEnableVehicle()
         {
-            porsche919 = PerformanceBenchmarkHelper.CreatePorsche919();
-            idr = PerformanceBenchmarkHelper.CreateIDR();
+            porsche919 = new PerformanceBenchmark(porsche919Data.samples, porsche919Data.frequency);
+            idr = new PerformanceBenchmark(idrData.samples, idrData.frequency);
         }
 
         public override void FixedUpdateVehicle()

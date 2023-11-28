@@ -3,21 +3,23 @@ using UnityEngine;
 
 namespace Perrinn424
 {
-    public class PerformanceBenchmark: IPerformanceBenchmarkData
+    public class PerformanceBenchmark: IPerformanceBenchmark
     {
         public readonly float[] distance;
         private readonly int count;
         private int previousIndex = -1;
+        private readonly float period;
 
         public float Time { get; private set; } //[s]
         public float TimeDiff { get; private set; } //[s]
         public float Speed { get; private set; } //[m/s]
         public float TraveledDistance { get; private set; } //[m]
 
-        public PerformanceBenchmark(int[] reference)
+        public PerformanceBenchmark(float[] reference, float frequency)
         {
             count = reference.Length;
             distance = new float[count];
+            period = 1f / frequency;
 
             for (int i = 0; i < reference.Length; i++)
             {
@@ -90,7 +92,7 @@ namespace Perrinn424
         {
             float currentDistance = distance[index];
             float previousDistance = index == 0 ? 0 : distance[index - 1];
-            return currentDistance - previousDistance;
+            return (currentDistance - previousDistance)/period;
         }
 
         public bool IsCorrectIndex(int index, float d)

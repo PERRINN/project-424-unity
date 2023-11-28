@@ -2,7 +2,7 @@
 
 namespace Perrinn424.TrackMapSystem
 {
-    [CreateAssetMenu(fileName = "TrackMapData", menuName = "Perrin 424/TrackMapData", order = 490)]
+    [CreateAssetMenu(fileName = "TrackMapData", menuName = "Perrinn 424/TrackMapData", order = 490)]
     public class TrackMapData : ScriptableObject
     {
         public Sprite map;
