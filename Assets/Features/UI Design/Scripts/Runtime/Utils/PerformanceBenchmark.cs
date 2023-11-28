@@ -42,8 +42,8 @@ namespace Perrinn424
             
             float ratio = Mathf.InverseLerp(distance[index], distance[index + 1], currentDistance);
             
-            //index represents time, so index == m means [m seconds]
-            Time = Mathf.Lerp(index, index + 1, ratio);
+            //index represents time, so index == m means [m * period seconds]
+            Time = Mathf.Lerp(index, index + 1, ratio)*period;
             TimeDiff = currentTime - Time;
 
             TraveledDistance = Mathf.Lerp(distance[index], distance[index + 1], ratio);
