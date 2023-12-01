@@ -28,7 +28,7 @@ namespace Perrinn424
                 channelInfo[3].SetNameAndSemantic("IDRTraveledDistance", Telemetry.Semantic.Custom, distanceSemantic);
 
                 var timeSemantic = new Telemetry.SemanticInfo();
-                timeSemantic.SetRangeAndFormat(-10, 10, "0.000", " s");
+                timeSemantic.SetRangeAndFormat(-20, 20, "0.000", " s");
                 channelInfo[4].SetNameAndSemantic("919TimeDiff", Telemetry.Semantic.Custom, timeSemantic);
                 channelInfo[5].SetNameAndSemantic("IDRTimeDiff", Telemetry.Semantic.Custom, timeSemantic);
             }
@@ -48,5 +48,5 @@ namespace Perrinn424
                 values[index + 5] = performanceBenchmarkController.IDR.TimeDiff;
             }
         }
-    } 
+    }
 }
