@@ -12,7 +12,7 @@ namespace Perrinn424
 
             public override int GetChannelCount()
             {
-                return 6;
+                return 8;
             }
 
             public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
@@ -32,6 +32,10 @@ namespace Perrinn424
                 timeSemantic.SetRangeAndFormat(-20, 20, "0.000", " s");
                 channelInfo[4].SetNameAndSemantic("919TimeDiff", Telemetry.Semantic.Custom, timeSemantic);
                 channelInfo[5].SetNameAndSemantic("IDRTimeDiff", Telemetry.Semantic.Custom, timeSemantic);
+
+                channelInfo[6].SetNameAndSemantic("919Throttle", Telemetry.Semantic.Ratio);
+                channelInfo[7].SetNameAndSemantic("919Brake", Telemetry.Semantic.Ratio);
+
             }
 
             public override Telemetry.PollFrequency GetPollFrequency()
@@ -47,6 +51,8 @@ namespace Perrinn424
                 values[index + 3] = performanceBenchmarkController.IDR.TraveledDistance;
                 values[index + 4] = performanceBenchmarkController.Porsche919.TimeDiff;
                 values[index + 5] = performanceBenchmarkController.IDR.TimeDiff;
+                values[index + 6] = performanceBenchmarkController.Porsche919.Throttle;
+                values[index + 7] = performanceBenchmarkController.Porsche919.Brake;
             }
         }
     }
