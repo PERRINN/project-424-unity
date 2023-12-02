@@ -77,15 +77,13 @@ namespace Perrinn424.Editor.Tests
         {
             PerformanceBenchmark performanceBenchmark = new PerformanceBenchmark(new float[] { 0f, 3f, 5f, 6f }, 0f);
 
+            //float[] testValues = { -80f, 0f, 1.5f, 3f, 3.5f, 5f, 5.5f, 6f, 80f };
 
-            float[] testValues = { -80f, 0f, 1.5f, 3f, 3.5f, 5f, 5.5f, 6f, 80f };
+            //foreach (float value in testValues)
+            //{
+            //    UnityEngine.Debug.Log($"With {value} the index is: {performanceBenchmark.BinarySearch(value)}");
 
-            foreach (float value in testValues)
-            {
-                UnityEngine.Debug.Log($"With {value} the index is: {performanceBenchmark.BinarySearch(value)}");
-
-            }
-
+            //}
 
             float currentDistance = 1.5f;
             performanceBenchmark.Update(0f, currentDistance);
