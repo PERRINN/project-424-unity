@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Perrinn424
+namespace Perrinn424.PerformanceBenchmarkSystem
 {
     public static class PerformanceBenchmarkHelper
     {

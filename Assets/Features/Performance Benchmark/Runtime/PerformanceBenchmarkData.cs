@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Perrinn424
+namespace Perrinn424.PerformanceBenchmarkSystem
 {
     [CreateAssetMenu(fileName = "PerformanceBenchmarkData", menuName = "Perrinn 424/PerformanceBenchmarkData")]
     public class PerformanceBenchmarkData : ScriptableObject

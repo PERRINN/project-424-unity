@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.TestTools.Constraints;
 using Is = UnityEngine.TestTools.Constraints.Is;
-namespace Perrinn424.Editor.Tests
+namespace Perrinn424.PerformanceBenchmarkSystem.Editor.Tests
 {
     public class PerformanceBenchmarkTests
     {

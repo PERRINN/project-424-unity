@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using UnityEditor;
 
-namespace Perrinn424
+namespace Perrinn424.PerformanceBenchmarkSystem.Editor
 {
     public class PerformanceBenchmarkImporter : EditorWindow
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using VehiclePhysics;
 
-namespace Perrinn424
+namespace Perrinn424.PerformanceBenchmarkSystem
 {
     public class PerformanceBenchmarkController : VehicleBehaviour
     {

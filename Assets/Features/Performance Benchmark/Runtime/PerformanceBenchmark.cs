@@ -15,6 +15,10 @@ namespace Perrinn424
         public float Speed { get; private set; } //[m/s]
         public float TraveledDistance { get; private set; } //[m]
 
+        public float Throttle => 0f;
+
+        public float Brake => 0f;
+
         public PerformanceBenchmark(float[] reference, float frequency)
         {
             count = reference.Length;
