@@ -7,7 +7,7 @@ namespace Perrinn424
     {
         public readonly float[] distance;
         private readonly int count;
-        private int previousIndex = -1;
+        public int PreviousIndex { get; private set; }
         private readonly float period;
 
         public float Time { get; private set; } //[s]
@@ -38,7 +38,7 @@ namespace Perrinn424
                 Speed = float.NaN;
                 return;
             }
-            previousIndex = index;
+            PreviousIndex = index;
             
             float ratio = Mathf.InverseLerp(distance[index], distance[index + 1], currentDistance);
             
@@ -55,27 +55,42 @@ namespace Perrinn424
         private int FindIndex(float currentDistance)
         {
             // The most probably is that the last index is still the correct index
-            if (IsCorrectIndex(previousIndex, currentDistance))
+            if (IsCorrectIndex(PreviousIndex, currentDistance))
             {
-                return previousIndex;
+                return PreviousIndex;
             }
 
             // If not, probably is the next one
-            if(IsCorrectIndex(previousIndex + 1, currentDistance))
+            if(IsCorrectIndex(PreviousIndex + 1, currentDistance))
             {
-                return previousIndex + 1;
+                return PreviousIndex + 1;
             }
 
+            if (IsCorrectIndex(0, currentDistance)) //maybe new lap
+            {
+                return 0;
+            }
+
+
             // We can use binary search because distance is sorted and it is much faster
+            int binaryIndex = BinarySearch(currentDistance);
+
+            //Debug.LogError($"Index not found! Previous was {PreviousIndex} and the real one was {binaryIndex}");
+
+            return binaryIndex;
+        }
+
+        public int BinarySearch(float currentDistance)
+        {
             int binaryIndex = Array.BinarySearch(distance, currentDistance);
             if (binaryIndex < 0)
             {
                 //The return index is complement of the first element larger than currentDistance
                 binaryIndex = ~binaryIndex;
                 if (binaryIndex > count)
-                    binaryIndex = - 1; //not found
+                    binaryIndex = -1; //not found
 
-                return binaryIndex -1; //the return index is the first element larger, but we need the previous one
+                return binaryIndex - 1; //the return index is the first element larger, but we need the previous one
             }
 
             return binaryIndex;
@@ -100,7 +115,7 @@ namespace Perrinn424
             if (index < 0 || index + 1 >= count)
                 return false;
 
-            return distance[index] < d && distance[index + 1] > d;
+            return distance[index] <= d && distance[index + 1] > d;
         }
     } 
 }

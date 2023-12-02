@@ -73,6 +73,33 @@ namespace Perrinn424.Editor.Tests
         }
 
         [Test]
+        public void BoundaryTest()
+        {
+            PerformanceBenchmark performanceBenchmark = new PerformanceBenchmark(new float[] { 0f, 3f, 5f, 6f }, 0f);
+
+
+            float[] testValues = { -80f, 0f, 1.5f, 3f, 3.5f, 5f, 5.5f, 6f, 80f };
+
+            foreach (float value in testValues)
+            {
+                UnityEngine.Debug.Log($"With {value} the index is: {performanceBenchmark.BinarySearch(value)}");
+
+            }
+
+
+            float currentDistance = 1.5f;
+            performanceBenchmark.Update(0f, currentDistance);
+
+            Assert.That(performanceBenchmark.PreviousIndex, Is.EqualTo(0));
+            Assert.That(performanceBenchmark.PreviousIndex, Is.EqualTo(performanceBenchmark.BinarySearch(currentDistance)));
+
+            currentDistance = 3f; //boundary
+            performanceBenchmark.Update(0f, currentDistance);
+            Assert.That(performanceBenchmark.PreviousIndex, Is.EqualTo(1));
+            Assert.That(performanceBenchmark.PreviousIndex, Is.EqualTo(performanceBenchmark.BinarySearch(currentDistance)));
+        }
+
+        [Test]
         public void OutOfIndexTest()
         {
             PerformanceBenchmark porsche = PerformanceBenchmarkHelper.CreatePorsche919();
