@@ -13,13 +13,21 @@ namespace Perrinn424.PerformanceBenchmarkSystem
         private PerformanceBenchmark porsche919;
         private PerformanceBenchmark idr;
 
-        public IPerformanceBenchmark Porsche919 { get => porsche919; }
-        public IPerformanceBenchmark IDR { get => idr; } 
+        public IPerformanceBenchmark Porsche919 { get => newPorsche919; }
+        public IPerformanceBenchmark IDR { get => idr; }
+
+
+        [SerializeField]
+        private NewPerformanceBenchmarkData newPorsche919Data;
+
+        private NewPerformanceBenchmark newPorsche919;
 
         public override void OnEnableVehicle()
         {
             porsche919 = new PerformanceBenchmark(porsche919Data.samples, porsche919Data.frequency);
             idr = new PerformanceBenchmark(idrData.samples, idrData.frequency);
+
+            newPorsche919 = new NewPerformanceBenchmark(newPorsche919Data.samples);
         }
 
         public override void FixedUpdateVehicle()
@@ -32,6 +40,8 @@ namespace Perrinn424.PerformanceBenchmarkSystem
         {
             porsche919.Update(currentTime, currentDistance);
             idr.Update(currentTime, currentDistance);
+
+            newPorsche919.Update(currentTime, currentDistance);
         }
     }
 }

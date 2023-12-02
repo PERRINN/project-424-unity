@@ -2,6 +2,8 @@
 {
     public interface IPerformanceBenchmark
     {
+        void Update(float currentTime, float currentDistance);
+
         float Time { get; } //[s]
         float TimeDiff { get; } //[s]
         float Speed { get; } //[m/s]

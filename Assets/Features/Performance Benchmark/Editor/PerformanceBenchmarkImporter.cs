@@ -19,7 +19,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor
         private float timeScale = 1.0f;
 
         private string distanceHeader = "distance (km)";
-        private float distanceScale = 1000.0f;
+        private float distanceScale = 996.4f;
 
         private string throttleHeader = "percentThrottle";
         private float throttleScale = 0.01f;
@@ -28,7 +28,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor
         private float brakeScale = 0.01f;
 
         private string speedHeader = "speed";
-        private float speedScale = 1.0f;
+        private float speedScale = 0.277778f;
 
 
 
@@ -110,8 +110,6 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor
 
                     EditorUtility.DisplayDialog(title, "Done!", "ok");
                     Selection.activeObject = performanceBenchmarkData;
-
-
                 }
 
             }
