@@ -1,19 +1,26 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Perrinn424.PerformanceBenchmarkSystem
 {
-    public class NewPerformanceBenchmarkData : MonoBehaviour
+    public class NewPerformanceBenchmarkData : ScriptableObject, IReadOnlyList<PerformanceBenchmarkSample>
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        public float frenquency;
+        public List<PerformanceBenchmarkSample> samples;
 
+        public PerformanceBenchmarkSample this[int index] => samples[index];
+
+        public int Count => samples.Count;
+
+        public IEnumerator<PerformanceBenchmarkSample> GetEnumerator()
+        {
+            return samples.GetEnumerator();
         }
 
-        // Update is called once per frame
-        void Update()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-
+            return this.GetEnumerator();
         }
-    } 
+    }
 }
