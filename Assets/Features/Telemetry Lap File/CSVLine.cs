@@ -7,12 +7,16 @@ namespace Perrinn424.TelemetryLapSystem
     {
         private float [] values;
         private readonly HeadersIndex headersIndex;
+        private readonly char separatorCharacter;
         public bool HasValues { get; private set; }
-        public CSVLine(string[] headers)
+        public CSVLine(string[] headers, char separatorCharacter)
         {
             values = new float[headers.Length];
             headersIndex = new HeadersIndex(headers);
+            this.separatorCharacter = separatorCharacter;
         }
+
+        public CSVLine(string[] headers): this(headers, ','){}
 
         public float[] Values => values;
 
@@ -29,8 +33,25 @@ namespace Perrinn424.TelemetryLapSystem
 
         public void UpdateValues(string line)
         {
-            float[] aux = line.Split(',').Select(v => float.Parse(v, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
-            UpdateValues(aux);
+            string[] stringValues = line.Split(separatorCharacter);
+            float [] newValues = new float[stringValues.Length];
+
+            for (int i = 0; i < stringValues.Length; i++)
+            {
+                float newValue;
+                if (float.TryParse(stringValues[i], out newValue))
+                {
+                    newValues[i] = newValue;
+                }
+                else
+                {
+                    newValues[i] = float.NaN;
+                }
+            }
+
+
+            //float[] aux = line.Split(separatorCharacter).Select(v => float.Parse(v, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+            UpdateValues(newValues);
         }
 
         public void UpdateValues(float[] newValues)

@@ -11,7 +11,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
 {
     public class CSVImporterEditor : EditorWindow
     {
-        [MenuItem("Perrinn424/CSV Importer")]
+        [MenuItem("Perrinn424/CSV Importer", priority = 1)]
         public static void ShowWindow()
         {
             Import();

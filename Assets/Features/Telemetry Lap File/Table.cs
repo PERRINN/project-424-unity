@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Perrinn424.TelemetryLapSystem
@@ -35,15 +36,15 @@ namespace Perrinn424.TelemetryLapSystem
             return table;
         }
 
-        public static Table FromStream(StreamReader stream)
+        public static Table FromStream(StreamReader stream, char separatorCharacter = ',', bool hasUnits = true)
         {
-            return FromTextReader(stream);
+            return FromTextReader(stream, separatorCharacter, hasUnits);
         }
 
-        private static Table FromTextReader(TextReader textReader)
+        private static Table FromTextReader(TextReader textReader, char separatorCharacter = ',', bool hasUnits = true)
         {
             Table table = new Table();
-            CSVLine csvLine = new CSVLine(new string[0]);
+            CSVLine csvLine = new CSVLine(new string[0], separatorCharacter);
             List<float> tempValues = new List<float>();
             int lineCount = 0;
             string stringLine;
@@ -52,14 +53,23 @@ namespace Perrinn424.TelemetryLapSystem
                 if (lineCount == 0)
                 {
 
-                    table.headers = stringLine.Split(',');
+                    table.headers = stringLine.Split(separatorCharacter);
                     table.headerIndex = new HeadersIndex(table.Headers);
-                    csvLine = new CSVLine(table.Headers);
+                    csvLine = new CSVLine(table.Headers, separatorCharacter);
 
                 }
                 else if (lineCount == 1)
                 {
-                    table.units = stringLine.Split(',');
+                    if (hasUnits)
+                    {
+                        table.units = stringLine.Split(separatorCharacter);
+                    }
+                    else
+                    {
+                        table.units = table.headers.Select(_ => string.Empty).ToArray(); //array of empty strings
+                        csvLine.UpdateValues(stringLine);
+                        tempValues.AddRange(csvLine.Values);
+                    }
                 }
                 else
                 {
@@ -70,7 +80,8 @@ namespace Perrinn424.TelemetryLapSystem
                 lineCount++;
             }
 
-            table.rowCount = lineCount - 2; //header and units
+            int headerCount = hasUnits ? 2 : 1;
+            table.rowCount = lineCount - headerCount; //header and units
             table.columnCount = csvLine.Values.Length;
             table.matrix = new SerializedDenseArray(table.RowCount, table.ColumnCount);
             table.matrix.collection = tempValues.ToArray();
