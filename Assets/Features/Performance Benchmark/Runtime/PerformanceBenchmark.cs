@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Perrinn424
+namespace Perrinn424.PerformanceBenchmarkSystem
 {
     public class PerformanceBenchmark: IPerformanceBenchmark
     {
