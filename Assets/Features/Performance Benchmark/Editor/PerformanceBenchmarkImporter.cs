@@ -11,7 +11,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor
     public class PerformanceBenchmarkImporter : EditorWindow
     {
         private static string rootFolder = "Assets/Replays/Performance Benchmarks";
-        private static string title = "Performance Benchmark CSV Importer";
+        private static string dialogTitle = "Performance Benchmark CSV Importer";
 
         private float frequency = 10f;
 
@@ -76,7 +76,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor
         {
             var myDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            string path = EditorUtility.OpenFilePanel(title, myDocumentsFolder, "csv");
+            string path = EditorUtility.OpenFilePanel(dialogTitle, myDocumentsFolder, "csv");
 
             if (path.Length != 0)
             {
@@ -108,7 +108,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor
                     string filePath = $"{rootFolder}/{filename}_{timestamp}.asset";
                     AssetDatabase.CreateAsset(performanceBenchmarkData, filePath);
 
-                    EditorUtility.DisplayDialog(title, "Done!", "ok");
+                    EditorUtility.DisplayDialog(dialogTitle, "Done!", "ok");
                     Selection.activeObject = performanceBenchmarkData;
                 }
 
