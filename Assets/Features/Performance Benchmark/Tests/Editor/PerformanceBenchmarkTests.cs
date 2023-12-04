@@ -17,7 +17,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor.Tests
 
         private PerformanceBenchmarkData LoadData()
         {
-            var guids = AssetDatabase.FindAssets("t:NewPerformanceBenchmarkData");
+            var guids = AssetDatabase.FindAssets("t:PerformanceBenchmarkData");
             return AssetDatabase.LoadAssetAtPath<PerformanceBenchmarkData>(AssetDatabase.GUIDToAssetPath(guids[0]));
         }
 

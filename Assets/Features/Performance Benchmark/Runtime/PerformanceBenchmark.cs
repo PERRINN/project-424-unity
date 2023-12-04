@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using VehiclePhysics;
 
 namespace Perrinn424.PerformanceBenchmarkSystem
 {
@@ -19,6 +22,9 @@ namespace Perrinn424.PerformanceBenchmarkSystem
 
         private SampleComparer sampleComparer;
 
+        private PerformanceBenchmarkSample currentSample;
+        private PerformanceBenchmarkSample nextSample;
+
         public PerformanceBenchmark(List<PerformanceBenchmarkSample> samples)
         { 
             this.count = samples.Count;
@@ -28,27 +34,37 @@ namespace Perrinn424.PerformanceBenchmarkSystem
 
         public void Update(float currentTime, float currentDistance)
         {
-            int index = FindIndex(currentDistance);
-
-            if (index < 0 || index + 1 >= count)
+            if(!IsBetween(currentSample.distance, nextSample.distance, currentDistance)) //do samples need to be refreshed?
             {
-                TimeDiff = float.NaN;
-                TraveledDistance = float.NaN;
-                Speed = float.NaN;
-                return;
+                int index = FindIndex(currentDistance);
+
+                if (index < 0 || index + 1 >= count)
+                {
+                    SetErrorValues();
+                    return;
+                }
+
+
+                //Refresh samples
+                PreviousIndex = index;
+                currentSample = samples[index];
+                nextSample = samples[index + 1];
             }
 
-            PreviousIndex = index;
+            SetValues(currentSample, nextSample, currentTime, currentDistance);
+        }
 
-            float ratio = Mathf.InverseLerp(samples[index].distance, samples[index + 1].distance, currentDistance);
+        public void SetValues(PerformanceBenchmarkSample currentSample, PerformanceBenchmarkSample nextSample, float currentTime, float currentDistance)
+        {
+            float ratio = Mathf.InverseLerp(currentSample.distance, nextSample.distance, currentDistance);
 
-            PerformanceBenchmarkSample sample = PerformanceBenchmarkSample.Lerp(samples[index], samples[index + 1], ratio);
-            Time = sample.time;
+            PerformanceBenchmarkSample interpolatedSample = PerformanceBenchmarkSample.Lerp(currentSample, nextSample, ratio);
+            Time = interpolatedSample.time;
             TimeDiff = currentTime - Time;
-            TraveledDistance = sample.distance;
-            Speed = sample.speed;
-            Throttle = sample.throttle;
-            Brake = sample.brake;
+            TraveledDistance = interpolatedSample.distance;
+            Speed = interpolatedSample.speed;
+            Throttle = interpolatedSample.throttle;
+            Brake = interpolatedSample.brake;
         }
 
         private int FindIndex(float currentDistance)
@@ -100,7 +116,16 @@ namespace Perrinn424.PerformanceBenchmarkSystem
             if (index < 0 || index + 1 >= count)
                 return false;
 
-            return samples[index].distance <= distance && samples[index + 1].distance > distance;
+            return IsBetween(samples[index].distance, samples[index + 1].distance, distance);
+        }
+
+        private bool IsBetween(float lower, float upper, float value) // [lower, upper)
+        {
+            return lower <= value && upper > value;
+        }
+        private void SetErrorValues()
+        {
+            Time = TimeDiff = Speed = TraveledDistance = Throttle = Brake = float.NaN;
         }
 
         private class SampleComparer : IComparer<PerformanceBenchmarkSample>
