@@ -7,7 +7,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor.Tests
 {
     public class PerformanceBenchmarkTests
     {
-        private NewPerformanceBenchmarkData data;
+        private PerformanceBenchmarkData data;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
@@ -15,10 +15,10 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor.Tests
             data = LoadData();
         }
 
-        private NewPerformanceBenchmarkData LoadData()
+        private PerformanceBenchmarkData LoadData()
         {
             var guids = AssetDatabase.FindAssets("t:NewPerformanceBenchmarkData");
-            return AssetDatabase.LoadAssetAtPath<NewPerformanceBenchmarkData>(AssetDatabase.GUIDToAssetPath(guids[0]));
+            return AssetDatabase.LoadAssetAtPath<PerformanceBenchmarkData>(AssetDatabase.GUIDToAssetPath(guids[0]));
         }
 
 
@@ -27,7 +27,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor.Tests
         [TestCase(5.562164f, 544.5441f, -6.129224123f)]
         public void TimeReferenceTest(float time, float distance, float expectedDifference)
         {
-            IPerformanceBenchmark porsche919 = new NewPerformanceBenchmark(data.samples);
+            IPerformanceBenchmark porsche919 = new PerformanceBenchmark(data.samples);
             porsche919.Update(time, distance);
             Assert.That(expectedDifference, Is.EqualTo(porsche919.TimeDiff).Within(10e-3));
         }
@@ -35,7 +35,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor.Tests
         [Test]
         public void GCTest()
         {
-            IPerformanceBenchmark porsche919 = new NewPerformanceBenchmark(data.samples);
+            IPerformanceBenchmark porsche919 = new PerformanceBenchmark(data.samples);
             porsche919.Update(0f, 0f);
 
 
@@ -59,7 +59,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor.Tests
             };
 
             //IPerformanceBenchmark performanceBenchmark = new PerformanceBenchmark(new float[] { 0f, 3f, 5f, 6f }, 0f);
-            NewPerformanceBenchmark performanceBenchmark = new NewPerformanceBenchmark (samples);
+            PerformanceBenchmark performanceBenchmark = new PerformanceBenchmark (samples);
 
             //float[] testValues = { -80f, 0f, 1.5f, 3f, 3.5f, 5f, 5.5f, 6f, 80f };
 
@@ -84,7 +84,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor.Tests
         [Test]
         public void OutOfIndexTest()
         {
-            IPerformanceBenchmark porsche = new NewPerformanceBenchmark(data.samples);
+            IPerformanceBenchmark porsche = new PerformanceBenchmark(data.samples);
             Assert.DoesNotThrow(() => porsche.Update(305.016f, 20737.32f));
         }
     } 

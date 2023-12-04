@@ -84,7 +84,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem.Editor
                 {
                     Table table = Table.FromStream(s, ';', false);
                     
-                    NewPerformanceBenchmarkData performanceBenchmarkData = ScriptableObject.CreateInstance<NewPerformanceBenchmarkData>();
+                    PerformanceBenchmarkData performanceBenchmarkData = ScriptableObject.CreateInstance<PerformanceBenchmarkData>();
                     performanceBenchmarkData.frenquency = frequency;
                     performanceBenchmarkData.samples = new List<PerformanceBenchmarkSample>(table.RowCount);
 

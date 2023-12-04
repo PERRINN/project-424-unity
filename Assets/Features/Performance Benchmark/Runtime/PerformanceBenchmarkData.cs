@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Perrinn424.PerformanceBenchmarkSystem
 {
-    public class NewPerformanceBenchmarkData : ScriptableObject, IReadOnlyList<PerformanceBenchmarkSample>
+    public class PerformanceBenchmarkData : ScriptableObject, IReadOnlyList<PerformanceBenchmarkSample>
     {
         public float frenquency;
         public List<PerformanceBenchmarkSample> samples;

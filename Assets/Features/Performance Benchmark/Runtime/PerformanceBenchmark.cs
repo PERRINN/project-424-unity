@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Perrinn424.PerformanceBenchmarkSystem
 {
-    public class NewPerformanceBenchmark : IPerformanceBenchmark
+    public class PerformanceBenchmark : IPerformanceBenchmark
     {
         public float Time { get; private set; } //[s]
         public float TimeDiff { get; private set; } //[s]
@@ -19,7 +19,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem
 
         private SampleComparer sampleComparer;
 
-        public NewPerformanceBenchmark(List<PerformanceBenchmarkSample> samples)
+        public PerformanceBenchmark(List<PerformanceBenchmarkSample> samples)
         { 
             this.count = samples.Count;
             this.samples = samples;

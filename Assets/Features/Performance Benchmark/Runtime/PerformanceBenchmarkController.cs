@@ -5,16 +5,16 @@ namespace Perrinn424.PerformanceBenchmarkSystem
 {
     public class PerformanceBenchmarkController : VehicleBehaviour
     {
-        public IPerformanceBenchmark Porsche919 { get => newPorsche919; }
+        public IPerformanceBenchmark Porsche919 { get => porsche919; }
 
         [SerializeField]
-        private NewPerformanceBenchmarkData newPorsche919Data;
+        private PerformanceBenchmarkData porsche919Data;
 
-        private NewPerformanceBenchmark newPorsche919;
+        private PerformanceBenchmark porsche919;
 
         public override void OnEnableVehicle()
         {
-            newPorsche919 = new NewPerformanceBenchmark(newPorsche919Data.samples);
+            porsche919 = new PerformanceBenchmark(porsche919Data.samples);
         }
 
         public override void FixedUpdateVehicle()
@@ -25,7 +25,7 @@ namespace Perrinn424.PerformanceBenchmarkSystem
 
         private void UpdateBenchmark(float currentTime, float currentDistance)
         {
-            newPorsche919.Update(currentTime, currentDistance);
+            porsche919.Update(currentTime, currentDistance);
         }
     }
 }
