@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Perrinn424.TelemetryLapSystem
@@ -12,7 +13,7 @@ namespace Perrinn424.TelemetryLapSystem
             headersIndex =
             headers
                 .Select((header, index) => new { header, index })
-                .ToDictionary(x => x.header, x => x.index);
+                .ToDictionary(x => x.header, x => x.index, StringComparer.OrdinalIgnoreCase);
         }
 
         public int this[string header] => headersIndex[header];
