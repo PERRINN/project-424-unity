@@ -28,10 +28,10 @@ namespace Perrinn424.TelemetryLapSystem
         [SerializeField]
         private string [] units;
 
-        public static Table FromCSV(string csv)
+        public static Table FromCSV(string csv, char separatorCharacter = ',', bool hasUnits = true)
         {
             StringReader reader = new StringReader(csv);
-            var table = FromTextReader(reader);
+            var table = FromTextReader(reader, separatorCharacter, hasUnits);
             reader.Dispose();
             return table;
         }
