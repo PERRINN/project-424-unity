@@ -41,6 +41,14 @@ All other features work normally: telemetry (T), cameras (C), time scale... (see
 4. Press the **Gear Up** input to engage the **D** (drive) mode.
 5. Drive!
 
+## Triples or multi-monitor settings
+
+After building the project, launch the executable with these command-line options:
+
+    -screen-width 5760 -screen-height 1080 -screen-fullscreen 0 -popupwindow
+
+Change the values according to the combined resolution.
+
 ## Development guidelines
 
 Writing code and components for the Project 424 should follow these rules:
