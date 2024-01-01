@@ -1,7 +1,7 @@
 # Project 424
 Simulation of the PERRINN 424 electric hypercar in Unity using Vehicle Physics Pro.
 
-[More information on Project 424](https://discover.perrinn.com/project-424/424-unity-simulation)
+[More information on Project 424](https://discover.perrinn.com/424/424-unity-simulation)
 
 ## Videos
 
