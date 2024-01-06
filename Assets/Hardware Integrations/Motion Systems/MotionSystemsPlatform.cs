@@ -238,10 +238,10 @@ public class MotionSystemsPlatform : VehicleBehaviour
 
 		// Normalized suspension compression
 
-		m_motionData.suspensionFL = m_wheelFL.suspensionCompression;
-		m_motionData.suspensionFR = m_wheelFR.suspensionCompression;
-		m_motionData.suspensionRL = m_wheelRL.suspensionCompression;
-		m_motionData.suspensionRR = m_wheelRR.suspensionCompression;
+		m_motionData.suspensionFL = m_wheelFL.suspensionState.compressionRatio;
+		m_motionData.suspensionFR = m_wheelFR.suspensionState.compressionRatio;
+		m_motionData.suspensionRL = m_wheelRL.suspensionState.compressionRatio;
+		m_motionData.suspensionRR = m_wheelRR.suspensionState.compressionRatio;
 
 		// Terrain type
 		// 0 = hard terrain (asphalt, kerbs, etc), 1 = rought terrain (offroad, grass, sand, etc)

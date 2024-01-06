@@ -78,28 +78,32 @@ public class Perrinn424RenderClient : NetworkBehaviour
 		public VisualPose caliper;
 		public VisualPose wheel;
 
-		public void SetFrom (VPWheelCollider wheelCol)
+		public void SetFrom (WheelColliderBehaviour wheelCol)
 			{
-			if (wheelCol.suspensionTransform != null)
-				suspension.SetFrom(wheelCol.suspensionTransform);
+			wheelCol.GetVisualSuspensionTransforms(out Transform wheelTransform, out Transform caliperTransform, out Transform suspensionTransform);
 
-			if (wheelCol.caliperTransform != null)
-				caliper.SetFrom(wheelCol.caliperTransform);
+			if (suspensionTransform != null)
+				suspension.SetFrom(suspensionTransform);
 
-			if (wheelCol.wheelTransform != null)
-				wheel.SetFrom(wheelCol.wheelTransform);
+			if (caliperTransform != null)
+				caliper.SetFrom(caliperTransform);
+
+			if (wheelTransform != null)
+				wheel.SetFrom(wheelTransform);
 			}
 
-		public void ApplyTo (VPWheelCollider wheelCol)
+		public void ApplyTo (WheelColliderBehaviour wheelCol)
 			{
-			if (wheelCol.suspensionTransform != null)
-				suspension.ApplyTo(wheelCol.suspensionTransform);
+			wheelCol.GetVisualSuspensionTransforms(out Transform wheelTransform, out Transform caliperTransform, out Transform suspensionTransform);
 
-			if (wheelCol.caliperTransform != null)
-				caliper.ApplyTo(wheelCol.caliperTransform);
+			if (suspensionTransform != null)
+				suspension.ApplyTo(suspensionTransform);
 
-			if (wheelCol.wheelTransform != null)
-				wheel.ApplyTo(wheelCol.wheelTransform);
+			if (caliperTransform != null)
+				caliper.ApplyTo(caliperTransform);
+
+			if (wheelTransform != null)
+				wheel.ApplyTo(wheelTransform);
 			}
 		}
 

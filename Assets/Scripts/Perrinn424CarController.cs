@@ -193,10 +193,10 @@ public class Perrinn424CarController : VehicleBase
 			channel[baseId + Perrinn424Data.MguTorque] = (int)(mgu.sensorMguTorque * 1000);
 			channel[baseId + Perrinn424Data.MguStatorTorque] = (int)(mgu.sensorStatorTorque * 1000);
 			channel[baseId + Perrinn424Data.MguRotorTorque] = (int)(mgu.sensorRotorTorque * 1000);
-			channel[baseId + Perrinn424Data.ShaftsTorque] = (int)((m_leftWheel.driveTorque + m_rightWheel.driveTorque) * 1000);
+			channel[baseId + Perrinn424Data.ShaftsTorque] = (int)((m_leftWheel.sensorDriveTorque + m_rightWheel.sensorDriveTorque) * 1000);
 
-			float leftWheelTorque = m_leftWheel.driveTorque + m_leftWheel.brakeTorque * Mathf.Sign(-m_leftWheel.contact.localVelocity.y);
-			float rightWheelTorque = m_rightWheel.driveTorque + m_rightWheel.brakeTorque * Mathf.Sign(-m_rightWheel.contact.localVelocity.y);
+			float leftWheelTorque = m_leftWheel.sensorDriveTorque + m_leftWheel.sensorBrakeTorque * Mathf.Sign(-m_leftWheel.contactPatch.localVelocity.y);
+			float rightWheelTorque = m_rightWheel.sensorDriveTorque + m_rightWheel.sensorBrakeTorque * Mathf.Sign(-m_rightWheel.contactPatch.localVelocity.y);
 			channel[baseId + Perrinn424Data.WheelsTorque] = (int)((leftWheelTorque + rightWheelTorque) * 1000);
 			}
 
@@ -288,7 +288,7 @@ public class Perrinn424CarController : VehicleBase
 		if (frontAxle.leftWheel == null || frontAxle.rightWheel == null
 			|| rearAxle.leftWheel == null || rearAxle.rightWheel == null)
 			{
-			DebugLogError("Some VPWheelCollider references are missing in the axles.\nAll axles must have a reference to the corresponding left-right VPWheelCollider objects.");
+			DebugLogError("Some WheelColliderBehaviour references are missing in the axles.\nAll axles must have a reference to the corresponding left-right WheelColliderBehaviour objects.");
 			enabled = false;
 			return;
 			}
@@ -334,8 +334,7 @@ public class Perrinn424CarController : VehicleBase
 
 		// Initialize internal data
 
-		disableSteerAngleFix = true;
-		forceRaycastIgnoreColliders = true;
+		VPWheelColliderLegacy.disableSteerAngleFix = true;
 		m_gearMode = (int)Gearbox.AutomaticGear.N;
 		m_prevGearMode = (int)Gearbox.AutomaticGear.N;
 		data.Set(Channel.Input, InputData.AutomaticGear, m_gearMode);
@@ -369,13 +368,11 @@ public class Perrinn424CarController : VehicleBase
 
 	// WheelState and Wheel objects must be initialized with a minimum data per wheel
 
-	void ConfigureWheelData (WheelState ws, Wheel wheel, VPWheelCollider wheelCol, TireFrictionBase tireFriction, bool steerable = false)
+	void ConfigureWheelData (WheelState ws, Wheel wheel, WheelColliderBehaviour wheelCol, TireFrictionBase tireFriction, bool steerable = false)
 		{
 		ws.wheelCol = wheelCol;
 		ws.steerable = steerable;
 		wheel.tireFriction = tireFriction;
-		wheel.radius = wheelCol.radius;
-		wheel.mass = wheelCol.mass;
 		}
 
 

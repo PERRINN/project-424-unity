@@ -69,22 +69,10 @@ public class Perrinn424CarControllerInspector : VPInspector
 		DrawProperty("tractionControl", "Traction Control (TCS)");
 
 		DrawHeader("Advanced");
-		SetMinLabelWidth(165);
-		DrawProperty("integrationSteps");
-		DrawProperty("integrationUseRK4");
-		DrawProperty("wheelSleepVelocity");
-		DrawProperty("tireAdherentImpulseRatio");
-
-		DrawHeader("Experimental");
-		DrawProperty("tireSideDeflection");
-		DrawProperty("tireSideDeflectionRate");
-
-		Space();
-		SetMinLabelWidth(190);
-		bool advancedSuspension = DrawProperty("advancedSuspensionDamper").boolValue;
-		if (!advancedSuspension) GUI.enabled = false;
-		DrawProperty("suspensionDamperLimitFactor");
-		GUI.enabled = true;
+		SetMinLabelWidth(175);
+		DrawProperty("solverSubsteps");
+		DrawProperty("wheelMomentumFactor");
+		DrawProperty("asyncPhysicsQueries");
 		}
 
 

@@ -199,11 +199,15 @@ namespace Perrinn424
                 {
                     if (m_lapStarted)
                     {
-                        float deltaTime = Mathf.Clamp(m_autopilot.DeltaTime, -42.4f, 42.4f);
                         if (m_autopilot != null)
+                        {
+                            float deltaTime = Mathf.Clamp(m_autopilot.DeltaTime, -42.4f, 42.4f);
                             timeDifference.text = deltaTime.ToString("+0.00;-0.00");
+                        }
                         else
+                        {
                             timeDifference.text = "--.--";
+                        }
                     }
                     else
                     {

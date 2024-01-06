@@ -165,11 +165,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877714749028560}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 1423400435, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 25
   radius: 0.34
+  inertia: 1.5
+  hidden: 0
+  mass: 25
   center: {x: 0, y: 0, z: 0}
   suspensionDistance: 0.065
   suspensionAnchor: 0
@@ -181,8 +183,10 @@ MonoBehaviour:
   groundPenetration: 0.01
   disableSuspensionMovement: 0
   hideWheelOnDisable: 1
+  visualTireWidth: 0.25
   localSteeringAxis: 1
   localSpinAxis: 0
+  canSleep: 0
 --- !u!1 &2483877714874542022
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,11 +228,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877714874542022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 1423400435, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 25
   radius: 0.34
+  inertia: 1.5
+  hidden: 0
+  mass: 25
   center: {x: 0, y: 0, z: 0}
   suspensionDistance: 0.09
   suspensionAnchor: 0
@@ -240,8 +246,10 @@ MonoBehaviour:
   groundPenetration: 0.01
   disableSuspensionMovement: 0
   hideWheelOnDisable: 1
+  visualTireWidth: 0.25
   localSteeringAxis: 1
   localSpinAxis: 0
+  canSleep: 0
 --- !u!1 &2483877714929404264
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,13 +436,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dynamicModel: 0
-  dynamicCoefficient: 0.01
+  constantCoefficient: 0.01
+  linearCoefficient: 0.0003
+  tirePressure: 2
   staticCoefficient: 0.01
   staticSpeedThreshold: 2
   axleFrictionFactors: []
   showDebugLabel: 0
   coefficient: -1
-  version: 1
+  version: 2
 --- !u!114 &7096784938595829830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,12 +458,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axle: 0
+  springRate: 500000
+  emitTelemetry: 0
   mode: 1
   stiffness: 0.5
-  springRate: 500000
   antiRollRate: 20000
-  rigidity: 0
-  emitTelemetry: 0
+  version: 2
 --- !u!114 &5252892781311452814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,12 +477,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axle: 1
+  springRate: 0
+  emitTelemetry: 0
   mode: 1
   stiffness: 0.5
-  springRate: 0
   antiRollRate: 20000
-  rigidity: 0
-  emitTelemetry: 0
+  version: 2
 --- !u!114 &2623578543911979919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,7 +885,6 @@ MonoBehaviour:
   m_Script: {fileID: -253657760, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tireWidth: 0.4
   minSlip: 2
   maxSlip: 8
   intensity: 1
@@ -883,6 +892,7 @@ MonoBehaviour:
   minIntensityTime: 0.5
   maxIntensityTime: 6
   limitIntensityTime: 10
+  tireWidth: 0.4
 --- !u!1 &2483877715601729040
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,11 +965,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877715777984044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 1423400435, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 25
   radius: 0.34
+  inertia: 1.5
+  hidden: 0
+  mass: 25
   center: {x: 0, y: 0, z: 0}
   suspensionDistance: 0.065
   suspensionAnchor: 0
@@ -971,8 +983,10 @@ MonoBehaviour:
   groundPenetration: 0.01
   disableSuspensionMovement: 0
   hideWheelOnDisable: 1
+  visualTireWidth: 0.25
   localSteeringAxis: 1
   localSpinAxis: 0
+  canSleep: 0
 --- !u!1 &2483877715907473430
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,11 +1028,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877715907473430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1445780741, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 1423400435, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 25
   radius: 0.34
+  inertia: 1.5
+  hidden: 0
+  mass: 25
   center: {x: 0, y: 0, z: 0}
   suspensionDistance: 0.09
   suspensionAnchor: 0
@@ -1030,8 +1046,10 @@ MonoBehaviour:
   groundPenetration: 0.01
   disableSuspensionMovement: 0
   hideWheelOnDisable: 1
+  visualTireWidth: 0.25
   localSteeringAxis: 1
   localSpinAxis: 0
+  canSleep: 0
 --- !u!1 &2483877715949788932
 GameObject:
   m_ObjectHideFlags: 0
@@ -1293,23 +1311,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecfffc18ce3aa4b4f95d46ba88aa1212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  integrationSteps: 2
-  integrationUseRK4: 0
   centerOfMass: {fileID: 2483877715601729047}
-  tireSideDeflection: 0
-  tireSideDeflectionRate: 10
-  tireAdherentImpulseRatio: 0.5
-  wheelSleepVelocity: 0.2
-  advancedSuspensionDamper: 1
-  suspensionDamperLimitFactor: 2
-  contactAngleAffectsTireForce: 0
-  dontAdjustSuspensionForcePoint: 0
-  disableSteerAngleFix: 0
-  disableWheelReferenceFrameFix: 0
-  forceRaycastIgnoreColliders: 0
-  scaleFactor: 1
-  vehicleSleepCriteria: 0
-  showContactGizmos: 1
+  solverSubsteps: 2
+  wheelMomentumFactor: 0.25
+  hasRadialTires: 0
+  climbStepAngle: 15
+  climbStepLowSpeed: 5
+  springRateLimitFactor: 8
+  suspensionCompressionLimit: 1.2
+  asyncPhysicsQueries: 1
+  debugLogInfo: 0
+  thickGizmos: 0
+  debugContacts: 1
   disableContactProcessing: 0
   inertia:
     mode: 4
@@ -1478,7 +1491,7 @@ MonoBehaviour:
   showWheelGizmos: 1
   showLocalFrame: 1
   showContactPoints: 1
-  showTireSlip: 1
+  showTireSlip: 0
   showTireForces: 1
   showSurfaceForces: 0
   useLogScale: 1

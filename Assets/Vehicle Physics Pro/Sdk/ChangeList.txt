@@ -69,6 +69,202 @@ Other, mostly internal, renames:
 
 
 ----------------------------------------------------------------------------------------------------
+2023-06-05
+----------------------------------------------------------------------------------------------------
+
+Support for RK4 (Runge-Kutta integration of order 4) has been removed.
+
+	If you were using RK4 (Integration Use RK4 enabled), now ensure the number of Integration Steps
+	is 4 or above.
+
+VehicleBase: integrationSteps renamed to solverSubsteps.
+
+	Rename any references in your code.
+
+
+----------------------------------------------------------------------------------------------------
+2023-05-12
+----------------------------------------------------------------------------------------------------
+
+ElectricMotor block renamed as ElectricMotorLegacy.
+
+	Modify any reference in the code from ElectricMotor to ElectricMotorLegacy.
+
+AntiSpin
+
+	maxBrakeTorque replaced with maxBrakeRatio. Now specifies the maximum ratio of the brake
+	to be applied at the affected wheel, up to the maximum the corresponding brake is capable of.
+
+
+----------------------------------------------------------------------------------------------------
+2022-12-16
+----------------------------------------------------------------------------------------------------
+
+VPVehicleJoint
+
+	VPVehicleJoint.targetRotation now specifies the actual rotation between rigidbodies. Previously,
+	it was the rotation delta with respect to the rotation at which the joint was created.
+
+	This new behavior is now consistent with targetPosition, which is the distance between anchors,
+	regardless the starting positions of the RBs.
+
+Actions:
+
+	If you use VPVehicleJoint.targetRotation with Damped Spring angular constraints, you may preserve the
+	previous behavior by replacing:
+
+	 	vehicleJoint.targetRotation = expectedRotation;
+
+	with:
+
+		vehicleJoint.targetRotation = expectedRotation * vehicleJoint.originalRotation;
+
+	which specifies a delta rotation with respect to the rotation at witch the joint was created.
+
+
+----------------------------------------------------------------------------------------------------
+2022-11-29
+----------------------------------------------------------------------------------------------------
+
+VPTireAudio
+VPAudioExtras
+
+	Settings for the audio sources are now specified via new 3D Audio Settings section in the
+	inspector. Default values are equivalent to the previous defaults.
+
+Actions:
+
+	If you use any of these components with parameters modified from default, you should reconfigure
+	them with your values.
+
+
+----------------------------------------------------------------------------------------------------
+2022-02-15
+----------------------------------------------------------------------------------------------------
+
+VPVisualEffects
+
+	"Degrees Of Rotation" removed. This value is now configured in the vehicle's Steering settings
+	as "Steering Wheel Range".
+
+VPDeviceInput
+VPWheelDeviceInput
+
+	New parameter configuredWheelRange to report the physical degrees of rotation in the wheel
+	device. This value is typically configured in the wheel's control panel. Reporting it here
+	allows to match the rotation with the virtual wheel as configured in the Steering settings.
+
+	Note: Reporting the wheel range here does NOT modify the physical degrees of rotation in the
+	physical wheel device.
+
+VPRollingFriction
+
+	"Quadratic" model renamed to "TirePressure".
+
+
+----------------------------------------------------------------------------------------------------
+2022-02-01
+----------------------------------------------------------------------------------------------------
+
+Automatic gearbox: Behavior of limited modes D1-D5 changed
+
+	- When a lower mode is selected it will try	to switch to a lower gear as soon as possible to
+	  favor engine brake.
+	- New setting "Max Rpm" that should match the maximum rpm the engine is capable of.
+
+Actions:
+
+	- If you use the limited modes D1-D5, ensure the new "Max Rpm" setting in the Automatic gearbox
+	  matches the maximum rpm the engine can reach normally, including any rpm limiter.
+
+
+----------------------------------------------------------------------------------------------------
+2022-01-05
+----------------------------------------------------------------------------------------------------
+
+Data Bus: SettingsData values changed
+
+	- The numeric values for the Settings channel in the data bus have changed.
+	- Reference: DataBus.cs, struct SettingsData.
+
+Actions:
+
+	- If you're accessing the Settings channel directly (search for Channel.Settings) ensure to
+	  refer to the values through the constant names, NOT with the numeric IDs (these have changed).
+	- If you're using the numeric IDs directly, then either use the newly assigned numbers, or
+	  modify the code to use the constant names (recommended).
+
+
+----------------------------------------------------------------------------------------------------
+2021-12-21
+----------------------------------------------------------------------------------------------------
+
+VPAudio: Rpm Scaling
+
+	- The option "Rpm Scaling" now works based on "Audio Base Rpm": when the rpm of the vehicle
+	  equals "Audio Base Rpm", the resulting pitch will always be 1 regardless of "Rpm Scaling".
+	- "Rpm Scaling" controls the slope of the proportion of rpm to pitch on rpm below and above
+	  the value of "Audio Base Rpm".
+	- If "Rpm Scaling" is 1 (default) the behavior is the same as before.
+
+Actions:
+
+	- If you use "Rpm Scaling" different than 1, you need to multiply the value of "Audio Base Rpm"
+	  with the scaling to get the same result as before.
+
+
+----------------------------------------------------------------------------------------------------
+2021-12-02
+----------------------------------------------------------------------------------------------------
+
+VPStandardInput:
+
+	- The mode "Auto Forward And Reverse" has been fully rewritten for consistency. There should
+	  be no more hiccups when changing direction.
+	- The option "Brake On Throttle Backwards" now applies to the mode "Throttle And Brake" only.
+
+Actions:
+
+	- If your vehicles rely on VPStandardInput and the options mentioned above, verify they keep
+	  working as expected. If all, they should be more reliable on changing direction.
+
+
+----------------------------------------------------------------------------------------------------
+2021-12-01
+----------------------------------------------------------------------------------------------------
+
+Gearbox block:
+
+	- Mode L deprecated. Use new mode D1 instead.
+	- D1 - D5 modes may be selected anytime. Actual gears will be engaged and limited when proper
+	  conditions are met (previously selecting L required speed to be under auto2ndGearMinSpeed).
+
+Actions:
+
+	- Replace Gearbox.AutomaticGear.L with Gearbox.AutomaticGear.D1
+	- Databus ID remains the same for both L and D1 modes. No further action here.
+
+These public enums have been removed:
+
+	VPVehicleToolkit.AutomaticGear
+	VPDeviceInput.AutomaticGear
+
+Replace with:
+
+	Gearbox.AutomaticGear
+
+
+----------------------------------------------------------------------------------------------------
+2021-06-11
+----------------------------------------------------------------------------------------------------
+
+VPAeroSurface:
+
+	- dragCoefficient renamed to dragCoefficientQuadratic
+	- New properties and options. Previous behavior is preserved by default.
+
+
+----------------------------------------------------------------------------------------------------
 2021-03-24
 ----------------------------------------------------------------------------------------------------
 
