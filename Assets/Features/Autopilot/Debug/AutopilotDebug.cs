@@ -11,7 +11,7 @@ public class AutopilotDebug : MonoBehaviour
 
     private NearestSegmentSearcher segmentSearcher;
     private Path path;
-    private PidController pid;
+    private PIDController pid;
 
     public float force;
 
@@ -25,7 +25,7 @@ public class AutopilotDebug : MonoBehaviour
 
     private void OnEnable()
     {
-        pid = new PidController();
+        pid = new PIDController();
         path = new Path(lap);
         segmentSearcher = new NearestSegmentSearcher(path);
     }

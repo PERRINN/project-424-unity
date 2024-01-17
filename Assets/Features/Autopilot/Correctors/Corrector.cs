@@ -12,10 +12,10 @@ namespace Perrinn424.AutopilotSystem
         public float ki;
         public float kd;
         public float max;
-        public PidController.ProportionalMode mode;
+        public PIDController.ProportionalMode mode;
 
         protected Rigidbody rb;
-        protected PidController PIDController { get; private set; }
+        protected PIDController PIDController { get; private set; }
 
         public Vector3 Force { get; protected set; }
         public float Error { get; protected set; }
@@ -35,7 +35,7 @@ namespace Perrinn424.AutopilotSystem
         public void Init(Rigidbody rb)
         {
             this.rb = rb;
-            PIDController = new PidController();
+            PIDController = new PIDController();
         }
         protected void UpdatePIDSettings()
         {
@@ -50,5 +50,5 @@ namespace Perrinn424.AutopilotSystem
             PIDController.minOutput = enabled ? -max : 0;
             PIDController.proportionalMode = mode;
         }
-    } 
+    }
 }

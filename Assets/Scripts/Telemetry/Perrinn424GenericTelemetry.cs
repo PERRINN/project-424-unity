@@ -71,7 +71,6 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Register<Perrinn424Inputs>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Differential>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Chassis>(vehicle);
-		vehicle.telemetry.Register<Perrinn424Tires>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Distance>(vehicle);
 		vehicle.telemetry.Register<Perrinn424ForceFeedback>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Positions>(vehicle);
@@ -83,7 +82,6 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Unregister<Perrinn424Inputs>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Differential>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Chassis>(vehicle);
-		vehicle.telemetry.Unregister<Perrinn424Tires>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Distance>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424ForceFeedback>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Positions>(vehicle);
@@ -203,7 +201,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		{
 		public override int GetChannelCount ()
 			{
-			return 6;
+			return 7;
 			}
 
 
@@ -221,6 +219,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			channelInfo[3].SetNameAndSemantic("RollAngleRear", Telemetry.Semantic.BankAngle);
 			channelInfo[4].SetNameAndSemantic("GroundSlope", Telemetry.Semantic.BankAngle);
 			channelInfo[5].SetNameAndSemantic("GroundGrade", Telemetry.Semantic.SignedRatio);
+			channelInfo[6].SetNameAndSemantic("UndersteerAngle", Telemetry.Semantic.SlipAngle);
 			}
 
 
@@ -235,87 +234,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+3] = custom[Perrinn424Data.RearRollAngle] / 1000.0f;
 			values[index+4] = custom[Perrinn424Data.GroundAngle] / 1000.0f;
 			values[index+5] = custom[Perrinn424Data.GroundSlope] / 1000.0f;
-			}
-		}
-
-
-	public class Perrinn424Tires : Telemetry.ChannelGroup
-		{
-		Perrinn424CarController m_controller;
-
-		VehicleBase.WheelState m_wheelFL;
-		VehicleBase.WheelState m_wheelFR;
-		VehicleBase.WheelState m_wheelRL;
-		VehicleBase.WheelState m_wheelRR;
-
-
-		public override int GetChannelCount ()
-			{
-			return 9;
-			}
-
-
-		public override Telemetry.PollFrequency GetPollFrequency ()
-			{
-			return Telemetry.PollFrequency.Normal;
-			}
-
-
-		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
-			{
-			VehicleBase vehicle = instance as VehicleBase;
-			m_controller = vehicle as Perrinn424CarController;
-
-			// Retrieve states for the four monitored wheels
-
-			m_wheelFL = vehicle.wheelState[vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Left)];
-			m_wheelFR = vehicle.wheelState[vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Right)];
-			int rearAxle = vehicle.GetAxleCount() - 1;
-			m_wheelRL = vehicle.wheelState[vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Left)];
-			m_wheelRR = vehicle.wheelState[vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Right)];
-
-			// Using custom SlipRatio semantic not yet available in the built-in collection.
-			// TODO: use built-in semantic when available.
-
-			var slipRatioSemantic = new Telemetry.SemanticInfo();
-			slipRatioSemantic.SetRangeAndFormat(-1.0f, 1.0f, "0.0", " %", multiplier:100);
-
-			// Fill-in channel information
-
-			channelInfo[0].SetNameAndSemantic("SlipRatioFL", Telemetry.Semantic.Custom, slipRatioSemantic);
-			channelInfo[1].SetNameAndSemantic("SlipRatioFR", Telemetry.Semantic.Custom, slipRatioSemantic);
-			channelInfo[2].SetNameAndSemantic("SlipRatioRL", Telemetry.Semantic.Custom, slipRatioSemantic);
-			channelInfo[3].SetNameAndSemantic("SlipRatioRR", Telemetry.Semantic.Custom, slipRatioSemantic);
-			channelInfo[4].SetNameAndSemantic("SlipAngleFL", Telemetry.Semantic.SlipAngle);
-			channelInfo[5].SetNameAndSemantic("SlipAngleFR", Telemetry.Semantic.SlipAngle);
-			channelInfo[6].SetNameAndSemantic("SlipAngleRL", Telemetry.Semantic.SlipAngle);
-			channelInfo[7].SetNameAndSemantic("SlipAngleRR", Telemetry.Semantic.SlipAngle);
-			channelInfo[8].SetNameAndSemantic("Understeer", Telemetry.Semantic.SlipAngle);
-			}
-
-
-		public override void PollValues (float[] values, int index, Object instance)
-			{
-			FillData(m_wheelFL, values, index+0);
-			FillData(m_wheelFR, values, index+1);
-			FillData(m_wheelRL, values, index+2);
-			FillData(m_wheelRR, values, index+3);
-			values[index+8] = m_controller.understeerAngle;
-			}
-
-
-		void FillData (VehicleBase.WheelState ws, float[] values, int index)
-			{
-			if (ws.grounded)
-				{
-				values[index+0] = ws.slipRatio;
-				values[index+4] = ws.slipAngle;
-				}
-			else
-				{
-				values[index+0] = float.NaN;
-				values[index+4] = float.NaN;
-				}
+			values[index+6] = custom[Perrinn424Data.UndersteerAngle] / 1000.0f;
 			}
 		}
 

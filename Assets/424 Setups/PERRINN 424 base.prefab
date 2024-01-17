@@ -133,7 +133,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2483877714749028567}
-  - component: {fileID: 2483877714749028566}
+  - component: {fileID: 8125273608443436215}
   m_Layer: 8
   m_Name: WheelFL
   m_TagString: Untagged
@@ -156,7 +156,7 @@ Transform:
   m_Father: {fileID: 2483877714929404271}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2483877714749028566
+--- !u!114 &8125273608443436215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,28 +165,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877714749028560}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1423400435, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 929234263, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.34
-  inertia: 1.5
+  inertia: 1.445
   hidden: 0
-  mass: 25
   center: {x: 0, y: 0, z: 0}
-  suspensionDistance: 0.065
+  suspensionTravel: 0.065
   suspensionAnchor: 0
   springRate: 170000
   damperRate: 3000
+  springPreload: 0
+  unsprungMass: 0
+  bumpStopRate: 180000
+  bumpTravelOffset: 0
   suspensionTransform: {fileID: 839708947037456060}
-  caliperTransform: {fileID: 6447244425743666043}
+  wheelHubTransform: {fileID: 6447244425743666043}
   wheelTransform: {fileID: 8481584648128768785}
+  tireWidth: 0.25
   groundPenetration: 0.01
-  disableSuspensionMovement: 0
-  hideWheelOnDisable: 1
-  visualTireWidth: 0.25
-  localSteeringAxis: 1
-  localSpinAxis: 0
-  canSleep: 0
+  noSuspensionMotion: 0
+  hideOnDisable: 1
+  steerAxis: 1
+  spinAxis: 0
 --- !u!1 &2483877714874542022
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,7 +198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2483877714874542021}
-  - component: {fileID: 2483877714874542020}
+  - component: {fileID: 1116819523855469836}
   m_Layer: 8
   m_Name: WheelRL
   m_TagString: Untagged
@@ -219,7 +221,7 @@ Transform:
   m_Father: {fileID: 2483877714929404271}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2483877714874542020
+--- !u!114 &1116819523855469836
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -228,28 +230,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877714874542022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1423400435, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 929234263, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.34
-  inertia: 1.5
+  inertia: 1.445
   hidden: 0
-  mass: 25
   center: {x: 0, y: 0, z: 0}
-  suspensionDistance: 0.09
+  suspensionTravel: 0.09
   suspensionAnchor: 0
   springRate: 145000
   damperRate: 3000
+  springPreload: 0
+  unsprungMass: 0
+  bumpStopRate: 180000
+  bumpTravelOffset: 0
   suspensionTransform: {fileID: 717263724893151685}
-  caliperTransform: {fileID: 596898712701969201}
+  wheelHubTransform: {fileID: 596898712701969201}
   wheelTransform: {fileID: 5716544360041522673}
+  tireWidth: 0.25
   groundPenetration: 0.01
-  disableSuspensionMovement: 0
-  hideWheelOnDisable: 1
-  visualTireWidth: 0.25
-  localSteeringAxis: 1
-  localSpinAxis: 0
-  canSleep: 0
+  noSuspensionMotion: 0
+  hideOnDisable: 1
+  steerAxis: 1
+  spinAxis: 0
 --- !u!1 &2483877714929404264
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,7 +393,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2483877715235533905}
-  - component: {fileID: 3275875303832334606}
   - component: {fileID: 7096784938595829830}
   - component: {fileID: 5252892781311452814}
   - component: {fileID: 2623578543911979919}
@@ -423,28 +426,6 @@ Transform:
   m_Father: {fileID: 2483877716221292743}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3275875303832334606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2483877715235533906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1799796719, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dynamicModel: 0
-  constantCoefficient: 0.01
-  linearCoefficient: 0.0003
-  tirePressure: 2
-  staticCoefficient: 0.01
-  staticSpeedThreshold: 2
-  axleFrictionFactors: []
-  showDebugLabel: 0
-  coefficient: -1
-  version: 2
 --- !u!114 &7096784938595829830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,7 +637,7 @@ MonoBehaviour:
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 12
     fontColor: {r: 1, g: 1, b: 1, a: 1}
-    scrollLines: 0
+    maxLines: 0
   defaultFont: {fileID: 0}
 --- !u!114 &1952617881401160359
 MonoBehaviour:
@@ -933,7 +914,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2483877715777984035}
-  - component: {fileID: 2483877715777984034}
+  - component: {fileID: 5938249099071581607}
   m_Layer: 8
   m_Name: WheelFR
   m_TagString: Untagged
@@ -956,7 +937,7 @@ Transform:
   m_Father: {fileID: 2483877714929404271}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2483877715777984034
+--- !u!114 &5938249099071581607
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -965,28 +946,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877715777984044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1423400435, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 929234263, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.34
-  inertia: 1.5
+  inertia: 1.445
   hidden: 0
-  mass: 25
   center: {x: 0, y: 0, z: 0}
-  suspensionDistance: 0.065
+  suspensionTravel: 0.065
   suspensionAnchor: 0
   springRate: 170000
   damperRate: 3000
+  springPreload: 0
+  unsprungMass: 0
+  bumpStopRate: 180000
+  bumpTravelOffset: 0
   suspensionTransform: {fileID: 8510214184042845374}
-  caliperTransform: {fileID: 2320217314954261754}
+  wheelHubTransform: {fileID: 2320217314954261754}
   wheelTransform: {fileID: 1476911621587741050}
+  tireWidth: 0.25
   groundPenetration: 0.01
-  disableSuspensionMovement: 0
-  hideWheelOnDisable: 1
-  visualTireWidth: 0.25
-  localSteeringAxis: 1
-  localSpinAxis: 0
-  canSleep: 0
+  noSuspensionMotion: 0
+  hideOnDisable: 1
+  steerAxis: 1
+  spinAxis: 0
 --- !u!1 &2483877715907473430
 GameObject:
   m_ObjectHideFlags: 0
@@ -996,7 +979,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2483877715907473428}
-  - component: {fileID: 2483877715907473429}
+  - component: {fileID: 66808464962683038}
   m_Layer: 8
   m_Name: WheelRR
   m_TagString: Untagged
@@ -1019,7 +1002,7 @@ Transform:
   m_Father: {fileID: 2483877714929404271}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2483877715907473429
+--- !u!114 &66808464962683038
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1028,28 +1011,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877715907473430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1423400435, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 929234263, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.34
-  inertia: 1.5
+  inertia: 1.445
   hidden: 0
-  mass: 25
   center: {x: 0, y: 0, z: 0}
-  suspensionDistance: 0.09
+  suspensionTravel: 0.09
   suspensionAnchor: 0
   springRate: 145000
   damperRate: 3000
+  springPreload: 0
+  unsprungMass: 0
+  bumpStopRate: 180000
+  bumpTravelOffset: 0
   suspensionTransform: {fileID: 8651147804206917358}
-  caliperTransform: {fileID: 2354110884584777178}
+  wheelHubTransform: {fileID: 2354110884584777178}
   wheelTransform: {fileID: 685717978459552737}
+  tireWidth: 0.25
   groundPenetration: 0.01
-  disableSuspensionMovement: 0
-  hideWheelOnDisable: 1
-  visualTireWidth: 0.25
-  localSteeringAxis: 1
-  localSpinAxis: 0
-  canSleep: 0
+  noSuspensionMotion: 0
+  hideOnDisable: 1
+  steerAxis: 1
+  spinAxis: 0
 --- !u!1 &2483877715949788932
 GameObject:
   m_ObjectHideFlags: 0
@@ -1335,14 +1320,14 @@ MonoBehaviour:
     inertiaRow1: {x: 0, y: 1280, z: 0}
     inertiaRow2: {x: 0, y: 0, z: 131}
   frontAxle:
-    leftWheel: {fileID: 2483877714749028566}
-    rightWheel: {fileID: 2483877715777984034}
+    leftWheel: {fileID: 8125273608443436215}
+    rightWheel: {fileID: 5938249099071581607}
     brakeCircuit: 1
     steeringMode: 1
     steeringRatio: 1
   rearAxle:
-    leftWheel: {fileID: 2483877714874542020}
-    rightWheel: {fileID: 2483877715907473429}
+    leftWheel: {fileID: 1116819523855469836}
+    rightWheel: {fileID: 66808464962683038}
     brakeCircuit: 2
     steeringMode: 0
     steeringRatio: 1
@@ -1442,7 +1427,7 @@ GameObject:
   - component: {fileID: 2483877716263781661}
   - component: {fileID: 2483877716263781662}
   - component: {fileID: 2483877716263781649}
-  - component: {fileID: 2483877716263781650}
+  - component: {fileID: 8106028567685255545}
   - component: {fileID: 2483877716263781651}
   - component: {fileID: 2483877716263781660}
   m_Layer: 8
@@ -1517,7 +1502,7 @@ MonoBehaviour:
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 10
     fontColor: {r: 1, g: 1, b: 1, a: 1}
-    scrollLines: 35
+    maxLines: 35
   writeToCsv: 0
   csvWriteFolder: Assets
   enableTelemetryLog: 0
@@ -1581,7 +1566,7 @@ MonoBehaviour:
   font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
   fontSize: 12
   fontColor: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &2483877716263781650
+--- !u!114 &8106028567685255545
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1590,7 +1575,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2483877716263781659}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -301157081, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: -949843885, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   emitTelemetry: 1
@@ -1602,8 +1587,9 @@ MonoBehaviour:
   suspension: 1
   suspensionExtended: 1
   wheels: 1
-  tires: 0
+  tires: 1
   tiresExtended: 1
+  tireStates: 0
 --- !u!114 &2483877716263781651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1636,7 +1622,7 @@ MonoBehaviour:
     font: {fileID: 12800000, guid: 68e91a955efe04085922337eb01d7626, type: 3}
     fontSize: 12
     fontColor: {r: 1, g: 1, b: 1, a: 1}
-    scrollLines: 0
+    maxLines: 0
   defaultFont: {fileID: 0}
 --- !u!1 &2483877716415502930
 GameObject:
