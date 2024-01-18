@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b2d9942018d10448178eabdbdf6bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  porsche919Data: {fileID: 0}
 --- !u!1001 &10227660935106609
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -263,6 +264,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
+      propertyPath: noDRSSegment.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
       propertyPath: altitudeConverter.unityReference
       value: 146.63
       objectReference: {fileID: 0}
@@ -270,6 +276,66 @@ PrefabInstance:
         type: 3}
       propertyPath: altitudeConverter.altitudeReference
       value: 613.1741
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[0].segmentEnd
+      value: 2550
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[1].segmentEnd
+      value: 3800
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[2].segmentEnd
+      value: 13400
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[3].segmentEnd
+      value: 16000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[4].segmentEnd
+      value: 11500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[5].segmentEnd
+      value: 20500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[0].segmentStart
+      value: 2100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[1].segmentStart
+      value: 3200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[2].segmentStart
+      value: 12400
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[3].segmentStart
+      value: 14700
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[4].segmentStart
+      value: 10500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[5].segmentStart
+      value: 20000
       objectReference: {fileID: 0}
     - target: {fileID: 6611051989778264180, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
@@ -352,6 +418,9 @@ MonoBehaviour:
   - segmentStart: 15300
     segmentEnd: 15700
     minimumLimiter: 0.736
+  - segmentStart: 10500
+    segmentEnd: 11500
+    minimumLimiter: 0.8333
   limiterValue: 1
   limiterEnabled: 0
 --- !u!1001 &8838355619977855701
