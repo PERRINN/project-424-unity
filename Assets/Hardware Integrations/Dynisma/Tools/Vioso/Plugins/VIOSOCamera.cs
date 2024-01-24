@@ -184,6 +184,7 @@ public class VIOSOCamera : MonoBehaviour
                 cam.transform.localRotation = orig_rot * q;
                 cam.transform.localPosition = orig_pos + p;
 
+                // TODO: Camera shifting possible here? Must coordinate with UI (ViosoEyePointUICorrection)
                 cam.projectionMatrix = Matrix4x4.Frustum(pl);
 
                 lastMatrix = mV;
