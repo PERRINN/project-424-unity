@@ -6,13 +6,19 @@ namespace Perrinn424.Utilities
 {
     public class DriverSettingsPersistenceController : MonoBehaviour
     {
-        [SerializeField]
-        private DriverCameraSettingsController driverCameraSettingsController;
-
-        [SerializeField]
-        private SteeringWheelVisibilityController steeringWheelVisibilityController;
+        public DriverCameraSettingsController driverCameraSettingsController;
+        public SteeringWheelVisibilityController steeringWheelVisibilityController;
 
         private readonly string filename = "DriverSettings.json";
+
+        [Header("Restore Settings")]
+        public bool height = true;
+        public bool rotation = true;
+        public bool fov = true;
+        public bool viewDamping = true;
+        public bool steeringWheelVisibility = true;
+        public bool miniDashboardPosition = true;
+
 
         private string GetFullPath()
         {
@@ -43,6 +49,7 @@ namespace Perrinn424.Utilities
             DriverSettings settings = new DriverSettings()
             {
                 height = driverCameraSettingsController.Height,
+                rotation = driverCameraSettingsController.Rotation,
                 fov = driverCameraSettingsController.FOV,
                 damping = driverCameraSettingsController.Damping,
                 steeringWheelVisibility = steeringWheelVisibilityController.VisibilityOption,
@@ -62,11 +69,12 @@ namespace Perrinn424.Utilities
                 string json = File.ReadAllText(path);
                 DriverSettings settings = JsonUtility.FromJson<DriverSettings>(json);
 
-                driverCameraSettingsController.SetCameraFov(settings.fov);
-                driverCameraSettingsController.SetDriverHeight(settings.height);
-                driverCameraSettingsController.SetViewDamping(settings.damping);
-                steeringWheelVisibilityController.SetVisbilityOption(settings.steeringWheelVisibility);
-                driverCameraSettingsController.SetMiniDashboardPosition(settings.miniDashboardPosition);
+                if (height) driverCameraSettingsController.SetCameraHeight(settings.height);
+                if (rotation) driverCameraSettingsController.SetCameraRotation(settings.rotation);
+                if (fov) driverCameraSettingsController.SetCameraFov(settings.fov);
+                if (viewDamping) driverCameraSettingsController.SetViewDamping(settings.damping);
+                if (steeringWheelVisibility) steeringWheelVisibilityController.SetVisbilityOption(settings.steeringWheelVisibility);
+                if (miniDashboardPosition) driverCameraSettingsController.SetMiniDashboardPosition(settings.miniDashboardPosition);
             }
         }
 

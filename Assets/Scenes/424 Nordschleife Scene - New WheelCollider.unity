@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.3
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.044780876, g: 0.05738007, b: 0.070604235, a: 0.3}
+  m_IndirectSpecularColor: {r: 0.044782132, g: 0.057380278, b: 0.070605926, a: 0.3}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -175,23 +175,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fcb8472a18a0a147b932fd79700e222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  increaseHeight: 56
-  decreaseHeight: 55
   firstPersonCameraTarget: {fileID: 295459827}
+  increaseHeight: 0
+  decreaseHeight: 0
   heightStep: 0.005
   heightMax: 0.1
+  heightMin: -0.1
+  increaseRotation: 56
+  decreaseRotation: 55
+  rotationStep: 0.2
+  rotationMin: 0
+  rotationMax: 25
+  firstPersonCamera: {fileID: 324198543}
   increaseFOV: 61
   decreaseFOV: 45
-  firstPersonCamera: {fileID: 324198543}
   fovStep: 1
   fovMin: 25
   fovMax: 45
-  toggleViewDamping: 110
   headMotion: {fileID: 773184388}
+  toggleViewDamping: 110
+  miniDashboard: {fileID: 45143784}
   increaseMiniDashboardPosition: 53
   decreaseMiniDashboardPosition: 52
   miniDashboardHeightStep: 0.002
-  miniDashboard: {fileID: 45143784}
 --- !u!114 &180212505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,6 +226,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   driverCameraSettingsController: {fileID: 180212504}
   steeringWheelVisibilityController: {fileID: 180212505}
+  height: 0
+  rotation: 1
+  fov: 1
+  viewDamping: 1
+  steeringWheelVisibility: 1
+  miniDashboardPosition: 1
 --- !u!1001 &190246643
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7931,7 +7943,7 @@ PrefabInstance:
     - target: {fileID: 2871200712215333718, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000019073486
+      value: -0.00066363456
       objectReference: {fileID: 0}
     - target: {fileID: 2943063733098981655, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
@@ -8006,7 +8018,7 @@ PrefabInstance:
     - target: {fileID: 3151225947188190692, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000030517578
+      value: 0.000052899122
       objectReference: {fileID: 0}
     - target: {fileID: 3330819412347754366, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
@@ -9652,6 +9664,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7790872729746425159, guid: 8368094040e50bc48a2a58a0a8db460a,
+        type: 3}
+      propertyPath: m_Name
+      value: Driver View
       objectReference: {fileID: 0}
     - target: {fileID: 7877235855280944520, guid: 8368094040e50bc48a2a58a0a8db460a,
         type: 3}
@@ -12121,7 +12138,7 @@ PrefabInstance:
     - target: {fileID: 4951290182239091480, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.006922853
+      value: -0.0069228536
       objectReference: {fileID: 0}
     - target: {fileID: 4951290182239091480, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
@@ -12141,17 +12158,17 @@ PrefabInstance:
     - target: {fileID: 4951290182266220210, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.025614947
+      value: -0.025614927
       objectReference: {fileID: 0}
     - target: {fileID: 4951290182266220210, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.07262896
+      value: 0.07262899
       objectReference: {fileID: 0}
     - target: {fileID: 4951290182266220210, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0018659318
+      value: 0.0018659314
       objectReference: {fileID: 0}
     - target: {fileID: 4951290182266599055, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
@@ -12301,7 +12318,7 @@ PrefabInstance:
     - target: {fileID: 4951290182579749146, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.008314906
+      value: -0.008314907
       objectReference: {fileID: 0}
     - target: {fileID: 4951290182579749146, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
@@ -12311,7 +12328,7 @@ PrefabInstance:
     - target: {fileID: 4951290182579749146, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00356729
+      value: -0.0035672905
       objectReference: {fileID: 0}
     - target: {fileID: 4951290182636308683, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
@@ -12601,17 +12618,17 @@ PrefabInstance:
     - target: {fileID: 4951290183037697221, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.017195512
+      value: -0.01719551
       objectReference: {fileID: 0}
     - target: {fileID: 4951290183037697221, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.2226914
+      value: -0.22269143
       objectReference: {fileID: 0}
     - target: {fileID: 4951290183037697221, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0039285696
+      value: -0.00392857
       objectReference: {fileID: 0}
     - target: {fileID: 4951290183059083860, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}

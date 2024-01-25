@@ -1,6 +1,7 @@
 ﻿using Perrinn424.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
+using EdyCommonTools;
 
 namespace Perrinn424.UI
 {
@@ -40,7 +41,7 @@ namespace Perrinn424.UI
 
         private void UpdateLabels()
         {
-            heightText.text = string.Format("Height {0:+0.000;-0.000}", adjustmentsController.Height);
+            heightText.text = string.Format("View {0:+0.0°;-0.0°}", -MathUtility.ClampAngle(adjustmentsController.Rotation));
             fovText.text = $"FOV: {adjustmentsController.FOV}°";
             string damping = adjustmentsController.Damping? "ON" : "OFF";
             dampingText.text = $"View Damping: {damping}";
