@@ -7,17 +7,14 @@ namespace Perrinn424.UI
 {
     public class DriverCameraAdjustmentsUI : MonoBehaviour
     {
-        [SerializeField]
-        private Text heightText = default;
+        [UnityEngine.Serialization.FormerlySerializedAs("heightText")]
+        public Text driverViewText = default;
 
-        [SerializeField]
-        private Text fovText = default;
+        public Text fovText = default;
 
-        [SerializeField]
-        private Text dampingText = default;
+        public Text dampingText = default;
 
-        [SerializeField]
-        private DriverCameraSettingsController adjustmentsController;
+        public DriverCameraSettingsController adjustmentsController;
 
         private void OnEnable()
         {
@@ -41,7 +38,7 @@ namespace Perrinn424.UI
 
         private void UpdateLabels()
         {
-            heightText.text = string.Format("View {0:+0.0°;-0.0°}", -MathUtility.ClampAngle(adjustmentsController.Rotation));
+            driverViewText.text = string.Format("View {0:+0. mm;-0. mm} {1:+0.0°;-0.0°}", adjustmentsController.Height * 1000.0f, -MathUtility.ClampAngle(adjustmentsController.Rotation));
             fovText.text = $"FOV: {adjustmentsController.FOV}°";
             string damping = adjustmentsController.Damping? "ON" : "OFF";
             dampingText.text = $"View Damping: {damping}";
