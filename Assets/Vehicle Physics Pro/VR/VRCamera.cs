@@ -21,7 +21,7 @@ namespace VehiclePhysics
 public class VRCamera : MonoBehaviour
 	{
 	public bool autoInitializeVR = true;
-	public bool autoEnableVRCamera = true;
+	public bool autoEnableVRCamera = false;	// NOTE: May crash Unity if enabled while domain reload
 	public bool forceDeviceTrackingMode = true;
 	[Space(5)]
 	public KeyCode recenterKey = KeyCode.H;
@@ -197,9 +197,9 @@ public class VRCamera : MonoBehaviour
 			{
 			GetHMDPose(out bool hasPosition, out Vector3 position, out bool hasRotation, out Quaternion rotation);
 			if (hasPosition)
-				transform.localPosition = position + m_positionOffset;
+				transform.localPosition = m_rotationOffset * (position + m_positionOffset);
 			if (hasRotation)
-				transform.localRotation = rotation * m_rotationOffset;
+				transform.localRotation = m_rotationOffset * rotation;
 			}
 		}
 

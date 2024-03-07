@@ -968,6 +968,30 @@ MonoBehaviour:
   m_Script: {fileID: 1403093141, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1914757901 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6905166633232308540, guid: f67f11fd176aacd40b543b5bef4279c3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1914757899}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1914757902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914757901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af27f52ae8e0a8e4ca194197a852551a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoInitializeVR: 1
+  autoEnableVRCamera: 0
+  forceDeviceTrackingMode: 1
+  recenterKey: 104
+  saveRecenterPose: 1
+  debugLog: 0
 --- !u!1 &2133505911
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,23 +1135,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fcb8472a18a0a147b932fd79700e222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstPersonCameraTarget: {fileID: 2483877715364263437}
   increaseHeight: 56
   decreaseHeight: 55
-  firstPersonCameraTarget: {fileID: 2483877715364263437}
   heightStep: 0.005
   heightMax: 0.1
+  heightMin: -0.1
+  increaseRotation: 0
+  decreaseRotation: 0
+  rotationStep: 0.2
+  rotationMin: 0
+  rotationMax: 25
+  firstPersonCamera: {fileID: 1914757900}
   increaseFOV: 61
   decreaseFOV: 45
-  firstPersonCamera: {fileID: 1914757900}
   fovStep: 1
   fovMin: 25
   fovMax: 45
-  toggleViewDamping: 110
   headMotion: {fileID: 2483877715364263438}
+  toggleViewDamping: 110
+  miniDashboard: {fileID: 2483877715364263436}
   increaseMiniDashboardPosition: 53
   decreaseMiniDashboardPosition: 52
   miniDashboardHeightStep: 0.002
-  miniDashboard: {fileID: 2483877715364263436}
 --- !u!1001 &2483877715364263435
 PrefabInstance:
   m_ObjectHideFlags: 0
