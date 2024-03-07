@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5167941505499205937}
   - component: {fileID: 5167941505499205936}
   - component: {fileID: 5167941505499205943}
-  - component: {fileID: 1690794016537322190}
+  - component: {fileID: 7230341577231636083}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -94,31 +94,24 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5167941505499205941}
   m_Enabled: 1
---- !u!114 &1690794016537322190
+--- !u!114 &7230341577231636083
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5167941505499205941}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1043272640, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Script: {fileID: 11500000, guid: af27f52ae8e0a8e4ca194197a852551a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  fieldOfView: 50
-  mode: 2
-  targetSize: 2
-  targetSizeOffset: 0
-  damped: 1
-  damping: 4
-  clampedFov: 1
-  minFov: 4
-  maxFov: 64
-  clampedSize: 0
-  minSize: 0.1
-  maxSize: 2
+  autoInitializeVR: 1
+  autoEnableVRCamera: 1
+  forceDeviceTrackingMode: 1
+  recenterKey: 104
+  saveRecenterPose: 1
+  debugLog: 0
 --- !u!1 &5167941506463346354
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +408,7 @@ PrefabInstance:
     - target: {fileID: 8254093769922089922, guid: 47961d4647f778d4b91d1dcbcd0d69aa,
         type: 3}
       propertyPath: m_ChildCameras.Array.size
-      value: 74
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8254093769922089922, guid: 47961d4647f778d4b91d1dcbcd0d69aa,
         type: 3}
