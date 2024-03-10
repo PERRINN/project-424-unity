@@ -45,11 +45,15 @@ public class VRCamera : MonoBehaviour
 		m_originalPosition = transform.localPosition;
 		m_originalRotation = transform.localRotation;
 
-		// If "Initialize XR on Startup" is enabled in the XR settings, and a device has been successfully nitialized,
-		// then VR will be already intialized here.
+		// If "Initialize XR on Startup" is enabled in the XR settings, and a device has been successfully
+		// initialized, then the XR system will be reported as already intialized here in Awake.
 
+		// NOTE: Trying to initialze VR on mac causes issues. Skipping auto-Initialization.
+
+		#if !UNITY_EDITOR_OSX && !UNITY_STANDALONE_OSX
 		if (autoInitializeVR && !IsVRInitialized())
 			m_doAutoInitializeVr = true;
+		#endif
 
 		if (saveRecenterPose)
 			LoadRecenterPose();
