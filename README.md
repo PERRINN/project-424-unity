@@ -15,7 +15,7 @@ One of the first tests in Monza:
 
 ## Requirements
 
-- Unity 2021.3 LTS (using 2021.3.19f1 at the time of writing this)
+- Unity 2021.3 LTS (using 2021.3.32f1 at the time of writing this)
 
 ## How to set up and open the project in Unity
 
