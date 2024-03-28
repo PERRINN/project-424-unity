@@ -26,7 +26,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;
 		vehicle.telemetry.specs.maxSuspensionLoad = 2000.0f * Gravity.magnitude;
 		vehicle.telemetry.specs.maxTireForce = 30000.0f;
-		vehicle.telemetry.specs.maxEngineRpm = 21000.0f;
+		vehicle.telemetry.specs.maxEngineRpm = 2900.0f;
 		vehicle.telemetry.specs.maxEnginePowerKw = 500.0f;
 		vehicle.telemetry.specs.minEnginePowerKw = -500.0f;
 		vehicle.telemetry.specs.maxEngineTorque = 4400.0f;
