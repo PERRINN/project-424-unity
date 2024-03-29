@@ -45,7 +45,7 @@ public class Perrinn424ActivePowerBalance : VehicleBehaviour
 		// Compute power balance offset
 
 		m_nAxleDelta = frontRpm * rpmRatioFrontToRear - rearRpm;
-		float powerBalanceOffset = Mathf.Max (-authority, Mathf.Min(authority, m_nAxleDelta * (m_vehicle.brakePosition > 0.0f? gain : -gain)));
+		float powerBalanceOffset = Mathf.Max(-authority, Mathf.Min(authority, m_nAxleDelta * (m_vehicle.brakePosition > 0.0f? gain : -gain)));
 
 		// Apply to the vehicle
 
