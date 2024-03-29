@@ -103,6 +103,11 @@ public class Perrinn424CarController : VehicleBase
 	[System.NonSerialized]
 	public float mguLimiter = 1.0f;
 
+	// Power balance offset applied externally
+
+	[System.NonSerialized]
+	public float powerBalanceOffset = 0.0f;
+
 	// Mostly internal settings not exposed in the inspector
 
 	[System.NonSerialized]
@@ -168,7 +173,7 @@ public class Perrinn424CarController : VehicleBase
 			}
 
 
-		public void SetInputs (int gearInput, float throttleInput, float brakeInput, float limiter)
+		public void SetInputs (int gearInput, float throttleInput, float brakeInput, float limiter, float powerBalanceOffset)
 			{
 			// MGU
 
@@ -176,6 +181,7 @@ public class Perrinn424CarController : VehicleBase
 			mgu.throttleInput = throttleInput;
 			mgu.brakeInput = brakeInput;
 			mgu.limiterInput = Mathf.Clamp01(limiter);
+			mgu.powerBalanceOffset = powerBalanceOffset;
 
 			// Wheel brakes
 
@@ -534,8 +540,8 @@ public class Perrinn424CarController : VehicleBase
 		// Apply received inputs to car elements
 
 		if (m_brakePosition > brakePressureThreshold) m_throttlePosition = 0.0f;
-		m_frontPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter);
-		m_rearPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter);
+		m_frontPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset);
+		m_rearPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset);
 
 		m_steering.steerInput = m_steerAngle / steering.steeringWheelRange * 2.0f;
 		m_steering.DoUpdate();

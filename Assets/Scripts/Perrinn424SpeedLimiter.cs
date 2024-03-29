@@ -75,17 +75,17 @@ public class Perrinn424SpeedLimiter : VehicleBehaviour
 
     public override void RegisterTelemetry()
     {
-        vehicle.telemetry.Register<Perrinn424SpeedLimiterTelemetry>(this);
+        vehicle.telemetry.Register<SpeedLimiterTelemetry>(this);
     }
 
 
     public override void UnregisterTelemetry()
     {
-        vehicle.telemetry.Unregister<Perrinn424SpeedLimiterTelemetry>(this);
+        vehicle.telemetry.Unregister<SpeedLimiterTelemetry>(this);
     }
 
 
-    public class Perrinn424SpeedLimiterTelemetry : Telemetry.ChannelGroup
+    public class SpeedLimiterTelemetry : Telemetry.ChannelGroup
     {
         public override int GetChannelCount()
         {

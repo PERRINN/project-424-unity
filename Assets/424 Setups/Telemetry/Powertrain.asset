@@ -36,6 +36,16 @@ MonoBehaviour:
       logarithmic: 0
       logScale: 100
       displayColor: {r: 0.894, g: 0.7044519, b: 0.34655058, a: 0.7490196}
+    - name: nAxleDelta
+      displayName: Axle Delta
+      labelOffset: -1
+      displayOrigin: 9
+      displayRange: 1
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.84915036, g: 0.54901963, b: 0.9882353, a: 0.9019608}
     - name: MotorRpmFront
       displayName: Rpm Front
       labelOffset: 1
@@ -58,8 +68,8 @@ MonoBehaviour:
       displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.69803923}
     - name: PreEfficiencyPowerFront
       displayName: Pre Efficiency Power Front
-      labelOffset: 0
-      displayOrigin: 8
+      labelOffset: 1
+      displayOrigin: 7.4
       displayRange: 1
       fitPositiveRange: 0
       mirror: 0
@@ -68,8 +78,8 @@ MonoBehaviour:
       displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
     - name: PreEfficiencyPowerRear
       displayName: Pre Efficiency Power Rear
-      labelOffset: -1
-      displayOrigin: 8
+      labelOffset: 0
+      displayOrigin: 7.4
       displayRange: 1
       fitPositiveRange: 0
       mirror: 0
@@ -129,7 +139,7 @@ MonoBehaviour:
     - name: EfficiencyFront
       displayName: Efficiency Front
       labelOffset: 1
-      displayOrigin: 3.9
+      displayOrigin: 3.7
       displayRange: 0.7
       fitPositiveRange: 0
       mirror: 0
@@ -139,7 +149,7 @@ MonoBehaviour:
     - name: EfficiencyRear
       displayName: Efficiency Rear
       labelOffset: 0
-      displayOrigin: 3.9
+      displayOrigin: 3.7
       displayRange: 0.7
       fitPositiveRange: 0
       mirror: 0

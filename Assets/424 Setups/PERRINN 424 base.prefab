@@ -400,6 +400,7 @@ GameObject:
   - component: {fileID: 5326984190949575772}
   - component: {fileID: 2218053485607648859}
   - component: {fileID: 1952617881401160359}
+  - component: {fileID: 4623142189894402494}
   m_Layer: 8
   m_Name: Dynamics
   m_TagString: Untagged
@@ -672,6 +673,22 @@ MonoBehaviour:
     frontFlapDeflectionPreload: 0
     frontFlapDeflectionStiffness: 0
     frontFlapDeflectionMax: 0
+--- !u!114 &4623142189894402494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483877715235533906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd73a7539b06af44babaf806da94a1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rpmRatioFrontToRear: 1
+  gain: 0.0005
+  authority: 0.1
+  emitTelemetry: 1
 --- !u!1 &2483877715271342903
 GameObject:
   m_ObjectHideFlags: 0
