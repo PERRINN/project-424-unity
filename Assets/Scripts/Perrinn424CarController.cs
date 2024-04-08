@@ -37,22 +37,24 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	// MGU data. Combine base ID with values.
 
 	public const int FrontMguBase				= 20;		// Base ID for front MGU data
-	public const int RearMguBase				= 30;		// Base ID for rear MGU data
+	public const int RearMguBase				= 40;		// Base ID for rear MGU data
 
 	public const int Rpm						= 0;		// Motor rpm							rpm			1000			1200000 = 1200 rpm
 	public const int Load						= 1;		// Motor load. Negative = renerative	ratio		1000			900 = 0.9 = 90%
-	public const int Efficiency					= 2;		// Efficiency							ratio		1000			945 = 0.945
-	public const int PreEfficiencyPower			= 3;		// Pre-efficiency power					kW			1000			250000 = 250 kW
-	public const int PreEfficiencyTorque		= 4;		// Pre-efficiency torque				Nm			1000			50000 = 50 Nm
-	public const int MguTorque					= 5;		// Post-efficiency torque				Nm			1000			50000 = 50 Nm
-	public const int MguStatorTorque			= 6;		// Pre-inertia torque					Nm			1000			55000 = 55 Nm
-	public const int MguRotorTorque				= 7;		// Final torque in the mgu rotor		Nm			1000			50600 = 50.6 Nm
-	public const int ShaftsTorque				= 8;		// Sum of torques at drive shafts		Nm			1000			150600 = 150.6 Nm
-	public const int WheelsTorque				= 9;		// Sum of torques at wheels				Nm			1000			150600 = 150.6 Nm
+	public const int PowerBalanceFeedForward	= 2;		// Power balance from torque map		ratio		1000			333 = 0.333 = 33.3%
+	public const int PowerBalance				= 3;		// Final power balance (incl. offset)	ratio		1000			333 = 0.333 = 33.3%
+	public const int Efficiency					= 4;		// Efficiency							ratio		1000			945 = 0.945
+	public const int PreEfficiencyPower			= 5;		// Pre-efficiency power					kW			1000			250000 = 250 kW
+	public const int PreEfficiencyTorque		= 6;		// Pre-efficiency torque				Nm			1000			50000 = 50 Nm
+	public const int MguTorque					= 7;		// Post-efficiency torque				Nm			1000			50000 = 50 Nm
+	public const int MguStatorTorque			= 8;		// Pre-inertia torque					Nm			1000			55000 = 55 Nm
+	public const int MguRotorTorque				= 9;		// Final torque in the mgu rotor		Nm			1000			50600 = 50.6 Nm
+	public const int ShaftsTorque				= 10;		// Sum of torques at drive shafts		Nm			1000			150600 = 150.6 Nm
+	public const int WheelsTorque				= 11;		// Sum of torques at wheels				Nm			1000			150600 = 150.6 Nm
 
 	// Processed input data. Used by autopilot / automation.
 
-	public const int EnableProcessedInput		= 50;		// If non-zero, use the processed input data below. Otherwise, use standard Input channel.
+	public const int EnableProcessedInput		= 60;		// If non-zero, use the processed input data below. Otherwise, use standard Input channel.
 
 	public const int InputThrottlePosition		= 51;		// Throttle pedal position				ratio		10000			5000 = 0.5 = 50%
 	public const int InputBrakePosition			= 52;		// Brake pedal position					ratio		10000			5000 = 0.5 = 50%
@@ -100,6 +102,11 @@ public class Perrinn424CarController : VehicleBase
 
 	[System.NonSerialized]
 	public float mguLimiter = 1.0f;
+
+	// Power balance offset applied externally
+
+	[System.NonSerialized]
+	public float powerBalanceOffset = 0.0f;
 
 	// Mostly internal settings not exposed in the inspector
 
@@ -166,7 +173,7 @@ public class Perrinn424CarController : VehicleBase
 			}
 
 
-		public void SetInputs (int gearInput, float throttleInput, float brakeInput, float limiter)
+		public void SetInputs (int gearInput, float throttleInput, float brakeInput, float limiter, float powerBalanceOffset)
 			{
 			// MGU
 
@@ -174,6 +181,7 @@ public class Perrinn424CarController : VehicleBase
 			mgu.throttleInput = throttleInput;
 			mgu.brakeInput = brakeInput;
 			mgu.limiterInput = Mathf.Clamp01(limiter);
+			mgu.powerBalanceOffset = powerBalanceOffset;
 
 			// Wheel brakes
 
@@ -187,6 +195,8 @@ public class Perrinn424CarController : VehicleBase
 			{
 			channel[baseId + Perrinn424Data.Rpm] = (int)(mgu.sensorRpm * 1000);
 			channel[baseId + Perrinn424Data.Load] = (int)(mgu.sensorLoad * 1000);
+			channel[baseId + Perrinn424Data.PowerBalanceFeedForward] = (int)(mgu.sensorPowerBalanceFeedForward * 1000);
+			channel[baseId + Perrinn424Data.PowerBalance] = (int)(mgu.sensorPowerBalance * 1000);
 			channel[baseId + Perrinn424Data.Efficiency] = (int)(mgu.sensorEfficiency * 1000);
 			channel[baseId + Perrinn424Data.PreEfficiencyPower] = (int)(mgu.sensorPreEfficiencyPower);
 			channel[baseId + Perrinn424Data.PreEfficiencyTorque] = (int)(mgu.sensorPreEfficiencyTorque * 1000);
@@ -530,8 +540,8 @@ public class Perrinn424CarController : VehicleBase
 		// Apply received inputs to car elements
 
 		if (m_brakePosition > brakePressureThreshold) m_throttlePosition = 0.0f;
-		m_frontPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter);
-		m_rearPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter);
+		m_frontPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset);
+		m_rearPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset);
 
 		m_steering.steerInput = m_steerAngle / steering.steeringWheelRange * 2.0f;
 		m_steering.DoUpdate();

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5167941505499205936}
   - component: {fileID: 5167941505499205943}
   - component: {fileID: 1690794016537322190}
+  - component: {fileID: 4574261665701020362}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -119,6 +120,24 @@ MonoBehaviour:
   clampedSize: 0
   minSize: 0.1
   maxSize: 2
+--- !u!114 &4574261665701020362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5167941505499205941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af27f52ae8e0a8e4ca194197a852551a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoInitializeVR: 1
+  autoEnableVRCamera: 0
+  forceDeviceTrackingMode: 1
+  recenterKey: 104
+  saveRecenterPose: 1
+  debugLog: 0
 --- !u!1 &5167941506463346354
 GameObject:
   m_ObjectHideFlags: 0

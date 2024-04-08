@@ -26,9 +26,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;
 		vehicle.telemetry.specs.maxSuspensionLoad = 2000.0f * Gravity.magnitude;
 		vehicle.telemetry.specs.maxTireForce = 30000.0f;
-		vehicle.telemetry.specs.maxEngineRpm = 21000.0f;
-		vehicle.telemetry.specs.maxEnginePowerKw = 500.0f;
-		vehicle.telemetry.specs.minEnginePowerKw = -500.0f;
+		vehicle.telemetry.specs.maxEngineRpm = 2900.0f;
+		vehicle.telemetry.specs.maxEnginePowerKw = 600.0f;
+		vehicle.telemetry.specs.minEnginePowerKw = -300.0f;
 		vehicle.telemetry.specs.maxEngineTorque = 4400.0f;
 		vehicle.telemetry.specs.minEngineTorque = -4400.0f;
 
@@ -36,20 +36,16 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		// Adjust specific semantics to our vehicle's capabilities
 
-		// Angular velocity in the range [-90, +90]
+		// Set angular velocity range to [-90, +90] (default is [-45, 45])
 
 		Telemetry.SemanticInfo angularVelocitySemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.AngularVelocity];
 		angularVelocitySemantic.SetRange(-90.0f * Mathf.Deg2Rad, 90.0f * Mathf.Deg2Rad);
 
-		// Weight in newtons (original) instead of kilograms (default)
+		// Set weight in newtons (original) instead of kilograms (default)
 
 		Telemetry.SemanticInfo weightSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.Weight];
 		weightSemantic.displayMultiplier = 1.0f;
 		weightSemantic.displayUnitsSuffix = " N";
-
-		// Max tire forces. TODO: Remove when it's properly applied from specifications above.
-		Telemetry.SemanticInfo tireForceSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.TireForce];
-		tireForceSemantic.SetRange(-vehicle.telemetry.specs.maxTireForce, vehicle.telemetry.specs.maxTireForce);
 
 		// Steering angle
 
@@ -57,7 +53,6 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		Telemetry.SemanticInfo steeringWheelAngleSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.SteeringWheelAngle];
 		steeringWheelAngleSemantic.SetRange(-steering.steeringWheelRange * 0.5f, steering.steeringWheelRange * 0.5f);
 		}
-
 
 
 	public override bool EmitTelemetry ()
@@ -71,6 +66,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Register<Perrinn424Inputs>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Differential>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Chassis>(vehicle);
+		vehicle.telemetry.Register<Perrinn424Wheels>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Distance>(vehicle);
 		vehicle.telemetry.Register<Perrinn424ForceFeedback>(vehicle);
 		vehicle.telemetry.Register<Perrinn424Positions>(vehicle);
@@ -82,6 +78,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.Unregister<Perrinn424Inputs>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Differential>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Chassis>(vehicle);
+		vehicle.telemetry.Unregister<Perrinn424Wheels>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Distance>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424ForceFeedback>(vehicle);
 		vehicle.telemetry.Unregister<Perrinn424Positions>(vehicle);
@@ -193,6 +190,55 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 			values[index+4] = frontTorqueFiction;
 			values[index+5] = rearTorqueFiction;
+			}
+		}
+
+
+	public class Perrinn424Wheels : Telemetry.ChannelGroup
+		{
+		VehicleBase m_vehicle;
+		VehicleBase.WheelState m_wheelFL;
+		VehicleBase.WheelState m_wheelFR;
+		VehicleBase.WheelState m_wheelRL;
+		VehicleBase.WheelState m_wheelRR;
+
+
+		public override int GetChannelCount () => 4;
+		public override Telemetry.PollFrequency GetPollFrequency () => Telemetry.PollFrequency.Normal;
+
+
+		public override void GetChannelInfo (Telemetry.ChannelInfo[] channelInfo, Object instance)
+			{
+			m_vehicle = instance as VehicleBase;
+
+			// Retrieve states for the four monitored wheels
+
+			m_wheelFL = m_vehicle.wheelState[m_vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Left)];
+			m_wheelFR = m_vehicle.wheelState[m_vehicle.GetWheelIndex(0, VehicleBase.WheelPos.Right)];
+			int rearAxle = m_vehicle.GetAxleCount() - 1;
+			m_wheelRL = m_vehicle.wheelState[m_vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Left)];
+			m_wheelRR = m_vehicle.wheelState[m_vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Right)];
+
+			// Custom wheel RPM semantic
+
+			var wheelRpmSemantic = new Telemetry.SemanticInfo();
+			wheelRpmSemantic.SetRangeAndFormat(0, 2900, "0.", " rpm", quantization:200);
+
+			// Fill-in channel information. Naming is F1 style.
+
+			channelInfo[0].SetNameAndSemantic("nWheelFL", Telemetry.Semantic.Custom, wheelRpmSemantic);
+			channelInfo[1].SetNameAndSemantic("nWheelFR", Telemetry.Semantic.Custom, wheelRpmSemantic);
+			channelInfo[2].SetNameAndSemantic("nWheelRL", Telemetry.Semantic.Custom, wheelRpmSemantic);
+			channelInfo[3].SetNameAndSemantic("nWheelRR", Telemetry.Semantic.Custom, wheelRpmSemantic);
+			}
+
+
+		public override void PollValues (float[] values, int index, Object instance)
+			{
+			values[index+0] = m_wheelFL.angularVelocity * MathUtility.WToRpm;
+			values[index+1] = m_wheelFR.angularVelocity * MathUtility.WToRpm;
+			values[index+2] = m_wheelRL.angularVelocity * MathUtility.WToRpm;
+			values[index+3] = m_wheelRR.angularVelocity * MathUtility.WToRpm;
 			}
 		}
 

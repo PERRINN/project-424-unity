@@ -42,7 +42,7 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		{
 		public override int GetChannelCount ()
 			{
-			return 13;
+			return 16;
 			}
 
 
@@ -59,14 +59,17 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 			channelInfo[2].SetNameAndSemantic("PreEfficiencyPowerFront", Telemetry.Semantic.EnginePower);
 			channelInfo[3].SetNameAndSemantic("PreEfficiencyPowerRear", Telemetry.Semantic.EnginePower);
 			channelInfo[4].SetNameAndSemantic("PreEfficiencyPowerTotal", Telemetry.Semantic.EnginePower);
-			channelInfo[5].SetNameAndSemantic("PowerBalance", Telemetry.Semantic.Ratio);
-			channelInfo[6].SetNameAndSemantic("WheelTorqueBalance", Telemetry.Semantic.Ratio);
-			channelInfo[7].SetNameAndSemantic("EfficiencyFront", Telemetry.Semantic.Ratio);
-			channelInfo[8].SetNameAndSemantic("EfficiencyRear", Telemetry.Semantic.Ratio);
-			channelInfo[9].SetNameAndSemantic("MguTorqueFront", Telemetry.Semantic.EngineTorque);
-			channelInfo[10].SetNameAndSemantic("MguTorqueRear", Telemetry.Semantic.EngineTorque);
-			channelInfo[11].SetNameAndSemantic("MguRotorTorqueFront", Telemetry.Semantic.EngineTorque);
-			channelInfo[12].SetNameAndSemantic("MguRotorTorqueRear", Telemetry.Semantic.EngineTorque);
+			channelInfo[5].SetNameAndSemantic("PowerBalanceFeedForward", Telemetry.Semantic.Ratio);
+			channelInfo[6].SetNameAndSemantic("PowerBalanceOffset", Telemetry.Semantic.Ratio);
+			channelInfo[7].SetNameAndSemantic("PowerBalance", Telemetry.Semantic.Ratio);
+			channelInfo[8].SetNameAndSemantic("PowerBalanceDelivered", Telemetry.Semantic.Ratio);
+			channelInfo[9].SetNameAndSemantic("WheelTorqueBalance", Telemetry.Semantic.Ratio);
+			channelInfo[10].SetNameAndSemantic("EfficiencyFront", Telemetry.Semantic.Ratio);
+			channelInfo[11].SetNameAndSemantic("EfficiencyRear", Telemetry.Semantic.Ratio);
+			channelInfo[12].SetNameAndSemantic("MguTorqueFront", Telemetry.Semantic.EngineTorque);
+			channelInfo[13].SetNameAndSemantic("MguTorqueRear", Telemetry.Semantic.EngineTorque);
+			channelInfo[14].SetNameAndSemantic("MguRotorTorqueFront", Telemetry.Semantic.EngineTorque);
+			channelInfo[15].SetNameAndSemantic("MguRotorTorqueRear", Telemetry.Semantic.EngineTorque);
 			}
 
 
@@ -89,19 +92,25 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 			float rearMguRotorTorque = custom[Perrinn424Data.RearMguBase + Perrinn424Data.MguRotorTorque] / 1000.0f;
 			float rearWheelsTorque = custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque] / 1000.0f;
 
+			float powerBalanceFeedForward = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.PowerBalanceFeedForward] / 1000.0f;
+			float powerBalance = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.PowerBalance] / 1000.0f;
+
 			values[index+0] = frontRpm;
 			values[index+1] = rearRpm;
 			values[index+2] = frontPreEfficiencyPower;
 			values[index+3] = rearPreEfficiencyPower;
 			values[index+4] = frontPreEfficiencyPower + rearPreEfficiencyPower;
-			values[index+5] = GetBalance(frontPreEfficiencyPower, rearPreEfficiencyPower);
-			values[index+6] = GetBalance(frontWheelsTorque, rearWheelsTorque);
-			values[index+7] = frontEfficiency;
-			values[index+8] = rearEfficiency;
-			values[index+9] = frontMguTorque;
-			values[index+10] = rearMguTorque;
-			values[index+11] = frontMguRotorTorque;
-			values[index+12] = rearMguRotorTorque;
+			values[index+5] = powerBalanceFeedForward;
+			values[index+6] = powerBalance - powerBalanceFeedForward;
+			values[index+7] = powerBalance;
+			values[index+8] = GetBalance(frontPreEfficiencyPower, rearPreEfficiencyPower);
+			values[index+9] = GetBalance(frontWheelsTorque, rearWheelsTorque);
+			values[index+10] = frontEfficiency;
+			values[index+11] = rearEfficiency;
+			values[index+12] = frontMguTorque;
+			values[index+13] = rearMguTorque;
+			values[index+14] = frontMguRotorTorque;
+			values[index+15] = rearMguRotorTorque;
 			}
 		}
 
@@ -145,6 +154,7 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 
 		float frontRpm = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Rpm] / 1000.0f;
 		float frontLoad = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Load] / 1000.0f;
+		float frontBalance = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.PowerBalance] / 1000.0f;
 		float frontEfficiency = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.Efficiency] / 1000.0f;
 		float frontPreEfficiencyPower = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.PreEfficiencyPower] / 1000.0f;
 		float frontPreEfficiencyTorque = custom[Perrinn424Data.FrontMguBase + Perrinn424Data.PreEfficiencyTorque] / 1000.0f;
@@ -156,6 +166,7 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 
 		float rearRpm = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Rpm] / 1000.0f;
 		float rearLoad = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Load] / 1000.0f;
+		float rearBalance = custom[Perrinn424Data.RearMguBase + Perrinn424Data.PowerBalance] / 1000.0f;
 		float rearEfficiency = custom[Perrinn424Data.RearMguBase + Perrinn424Data.Efficiency] / 1000.0f;
 		float rearPreEfficiencyPower = custom[Perrinn424Data.RearMguBase + Perrinn424Data.PreEfficiencyPower] / 1000.0f;
 		float rearPreEfficiencyTorque = custom[Perrinn424Data.RearMguBase + Perrinn424Data.PreEfficiencyTorque] / 1000.0f;
@@ -175,7 +186,8 @@ public class Perrinn424MguTelemetry : VehicleBehaviour
 		m_text.Append($"Load (%)             {frontLoad*100,6:0.0}      {rearLoad*100,6:0.0}        {GetBalanceStr(frontLoad, rearLoad),5}\n\n");
 		m_text.Append($"Pre Efficiency (kW)  {frontPreEfficiencyPower,6:0.0}      {rearPreEfficiencyPower,6:0.0}        {GetBalanceStr(frontPreEfficiencyPower, rearPreEfficiencyPower),5}\n");
 		m_text.Append($"Pre Efficiency (Nm)  {frontPreEfficiencyTorque,6:0.}      {rearPreEfficiencyTorque,6:0.}        {GetBalanceStr(frontPreEfficiencyTorque, rearPreEfficiencyTorque),5}\n");
-		m_text.Append($"Efficiency (%)       {frontEfficiency*100,6:0.0}      {rearEfficiency*100,6:0.0}        {GetBalanceStr(frontEfficiency, rearEfficiency),5}  \n\n");
+		m_text.Append($"Efficiency (%)       {frontEfficiency*100,6:0.0}      {rearEfficiency*100,6:0.0}        {GetBalanceStr(frontEfficiency, rearEfficiency),5}\n");
+		m_text.Append($"Power Balance (%)    {frontBalance*100,6:0.0}      {rearBalance*100,6:0.0}        \n\n");
 		m_text.Append($"Mgu Torque (Nm)      {frontMguTorque,6:0.}      {rearMguTorque,6:0.}        {GetBalanceStr(frontMguTorque, rearMguTorque),5}\n");
 		m_text.Append($"Stator (Nm)          {frontMguStatorTorque,6:0.}      {rearMguStatorTorque,6:0.}        {GetBalanceStr(frontMguStatorTorque, rearMguStatorTorque),5}\n");
 		m_text.Append($"Rotor (Nm)           {frontMguRotorTorque,6:0.}      {rearMguRotorTorque,6:0.}        {GetBalanceStr(frontMguRotorTorque, rearMguRotorTorque),5}\n");
