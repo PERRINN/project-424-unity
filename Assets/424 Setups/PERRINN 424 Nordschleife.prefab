@@ -325,6 +325,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
+      propertyPath: noDRSSegment.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
       propertyPath: drag.frontFlapCoefficient
       value: 0.0024
       objectReference: {fileID: 0}
@@ -435,8 +440,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
+      propertyPath: noDRSSegment.Array.data[1].segmentEnd
+      value: 11500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
       propertyPath: noDRSSegment.Array.data[2].segmentEnd
-      value: 13400
+      value: 16000
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
@@ -460,8 +470,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
+      propertyPath: noDRSSegment.Array.data[1].segmentStart
+      value: 10500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
       propertyPath: noDRSSegment.Array.data[2].segmentStart
-      value: 12400
+      value: 14700
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
@@ -553,15 +568,6 @@ MonoBehaviour:
   - segmentStart: 1700
     segmentEnd: 2250
     minimumLimiter: 0.833
-  - segmentStart: 14700
-    segmentEnd: 15300
-    minimumLimiter: 0.722
-  - segmentStart: 15300
-    segmentEnd: 15700
-    minimumLimiter: 0.736
-  - segmentStart: 10500
-    segmentEnd: 11500
-    minimumLimiter: 0.75
   - segmentStart: 3250
     segmentEnd: 4000
     minimumLimiter: 0.75
@@ -571,6 +577,15 @@ MonoBehaviour:
   - segmentStart: 8680
     segmentEnd: 8930
     minimumLimiter: 0.75
+  - segmentStart: 10500
+    segmentEnd: 11500
+    minimumLimiter: 0.75
+  - segmentStart: 14700
+    segmentEnd: 15300
+    minimumLimiter: 0.722
+  - segmentStart: 15300
+    segmentEnd: 15700
+    minimumLimiter: 0.736
   - segmentStart: 16150
     segmentEnd: 16900
     minimumLimiter: 0.75
