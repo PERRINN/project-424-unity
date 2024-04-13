@@ -521,7 +521,11 @@ MonoBehaviour:
   deltaISA: 0
   dRSActivationDelay: 0.5
   dRSActivationTime: 0.25
-  noDRSSegment: []
+  noDRSSegment:
+  - segmentStart: 0
+    segmentEnd: 0
+  - segmentStart: 14700
+    segmentEnd: 16000
   frontFlapStaticAngle: 3
   frontFlapDRSAngle: -13
   frontFlapSCz0: 0.38
