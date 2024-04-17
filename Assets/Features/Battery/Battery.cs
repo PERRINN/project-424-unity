@@ -13,6 +13,7 @@ namespace Perrinn424
         public float Power => powerModel.Power;
         public float StateOfCharge => powerModel.StateOfCharge;
         public float NetEnergy => powerModel.NetEnergy; //Kwh
+        public float PowerRMS => powerModel.PowerRMS; //kW
         public float Capacity => powerModel.settings.capacity;
 
         public float TotalHeat => temperatureModel.TotalHeat; //W

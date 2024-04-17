@@ -14,11 +14,13 @@ namespace Perrinn424
 
         public Settings settings = new Settings();
 
-        public float Power { get; private set; } 
+        public float Power { get; private set; }
         public float Capacity { get; private set; } //kWh
         public float StateOfCharge { get; private set; }  //SOC
         public float DepthOfDischarge { get; private set; } //DOD
         public float NetEnergy { get; private set; }//kWh
+        public float PowerRMS { get; private set; }//kW
+        public float PowerRMSCount { get; private set; }
 
 
         public void InitModel()
@@ -28,6 +30,8 @@ namespace Perrinn424
             StateOfCharge = Capacity;
             DepthOfDischarge = 0;
             NetEnergy = settings.capacity - Capacity;
+            PowerRMS = 0;
+            PowerRMSCount = 0;
         }
 
         public void Reset()
@@ -44,6 +48,8 @@ namespace Perrinn424
             StateOfCharge = Mathf.InverseLerp(0f, settings.capacity, Capacity);
             DepthOfDischarge = 1f - StateOfCharge;
             NetEnergy = settings.capacity - Capacity;
+            PowerRMS = Mathf.Sqrt(((PowerRMS*PowerRMS)*PowerRMSCount+Power*Power)/(PowerRMSCount+1));
+            PowerRMSCount += 1;
         }
-    } 
+    }
 }
