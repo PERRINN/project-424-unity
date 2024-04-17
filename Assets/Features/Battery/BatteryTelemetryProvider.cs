@@ -11,7 +11,7 @@ namespace Perrinn424
 
 			public override int GetChannelCount()
 			{
-				return 7;
+				return 8;
 			}
 
 			public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
@@ -44,6 +44,10 @@ namespace Perrinn424
                 Telemetry.SemanticInfo netEnergySemantic = new Telemetry.SemanticInfo();
                 netEnergySemantic.SetRangeAndFormat(0, battery.Capacity, "0.00", " kWh");
                 channelInfo[6].SetNameAndSemantic("BatteryNetEnergy", Telemetry.Semantic.Custom, netEnergySemantic);
+
+                Telemetry.SemanticInfo PowerRMSSemantic = new Telemetry.SemanticInfo();
+                PowerRMSSemantic.SetRangeAndFormat(0, 1000, "0.0", " kW");
+                channelInfo[7].SetNameAndSemantic("BatteryPowerRMS", Telemetry.Semantic.Custom, PowerRMSSemantic);
             }
 
 			public override Telemetry.PollFrequency GetPollFrequency()
@@ -54,13 +58,14 @@ namespace Perrinn424
 			public override void PollValues(float[] values, int index, Object instance)
 			{
 				values[index + 0] = battery.TotalHeat;
-                values[index + 1] = battery.AirMassFlow;
-                values[index + 2] = battery.HeatDissipation;
-                values[index + 3] = battery.HeatDissipated;
-                values[index + 4] = battery.TemperatureModule;
-                values[index + 5] = battery.HeatInternal;
-                values[index + 6] = battery.NetEnergy;
-            }
+        values[index + 1] = battery.AirMassFlow;
+        values[index + 2] = battery.HeatDissipation;
+        values[index + 3] = battery.HeatDissipated;
+        values[index + 4] = battery.TemperatureModule;
+        values[index + 5] = battery.HeatInternal;
+        values[index + 6] = battery.NetEnergy;
+        values[index + 7] = battery.PowerRMS;
+    }
 		}
-    } 
+    }
 }

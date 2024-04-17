@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: Battery
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   settings:
     templateName: Battery
     verticalRange: 12
@@ -59,6 +59,14 @@ MonoBehaviour:
     - name: BatteryNetEnergy
       displayName: Net Energy
       labelOffset: 0
+      displayOrigin: 10
+      displayRange: 2
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: BatteryPowerRMS
+      displayName: Power RMS
+      labelOffset: 1.15
       displayOrigin: 10
       displayRange: 2
       adjustToRange: 0
