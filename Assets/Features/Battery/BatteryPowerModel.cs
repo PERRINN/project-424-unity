@@ -20,7 +20,7 @@ namespace Perrinn424
         public float DepthOfDischarge { get; private set; } //DOD
         public float NetEnergy { get; private set; }//kWh
         public float PowerRMS { get; private set; }//kW
-        public float PowerRMSCount { get; private set; }
+        public int PowerRMSCount { get; private set; }
 
 
         public void InitModel()
