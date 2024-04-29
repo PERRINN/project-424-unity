@@ -247,9 +247,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+2] = m_wheelRL.angularVelocity * MathUtility.WToRpm;
 			values[index+3] = m_wheelRR.angularVelocity * MathUtility.WToRpm;
 
-			values[index+4] = m_wheelFL.grounded? m_wheelFL.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
+			values[index+4] = m_wheelFL.grounded? -m_wheelFL.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
 			values[index+5] = m_wheelFR.grounded? m_wheelFR.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
-			values[index+6] = m_wheelRL.grounded? m_wheelRL.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
+			values[index+6] = m_wheelRL.grounded? -m_wheelRL.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
 			values[index+7] = m_wheelRR.grounded? m_wheelRR.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
 			}
 		}
