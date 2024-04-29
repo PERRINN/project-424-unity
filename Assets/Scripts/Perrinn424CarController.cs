@@ -312,6 +312,10 @@ public class Perrinn424CarController : VehicleBase
 			return;
 			}
 
+		// This removes one redundant tire friction attenuation. No significant difference though.
+
+		hasRadialTires = true;
+
 		// We now have the inherited properties wheels[wheelCount] and wheelsState[wheelCount].
 		// Configure the wheels in the axles accordingly:
 		//
