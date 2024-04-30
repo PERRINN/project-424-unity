@@ -203,7 +203,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		VehicleBase.WheelState m_wheelRR;
 
 
-		public override int GetChannelCount () => 4;
+		public override int GetChannelCount () => 8;
 		public override Telemetry.PollFrequency GetPollFrequency () => Telemetry.PollFrequency.Normal;
 
 
@@ -230,6 +230,13 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			channelInfo[1].SetNameAndSemantic("nWheelFR", Telemetry.Semantic.Custom, wheelRpmSemantic);
 			channelInfo[2].SetNameAndSemantic("nWheelRL", Telemetry.Semantic.Custom, wheelRpmSemantic);
 			channelInfo[3].SetNameAndSemantic("nWheelRR", Telemetry.Semantic.Custom, wheelRpmSemantic);
+
+			// Camber
+
+			channelInfo[4].SetNameAndSemantic("CamberFL", Telemetry.Semantic.BankAngle);
+			channelInfo[5].SetNameAndSemantic("CamberFR", Telemetry.Semantic.BankAngle);
+			channelInfo[6].SetNameAndSemantic("CamberRL", Telemetry.Semantic.BankAngle);
+			channelInfo[7].SetNameAndSemantic("CamberRR", Telemetry.Semantic.BankAngle);
 			}
 
 
@@ -239,6 +246,11 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+1] = m_wheelFR.angularVelocity * MathUtility.WToRpm;
 			values[index+2] = m_wheelRL.angularVelocity * MathUtility.WToRpm;
 			values[index+3] = m_wheelRR.angularVelocity * MathUtility.WToRpm;
+
+			values[index+4] = m_wheelFL.grounded? -m_wheelFL.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
+			values[index+5] = m_wheelFR.grounded? m_wheelFR.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
+			values[index+6] = m_wheelRL.grounded? -m_wheelRL.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
+			values[index+7] = m_wheelRR.grounded? m_wheelRR.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
 			}
 		}
 
