@@ -94,6 +94,10 @@ MonoBehaviour:
     - nWheelRL
     - nWheelRR
     - BatteryPowerRMS
+    - AeroSczFront
+    - AeroSczRear
+    - AeroScx
+    - AeroBalance
 --- !u!1 &8368247291481045983
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,8 +352,123 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
+      propertyPath: frontFlapSCz0
+      value: 0.41
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: drag.dRS_Coefficient
+      value: -0.333
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: frontFlapStaticAngle
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: rear.dRS_Coefficient
+      value: -1.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: drag.heaveCoefficient
+      value: 0.0035
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: drag.pitchCoefficient
+      value: 0.0013
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: front.dRS_Coefficient
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: rear.heaveCoefficient
+      value: 0.0328
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: rear.pitchCoefficient
+      value: -0.0082
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: drag.heave2Coefficient
+      value: -0.0000102
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: drag.pitch2Coefficient
+      value: -0.0000255
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: front.heaveCoefficient
+      value: 0.0189
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: front.pitchCoefficient
+      value: 0.0392
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: rear.heave2Coefficient
+      value: -0.00013
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: rear.pitch2Coefficient
+      value: -0.0002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: drag.constantHeavePitch
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: front.heave2Coefficient
+      value: -0.000115
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: front.pitch2Coefficient
+      value: -0.000573
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
       propertyPath: noDRSSegment.Array.size
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: rear.constantHeavePitch
+      value: 2.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: front.constantHeavePitch
+      value: 2.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: drag.frontFlapCoefficient
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: rear.frontFlapCoefficient
+      value: -0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: front.frontFlapCoefficient
+      value: 0.09
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
