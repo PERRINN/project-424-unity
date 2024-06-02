@@ -358,7 +358,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	{
 		public override int GetChannelCount ()
 		{
-			return 13;
+			return 14;
 		}
 
 
@@ -399,19 +399,20 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			channelInfo[0].SetNameAndSemantic("AeroDrsPosition", Telemetry.Semantic.Ratio);
 			channelInfo[1].SetNameAndSemantic("AeroSczFront", Telemetry.Semantic.Custom, aeroCoeffSemantic);
 			channelInfo[2].SetNameAndSemantic("AeroSczRear", Telemetry.Semantic.Custom, aeroCoeffSemantic);
-			channelInfo[3].SetNameAndSemantic("AeroDownforceFront", Telemetry.Semantic.Custom, aeroForceSemantic);
-			channelInfo[4].SetNameAndSemantic("AeroDownforceRear", Telemetry.Semantic.Custom, aeroForceSemantic);
-			channelInfo[5].SetNameAndSemantic("AeroDrag", Telemetry.Semantic.Custom, aeroForceSemantic);
+			channelInfo[3].SetNameAndSemantic("AeroScx", Telemetry.Semantic.Custom, aeroCoeffSemantic);
+			channelInfo[4].SetNameAndSemantic("AeroDownforceFront", Telemetry.Semantic.Custom, aeroForceSemantic);
+			channelInfo[5].SetNameAndSemantic("AeroDownforceRear", Telemetry.Semantic.Custom, aeroForceSemantic);
+			channelInfo[6].SetNameAndSemantic("AeroDrag", Telemetry.Semantic.Custom, aeroForceSemantic);
 
-			channelInfo[6].SetNameAndSemantic("AeroSteer", Telemetry.Semantic.Custom, steerAngleSemantic);
-			channelInfo[7].SetNameAndSemantic("AeroYaw", Telemetry.Semantic.BankAngle);
-			channelInfo[8].SetNameAndSemantic("AeroRoll", Telemetry.Semantic.BankAngle);
+			channelInfo[7].SetNameAndSemantic("AeroSteer", Telemetry.Semantic.Custom, steerAngleSemantic);
+			channelInfo[8].SetNameAndSemantic("AeroYaw", Telemetry.Semantic.BankAngle);
+			channelInfo[9].SetNameAndSemantic("AeroRoll", Telemetry.Semantic.BankAngle);
 
-			channelInfo[9].SetNameAndSemantic("AeroBalance", Telemetry.Semantic.Ratio);
-			channelInfo[10].SetNameAndSemantic("AeroFrontFlap", Telemetry.Semantic.Custom, aeroAngleSemantic);
-			channelInfo[11].SetNameAndSemantic("AirDensity", Telemetry.Semantic.Custom, airDensitySemantic);
+			channelInfo[10].SetNameAndSemantic("AeroBalance", Telemetry.Semantic.Ratio);
+			channelInfo[11].SetNameAndSemantic("AeroFrontFlap", Telemetry.Semantic.Custom, aeroAngleSemantic);
+			channelInfo[12].SetNameAndSemantic("AirDensity", Telemetry.Semantic.Custom, airDensitySemantic);
 
-			channelInfo[12].SetNameAndSemantic("AeroNoDRSSegment", Telemetry.Semantic.Ratio);
+			channelInfo[13].SetNameAndSemantic("AeroNoDRSSegment", Telemetry.Semantic.Ratio);
 		}
 
 
@@ -422,19 +423,20 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			values[index+0] = aero.DRS;
 			values[index+1] = aero.SCzFront;
 			values[index+2] = aero.SCzRear;
-			values[index+3] = aero.downforceFront;
-			values[index+4] = aero.downforceRear;
-			values[index+5] = aero.dragForce;
+			values[index+3] = aero.SCx;
+			values[index+4] = aero.downforceFront;
+			values[index+5] = aero.downforceRear;
+			values[index+6] = aero.dragForce;
 
-			values[index+6] = aero.steerAngle;
-			values[index+7] = aero.yawAngle;
-			values[index+8] = aero.rollAngle;
+			values[index+7] = aero.steerAngle;
+			values[index+8] = aero.yawAngle;
+			values[index+9] = aero.rollAngle;
 
-			values[index+9] = aero.aeroBal / 100.0f;
-			values[index+10] = aero.flapAngle;
-			values[index+11] = aero.rho;
+			values[index+10] = aero.aeroBal / 100.0f;
+			values[index+11] = aero.flapAngle;
+			values[index+12] = aero.rho;
 
-			values[index+12] = aero.noDRSseg;
+			values[index+13] = aero.noDRSseg;
 		}
 	}
 
