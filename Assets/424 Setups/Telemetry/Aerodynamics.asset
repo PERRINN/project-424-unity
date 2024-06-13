@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   settings:
     templateName: Aerodynamics
-    verticalRange: 16
+    verticalRange: 18
     channels:
     - name: Speed
       displayName:
@@ -27,7 +27,7 @@ MonoBehaviour:
     - name: AeroDrsPosition
       displayName: DRS
       labelOffset: 0
-      displayOrigin: 13
+      displayOrigin: 15
       displayRange: 1
       adjustToRange: 0
       mirror: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
     - name: AeroNoDRSSegment
       displayName: NoDRSSegment
       labelOffset: 1
-      displayOrigin: 13
+      displayOrigin: 15
       displayRange: 1
       adjustToRange: 0
       mirror: 0
@@ -43,7 +43,7 @@ MonoBehaviour:
     - name: AeroFrontFlap
       displayName: Front Flap
       labelOffset: -1
-      displayOrigin: 13
+      displayOrigin: 15
       displayRange: 1
       adjustToRange: 0
       mirror: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
     - name: AeroSczFront
       displayName: SCz Front
       labelOffset: 2
-      displayOrigin: 10
+      displayOrigin: 12
       displayRange: 2
       adjustToRange: 1
       mirror: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
     - name: AeroSczRear
       displayName: SCz Rear
       labelOffset: 1
-      displayOrigin: 10
+      displayOrigin: 12
       displayRange: 2
       adjustToRange: 1
       mirror: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
     - name: AeroScx
       displayName: SCx
       labelOffset: 0
-      displayOrigin: 10
+      displayOrigin: 12
       displayRange: 2
       adjustToRange: 1
       mirror: 0
@@ -75,7 +75,7 @@ MonoBehaviour:
     - name: AeroDrag
       displayName: Drag
       labelOffset: 1
-      displayOrigin: 6
+      displayOrigin: 8
       displayRange: 4
       adjustToRange: 0
       mirror: 0
@@ -83,7 +83,7 @@ MonoBehaviour:
     - name: AeroBalance
       displayName: Balance
       labelOffset: 0
-      displayOrigin: 6
+      displayOrigin: 8
       displayRange: 4
       adjustToRange: 0
       mirror: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
     - name: AeroDownforceFront
       displayName: Downforce Front
       labelOffset: 3
-      displayOrigin: 6
+      displayOrigin: 8
       displayRange: 4
       adjustToRange: 0
       mirror: 0
@@ -99,14 +99,14 @@ MonoBehaviour:
     - name: AeroDownforceRear
       displayName: Downforce Rear
       labelOffset: 2
-      displayOrigin: 6
+      displayOrigin: 8
       displayRange: 4
       adjustToRange: 0
       mirror: 0
       displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.74509805}
     - name: RideHeightFront
       displayName: Front Ride Height
-      labelOffset: 1
+      labelOffset: 3
       displayOrigin: 4
       displayRange: 2
       adjustToRange: 0
@@ -114,6 +114,22 @@ MonoBehaviour:
       displayColor: {r: 0.7307761, g: 0.9622642, b: 0.7401292, a: 0.74509805}
     - name: RideHeightRear
       displayName: Rear Ride Height
+      labelOffset: 2
+      displayOrigin: 4
+      displayRange: 2
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0, g: 0.5882353, b: 0.53333336, a: 0.74509805}
+    - name: AeroHeave
+      displayName: Heave
+      labelOffset: 1
+      displayOrigin: 4
+      displayRange: 2
+      adjustToRange: 0
+      mirror: 0
+      displayColor: {r: 0.7307761, g: 0.9622642, b: 0.7401292, a: 0.74509805}
+    - name: AeroPitch
+      displayName: Pitch
       labelOffset: 0
       displayOrigin: 4
       displayRange: 2
