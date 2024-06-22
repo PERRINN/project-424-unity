@@ -88,7 +88,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float aeroBal         = 0.0f;
 	[HideInInspector] public float dragForce       = 0.0f;
 	[HideInInspector] public float yawAngle        = 0.0f;
-	[HideInInspector] public float steerAngle      = 0.0f;
+	[HideInInspector] public float steeringAngle      = 0.0f;
 	[HideInInspector] public float rollAngle       = 0.0f;
 	[HideInInspector] public float fronRollAngle   = 0.0f;
 	[HideInInspector] public float rearRollAngle   = 0.0f;
@@ -260,7 +260,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Setting vehicle parameters for the aero model
 		yawAngle        = vehicle.speed > 1.0f ? vehicle.speedAngle : 0.0f;
-		steerAngle      = (vehicle.wheelState[0].steerAngle + vehicle.wheelState[1].steerAngle) / 2;
+		steeringAngle   = (vehicle.wheelState[0].steeringAngle + vehicle.wheelState[1].steeringAngle) / 2;
 		fronRollAngle   = customData[Perrinn424Data.FrontRollAngle] / 1000.0f;
 		rearRollAngle   = customData[Perrinn424Data.RearRollAngle] / 1000.0f;
 		rollAngle       = (fronRollAngle + rearRollAngle) / 2;
@@ -279,21 +279,21 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		// Calculating aero forces
 		if (front.applicationPoint != null)
 		{
-			SCzFront = CalcAeroCoeff(front, heave, pitch, yawAngle, steerAngle, rollAngle, DRS, flapAngle);
+			SCzFront = CalcAeroCoeff(front, heave, pitch, yawAngle, steeringAngle, rollAngle, DRS, flapAngle);
 			Vector3 VEC_SCzFront = -SCzFront * dynamicPressure * front.applicationPoint.up;
 			rb.AddForceAtPosition(VEC_SCzFront, front.applicationPoint.position);
 		}
 
 		if (rear.applicationPoint != null)
 		{
-			SCzRear = CalcAeroCoeff(rear, heave, pitch, yawAngle, steerAngle, rollAngle, DRS, flapAngle);
+			SCzRear = CalcAeroCoeff(rear, heave, pitch, yawAngle, steeringAngle, rollAngle, DRS, flapAngle);
 			Vector3 VEC_SCzRear = -SCzRear * dynamicPressure * rear.applicationPoint.up;
 			rb.AddForceAtPosition(VEC_SCzRear, rear.applicationPoint.position);
 		}
 
 		if (drag.applicationPoint != null)
 		{
-			SCx = CalcAeroCoeff(drag, heave, pitch, yawAngle, steerAngle, rollAngle, DRS, flapAngle);
+			SCx = CalcAeroCoeff(drag, heave, pitch, yawAngle, steeringAngle, rollAngle, DRS, flapAngle);
 			Vector3 VEC_SCx = -SCx * dynamicPressure * drag.applicationPoint.forward;
 			rb.AddForceAtPosition(VEC_SCx, drag.applicationPoint.position);
 		}
@@ -436,7 +436,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			values[index+5] = aero.downforceRear;
 			values[index+6] = aero.dragForce;
 
-			values[index+7] = aero.steerAngle;
+			values[index+7] = aero.steeringAngle;
 			values[index+8] = aero.yawAngle;
 			values[index+9] = aero.rollAngle;
 
