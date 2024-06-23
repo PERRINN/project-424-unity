@@ -168,15 +168,15 @@ MonoBehaviour:
   m_Script: {fileID: -1884367577, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hidden: 0
   radius: 0.34
   inertia: 1.445
-  hidden: 0
   center: {x: 0, y: 0, z: 0}
   suspensionTravel: 0.065
   suspensionAnchor: 0
   springRate: 170000
   damperRate: 3000
-  springPreload: 0
+  preloadDistance: 0
   unsprungMass: 0
   bumpStopRate: 180000
   bumpTravelOffset: 0
@@ -187,7 +187,7 @@ MonoBehaviour:
   groundPenetration: 0.01
   noSuspensionMotion: 0
   hideOnDisable: 1
-  steerAxis: 1
+  steeringAxis: 1
   spinAxis: 0
 --- !u!1 &2483877714874542022
 GameObject:
@@ -233,15 +233,15 @@ MonoBehaviour:
   m_Script: {fileID: -1884367577, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hidden: 0
   radius: 0.34
   inertia: 1.445
-  hidden: 0
   center: {x: 0, y: 0, z: 0}
   suspensionTravel: 0.09
   suspensionAnchor: 0
   springRate: 145000
   damperRate: 3000
-  springPreload: 0
+  preloadDistance: 0
   unsprungMass: 0
   bumpStopRate: 180000
   bumpTravelOffset: 0
@@ -252,7 +252,7 @@ MonoBehaviour:
   groundPenetration: 0.01
   noSuspensionMotion: 0
   hideOnDisable: 1
-  steerAxis: 1
+  steeringAxis: 1
   spinAxis: 0
 --- !u!1 &2483877714929404264
 GameObject:
@@ -516,57 +516,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   altitudeConverter:
-    altitudeReference: 0
-    unityReference: 0
+    altitudeReference: 613.1741
+    unityReference: 146.63
   deltaISA: 0
   dRSActivationDelay: 0.5
   dRSActivationTime: 0.25
   noDRSSegment: []
-  frontFlapStaticAngle: 3
+  frontFlapStaticAngle: 1.5
   frontFlapDRSAngle: -13
-  frontFlapSCz0: 0.38
+  frontFlapSCz0: 0.41
   frontFlapSCz_perDeg: 0.035
   frontFlapDeflectionPreload: 480
   frontFlapDeflectionStiffness: -0.008
   frontFlapDeflectionMax: -5
-  takeOffFrontRideHeight: 70
-  takeOffGain: 0.26
+  heaveFactor: 1.333
   front:
     applicationPoint: {fileID: 2483877716415502929}
-    constant: 3.39
-    frontRideHeightCoefficient: -0.0106
-    frontRideHeight2Coefficient: -0.000411
-    rearRideHeightCoefficient: 0.018
-    rearRideHeight2Coefficient: -0.0000437
-    absoluteYawCoefficient: -0.02
+    constantHeavePitch: 2.97
+    heaveCoefficient: 0.0189
+    heave2Coefficient: -0.000115
+    pitchCoefficient: 0.0392
+    pitch2Coefficient: -0.000573
+    absoluteYawCoefficient: -0.03
     absoluteSteerCoefficient: 0
-    absoluteRollCoefficient: -0.17
-    dRS_Coefficient: 0
-    frontFlapCoefficient: 0.084
+    absoluteRollCoefficient: -0.26
+    dRS_Coefficient: 0.05
+    frontFlapCoefficient: 0.09
   rear:
     applicationPoint: {fileID: 2483877716124499243}
-    constant: 2.72
-    frontRideHeightCoefficient: 0.0379
-    frontRideHeight2Coefficient: -0.000324
-    rearRideHeightCoefficient: 0.019
-    rearRideHeight2Coefficient: -0.000198
-    absoluteYawCoefficient: 0
+    constantHeavePitch: 2.45
+    heaveCoefficient: 0.0328
+    heave2Coefficient: -0.00013
+    pitchCoefficient: -0.0082
+    pitch2Coefficient: -0.0002
+    absoluteYawCoefficient: -0.02
     absoluteSteerCoefficient: 0
-    absoluteRollCoefficient: 0
-    dRS_Coefficient: -1.5
-    frontFlapCoefficient: -0.032
+    absoluteRollCoefficient: -0.14
+    dRS_Coefficient: -1.47
+    frontFlapCoefficient: -0.04
   drag:
     applicationPoint: {fileID: 2483877716124499243}
-    constant: 1.11
-    frontRideHeightCoefficient: 0.0038
-    frontRideHeight2Coefficient: -0.0000495
-    rearRideHeightCoefficient: 0.0028
-    rearRideHeight2Coefficient: -0.00000804
+    constantHeavePitch: 1.05
+    heaveCoefficient: 0.0035
+    heave2Coefficient: -0.0000102
+    pitchCoefficient: 0.0013
+    pitch2Coefficient: -0.0000255
     absoluteYawCoefficient: 0
     absoluteSteerCoefficient: 0
-    absoluteRollCoefficient: 0
-    dRS_Coefficient: -0.332
-    frontFlapCoefficient: 0.003
+    absoluteRollCoefficient: -0.01
+    dRS_Coefficient: -0.333
+    frontFlapCoefficient: 0.001
   emitTelemetry: 1
   drsFlap: {fileID: 5650179999687691602}
   drsClosedAngle: 0
@@ -587,12 +586,14 @@ MonoBehaviour:
   aeroBal: 1
   dragForce: 1
   yawAngle: 1
-  steerAngle: 1
+  steeringAngle: 0
   rollAngle: 1
   fronRollAngle: 1
   rearRollAngle: 1
   frontRideHeight: 40
   rearRideHeight: 50
+  heave: 0
+  pitch: 0
   rho: 0
   noDRSseg: 0
 --- !u!114 &2218053485607648859
@@ -966,15 +967,15 @@ MonoBehaviour:
   m_Script: {fileID: -1884367577, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hidden: 0
   radius: 0.34
   inertia: 1.445
-  hidden: 0
   center: {x: 0, y: 0, z: 0}
   suspensionTravel: 0.065
   suspensionAnchor: 0
   springRate: 170000
   damperRate: 3000
-  springPreload: 0
+  preloadDistance: 0
   unsprungMass: 0
   bumpStopRate: 180000
   bumpTravelOffset: 0
@@ -985,7 +986,7 @@ MonoBehaviour:
   groundPenetration: 0.01
   noSuspensionMotion: 0
   hideOnDisable: 1
-  steerAxis: 1
+  steeringAxis: 1
   spinAxis: 0
 --- !u!1 &2483877715907473430
 GameObject:
@@ -1031,15 +1032,15 @@ MonoBehaviour:
   m_Script: {fileID: -1884367577, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hidden: 0
   radius: 0.34
   inertia: 1.445
-  hidden: 0
   center: {x: 0, y: 0, z: 0}
   suspensionTravel: 0.09
   suspensionAnchor: 0
   springRate: 145000
   damperRate: 3000
-  springPreload: 0
+  preloadDistance: 0
   unsprungMass: 0
   bumpStopRate: 180000
   bumpTravelOffset: 0
@@ -1050,7 +1051,7 @@ MonoBehaviour:
   groundPenetration: 0.01
   noSuspensionMotion: 0
   hideOnDisable: 1
-  steerAxis: 1
+  steeringAxis: 1
   spinAxis: 0
 --- !u!1 &2483877715949788932
 GameObject:

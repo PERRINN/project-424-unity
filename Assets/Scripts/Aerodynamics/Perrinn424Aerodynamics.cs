@@ -15,15 +15,13 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		public float segmentEnd = 500.0f;
 	}
 
-
-
 	[Space(5)]
 	public float deltaISA                  = 0.0f;
 	public float dRSActivationDelay        = 0.0f;
-	public float dRSActivationTime         = 0.0f;
+	public float dRSActivationTime         = 0.25f;
 
 	[Space(5)]
-	[SerializeField] private NoDRSarray[] noDRSSegment;
+	public NoDRSarray[] noDRSSegment;
 
 	[Space(5)]
 	public float frontFlapStaticAngle         = 5.0f;
@@ -44,15 +42,15 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Aerodynamic model coefficients
 		public float constantHeavePitch          = 1.0f;
-		public float heaveCoefficient            = 1.0f;
-		public float heave2Coefficient           = 1.0f;
-		public float pitchCoefficient            = 1.0f;
-		public float pitch2Coefficient           = 1.0f;
-		public float absoluteYawCoefficient      = 1.0f;
-		public float absoluteSteerCoefficient    = 1.0f;
-		public float absoluteRollCoefficient     = 1.0f;
-		public float dRS_Coefficient             = 1.0f;
-		public float frontFlapCoefficient        = 1.0f;
+		public float heaveCoefficient            = 0.0f;
+		public float heave2Coefficient           = 0.0f;
+		public float pitchCoefficient            = 0.0f;
+		public float pitch2Coefficient           = 0.0f;
+		public float absoluteYawCoefficient      = 0.0f;
+		public float absoluteSteerCoefficient    = 0.0f;
+		public float absoluteRollCoefficient     = 0.0f;
+		public float dRS_Coefficient             = 0.0f;
+		public float frontFlapCoefficient        = 0.0f;
 	}
 
 	[Space(5)]
