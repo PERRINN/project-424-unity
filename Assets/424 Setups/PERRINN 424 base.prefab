@@ -402,12 +402,14 @@ MonoBehaviour:
     kingpinHigh: {fileID: 0}
   unsprungMass: 60
   wheelProperties:
+    rimWidth: 0.35
+    rimRadius: 0.25
     tireRadius: 0.352
     treadWidth: 0.3
     treadRadius: 1.5
-    rimWidth: 0.35
-    rimRadius: 0.25
-    inertia: 1.445
+    centrifugalGrowth: 0.005
+    centrifugalGrowthRpm: 2800
+    rotationalInertia: 1.445
     contactQueries: 7
     contactDetection: 1
     groundMaterialDetection: 2
@@ -514,12 +516,14 @@ MonoBehaviour:
     kingpinHigh: {fileID: 3674729310046114434}
   unsprungMass: 60
   wheelProperties:
+    rimWidth: 0.35
+    rimRadius: 0.25
     tireRadius: 0.352
     treadWidth: 0.3
     treadRadius: 1.5
-    rimWidth: 0.35
-    rimRadius: 0.25
-    inertia: 1.445
+    centrifugalGrowth: 0.005
+    centrifugalGrowthRpm: 2800
+    rotationalInertia: 1.445
     contactQueries: 7
     contactDetection: 1
     groundMaterialDetection: 2
@@ -1860,6 +1864,7 @@ MonoBehaviour:
       frontRight: {fileID: 4596819812729439058}
       rearLeft: {fileID: 4829892283867516816}
       rearRight: {fileID: 2209396665434650757}
+    sensorHeight: 0.05
     rideHeightRange: 0.2
     layerMask:
       serializedVersion: 2
@@ -2425,12 +2430,14 @@ MonoBehaviour:
     kingpinHigh: {fileID: 0}
   unsprungMass: 60
   wheelProperties:
+    rimWidth: 0.35
+    rimRadius: 0.25
     tireRadius: 0.352
     treadWidth: 0.3
     treadRadius: 1.5
-    rimWidth: 0.35
-    rimRadius: 0.25
-    inertia: 1.445
+    centrifugalGrowth: 0.005
+    centrifugalGrowthRpm: 2800
+    rotationalInertia: 1.445
     contactQueries: 7
     contactDetection: 1
     groundMaterialDetection: 2
@@ -2538,12 +2545,14 @@ MonoBehaviour:
     kingpinHigh: {fileID: 8932839215881418565}
   unsprungMass: 60
   wheelProperties:
+    rimWidth: 0.35
+    rimRadius: 0.25
     tireRadius: 0.352
     treadWidth: 0.3
     treadRadius: 1.5
-    rimWidth: 0.35
-    rimRadius: 0.25
-    inertia: 1.445
+    centrifugalGrowth: 0.005
+    centrifugalGrowthRpm: 2800
+    rotationalInertia: 1.445
     contactQueries: 7
     contactDetection: 1
     groundMaterialDetection: 2
