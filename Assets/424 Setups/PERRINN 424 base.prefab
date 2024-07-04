@@ -902,6 +902,8 @@ GameObject:
   - component: {fileID: 5252892781311452814}
   - component: {fileID: 2623578543911979919}
   - component: {fileID: 1193015119273251600}
+  - component: {fileID: 8676708612816923791}
+  - component: {fileID: 2318558234032444254}
   - component: {fileID: 5326984190949575772}
   - component: {fileID: 2218053485607648859}
   - component: {fileID: 1952617881401160359}
@@ -1008,6 +1010,46 @@ MonoBehaviour:
   adjustDamper: 0
   maxDamperRateOffset: 500
   linearityFactor: 0.5
+--- !u!114 &8676708612816923791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483877715235533906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1544716085, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axle: 0
+  mode: 1
+  slowBumpRate: 10000
+  fastBumpRate: 4000
+  bumpSpeedSplit: 0.05
+  slowReboundRate: 10000
+  fastReboundRate: 4000
+  reboundSpeedSplit: 0.05
+--- !u!114 &2318558234032444254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483877715235533906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1544716085, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axle: 1
+  mode: 1
+  slowBumpRate: 10000
+  fastBumpRate: 6000
+  bumpSpeedSplit: 0.05
+  slowReboundRate: 10000
+  fastReboundRate: 6000
+  reboundSpeedSplit: 0.05
 --- !u!114 &5326984190949575772
 MonoBehaviour:
   m_ObjectHideFlags: 0
