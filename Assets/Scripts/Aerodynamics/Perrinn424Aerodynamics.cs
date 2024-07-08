@@ -376,7 +376,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			aeroCoeffSemantic.SetRangeAndFormat(1.0f, 3.0f, "0.00", "", quantization:0.1f);
 
 			Telemetry.SemanticInfo aeroForceSemantic = new Telemetry.SemanticInfo();
-			aeroForceSemantic.SetRangeAndFormat(0.0f, 15000.0f, "0", " N", quantization:1000);
+			aeroForceSemantic.SetRangeAndFormat(0.0f, 20000.0f, "0", " N", quantization:1000);
 
 			Telemetry.SemanticInfo aeroAngleSemantic = new Telemetry.SemanticInfo();
 			aeroAngleSemantic.SetRangeAndFormat(-5.0f, 5.0f, "0.00", "°", quantization:1);
