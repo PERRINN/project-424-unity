@@ -1996,6 +1996,7 @@ GameObject:
   - component: {fileID: 2483877716263781662}
   - component: {fileID: 2483877716263781649}
   - component: {fileID: 8106028567685255545}
+  - component: {fileID: 7010783395762143764}
   - component: {fileID: 2483877716263781651}
   - component: {fileID: 2483877716263781660}
   m_Layer: 8
@@ -2106,6 +2107,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 96cc4818578b35c42a22dd58a6bc466f, type: 2}
   - {fileID: 11400000, guid: dd0415c5fea9f21428415c1f65c06e48, type: 2}
   - {fileID: 11400000, guid: 0e3cd7133dbbd8546810c712bc086314, type: 2}
+  - {fileID: 11400000, guid: 7b7ce606c94eab44aada3157461b00b8, type: 2}
   - {fileID: 11400000, guid: a8eaa9006379e4e45b95bf7bde6a817e, type: 2}
   - {fileID: 11400000, guid: ce12a02d98333be4ca3f95176e2d9790, type: 2}
   - {fileID: 11400000, guid: b7b87c1e506ec974cbe3f56e86b4b447, type: 2}
@@ -2159,6 +2161,19 @@ MonoBehaviour:
   tires: 1
   tiresExtended: 1
   tireStates: 0
+--- !u!114 &7010783395762143764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483877716263781659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -674643555, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
 --- !u!114 &2483877716263781651
 MonoBehaviour:
   m_ObjectHideFlags: 0

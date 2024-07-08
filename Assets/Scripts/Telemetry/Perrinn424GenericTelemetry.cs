@@ -24,13 +24,14 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxAngularAcceleration = 4000 * Mathf.Deg2Rad;
 		vehicle.telemetry.specs.maxWheelTorque = 3000;
 		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;
-		vehicle.telemetry.specs.maxSuspensionLoad = 2000.0f * Gravity.magnitude;
+		vehicle.telemetry.specs.maxWheelLoad = 2000.0f * Gravity.magnitude;
 		vehicle.telemetry.specs.maxTireForce = 30000.0f;
 		vehicle.telemetry.specs.maxEngineRpm = 2900.0f;
 		vehicle.telemetry.specs.maxEnginePowerKw = 600.0f;
 		vehicle.telemetry.specs.minEnginePowerKw = -300.0f;
 		vehicle.telemetry.specs.maxEngineTorque = 4400.0f;
 		vehicle.telemetry.specs.minEngineTorque = -4400.0f;
+		vehicle.telemetry.specs.maxWheelRpm = 2900.0f;
 
 		vehicle.telemetry.ApplySpecifications();
 
@@ -41,11 +42,11 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		Telemetry.SemanticInfo angularVelocitySemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.AngularVelocity];
 		angularVelocitySemantic.SetRange(-90.0f * Mathf.Deg2Rad, 90.0f * Mathf.Deg2Rad);
 
-		// Set weight in newtons (original) instead of kilograms (default)
+		// Set wheel load in newtons (original) instead of kilograms (default)
 
-		Telemetry.SemanticInfo weightSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.Weight];
-		weightSemantic.displayMultiplier = 1.0f;
-		weightSemantic.displayUnitsSuffix = " N";
+		Telemetry.SemanticInfo wheelLoadSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.WheelLoad];
+		wheelLoadSemantic.displayMultiplier = 1.0f;
+		wheelLoadSemantic.displayUnitsSuffix = " N";
 
 		// Steering angle
 
@@ -219,17 +220,12 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			m_wheelRL = m_vehicle.wheelState[m_vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Left)];
 			m_wheelRR = m_vehicle.wheelState[m_vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Right)];
 
-			// Custom wheel RPM semantic
-
-			var wheelRpmSemantic = new Telemetry.SemanticInfo();
-			wheelRpmSemantic.SetRangeAndFormat(0, 2900, "0.", " rpm", quantization:200);
-
 			// Fill-in channel information. Naming is F1 style.
 
-			channelInfo[0].SetNameAndSemantic("nWheelFL", Telemetry.Semantic.Custom, wheelRpmSemantic);
-			channelInfo[1].SetNameAndSemantic("nWheelFR", Telemetry.Semantic.Custom, wheelRpmSemantic);
-			channelInfo[2].SetNameAndSemantic("nWheelRL", Telemetry.Semantic.Custom, wheelRpmSemantic);
-			channelInfo[3].SetNameAndSemantic("nWheelRR", Telemetry.Semantic.Custom, wheelRpmSemantic);
+			channelInfo[0].SetNameAndSemantic("nWheelFL", Telemetry.Semantic.WheelRpm);
+			channelInfo[1].SetNameAndSemantic("nWheelFR", Telemetry.Semantic.WheelRpm);
+			channelInfo[2].SetNameAndSemantic("nWheelRL", Telemetry.Semantic.WheelRpm);
+			channelInfo[3].SetNameAndSemantic("nWheelRR", Telemetry.Semantic.WheelRpm);
 
 			// Camber
 
