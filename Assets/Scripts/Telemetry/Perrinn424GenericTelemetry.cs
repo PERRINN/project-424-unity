@@ -288,7 +288,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+3] = custom[Perrinn424Data.RearRollAngle] / 1000.0f;
 			values[index+4] = custom[Perrinn424Data.GroundAngle] / 1000.0f;
 			values[index+5] = custom[Perrinn424Data.GroundSlope] / 1000.0f;
-			values[index+6] = custom[Perrinn424Data.UndersteerAngle] / 1000.0f;
+
+			int understeerAngle = custom[Perrinn424Data.UndersteerAngle];
+			values[index+6] = understeerAngle == -2147483648? float.NaN : understeerAngle / 1000.0f;
 			}
 		}
 
