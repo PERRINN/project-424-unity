@@ -171,8 +171,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 			channelInfo[0].SetNameAndSemantic("TorqueDiffFront", Telemetry.Semantic.WheelTorque);
 			channelInfo[1].SetNameAndSemantic("TorqueDiffRear", Telemetry.Semantic.WheelTorque);
-			channelInfo[2].SetNameAndSemantic("SpeedDiffFront", Telemetry.Semantic.Speed);
-			channelInfo[3].SetNameAndSemantic("SpeedDiffRear", Telemetry.Semantic.Speed);
+			channelInfo[2].SetNameAndSemantic("RpmDiffFront", Telemetry.Semantic.WheelRpm);
+			channelInfo[3].SetNameAndSemantic("RpmDiffRear", Telemetry.Semantic.WheelRpm);
 			channelInfo[4].SetNameAndSemantic("TorqueFrictionFront", Telemetry.Semantic.WheelTorque);
 			channelInfo[5].SetNameAndSemantic("TorqueFrictionRear", Telemetry.Semantic.WheelTorque);
 			}
@@ -182,8 +182,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			{
 			values[index+0] = m_wheelFL.driveTorque - m_wheelFR.driveTorque;
 			values[index+1] = m_wheelRL.driveTorque - m_wheelRR.driveTorque;
-			values[index+2] = m_wheelFL.angularVelocity * m_wheelFL.wheelContact.effectiveRadius - m_wheelFR.angularVelocity * m_wheelFR.wheelContact.effectiveRadius;
-			values[index+3] = m_wheelRL.angularVelocity * m_wheelRL.wheelContact.effectiveRadius - m_wheelRR.angularVelocity * m_wheelRR.wheelContact.effectiveRadius;
+			values[index+2] = (m_wheelFL.angularVelocity - m_wheelFR.angularVelocity) * Block.WToRpm;
+			values[index+3] = (m_wheelRL.angularVelocity - m_wheelRR.angularVelocity) * Block.WToRpm;
 
 			int[] custom = m_vehicle.data.Get(Channel.Custom);
 			float frontTorqueFiction = custom[Perrinn424Data.FrontDiffFriction] / 1000.0f;
