@@ -406,16 +406,6 @@ public class Perrinn424CarController : VehicleBase
 		}
 
 
-	public void SetDifferentialDamping (float frontDamping, float rearDamping)
-		{
-		if (m_frontPowertrain != null)
-			m_frontPowertrain.differential.damping = frontDamping;
-
-		if (m_rearPowertrain != null)
-			m_rearPowertrain.differential.damping = rearDamping;
-		}
-
-
 	// Compute understeer-oversteer
 
 	void ComputeUndersteerAngle ()
