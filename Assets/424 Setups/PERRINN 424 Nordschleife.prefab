@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2476090975396258038}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1360312357267985368
 MonoBehaviour:
@@ -131,7 +131,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2476090975396258038}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3662052850870299041
 MonoBehaviour:
@@ -153,21 +153,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 602905415814629967, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.825
-      objectReference: {fileID: 0}
-    - target: {fileID: 602905415814629967, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 602905415814629967, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.625
-      objectReference: {fileID: 0}
     - target: {fileID: 1931774191110935799, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: trackMaterials.Array.size
@@ -178,27 +163,12 @@ PrefabInstance:
       propertyPath: widget.position.y
       value: 150
       objectReference: {fileID: 0}
-    - target: {fileID: 2318558234032444254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: fastReboundRate
-      value: 18000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2318558234032444254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: slowReboundRate
-      value: 30000
-      objectReference: {fileID: 0}
     - target: {fileID: 2483877715211310783, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: predefinedReplay
       value: 
       objectReference: {fileID: 11400000, guid: 4798faf1eb7464f268fe7bae22d48e06,
         type: 2}
-    - target: {fileID: 2483877715601729047, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.607
-      objectReference: {fileID: 0}
     - target: {fileID: 2483877716158660179, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: smallDisplay.y
@@ -343,165 +313,15 @@ PrefabInstance:
       propertyPath: screenPosition.y
       value: 250
       objectReference: {fileID: 0}
-    - target: {fileID: 2483877716263781662, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: showChannelList
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2748440892036001422, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: unsprungMass
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 2748440892036001422, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionTravel.offset
-      value: 0.055
-      objectReference: {fileID: 0}
-    - target: {fileID: 2748440892036001422, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionTravel.bumpStop
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 2748440892036001422, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionDamper.damperRate
-      value: 6000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2748440892036001422, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionDamper.springRate
-      value: 200000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2748440892036001422, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.lateralDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2748440892036001422, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.verticalDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2748440892036001422, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.longitudinalDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 3138034683719753726, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3138034683719753726, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.33
-      objectReference: {fileID: 0}
     - target: {fileID: 4397584537829769748, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 4623142189894402494, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: rpmRatioFrontToRear
-      value: 1.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 4755367164396867821, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.825
-      objectReference: {fileID: 0}
-    - target: {fileID: 4755367164396867821, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 4755367164396867821, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.625
-      objectReference: {fileID: 0}
-    - target: {fileID: 4917145807862789854, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: unsprungMass
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 4917145807862789854, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionTravel.offset
-      value: 0.055
-      objectReference: {fileID: 0}
-    - target: {fileID: 4917145807862789854, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionTravel.bumpStop
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 4917145807862789854, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionDamper.damperRate
-      value: 6000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4917145807862789854, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionDamper.springRate
-      value: 200000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4917145807862789854, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.lateralDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4917145807862789854, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.verticalDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4917145807862789854, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.longitudinalDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: frontFlapStaticAngle
-      value: 3.5
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: noDRSSegment.Array.size
       value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: rear.absoluteYawCoefficient
-      value: -0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: drag.absoluteRollCoefficient
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: front.absoluteYawCoefficient
-      value: -0.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: rear.absoluteRollCoefficient
-      value: -0.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: front.absoluteRollCoefficient
-      value: -0.17
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: front.absoluteSteerCoefficient
-      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 5326984190949575772, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
@@ -563,115 +383,15 @@ PrefabInstance:
       propertyPath: noDRSSegment.Array.data[5].segmentStart
       value: 20000
       objectReference: {fileID: 0}
-    - target: {fileID: 5609221771532909897, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5609221771532909897, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.377
-      objectReference: {fileID: 0}
-    - target: {fileID: 5682389695551593254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: unsprungMass
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 5682389695551593254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionTravel.offset
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 5682389695551593254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionTravel.bumpStop
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 5682389695551593254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionDamper.damperRate
-      value: 6000
-      objectReference: {fileID: 0}
-    - target: {fileID: 5682389695551593254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionDamper.springRate
-      value: 230000
-      objectReference: {fileID: 0}
-    - target: {fileID: 5682389695551593254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.lateralDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 5682389695551593254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.verticalDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 5682389695551593254, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.longitudinalDamping
-      value: 4000
-      objectReference: {fileID: 0}
     - target: {fileID: 6611051989778264180, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326591211390265308, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: unsprungMass
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326591211390265308, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionTravel.offset
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326591211390265308, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionTravel.bumpStop
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326591211390265308, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionDamper.damperRate
-      value: 6000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326591211390265308, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: suspensionDamper.springRate
-      value: 230000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326591211390265308, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.lateralDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326591211390265308, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.verticalDamping
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7326591211390265308, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: tireProperties.longitudinalDamping
-      value: 4000
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8671232185016553812, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: nextCameraKey
       value: 118
-      objectReference: {fileID: 0}
-    - target: {fileID: 8676708612816923791, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: fastReboundRate
-      value: 12000
-      objectReference: {fileID: 0}
-    - target: {fileID: 8676708612816923791, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
-        type: 3}
-      propertyPath: slowReboundRate
-      value: 30000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c2bc6b582ebcdb4e8baff52cef5108f, type: 3}
@@ -759,7 +479,7 @@ PrefabInstance:
     - target: {fileID: 4095416709289502216, guid: 053ed87021a547747897c16a9cbf1e1b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 18
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4095416709289502216, guid: 053ed87021a547747897c16a9cbf1e1b,
         type: 3}

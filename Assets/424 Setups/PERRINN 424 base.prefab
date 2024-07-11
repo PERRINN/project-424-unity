@@ -86,7 +86,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 830292482576123327}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.824, y: 0.011, z: 0.77}
+  m_LocalPosition: {x: 0.825, y: 0.01, z: 0.625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -400,7 +400,7 @@ MonoBehaviour:
     sideInstantCenter: {fileID: 7682616080334593630}
     kingpinLow: {fileID: 0}
     kingpinHigh: {fileID: 0}
-  unsprungMass: 60
+  unsprungMass: 40
   wheelProperties:
     rimWidth: 0.35
     rimRadius: 0.25
@@ -415,19 +415,19 @@ MonoBehaviour:
     groundMaterialDetection: 2
   tireProperties:
     verticalStiffness: 450000
-    verticalDamping: 1000
+    verticalDamping: 4000
     lateralStiffness: 450000
-    lateralDamping: 1600
+    lateralDamping: 4000
     longitudinalStiffness: 450000
-    longitudinalDamping: 2000
+    longitudinalDamping: 4000
   rimPhysicsMaterial: {fileID: 0}
   suspensionTravel:
     distance: 0.09
-    offset: 0.048
-    bumpStop: 0.015
+    offset: 0.055
+    bumpStop: 0.04
   suspensionDamper:
-    springRate: 145000
-    damperRate: 3000
+    springRate: 200000
+    damperRate: 6000
     bumpStopRate: 2000000
     preloadDistance: 0
   deflectContactQueries: 1
@@ -514,7 +514,7 @@ MonoBehaviour:
     sideInstantCenter: {fileID: 7750436938438093970}
     kingpinLow: {fileID: 863628455492934608}
     kingpinHigh: {fileID: 3674729310046114434}
-  unsprungMass: 60
+  unsprungMass: 40
   wheelProperties:
     rimWidth: 0.35
     rimRadius: 0.25
@@ -529,19 +529,19 @@ MonoBehaviour:
     groundMaterialDetection: 2
   tireProperties:
     verticalStiffness: 450000
-    verticalDamping: 1000
+    verticalDamping: 4000
     lateralStiffness: 450000
-    lateralDamping: 1600
+    lateralDamping: 4000
     longitudinalStiffness: 450000
-    longitudinalDamping: 2000
+    longitudinalDamping: 4000
   rimPhysicsMaterial: {fileID: 0}
   suspensionTravel:
     distance: 0.065
-    offset: 0.033
-    bumpStop: 0.01
+    offset: 0.04
+    bumpStop: 0.04
   suspensionDamper:
-    springRate: 170000
-    damperRate: 3000
+    springRate: 230000
+    damperRate: 6000
     bumpStopRate: 2000000
     preloadDistance: 0
   deflectContactQueries: 1
@@ -1027,8 +1027,8 @@ MonoBehaviour:
   slowBumpRate: 10000
   fastBumpRate: 4000
   bumpSpeedSplit: 0.05
-  slowReboundRate: 10000
-  fastReboundRate: 4000
+  slowReboundRate: 30000
+  fastReboundRate: 12000
   reboundSpeedSplit: 0.05
 --- !u!114 &2318558234032444254
 MonoBehaviour:
@@ -1047,8 +1047,8 @@ MonoBehaviour:
   slowBumpRate: 10000
   fastBumpRate: 6000
   bumpSpeedSplit: 0.05
-  slowReboundRate: 10000
-  fastReboundRate: 6000
+  slowReboundRate: 30000
+  fastReboundRate: 18000
   reboundSpeedSplit: 0.05
 --- !u!114 &5326984190949575772
 MonoBehaviour:
@@ -1069,7 +1069,7 @@ MonoBehaviour:
   dRSActivationDelay: 0.5
   dRSActivationTime: 0.25
   noDRSSegment: []
-  frontFlapStaticAngle: 1.5
+  frontFlapStaticAngle: 3.5
   frontFlapDRSAngle: -13
   frontFlapSCz0: 0.41
   frontFlapSCz_perDeg: 0.035
@@ -1084,9 +1084,9 @@ MonoBehaviour:
     heave2Coefficient: -0.000115
     pitchCoefficient: 0.0392
     pitch2Coefficient: -0.000573
-    absoluteYawCoefficient: -0.03
-    absoluteSteerCoefficient: 0
-    absoluteRollCoefficient: -0.26
+    absoluteYawCoefficient: -0.02
+    absoluteSteerCoefficient: -0.01
+    absoluteRollCoefficient: -0.17
     dRS_Coefficient: 0.05
     frontFlapCoefficient: 0.09
   rear:
@@ -1096,9 +1096,9 @@ MonoBehaviour:
     heave2Coefficient: -0.00013
     pitchCoefficient: -0.0082
     pitch2Coefficient: -0.0002
-    absoluteYawCoefficient: -0.02
+    absoluteYawCoefficient: -0.01
     absoluteSteerCoefficient: 0
-    absoluteRollCoefficient: -0.14
+    absoluteRollCoefficient: -0.12
     dRS_Coefficient: -1.47
     frontFlapCoefficient: -0.04
   drag:
@@ -1110,7 +1110,7 @@ MonoBehaviour:
     pitch2Coefficient: -0.0000255
     absoluteYawCoefficient: 0
     absoluteSteerCoefficient: 0
-    absoluteRollCoefficient: -0.01
+    absoluteRollCoefficient: 0
     dRS_Coefficient: -0.333
     frontFlapCoefficient: 0.001
   emitTelemetry: 1
@@ -1233,7 +1233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd73a7539b06af44babaf806da94a1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rpmRatioFrontToRear: 1
+  rpmRatioFrontToRear: 1.01
   gain: 0.001
   authority: 0.25
   emitTelemetry: 1
@@ -1463,7 +1463,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2483877715601729040}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.311, z: -1.59}
+  m_LocalPosition: {x: 0, y: 0.311, z: -1.607}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2295,7 +2295,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2613458295519927322}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.015, z: -2.885}
+  m_LocalPosition: {x: 0, y: 0, z: -2.377}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2486,7 +2486,7 @@ MonoBehaviour:
     sideInstantCenter: {fileID: 2332391891510437962}
     kingpinLow: {fileID: 0}
     kingpinHigh: {fileID: 0}
-  unsprungMass: 60
+  unsprungMass: 40
   wheelProperties:
     rimWidth: 0.35
     rimRadius: 0.25
@@ -2501,19 +2501,19 @@ MonoBehaviour:
     groundMaterialDetection: 2
   tireProperties:
     verticalStiffness: 450000
-    verticalDamping: 1000
+    verticalDamping: 4000
     lateralStiffness: 450000
-    lateralDamping: 1600
+    lateralDamping: 4000
     longitudinalStiffness: 450000
-    longitudinalDamping: 2000
+    longitudinalDamping: 4000
   rimPhysicsMaterial: {fileID: 0}
   suspensionTravel:
     distance: 0.09
-    offset: 0.048
-    bumpStop: 0.015
+    offset: 0.055
+    bumpStop: 0.04
   suspensionDamper:
-    springRate: 145000
-    damperRate: 3000
+    springRate: 200000
+    damperRate: 6000
     bumpStopRate: 2000000
     preloadDistance: 0
   deflectContactQueries: 1
@@ -2601,7 +2601,7 @@ MonoBehaviour:
     sideInstantCenter: {fileID: 1810695606714721689}
     kingpinLow: {fileID: 2500983355993441662}
     kingpinHigh: {fileID: 8932839215881418565}
-  unsprungMass: 60
+  unsprungMass: 40
   wheelProperties:
     rimWidth: 0.35
     rimRadius: 0.25
@@ -2616,19 +2616,19 @@ MonoBehaviour:
     groundMaterialDetection: 2
   tireProperties:
     verticalStiffness: 450000
-    verticalDamping: 1000
+    verticalDamping: 4000
     lateralStiffness: 450000
-    lateralDamping: 1600
+    lateralDamping: 4000
     longitudinalStiffness: 450000
-    longitudinalDamping: 2000
+    longitudinalDamping: 4000
   rimPhysicsMaterial: {fileID: 0}
   suspensionTravel:
     distance: 0.065
-    offset: 0.033
-    bumpStop: 0.01
+    offset: 0.04
+    bumpStop: 0.04
   suspensionDamper:
-    springRate: 170000
-    damperRate: 3000
+    springRate: 230000
+    damperRate: 6000
     bumpStopRate: 2000000
     preloadDistance: 0
   deflectContactQueries: 1
@@ -3858,7 +3858,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4226066446380457861}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.015, z: -0.29}
+  m_LocalPosition: {x: 0, y: 0, z: -0.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4405,7 +4405,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5993850994854658625}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.824, y: 0.011, z: 0.77}
+  m_LocalPosition: {x: -0.825, y: 0.01, z: 0.625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
