@@ -134,10 +134,12 @@ public class LapTimer : MonoBehaviour
 
 	void Update ()
 		{
+		/*
 		VPTelemetry.customData = "";
 
 		foreach (LapTime lap in m_lapTimeList)
 			VPTelemetry.customData += $"\n{lap.ToString()}";
+		*/
 
 		if (enableTestKeys)
 			{
