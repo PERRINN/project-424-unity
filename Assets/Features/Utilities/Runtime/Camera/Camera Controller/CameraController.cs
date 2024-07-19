@@ -10,6 +10,9 @@ namespace Perrinn424.CameraSystem
 {
     public class CameraController : MonoBehaviour
     {
+        // This controller expects a CameraTarget component in the target with "Use Custom Cameras" enabled
+        // and one custom camera per each entry, except for Tv.
+
         public enum Mode
         {
             Driver,
@@ -18,11 +21,13 @@ namespace Perrinn424.CameraSystem
             OrbitFixed,
             LookAt,
             Free,
+            Physics,
             Tv
         }
 
         public Transform tvCameraSystem;
         public Camera mainCamera;
+        public GameObject physicsCamera;
 
         private VPCameraController m_vppController;
         private CinemachineBrain m_cmController;
@@ -33,7 +38,7 @@ namespace Perrinn424.CameraSystem
 
         private void OnEnable()
         {
-            m_modeIterator = new CircularIterator<Mode>(new[] { Mode.Driver, Mode.SmoothFollow, Mode.Orbit, Mode.OrbitFixed, Mode.Tv });
+            m_modeIterator = new CircularIterator<Mode>(new[] { Mode.Driver, Mode.SmoothFollow, Mode.Orbit, Mode.OrbitFixed, Mode.Tv, Mode.Physics });
             m_vppController = tvCameraSystem.GetComponent<VPCameraController>();
             m_cmController = tvCameraSystem.GetComponent<CinemachineBrain>();
             m_fovController = mainCamera.GetComponent<CameraFovController>();
@@ -45,10 +50,9 @@ namespace Perrinn424.CameraSystem
         {
         }
 
-
         public void SetMode(Mode mode)
         {
-            if (isActiveAndEnabled)
+            if (isActiveAndEnabled && mode != m_modeIterator.Current)
             {
                 m_modeIterator.Current = mode;
                 UpdateMode();
@@ -69,33 +73,38 @@ namespace Perrinn424.CameraSystem
             switch (m_modeIterator.Current)
             {
                 case Mode.Driver:
-                    SetVPCamera(VPCameraController.Mode.Driver);
-                    break;
                 case Mode.SmoothFollow:
-                    SetVPCamera(VPCameraController.Mode.SmoothFollow);
+                case Mode.LookAt:
+                case Mode.Free:
+                    SetPhysicsCamera(false);
+                    SetVPCamera((int)m_modeIterator.Current);
                     break;
+
+                case Mode.Physics:
+                    SetPhysicsCamera(true);
+                    SetVPCamera((int)m_modeIterator.Current);
+                    break;
+
                 case Mode.Orbit:
                     m_vppController.orbit.targetRelative = false;
-                    SetVPCamera(VPCameraController.Mode.Orbit);
+                    SetVPCamera((int)m_modeIterator.Current);
+                    SetPhysicsCamera(false);
                     break;
+
                 case Mode.OrbitFixed:
                     m_vppController.orbit.targetRelative = true;
-                    SetVPCamera(VPCameraController.Mode.Orbit);
+                    SetVPCamera((int)m_modeIterator.Current);
+                    SetPhysicsCamera(false);
                     break;
-                case Mode.LookAt:
-                    SetVPCamera(VPCameraController.Mode.LookAt);
-                    break;
-                case Mode.Free:
-                    SetVPCamera(VPCameraController.Mode.Free);
-                    break;
+
                 case Mode.Tv:
+                    SetPhysicsCamera(false);
                     SetTVMode();
                     break;
             }
         }
 
-
-        private void SetVPCamera(VPCameraController.Mode mode)
+        private void SetVPCamera(int cameraIndex)
         {
             // TV mode may have changed the camera FoV. Restore it here.
 
@@ -103,13 +112,19 @@ namespace Perrinn424.CameraSystem
             mainCamera.fieldOfView = m_savedCameraFov;
 
             m_vppController.enabled = true;
-            m_vppController.mode = mode;
+            m_vppController.customCameraIndex = cameraIndex;
 
             // Also disable the FoV controller if existing, so it can't
             // change the FoV before is disabled by the TV Camera Zoom Controller.
 
             if (m_fovController)
                 m_fovController.enabled = false;
+        }
+
+        private void SetPhysicsCamera(bool enabled)
+        {
+            if (physicsCamera != null)
+                physicsCamera.SetActive(enabled);
         }
 
         private void SetTVMode()

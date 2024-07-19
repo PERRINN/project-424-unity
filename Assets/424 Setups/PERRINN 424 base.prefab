@@ -1396,7 +1396,56 @@ MonoBehaviour:
   targetRadius: 5
   useCustomCameras: 0
   currentCustomCamera: 0
-  customCameras: []
+  customCameras:
+  - mode: 0
+    reference: {fileID: 2483877715949788955}
+    enabled: 1
+    isInteriorCamera: 1
+    isDriverCamera: 1
+    onEnableMessage: 
+    key: 0
+  - mode: 1
+    reference: {fileID: 2483877715601729047}
+    enabled: 1
+    isInteriorCamera: 0
+    isDriverCamera: 0
+    onEnableMessage: 
+    key: 0
+  - mode: 2
+    reference: {fileID: 2483877715601729047}
+    enabled: 1
+    isInteriorCamera: 0
+    isDriverCamera: 0
+    onEnableMessage: 
+    key: 0
+  - mode: 2
+    reference: {fileID: 2483877715601729047}
+    enabled: 1
+    isInteriorCamera: 0
+    isDriverCamera: 0
+    onEnableMessage: 
+    key: 0
+  - mode: 3
+    reference: {fileID: 2483877715601729047}
+    enabled: 1
+    isInteriorCamera: 0
+    isDriverCamera: 0
+    onEnableMessage: 
+    key: 0
+  - mode: 4
+    reference: {fileID: 2483877715601729047}
+    enabled: 1
+    isInteriorCamera: 0
+    isDriverCamera: 0
+    onEnableMessage: 
+    key: 0
+  - mode: 0
+    reference: {fileID: 51837496153412607}
+    enabled: 1
+    isInteriorCamera: 0
+    isDriverCamera: 0
+    onEnableMessage: 
+    key: 0
 --- !u!1 &2483877716124499220
 GameObject:
   m_ObjectHideFlags: 0
@@ -4361,13 +4410,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 51837496153412607}
+  - component: {fileID: 4906998007872751618}
   m_Layer: 0
-  m_Name: Tech Demo Camera
+  m_Name: Physics Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &51837496153412607
 Transform:
   m_ObjectHideFlags: 0
@@ -4383,6 +4433,26 @@ Transform:
   m_Father: {fileID: 2483877715992440981}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 17, y: 0, z: 0}
+--- !u!114 &4906998007872751618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7192370561818121068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b068f7aa37e8c0e4a9252d27fba96fcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableGameObjects:
+  - {fileID: 866943308184137044}
+  - {fileID: 689060360327815075}
+  wheelsToShowGizmos:
+  - {fileID: 7326591211390265308}
+  - {fileID: 5682389695551593254}
+  - {fileID: 2748440892036001422}
+  - {fileID: 4917145807862789854}
 --- !u!1 &7382985401532202949
 GameObject:
   m_ObjectHideFlags: 0
@@ -5488,6 +5558,12 @@ PrefabInstance:
 --- !u!4 &205995786986849561 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 38d2251c72cd450439e31fd33b330b03,
+    type: 3}
+  m_PrefabInstance: {fileID: 383194571903427314}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &689060360327815075 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 38d2251c72cd450439e31fd33b330b03,
     type: 3}
   m_PrefabInstance: {fileID: 383194571903427314}
   m_PrefabAsset: {fileID: 0}
@@ -8180,6 +8256,12 @@ PrefabInstance:
 --- !u!4 &523491732089206766 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4323050479588212249, guid: 2d40989c0620a924d9e7230fda877527,
+    type: 3}
+  m_PrefabInstance: {fileID: 4376759370531736055}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &866943308184137044 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3509816132278133923, guid: 2d40989c0620a924d9e7230fda877527,
     type: 3}
   m_PrefabInstance: {fileID: 4376759370531736055}
   m_PrefabAsset: {fileID: 0}
