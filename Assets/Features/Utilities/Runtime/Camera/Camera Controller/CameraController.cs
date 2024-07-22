@@ -21,13 +21,15 @@ namespace Perrinn424.CameraSystem
             OrbitFixed,
             LookAt,
             Free,
-            Physics,
+            PhysicsFront,
+            PhysicsRear,
             Tv
         }
 
         public Transform tvCameraSystem;
         public Camera mainCamera;
-        public GameObject physicsCamera;
+        public GameObject physicsCameraFront;
+        public GameObject physicsCameraRear;
 
         private VPCameraController m_vppController;
         private CinemachineBrain m_cmController;
@@ -38,7 +40,7 @@ namespace Perrinn424.CameraSystem
 
         private void OnEnable()
         {
-            m_modeIterator = new CircularIterator<Mode>(new[] { Mode.Driver, Mode.SmoothFollow, Mode.Orbit, Mode.OrbitFixed, Mode.Tv, Mode.Physics });
+            m_modeIterator = new CircularIterator<Mode>(new[] { Mode.Driver, Mode.SmoothFollow, Mode.Orbit, Mode.OrbitFixed, Mode.Tv, Mode.PhysicsFront, Mode.PhysicsRear });
             m_vppController = tvCameraSystem.GetComponent<VPCameraController>();
             m_cmController = tvCameraSystem.GetComponent<CinemachineBrain>();
             m_fovController = mainCamera.GetComponent<CameraFovController>();
@@ -80,8 +82,13 @@ namespace Perrinn424.CameraSystem
                     SetVPCamera((int)m_modeIterator.Current);
                     break;
 
-                case Mode.Physics:
-                    SetPhysicsCamera(true);
+                case Mode.PhysicsFront:
+                    SetPhysicsCamera(true, rear: false);
+                    SetVPCamera((int)m_modeIterator.Current);
+                    break;
+
+                case Mode.PhysicsRear:
+                    SetPhysicsCamera(true, rear: true);
                     SetVPCamera((int)m_modeIterator.Current);
                     break;
 
@@ -121,10 +128,37 @@ namespace Perrinn424.CameraSystem
                 m_fovController.enabled = false;
         }
 
-        private void SetPhysicsCamera(bool enabled)
+        private void SetPhysicsCamera(bool enabled, bool rear = false)
         {
-            if (physicsCamera != null)
-                physicsCamera.SetActive(enabled);
+            if (enabled)
+            {
+                // If there's any physics camera enabled, disable it first.
+
+                if (!rear)
+                    {
+                    if (physicsCameraRear != null)
+                        physicsCameraRear.SetActive(false);
+                    }
+                else
+                    {
+                    if (physicsCameraFront != null)
+                        physicsCameraFront.SetActive(false);
+                    }
+
+                // Now enable the expected camera.
+
+                if (physicsCameraFront != null)
+                    physicsCameraFront.SetActive(!rear);
+                if (physicsCameraRear != null)
+                    physicsCameraRear.SetActive(rear);
+            }
+            else
+            {
+                if (physicsCameraFront != null)
+                    physicsCameraFront.SetActive(false);
+                if (physicsCameraRear != null)
+                    physicsCameraRear.SetActive(false);
+            }
         }
 
         private void SetTVMode()

@@ -1372,6 +1372,7 @@ Transform:
   - {fileID: 2483877716195476031}
   - {fileID: 1004260026653636740}
   - {fileID: 51837496153412607}
+  - {fileID: 5675501843065422704}
   m_Father: {fileID: 2483877716221292743}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1443,6 +1444,13 @@ MonoBehaviour:
     key: 0
   - mode: 0
     reference: {fileID: 51837496153412607}
+    enabled: 1
+    isInteriorCamera: 0
+    isDriverCamera: 0
+    onEnableMessage: 
+    key: 0
+  - mode: 0
+    reference: {fileID: 5675501843065422704}
     enabled: 1
     isInteriorCamera: 0
     isDriverCamera: 0
@@ -4374,6 +4382,85 @@ Transform:
   m_Father: {fileID: 1004260026653636740}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 10, y: 180, z: 0}
+--- !u!1 &7105571154367318676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5675501843065422704}
+  - component: {fileID: 3393786786116538180}
+  m_Layer: 0
+  m_Name: Physics Camera Rear
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &5675501843065422704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7105571154367318676}
+  m_LocalRotation: {x: 0, y: 0.9914449, z: -0.13052616, w: 0}
+  m_LocalPosition: {x: 0, y: 1.08, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2483877715992440981}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 15, y: 180, z: 0}
+--- !u!114 &3393786786116538180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7105571154367318676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b068f7aa37e8c0e4a9252d27fba96fcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableGameObjects:
+  - {fileID: 689060360327815075}
+  - {fileID: 5243777803475403869}
+  - {fileID: 4836704888804066790}
+  - {fileID: 1967551877790630633}
+  - {fileID: 5474581411263015226}
+  - {fileID: 7761001911954845959}
+  - {fileID: 8050037843057483107}
+  - {fileID: 6069882394465832914}
+  - {fileID: 1703429840008942202}
+  - {fileID: 3664553391690171005}
+  - {fileID: 1110854016877962201}
+  - {fileID: 3817413358518198504}
+  - {fileID: 2021339096260838769}
+  - {fileID: 2445537814213559871}
+  - {fileID: 8178223096571077054}
+  - {fileID: 6433254932673910812}
+  - {fileID: 184210162461920705}
+  - {fileID: 7332712115199981325}
+  - {fileID: 4453851287110250421}
+  - {fileID: 4443473249460060716}
+  - {fileID: 4552639667903262623}
+  - {fileID: 2637274752676571556}
+  - {fileID: 5500820088790564819}
+  - {fileID: 4518165032290606655}
+  - {fileID: 1827561033233076827}
+  - {fileID: 6624614200955705625}
+  - {fileID: 7680120804598336601}
+  - {fileID: 3484735010340073968}
+  - {fileID: 3188662277231153193}
+  wheelsToShowGizmos:
+  - {fileID: 7326591211390265308}
+  - {fileID: 5682389695551593254}
+  - {fileID: 2748440892036001422}
+  - {fileID: 4917145807862789854}
 --- !u!1 &7109238782402395542
 GameObject:
   m_ObjectHideFlags: 0
@@ -4416,7 +4503,7 @@ GameObject:
   - component: {fileID: 51837496153412607}
   - component: {fileID: 4906998007872751618}
   m_Layer: 0
-  m_Name: Physics Camera
+  m_Name: Physics Camera Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4468,15 +4555,12 @@ MonoBehaviour:
   - {fileID: 6433254932673910812}
   - {fileID: 184210162461920705}
   - {fileID: 7332712115199981325}
-  - {fileID: 3228682010880159355}
   - {fileID: 4453851287110250421}
   - {fileID: 4443473249460060716}
   - {fileID: 4552639667903262623}
   - {fileID: 2637274752676571556}
   - {fileID: 5500820088790564819}
   - {fileID: 4518165032290606655}
-  - {fileID: 5867614492886861153}
-  - {fileID: 1247933020826157672}
   - {fileID: 1827561033233076827}
   - {fileID: 6624614200955705625}
   - {fileID: 7680120804598336601}
@@ -8305,12 +8389,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4376759370531736055}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1247933020826157672 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3309251879572786079, guid: 2d40989c0620a924d9e7230fda877527,
-    type: 3}
-  m_PrefabInstance: {fileID: 4376759370531736055}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1703429840008942202 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3107082555533335437, guid: 2d40989c0620a924d9e7230fda877527,
@@ -8356,12 +8434,6 @@ Transform:
 --- !u!1 &3188662277231153193 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1224196277452216798, guid: 2d40989c0620a924d9e7230fda877527,
-    type: 3}
-  m_PrefabInstance: {fileID: 4376759370531736055}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &3228682010880159355 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1185513622959073164, guid: 2d40989c0620a924d9e7230fda877527,
     type: 3}
   m_PrefabInstance: {fileID: 4376759370531736055}
   m_PrefabAsset: {fileID: 0}
@@ -8434,12 +8506,6 @@ GameObject:
 --- !u!4 &5650179999687691602 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8274282066440275109, guid: 2d40989c0620a924d9e7230fda877527,
-    type: 3}
-  m_PrefabInstance: {fileID: 4376759370531736055}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5867614492886861153 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7913012829351611542, guid: 2d40989c0620a924d9e7230fda877527,
     type: 3}
   m_PrefabInstance: {fileID: 4376759370531736055}
   m_PrefabAsset: {fileID: 0}

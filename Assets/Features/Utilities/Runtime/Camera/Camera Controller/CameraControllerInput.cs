@@ -17,7 +17,8 @@ namespace Perrinn424.CameraSystem
         public KeyCode followMode = KeyCode.F2;
         public KeyCode orbitMode = KeyCode.F3;
         public KeyCode tvMode = KeyCode.F4;
-        public KeyCode physicsMode = KeyCode.F5;
+        public KeyCode physicsFrontMode = KeyCode.F5;
+        public KeyCode physicsRearMode = KeyCode.F6;
 
 
         private KeyCode vpCameraControllerKey;
@@ -64,9 +65,14 @@ namespace Perrinn424.CameraSystem
                 cameraController.SetMode(CameraController.Mode.Tv);
             }
 
-            if (Input.GetKeyDown(physicsMode))
+            if (Input.GetKeyDown(physicsFrontMode))
             {
-                cameraController.SetMode(CameraController.Mode.Physics);
+                cameraController.SetMode(CameraController.Mode.PhysicsFront);
+            }
+
+            if (Input.GetKeyDown(physicsRearMode))
+            {
+                cameraController.SetMode(CameraController.Mode.PhysicsRear);
             }
         }
 
