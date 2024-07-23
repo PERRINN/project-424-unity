@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     packPowerMax: 800
+    packPowerMin: -800
     packTorqueOverrun: -300
     powerBalanceDrive: 0.333
     powerBalanceOverrun: 0.15
@@ -21,18 +22,21 @@ MonoBehaviour:
     packBrakeGain: 33
     clutch: 0.15
     limiter: 1
+    limiterRamp: 0.03
+    powerRampStart: 1
+    powerRampEnd: 2
     inertiaFront: 0.57
     inertiaRear: 1.14
     muFront: 1
     muRear: 1
-    maxRpmFront: 2857
-    maxRpmRear: 2857
+    maxRpmFront: 2800
+    maxRpmRear: 2800
     efficiencyZeroRpmFront: 0.77
     efficiencyZeroRpmRear: 0.77
     efficiencyPeakFront: 0.95
     efficiencyPeakRear: 0.95
-    efficiencyPeakRpmFront: 2040
-    efficiencyPeakRpmRear: 2040
+    efficiencyPeakRpmFront: 2200
+    efficiencyPeakRpmRear: 2200
     maxPowerFront: 300
     maxPowerRear: 600
     unrestrictedPowerFront: 700

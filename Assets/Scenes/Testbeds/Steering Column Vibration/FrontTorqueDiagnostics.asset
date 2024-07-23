@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: FrontTorqueDiagnostics
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Front Diagnostics
+    verticalRange: 17
+    channels:
+    - name: Speed
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 17
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: TorqueFrictionFront
+      displayName: Torque Friction
+      labelOffset: 0
+      displayOrigin: 15
+      displayRange: 3
+      fitPositiveRange: 0
+      mirror: 1
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.6}
+    - name: TorqueDiffFront
+      displayName: Torque Diff
+      labelOffset: -1
+      displayOrigin: 15
+      displayRange: 3
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+    - name: RpmDiffFront
+      displayName: Rpm Diff
+      labelOffset: 0
+      displayOrigin: 11
+      displayRange: 3
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
+    - name: WheelShaftTorqueFL
+      displayName: Shaft Torque Left
+      labelOffset: 0
+      displayOrigin: 8
+      displayRange: 3
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.6}
+    - name: WheelShaftTorqueFR
+      displayName: Shaft Torque Right
+      labelOffset: -1
+      displayOrigin: 8
+      displayRange: 3
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+    - name: TireForceLongFL
+      displayName: Longitudinal Load Left
+      labelOffset: 0
+      displayOrigin: 5
+      displayRange: 10
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.6}
+    - name: TireForceLongFR
+      displayName: Longitudinal Load Right
+      labelOffset: -1
+      displayOrigin: 5
+      displayRange: 10
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+    - name: ForceFeedbackForceRatio
+      displayName: FFB Force
+      labelOffset: 0
+      displayOrigin: 2
+      displayRange: 3
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 1, g: 0.60784316, b: 0, a: 0.9490196}

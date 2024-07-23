@@ -15,15 +15,13 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		public float segmentEnd = 500.0f;
 	}
 
-
-
 	[Space(5)]
 	public float deltaISA                  = 0.0f;
 	public float dRSActivationDelay        = 0.0f;
-	public float dRSActivationTime         = 0.0f;
+	public float dRSActivationTime         = 0.25f;
 
 	[Space(5)]
-	[SerializeField] private NoDRSarray[] noDRSSegment;
+	public NoDRSarray[] noDRSSegment;
 
 	[Space(5)]
 	public float frontFlapStaticAngle         = 5.0f;
@@ -44,15 +42,15 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Aerodynamic model coefficients
 		public float constantHeavePitch          = 1.0f;
-		public float heaveCoefficient            = 1.0f;
-		public float heave2Coefficient           = 1.0f;
-		public float pitchCoefficient            = 1.0f;
-		public float pitch2Coefficient           = 1.0f;
-		public float absoluteYawCoefficient      = 1.0f;
-		public float absoluteSteerCoefficient    = 1.0f;
-		public float absoluteRollCoefficient     = 1.0f;
-		public float dRS_Coefficient             = 1.0f;
-		public float frontFlapCoefficient        = 1.0f;
+		public float heaveCoefficient            = 0.0f;
+		public float heave2Coefficient           = 0.0f;
+		public float pitchCoefficient            = 0.0f;
+		public float pitch2Coefficient           = 0.0f;
+		public float absoluteYawCoefficient      = 0.0f;
+		public float absoluteSteerCoefficient    = 0.0f;
+		public float absoluteRollCoefficient     = 0.0f;
+		public float dRS_Coefficient             = 0.0f;
+		public float frontFlapCoefficient        = 0.0f;
 	}
 
 	[Space(5)]
@@ -88,7 +86,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	[HideInInspector] public float aeroBal         = 0.0f;
 	[HideInInspector] public float dragForce       = 0.0f;
 	[HideInInspector] public float yawAngle        = 0.0f;
-	[HideInInspector] public float steerAngle      = 0.0f;
+	[HideInInspector] public float steeringAngle      = 0.0f;
 	[HideInInspector] public float rollAngle       = 0.0f;
 	[HideInInspector] public float fronRollAngle   = 0.0f;
 	[HideInInspector] public float rearRollAngle   = 0.0f;
@@ -260,7 +258,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 		// Setting vehicle parameters for the aero model
 		yawAngle        = vehicle.speed > 1.0f ? vehicle.speedAngle : 0.0f;
-		steerAngle      = (vehicle.wheelState[0].steerAngle + vehicle.wheelState[1].steerAngle) / 2;
+		steeringAngle   = (vehicle.wheelState[0].steeringAngle + vehicle.wheelState[1].steeringAngle) / 2;
 		fronRollAngle   = customData[Perrinn424Data.FrontRollAngle] / 1000.0f;
 		rearRollAngle   = customData[Perrinn424Data.RearRollAngle] / 1000.0f;
 		rollAngle       = (fronRollAngle + rearRollAngle) / 2;
@@ -279,21 +277,21 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		// Calculating aero forces
 		if (front.applicationPoint != null)
 		{
-			SCzFront = CalcAeroCoeff(front, heave, pitch, yawAngle, steerAngle, rollAngle, DRS, flapAngle);
+			SCzFront = CalcAeroCoeff(front, heave, pitch, yawAngle, steeringAngle, rollAngle, DRS, flapAngle);
 			Vector3 VEC_SCzFront = -SCzFront * dynamicPressure * front.applicationPoint.up;
 			rb.AddForceAtPosition(VEC_SCzFront, front.applicationPoint.position);
 		}
 
 		if (rear.applicationPoint != null)
 		{
-			SCzRear = CalcAeroCoeff(rear, heave, pitch, yawAngle, steerAngle, rollAngle, DRS, flapAngle);
+			SCzRear = CalcAeroCoeff(rear, heave, pitch, yawAngle, steeringAngle, rollAngle, DRS, flapAngle);
 			Vector3 VEC_SCzRear = -SCzRear * dynamicPressure * rear.applicationPoint.up;
 			rb.AddForceAtPosition(VEC_SCzRear, rear.applicationPoint.position);
 		}
 
 		if (drag.applicationPoint != null)
 		{
-			SCx = CalcAeroCoeff(drag, heave, pitch, yawAngle, steerAngle, rollAngle, DRS, flapAngle);
+			SCx = CalcAeroCoeff(drag, heave, pitch, yawAngle, steeringAngle, rollAngle, DRS, flapAngle);
 			Vector3 VEC_SCx = -SCx * dynamicPressure * drag.applicationPoint.forward;
 			rb.AddForceAtPosition(VEC_SCx, drag.applicationPoint.position);
 		}
@@ -378,7 +376,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			aeroCoeffSemantic.SetRangeAndFormat(1.0f, 3.0f, "0.00", "", quantization:0.1f);
 
 			Telemetry.SemanticInfo aeroForceSemantic = new Telemetry.SemanticInfo();
-			aeroForceSemantic.SetRangeAndFormat(0.0f, 15000.0f, "0", " N", quantization:1000);
+			aeroForceSemantic.SetRangeAndFormat(0.0f, 20000.0f, "0", " N", quantization:1000);
 
 			Telemetry.SemanticInfo aeroAngleSemantic = new Telemetry.SemanticInfo();
 			aeroAngleSemantic.SetRangeAndFormat(-5.0f, 5.0f, "0.00", "°", quantization:1);
@@ -436,7 +434,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			values[index+5] = aero.downforceRear;
 			values[index+6] = aero.dragForce;
 
-			values[index+7] = aero.steerAngle;
+			values[index+7] = aero.steeringAngle;
 			values[index+8] = aero.yawAngle;
 			values[index+9] = aero.rollAngle;
 

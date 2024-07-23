@@ -80,7 +80,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		public void SetFrom (WheelColliderBehaviour wheelCol)
 			{
-			wheelCol.GetVisualSuspensionTransforms(out Transform wheelTransform, out Transform caliperTransform, out Transform suspensionTransform);
+			wheelCol.GetVisualTransforms(out Transform wheelTransform, out Transform caliperTransform, out Transform suspensionTransform);
 
 			if (suspensionTransform != null)
 				suspension.SetFrom(suspensionTransform);
@@ -94,7 +94,7 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 		public void ApplyTo (WheelColliderBehaviour wheelCol)
 			{
-			wheelCol.GetVisualSuspensionTransforms(out Transform wheelTransform, out Transform caliperTransform, out Transform suspensionTransform);
+			wheelCol.GetVisualTransforms(out Transform wheelTransform, out Transform caliperTransform, out Transform suspensionTransform);
 
 			if (suspensionTransform != null)
 				suspension.ApplyTo(suspensionTransform);
