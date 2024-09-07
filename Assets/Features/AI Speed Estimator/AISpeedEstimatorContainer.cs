@@ -30,12 +30,6 @@ namespace Perrinn424.AISpeedEstimatorSystem
             frequency.Reset();
         }
 
-        public override void OnDisableVehicle()
-        {
-            aiSpeedEstimator.Dispose();
-        }
-
-
         public override void FixedUpdateVehicle()
         {
             if (frequency.Update(Time.deltaTime))
@@ -70,6 +64,11 @@ namespace Perrinn424.AISpeedEstimatorSystem
             input.nWheelRL = channels.GetValue(7);
             input.nWheelRR = channels.GetValue(8);
             input.steeringAngle = channels.GetValue(9);
+        }
+
+        public override void OnDisableVehicle()
+        {
+            aiSpeedEstimator.Dispose();
         }
     } 
 }

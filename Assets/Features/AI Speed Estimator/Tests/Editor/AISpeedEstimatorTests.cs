@@ -10,17 +10,33 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
     [TestFixture]
     public class AISpeedEstimatorTests
     {
+
+        private AISpeedEstimator aISpeedEstimator;
+        private ModelAsset model;
+        private TelemetryLapAsset lap;
+
+        [OneTimeSetUp]
+        public void Init()
+        {
+            (model,  lap) = GetAssets();
+
+            Assert.That(model != null, Is.True);
+            Assert.That(lap != null, Is.True);
+            aISpeedEstimator = new AISpeedEstimator(model);
+        }
+
+        [OneTimeTearDown]
+        public void Cleanup()
+        {
+            aISpeedEstimator.Dispose();
+        }
+
+
         [Test]
         public void LapTest()
         {
-            (ModelAsset model, TelemetryLapAsset lap) = GetAssets();
-
-            Assert.That(model, Is.Not.Null);
-            Assert.That(lap, Is.Not.Null);
-
             Table table = lap.table;
 
-            using AISpeedEstimator aISpeedEstimator = new AISpeedEstimator(model);
             AISpeedEstimatorInput input = new AISpeedEstimatorInput();
 
             Stopwatch sw = Stopwatch.StartNew();
@@ -53,6 +69,29 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
 
 
             Assert.That(error, Is.LessThan(7f / 3.6f)); //avg error less than 7 km/h
+        }
+
+        [Test]
+        public void SpecificValuesTest()
+        {
+            AISpeedEstimatorInput input = new AISpeedEstimatorInput()
+            {
+                throttle = 100,
+                brake = 0,
+                accelerationLateral = 1.37576f,
+                accelerationLongitudinal = 0.8467f,
+                accelerationVertical = -0.04498f,
+                nWheelFL = 1785.489f,
+                nWheelFR = 1785.15f,
+                nWheelRL = 1788.021f,
+                nWheelRR = 1788.036f,
+                steeringAngle = 8.6219f
+            };
+
+            float expectedSpeed = 226.3568f / 3.6f;
+
+            float estimatedSpeed = aISpeedEstimator.Estimate(ref input);
+            Assert.That(estimatedSpeed, Is.EqualTo(expectedSpeed).Within(1f).Percent);
         }
 
         private static (ModelAsset model, TelemetryLapAsset lap) GetAssets()
