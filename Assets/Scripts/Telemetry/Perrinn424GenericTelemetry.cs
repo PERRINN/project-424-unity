@@ -24,13 +24,14 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxAngularAcceleration = 4000 * Mathf.Deg2Rad;
 		vehicle.telemetry.specs.maxWheelTorque = 3000;
 		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;
-		vehicle.telemetry.specs.maxSuspensionLoad = 2000.0f * Gravity.magnitude;
+		vehicle.telemetry.specs.maxWheelLoad = 2000.0f * Gravity.magnitude;
 		vehicle.telemetry.specs.maxTireForce = 30000.0f;
 		vehicle.telemetry.specs.maxEngineRpm = 2900.0f;
 		vehicle.telemetry.specs.maxEnginePowerKw = 600.0f;
 		vehicle.telemetry.specs.minEnginePowerKw = -300.0f;
 		vehicle.telemetry.specs.maxEngineTorque = 4400.0f;
 		vehicle.telemetry.specs.minEngineTorque = -4400.0f;
+		vehicle.telemetry.specs.maxWheelRpm = 2900.0f;
 
 		vehicle.telemetry.ApplySpecifications();
 
@@ -41,11 +42,11 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		Telemetry.SemanticInfo angularVelocitySemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.AngularVelocity];
 		angularVelocitySemantic.SetRange(-90.0f * Mathf.Deg2Rad, 90.0f * Mathf.Deg2Rad);
 
-		// Set weight in newtons (original) instead of kilograms (default)
+		// Set wheel load in newtons (original) instead of kilograms (default)
 
-		Telemetry.SemanticInfo weightSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.Weight];
-		weightSemantic.displayMultiplier = 1.0f;
-		weightSemantic.displayUnitsSuffix = " N";
+		Telemetry.SemanticInfo wheelLoadSemantic = vehicle.telemetry.semantics[(int)Telemetry.Semantic.WheelLoad];
+		wheelLoadSemantic.displayMultiplier = 1.0f;
+		wheelLoadSemantic.displayUnitsSuffix = " N";
 
 		// Steering angle
 
@@ -170,8 +171,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 			channelInfo[0].SetNameAndSemantic("TorqueDiffFront", Telemetry.Semantic.WheelTorque);
 			channelInfo[1].SetNameAndSemantic("TorqueDiffRear", Telemetry.Semantic.WheelTorque);
-			channelInfo[2].SetNameAndSemantic("SpeedDiffFront", Telemetry.Semantic.Speed);
-			channelInfo[3].SetNameAndSemantic("SpeedDiffRear", Telemetry.Semantic.Speed);
+			channelInfo[2].SetNameAndSemantic("RpmDiffFront", Telemetry.Semantic.WheelRpm);
+			channelInfo[3].SetNameAndSemantic("RpmDiffRear", Telemetry.Semantic.WheelRpm);
 			channelInfo[4].SetNameAndSemantic("TorqueFrictionFront", Telemetry.Semantic.WheelTorque);
 			channelInfo[5].SetNameAndSemantic("TorqueFrictionRear", Telemetry.Semantic.WheelTorque);
 			}
@@ -181,8 +182,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			{
 			values[index+0] = m_wheelFL.driveTorque - m_wheelFR.driveTorque;
 			values[index+1] = m_wheelRL.driveTorque - m_wheelRR.driveTorque;
-			values[index+2] = m_wheelFL.angularVelocity * m_wheelFL.wheelCol.radius - m_wheelFR.angularVelocity * m_wheelFR.wheelCol.radius;
-			values[index+3] = m_wheelRL.angularVelocity * m_wheelRL.wheelCol.radius - m_wheelRR.angularVelocity * m_wheelRR.wheelCol.radius;
+			values[index+2] = (m_wheelFL.angularVelocity - m_wheelFR.angularVelocity) * Block.WToRpm;
+			values[index+3] = (m_wheelRL.angularVelocity - m_wheelRR.angularVelocity) * Block.WToRpm;
 
 			int[] custom = m_vehicle.data.Get(Channel.Custom);
 			float frontTorqueFiction = custom[Perrinn424Data.FrontDiffFriction] / 1000.0f;
@@ -219,17 +220,12 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			m_wheelRL = m_vehicle.wheelState[m_vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Left)];
 			m_wheelRR = m_vehicle.wheelState[m_vehicle.GetWheelIndex(rearAxle, VehicleBase.WheelPos.Right)];
 
-			// Custom wheel RPM semantic
-
-			var wheelRpmSemantic = new Telemetry.SemanticInfo();
-			wheelRpmSemantic.SetRangeAndFormat(0, 2900, "0.", " rpm", quantization:200);
-
 			// Fill-in channel information. Naming is F1 style.
 
-			channelInfo[0].SetNameAndSemantic("nWheelFL", Telemetry.Semantic.Custom, wheelRpmSemantic);
-			channelInfo[1].SetNameAndSemantic("nWheelFR", Telemetry.Semantic.Custom, wheelRpmSemantic);
-			channelInfo[2].SetNameAndSemantic("nWheelRL", Telemetry.Semantic.Custom, wheelRpmSemantic);
-			channelInfo[3].SetNameAndSemantic("nWheelRR", Telemetry.Semantic.Custom, wheelRpmSemantic);
+			channelInfo[0].SetNameAndSemantic("nWheelFL", Telemetry.Semantic.WheelRpm);
+			channelInfo[1].SetNameAndSemantic("nWheelFR", Telemetry.Semantic.WheelRpm);
+			channelInfo[2].SetNameAndSemantic("nWheelRL", Telemetry.Semantic.WheelRpm);
+			channelInfo[3].SetNameAndSemantic("nWheelRR", Telemetry.Semantic.WheelRpm);
 
 			// Camber
 
@@ -247,10 +243,10 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+2] = m_wheelRL.angularVelocity * MathUtility.WToRpm;
 			values[index+3] = m_wheelRR.angularVelocity * MathUtility.WToRpm;
 
-			values[index+4] = m_wheelFL.grounded? -m_wheelFL.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
-			values[index+5] = m_wheelFR.grounded? m_wheelFR.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
-			values[index+6] = m_wheelRL.grounded? -m_wheelRL.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
-			values[index+7] = m_wheelRR.grounded? m_wheelRR.wheelContact.angle * Mathf.Rad2Deg : float.NaN;
+			values[index+4] = m_wheelFL.grounded? -m_wheelFL.wheelContact.camber * Mathf.Rad2Deg : float.NaN;
+			values[index+5] = m_wheelFR.grounded? m_wheelFR.wheelContact.camber * Mathf.Rad2Deg : float.NaN;
+			values[index+6] = m_wheelRL.grounded? -m_wheelRL.wheelContact.camber * Mathf.Rad2Deg : float.NaN;
+			values[index+7] = m_wheelRR.grounded? m_wheelRR.wheelContact.camber * Mathf.Rad2Deg : float.NaN;
 			}
 		}
 
@@ -292,7 +288,9 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+3] = custom[Perrinn424Data.RearRollAngle] / 1000.0f;
 			values[index+4] = custom[Perrinn424Data.GroundAngle] / 1000.0f;
 			values[index+5] = custom[Perrinn424Data.GroundSlope] / 1000.0f;
-			values[index+6] = custom[Perrinn424Data.UndersteerAngle] / 1000.0f;
+
+			int understeerAngle = custom[Perrinn424Data.UndersteerAngle];
+			values[index+6] = understeerAngle == -2147483648? float.NaN : understeerAngle / 1000.0f;
 			}
 		}
 

@@ -221,7 +221,7 @@ public class MotionSystemsPlatform : VehicleBehaviour
 
 		// Vehicle state
 
-		m_motionData.steer = (m_wheelFL.steerAngle + m_wheelFR.steerAngle) * 0.5f * Mathf.Deg2Rad;
+		m_motionData.steer = (m_wheelFL.steeringAngle + m_wheelFR.steeringAngle) * 0.5f * Mathf.Deg2Rad;
 		m_motionData.speed = vehicle.speed;
 
 		Vector3 angles = vehicle.cachedTransform.eulerAngles;

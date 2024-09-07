@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: Tire Radius
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Tire Radius
+    verticalRange: 9
+    channels:
+    - name: Speed
+      displayName: 
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 9
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: UnloadedRadiusFL
+      displayName: Unloaded Front Left
+      labelOffset: 13
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.497, g: 0.497, b: 0.27611113, a: 0.69803923}
+    - name: UnloadedRadiusFR
+      displayName: Unloaded Front Right
+      labelOffset: 12
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.25593603, g: 0.420608, b: 0.496, a: 0.69803923}
+    - name: UnloadedRadiusRL
+      displayName: Unloaded Rear Left
+      labelOffset: 11
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.39, g: 0.07878786, b: 0.07878786, a: 0.69803923}
+    - name: UnloadedRadiusRR
+      displayName: Unloaded Rear Right
+      labelOffset: 10
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.041125, g: 0.19779162, b: 0.376, a: 0.69803923}
+    - name: LoadedRadiusFL
+      displayName: Loaded Front Left
+      labelOffset: 3
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.5019608}
+    - name: LoadedRadiusFR
+      displayName: Loaded Front Right
+      labelOffset: 2
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.5019608}
+    - name: LoadedRadiusRL
+      displayName: Loaded Rear Left
+      labelOffset: 1
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.5019608}
+    - name: LoadedRadiusRR
+      displayName: Loaded Rear Right
+      labelOffset: 0
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.5019608}
+    - name: EffectiveRadiusFL
+      displayName: Effective Front Left
+      labelOffset: 8
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.98823535, g: 0.98823535, b: 0.54901963, a: 0.69803923}
+    - name: EffectiveRadiusFR
+      displayName: Effective Front Right
+      labelOffset: 7
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5058824, g: 0.8313726, b: 0.9803922, a: 0.69803923}
+    - name: EffectiveRadiusRL
+      displayName: Effective Rear Left
+      labelOffset: 6
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.77647066, g: 0.15686275, b: 0.15686275, a: 0.69803923}
+    - name: EffectiveRadiusRR
+      displayName: Effective Rear Right
+      labelOffset: 5
+      displayOrigin: 1
+      displayRange: 7
+      fitPositiveRange: 1
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.08235294, g: 0.39607847, b: 0.75294125, a: 0.69803923}

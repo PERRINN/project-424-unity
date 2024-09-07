@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2023 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -11,6 +11,8 @@
 //
 // Based on the Unity Wiki FloatingOrigin script by Peter Stirling
 // URL: http://wiki.unity3d.com/index.php/Floating_Origin
+//
+// EXECUTION ORDER: In VPP, this script must update AFTER the default FixedUpdate, or very bad things will happen!
 
 
 using UnityEngine;
@@ -47,7 +49,9 @@ public class FloatingOrigin : MonoBehaviour
 	private ParticleSystem.Particle[] m_particles = null;
 
 
-	void LateUpdate ()
+	// EXECUTION ORDER: Must update AFTER the default FixedUpdate.
+
+	void FixedUpdate ()
 		{
 		CheckTranslateOrigin();
 		}
@@ -72,7 +76,6 @@ public class FloatingOrigin : MonoBehaviour
 		{
 		MoveRootTransforms(offset);
 		NotifyVehicles(offset);
-		Physics.SyncTransforms();
 
 		if (UpdateParticles)
 			MoveParticles(offset);
