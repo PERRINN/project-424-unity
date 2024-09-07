@@ -12,7 +12,6 @@ namespace Perrinn424.AISpeedEstimatorSystem
 
         public ModelAsset modelAsset;
 
-        public float evaluateSpeed;
         public float Error { get; private set; }
 
         public float EstimatedSpeed { get; private set; }
@@ -20,10 +19,15 @@ namespace Perrinn424.AISpeedEstimatorSystem
         private AISpeedEstimator aiSpeedEstimator;
         private AISpeedEstimatorInput input;
 
+
+        [SerializeField]
+        private Frequency frequency;
+
         public override void OnEnableVehicle()
         {
             aiSpeedEstimator = new AISpeedEstimator(modelAsset);
             channels.Reset(vehicle);
+            frequency.Reset();
         }
 
         public override void OnDisableVehicle()
@@ -31,7 +35,30 @@ namespace Perrinn424.AISpeedEstimatorSystem
             aiSpeedEstimator.Dispose();
         }
 
-        private void Update()
+
+        public override void FixedUpdateVehicle()
+        {
+            if (frequency.Update(Time.deltaTime))
+            {
+                EstimateSpeed();
+            }
+        }
+
+        private void EstimateSpeed()
+        {
+            UpdateInput();
+            aiSpeedEstimator.Estimate(ref input);
+            SetEstimatedSpeed(aiSpeedEstimator.EstimatedSpeed);
+        }
+
+        private void SetEstimatedSpeed(float estimatedSpeed)
+        {
+            EstimatedSpeed = estimatedSpeed;
+            float speed = vehicle.speed;
+            Error = Mathf.Abs(speed - EstimatedSpeed);
+        }
+
+        private void UpdateInput()
         {
             input.throttle = channels.GetValue(0);
             input.brake = channels.GetValue(1);
@@ -43,10 +70,6 @@ namespace Perrinn424.AISpeedEstimatorSystem
             input.nWheelRL = channels.GetValue(7);
             input.nWheelRR = channels.GetValue(8);
             input.steeringAngle = channels.GetValue(9);
-
-            EstimatedSpeed = aiSpeedEstimator.Estimate(ref input);
-            float speed = vehicle.speed;
-            Error = Mathf.Abs(speed - EstimatedSpeed);
         }
     } 
 }
