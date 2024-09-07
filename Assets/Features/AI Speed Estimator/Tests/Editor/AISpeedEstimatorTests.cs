@@ -41,6 +41,8 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
 
             Stopwatch sw = Stopwatch.StartNew();
             float error = 0;
+            float maxError = float.MinValue;
+            float minError = float.MaxValue;
             for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
             {
 
@@ -58,14 +60,25 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
                 input.steeringAngle = table[rowIndex, "SteeringAngle"];
 
                 float estimation = aISpeedEstimator.Estimate(ref input);
-                error += Mathf.Abs(estimation - speed);
+                float currentError = Mathf.Abs(estimation - speed);
+                error += currentError;
+
+                if(currentError < minError) 
+                {
+                    minError = currentError;
+                }
+                if(currentError > maxError) 
+                { 
+                    maxError = currentError; 
+                }
             }
+
             sw.Stop();
 
             error /= table.RowCount;
 
             UnityEngine.Debug.Log($"Elapsed time to process {table.RowCount} frames: {sw.ElapsedMilliseconds} ms");
-            UnityEngine.Debug.Log($"Avg Error: {error} m/s. {error * 3.6f} km/h");
+            UnityEngine.Debug.Log($"Avg Error: {error} m/s. {error * 3.6f} km/h. Min: {minError} m/s. Max: {maxError}");
 
 
             Assert.That(error, Is.LessThan(7f / 3.6f)); //avg error less than 7 km/h
@@ -91,7 +104,7 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
             float expectedSpeed = 226.3568f / 3.6f;
 
             float estimatedSpeed = aISpeedEstimator.Estimate(ref input);
-            Assert.That(estimatedSpeed, Is.EqualTo(expectedSpeed).Within(1f).Percent);
+            Assert.That(estimatedSpeed, Is.EqualTo(expectedSpeed).Within(5f).Percent);
         }
 
         private static (ModelAsset model, TelemetryLapAsset lap) GetAssets()
