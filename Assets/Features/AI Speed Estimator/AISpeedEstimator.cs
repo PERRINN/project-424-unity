@@ -18,6 +18,11 @@ namespace Perrinn424.AISpeedEstimatorSystem
             values = new float[AISpeedEstimatorInput.count];
         }
 
+        /// <summary>
+        /// Estimate the speed in m/s
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public float Estimate(ref AISpeedEstimatorInput input)
         {
             UpdateValues(ref input);

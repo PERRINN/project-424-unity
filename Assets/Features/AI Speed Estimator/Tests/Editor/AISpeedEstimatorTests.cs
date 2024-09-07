@@ -1,13 +1,10 @@
 using NUnit.Framework;
-using Perrinn424.AutopilotSystem;
-using System;
 using Unity.Barracuda;
-using UnityEditor.Sprites;
 using UnityEditor;
+using Perrinn424.TelemetryLapSystem;
+using static VehiclePhysics.EnergyProvider;
+using Mirror;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using VehiclePhysics;
-using UnityEditor.SceneManagement;
 
 namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
 {
@@ -17,31 +14,63 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
         [Test]
         public void BasicTest()
         {
-            (NNModel model, RecordedLap lap) = GetAssets();
+            (NNModel model, TelemetryLapAsset lap) = GetAssets();
 
             Assert.That(model, Is.Not.Null);
             Assert.That(lap, Is.Not.Null);
-        }
 
-        private static (NNModel model, RecordedLap lap) GetAssets()
-        {
-            Scene mainScene = EditorSceneManager.OpenScene("Assets/Scenes/424 Nordschleife Scene.unity");
-            //SceneAsset mainScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Scenes/424 Nordschleife Scene.unity");
-            //mainScene.
-            //SceneAsset.FindAnyObjectByType<AISpeedEstimator>(mainScene)
-            //mainScene.FindAnyObjectByType<AISpeedEstimator>();
+            Table table = lap.table;
 
-            foreach (GameObject go in mainScene.GetRootGameObjects())
+            AISpeedEstimator aISpeedEstimator = new AISpeedEstimator(model);
+            AISpeedEstimatorInput input = new AISpeedEstimatorInput();
+
+            float error = 0;
+            for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
             {
-                if (go.GetComponent<VehicleBase>() is VehicleBase vehicle)
-                {
-                    AISpeedEstimatorContainer speedEstimator = vehicle.GetComponentInChildren<AISpeedEstimatorContainer>();
-                    Autopilot autopilot = vehicle.GetComponentInChildren<Autopilot>();
-                    return (speedEstimator.modelAsset, autopilot.recordedLap);
-                }
+
+                float speed = table[rowIndex, "Speed"]/3.6f; //kmh to m/s
+
+                input.throttle = table[rowIndex, "Throttle"];
+                input.brake = table[rowIndex, "Brake"];
+                input.accelerationLateral = table[rowIndex, "AccelerationLat"];
+                input.accelerationLongitudinal = table[rowIndex, "AccelerationLong"];
+                input.accelerationVertical = table[rowIndex, "AccelerationVert"];
+                input.nWheelFL = table[rowIndex, "nWheelFL"];
+                input.nWheelFR = table[rowIndex, "nWheelFR"];
+                input.nWheelRL = table[rowIndex, "nWheelRL"];
+                input.nWheelRR = table[rowIndex, "nWheelRR"];
+                input.steeringAngle = table[rowIndex, "SteeringAngle"];
+
+                float estimation = aISpeedEstimator.Estimate(ref input);
+                error += Mathf.Abs(estimation - speed);
             }
 
-            throw new InvalidOperationException("Assets not found in scene");
+            error /= table.RowCount;
+
+            Assert.That(error, Is.LessThan(5f / 3.6f)); //avg error less than 5 km/h
+        }
+
+        private static (NNModel model, TelemetryLapAsset lap) GetAssets()
+        {
+            var path = GetPluginPath();
+
+            TelemetryLapAsset telemetry = GetAssetFromPath<TelemetryLapAsset>(path);
+            NNModel model = GetAssetFromPath<NNModel>(path);
+
+            return (model, telemetry);
+        }
+
+        private static T GetAssetFromPath<T>(string path) where T : UnityEngine.Object
+        {
+            var guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new[] { path });
+            return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guids[0]));
+        }
+
+        private static string GetPluginPath()
+        {
+            string fileName = new System.Diagnostics.StackTrace(true).GetFrame(0).GetFileName();
+            string rootPath = System.IO.Path.GetDirectoryName(fileName);
+            return rootPath.Substring(rootPath.IndexOf("Assets"));
         }
     } 
 }
