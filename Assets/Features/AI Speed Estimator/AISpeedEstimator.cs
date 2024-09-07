@@ -8,7 +8,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
     {
         private readonly Model runtimeModel;
         private readonly IWorker engine;
-        private float[] values;
+        private readonly TensorFloat tensorInput;
 
         private float evaluateSpeed;
         public float EstimatedSpeed { get; private set; }
@@ -17,7 +17,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
         {
             runtimeModel = ModelLoader.Load(modelAsset);
             engine = WorkerFactory.CreateWorker(BackendType.CPU, runtimeModel);
-            values = new float[AISpeedEstimatorInput.count];
+            tensorInput = TensorFloat.Zeros(new TensorShape(1, AISpeedEstimatorInput.count));
 
         }
 
@@ -29,23 +29,14 @@ namespace Perrinn424.AISpeedEstimatorSystem
         public float Estimate(ref AISpeedEstimatorInput input)
         {
             UpdateValues(ref input);
-            // Create a tensor for input data
-            using TensorFloat tensorInput = new TensorFloat(new TensorShape(1, 10), values);  // Ensure TensorShape matches your input dimensions
 
-            // Execute the model with the input tensor
             engine.Execute(tensorInput);
 
-            // Get the output tensor
-            //TensorFloat tensorOutput = worker.PeekOutput() as TensorFloat;
-
             TensorFloat tensorOutput = engine.PeekOutput() as TensorFloat;
-            //UnityEngine.Debug.Log(tensorOutput.ToReadOnlyArray());
 
-            // Read the first value in the output (assuming it’s the speed)
             evaluateSpeed = tensorOutput.ToReadOnlyArray()[0];  // First value of the output tensor
             EstimatedSpeed = evaluateSpeed / 3.6f;  // Convert from km/h to m/s
 
-            tensorInput.Dispose();
             tensorOutput.Dispose();
 
             return EstimatedSpeed;
@@ -53,20 +44,21 @@ namespace Perrinn424.AISpeedEstimatorSystem
 
         private void UpdateValues(ref AISpeedEstimatorInput input) 
         {
-            values[0] = input.throttle;
-            values[1] = input.brake;
-            values[2] = input.accelerationLateral;
-            values[3] = input.accelerationLongitudinal;
-            values[4] = input.accelerationVertical;
-            values[5] = input.nWheelFL;
-            values[6] = input.nWheelFR;
-            values[7] = input.nWheelRL;
-            values[8] = input.nWheelRR;
-            values[9] = input.steeringAngle;
+            tensorInput[0] = input.throttle;
+            tensorInput[1] = input.brake;
+            tensorInput[2] = input.accelerationLateral;
+            tensorInput[3] = input.accelerationLongitudinal;
+            tensorInput[4] = input.accelerationVertical;
+            tensorInput[5] = input.nWheelFL;
+            tensorInput[6] = input.nWheelFR;
+            tensorInput[7] = input.nWheelRL;
+            tensorInput[8] = input.nWheelRR;
+            tensorInput[9] = input.steeringAngle;
     }
 
         public void Dispose()
         {
+            tensorInput.Dispose();
             engine.Dispose();
         }
     } 
