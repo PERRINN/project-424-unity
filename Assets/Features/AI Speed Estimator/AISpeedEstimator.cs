@@ -24,8 +24,8 @@ namespace Perrinn424.AISpeedEstimatorSystem
             Tensor tensorInput = new Tensor(1, 1, 1, 10, values);
             worker.Execute(tensorInput);
             Tensor O = worker.PeekOutput();
-            evaluateSpeed = O[0, 0, 0, 0];
-            EstimatedSpeed = evaluateSpeed / 3.6f;
+            evaluateSpeed = O[0, 0, 0, 0]; //output. The model is in kmh
+            EstimatedSpeed = evaluateSpeed / 3.6f; //transform to m/s
             tensorInput.Dispose();
 
             return EstimatedSpeed;

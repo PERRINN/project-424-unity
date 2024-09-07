@@ -11,12 +11,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
         private Channels channels;
 
         public NNModel modelAsset;
-        //public Model runtimeModel;
-        //public IWorker worker;
 
-        //public float[] inputValues;
-
-        public float speed;
         public float evaluateSpeed;
         public float Error { get; private set; }
 
@@ -25,11 +20,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
         private AISpeedEstimator aiSpeedEstimator;
         private AISpeedEstimatorInput input;
 
-        //void Start()
-        //{
-        //    runtimeModel = ModelLoader.Load(modelAsset);
-        //    worker = WorkerFactory.CreateWorker(runtimeModel);
-        //}
+
 
         public override void OnEnableVehicle()
         {
@@ -37,16 +28,10 @@ namespace Perrinn424.AISpeedEstimatorSystem
 
             channels.Reset(vehicle);
 
-            //inputValues = new float[10];
         }
 
         private void Update()
         {
-            //    for (int i = 0; i < channels.Length; i++)
-            //    {
-            //        inputValues[i] = channels.GetValue(i);
-            //    }
-
             input.throttle = channels.GetValue(0);
             input.brake = channels.GetValue(1);
             input.accelerationLateral = channels.GetValue(2);
@@ -59,18 +44,8 @@ namespace Perrinn424.AISpeedEstimatorSystem
             input.steeringAngle = channels.GetValue(9);
 
             EstimatedSpeed = aiSpeedEstimator.Estimate(ref input);
-            speed = vehicle.speed;
+            float speed = vehicle.speed;
             Error = Mathf.Abs(speed - EstimatedSpeed);
-
-
-            //Tensor input = new Tensor(1, 1, 1, 10, inputValues);
-            //worker.Execute(input);
-            //Tensor O = worker.PeekOutput();
-            //evaluateSpeed = O[0, 0, 0, 0];
-            //EstimatedSpeed = evaluateSpeed / 3.6f;
-            //speed = vehicle.speed;
-            //Error = Mathf.Abs(speed - EstimatedSpeed);
-            //input.Dispose();
         }
     } 
 }
