@@ -7,7 +7,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
     public class AISpeedEstimator : IDisposable
     {
         private readonly Model runtimeModel;
-        private readonly IWorker worker;
+        private readonly IWorker engine;
         private float[] values;
 
         private float evaluateSpeed;
@@ -16,8 +16,9 @@ namespace Perrinn424.AISpeedEstimatorSystem
         public AISpeedEstimator(ModelAsset modelAsset)
         {
             runtimeModel = ModelLoader.Load(modelAsset);
-            worker = WorkerFactory.CreateWorker(BackendType.CPU, runtimeModel);
+            engine = WorkerFactory.CreateWorker(BackendType.CPU, runtimeModel);
             values = new float[AISpeedEstimatorInput.count];
+
         }
 
         /// <summary>
@@ -29,15 +30,15 @@ namespace Perrinn424.AISpeedEstimatorSystem
         {
             UpdateValues(ref input);
             // Create a tensor for input data
-            TensorFloat tensorInput = new TensorFloat(new TensorShape(1, 10), values);  // Ensure TensorShape matches your input dimensions
+            using TensorFloat tensorInput = new TensorFloat(new TensorShape(1, 10), values);  // Ensure TensorShape matches your input dimensions
 
             // Execute the model with the input tensor
-            worker.Execute(tensorInput);
+            engine.Execute(tensorInput);
 
             // Get the output tensor
             //TensorFloat tensorOutput = worker.PeekOutput() as TensorFloat;
 
-            TensorFloat tensorOutput = worker.PeekOutput() as TensorFloat;
+            TensorFloat tensorOutput = engine.PeekOutput() as TensorFloat;
             //UnityEngine.Debug.Log(tensorOutput.ToReadOnlyArray());
 
             // Read the first value in the output (assuming it’s the speed)
@@ -66,7 +67,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
 
         public void Dispose()
         {
-            worker.Dispose();
+            engine.Dispose();
         }
     } 
 }
