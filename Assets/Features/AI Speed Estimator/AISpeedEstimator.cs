@@ -18,7 +18,6 @@ namespace Perrinn424.AISpeedEstimatorSystem
             runtimeModel = ModelLoader.Load(modelAsset);
             engine = WorkerFactory.CreateWorker(BackendType.CPU, runtimeModel);
             tensorInput = TensorFloat.Zeros(new TensorShape(1, AISpeedEstimatorInput.count));
-
         }
 
         /// <summary>
@@ -34,7 +33,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
 
             TensorFloat tensorOutput = engine.PeekOutput() as TensorFloat;
 
-            evaluateSpeed = tensorOutput.ToReadOnlyArray()[0];  // First value of the output tensor
+            evaluateSpeed = tensorOutput[0];  // First value of the output tensor
             EstimatedSpeed = evaluateSpeed / 3.6f;  // Convert from km/h to m/s
 
             tensorOutput.Dispose();
