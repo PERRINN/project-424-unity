@@ -1,5 +1,5 @@
 using Perrinn424.TelemetryLapSystem;
-using Unity.Barracuda;
+using Unity.Sentis;
 using UnityEngine;
 using VehiclePhysics;
 
@@ -10,7 +10,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
         [SerializeField]
         private Channels channels;
 
-        public NNModel modelAsset;
+        public ModelAsset modelAsset;
 
         public float evaluateSpeed;
         public float Error { get; private set; }
@@ -20,14 +20,10 @@ namespace Perrinn424.AISpeedEstimatorSystem
         private AISpeedEstimator aiSpeedEstimator;
         private AISpeedEstimatorInput input;
 
-
-
         public override void OnEnableVehicle()
         {
             aiSpeedEstimator = new AISpeedEstimator(modelAsset);
-
             channels.Reset(vehicle);
-
         }
 
         private void Update()

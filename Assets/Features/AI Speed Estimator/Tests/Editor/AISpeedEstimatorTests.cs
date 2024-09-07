@@ -1,11 +1,9 @@
 using NUnit.Framework;
-using Unity.Barracuda;
 using UnityEditor;
 using Perrinn424.TelemetryLapSystem;
-using static VehiclePhysics.EnergyProvider;
-using Mirror;
 using UnityEngine;
 using System.Diagnostics;
+using Unity.Sentis;
 
 namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
 {
@@ -15,7 +13,7 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
         [Test]
         public void LapTest()
         {
-            (NNModel model, TelemetryLapAsset lap) = GetAssets();
+            (ModelAsset model, TelemetryLapAsset lap) = GetAssets();
 
             Assert.That(model, Is.Not.Null);
             Assert.That(lap, Is.Not.Null);
@@ -57,12 +55,12 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
             Assert.That(error, Is.LessThan(7f / 3.6f)); //avg error less than 7 km/h
         }
 
-        private static (NNModel model, TelemetryLapAsset lap) GetAssets()
+        private static (ModelAsset model, TelemetryLapAsset lap) GetAssets()
         {
             var path = GetPluginPath();
 
             TelemetryLapAsset telemetry = GetAssetFromPath<TelemetryLapAsset>(path);
-            NNModel model = GetAssetFromPath<NNModel>(path);
+            ModelAsset model = GetAssetFromPath<ModelAsset>(path);
 
             return (model, telemetry);
         }

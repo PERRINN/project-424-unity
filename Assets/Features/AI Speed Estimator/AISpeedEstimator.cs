@@ -1,4 +1,5 @@
-using Unity.Barracuda;
+
+using Unity.Sentis;
 
 namespace Perrinn424.AISpeedEstimatorSystem
 {
@@ -11,10 +12,10 @@ namespace Perrinn424.AISpeedEstimatorSystem
         private float evaluateSpeed;
         public float EstimatedSpeed { get; private set; }
 
-        public AISpeedEstimator(NNModel modelAsset)
+        public AISpeedEstimator(ModelAsset modelAsset)
         {
             runtimeModel = ModelLoader.Load(modelAsset);
-            worker = WorkerFactory.CreateWorker(runtimeModel);
+            worker = WorkerFactory.CreateWorker(BackendType.CPU, runtimeModel);
             values = new float[AISpeedEstimatorInput.count];
         }
 
@@ -26,12 +27,24 @@ namespace Perrinn424.AISpeedEstimatorSystem
         public float Estimate(ref AISpeedEstimatorInput input)
         {
             UpdateValues(ref input);
-            Tensor tensorInput = new Tensor(1, 1, 1, 10, values);
+            // Create a tensor for input data
+            TensorFloat tensorInput = new TensorFloat(new TensorShape(1, 10), values);  // Ensure TensorShape matches your input dimensions
+
+            // Execute the model with the input tensor
             worker.Execute(tensorInput);
-            Tensor O = worker.PeekOutput();
-            evaluateSpeed = O[0, 0, 0, 0]; //output. The model is in kmh
-            EstimatedSpeed = evaluateSpeed / 3.6f; //transform to m/s
+
+            // Get the output tensor
+            //TensorFloat tensorOutput = worker.PeekOutput() as TensorFloat;
+
+            TensorFloat tensorOutput = worker.PeekOutput() as TensorFloat;
+            //UnityEngine.Debug.Log(tensorOutput.ToReadOnlyArray());
+
+            // Read the first value in the output (assuming it’s the speed)
+            evaluateSpeed = tensorOutput.ToReadOnlyArray()[0];  // First value of the output tensor
+            EstimatedSpeed = evaluateSpeed / 3.6f;  // Convert from km/h to m/s
+
             tensorInput.Dispose();
+            tensorOutput.Dispose();
 
             return EstimatedSpeed;
         }
