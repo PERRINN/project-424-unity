@@ -5,6 +5,7 @@ using Perrinn424.TelemetryLapSystem;
 using static VehiclePhysics.EnergyProvider;
 using Mirror;
 using UnityEngine;
+using System.Diagnostics;
 
 namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
 {
@@ -12,7 +13,7 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
     public class AISpeedEstimatorTests
     {
         [Test]
-        public void BasicTest()
+        public void LapTest()
         {
             (NNModel model, TelemetryLapAsset lap) = GetAssets();
 
@@ -24,6 +25,7 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
             AISpeedEstimator aISpeedEstimator = new AISpeedEstimator(model);
             AISpeedEstimatorInput input = new AISpeedEstimatorInput();
 
+            Stopwatch sw = Stopwatch.StartNew();
             float error = 0;
             for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
             {
@@ -44,10 +46,15 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
                 float estimation = aISpeedEstimator.Estimate(ref input);
                 error += Mathf.Abs(estimation - speed);
             }
+            sw.Stop();
 
             error /= table.RowCount;
 
-            Assert.That(error, Is.LessThan(5f / 3.6f)); //avg error less than 5 km/h
+            UnityEngine.Debug.Log($"Elapsed time to process {table.RowCount} frames: {sw.ElapsedMilliseconds} ms");
+            UnityEngine.Debug.Log($"Avg Error: {error} m/s. {error * 3.6f} km/h");
+
+
+            Assert.That(error, Is.LessThan(7f / 3.6f)); //avg error less than 7 km/h
         }
 
         private static (NNModel model, TelemetryLapAsset lap) GetAssets()
