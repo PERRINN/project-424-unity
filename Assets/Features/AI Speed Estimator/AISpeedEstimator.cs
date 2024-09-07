@@ -1,52 +1,48 @@
-using Perrinn424.TelemetryLapSystem;
 using Unity.Barracuda;
-using UnityEngine;
-using VehiclePhysics;
 
-public class AISpeedEstimator : VehicleBehaviour
+namespace Perrinn424.AISpeedEstimatorSystem
 {
-    [SerializeField]
-    private Channels channels;
-
-    public NNModel modelAsset;
-    public Model runtimeModel;
-    public IWorker worker;
-
-    public float[] inputValues;
-
-    public float speed;
-    public float evaluateSpeed;
-    public float Error { get; private set; }
-
-    public float EstimatedSpeed { get; private set; }
-
-    void Start()
+    public class AISpeedEstimator
     {
-        runtimeModel = ModelLoader.Load(modelAsset);
-        worker = WorkerFactory.CreateWorker(runtimeModel);
-    }
+        private readonly Model runtimeModel;
+        private readonly IWorker worker;
+        private float[] values;
 
-    public override void OnEnableVehicle()
-    {
-        channels.Reset(vehicle);
+        private float evaluateSpeed;
+        public float EstimatedSpeed { get; private set; }
 
-        inputValues = new float[10];
-    }
-
-    private void Update()
-    {
-        for (int i = 0; i < channels.Length; i++)
+        public AISpeedEstimator(NNModel modelAsset)
         {
-            inputValues[i] = channels.GetValue(i);
+            runtimeModel = ModelLoader.Load(modelAsset);
+            worker = WorkerFactory.CreateWorker(runtimeModel);
+            values = new float[AISpeedEstimatorInput.count];
         }
 
-        Tensor input = new Tensor(1, 1, 1, 10, inputValues);
-        worker.Execute(input);
-        Tensor O = worker.PeekOutput();
-        evaluateSpeed = O[0, 0, 0, 0];
-        EstimatedSpeed = evaluateSpeed/3.6f;
-        speed = vehicle.speed;
-        Error = Mathf.Abs(speed - EstimatedSpeed);
-        input.Dispose();
+        public float Estimate(ref AISpeedEstimatorInput input)
+        {
+            UpdateValues(ref input);
+            Tensor tensorInput = new Tensor(1, 1, 1, 10, values);
+            worker.Execute(tensorInput);
+            Tensor O = worker.PeekOutput();
+            evaluateSpeed = O[0, 0, 0, 0];
+            EstimatedSpeed = evaluateSpeed / 3.6f;
+            tensorInput.Dispose();
+
+            return EstimatedSpeed;
+        }
+
+        private void UpdateValues(ref AISpeedEstimatorInput input) 
+        {
+            values[0] = input.throttle;
+            values[1] = input.brake;
+            values[2] = input.accelerationLateral;
+            values[3] = input.accelerationLongitudinal;
+            values[4] = input.accelerationVertical;
+            values[5] = input.nWheelFL;
+            values[6] = input.nWheelFR;
+            values[7] = input.nWheelRL;
+            values[8] = input.nWheelRR;
+            values[9] = input.steeringAngle;
     }
+    } 
 }
