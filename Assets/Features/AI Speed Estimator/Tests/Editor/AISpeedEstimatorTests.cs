@@ -20,7 +20,7 @@ namespace Perrinn424.AISpeedEstimatorSystem.Editor.Tests
 
             Table table = lap.table;
 
-            AISpeedEstimator aISpeedEstimator = new AISpeedEstimator(model);
+            using AISpeedEstimator aISpeedEstimator = new AISpeedEstimator(model);
             AISpeedEstimatorInput input = new AISpeedEstimatorInput();
 
             Stopwatch sw = Stopwatch.StartNew();

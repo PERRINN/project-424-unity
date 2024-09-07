@@ -26,6 +26,11 @@ namespace Perrinn424.AISpeedEstimatorSystem
             channels.Reset(vehicle);
         }
 
+        public override void OnDisableVehicle()
+        {
+            aiSpeedEstimator.Dispose();
+        }
+
         private void Update()
         {
             input.throttle = channels.GetValue(0);

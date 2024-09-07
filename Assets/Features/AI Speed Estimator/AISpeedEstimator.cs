@@ -1,9 +1,10 @@
 
+using System;
 using Unity.Sentis;
 
 namespace Perrinn424.AISpeedEstimatorSystem
 {
-    public class AISpeedEstimator
+    public class AISpeedEstimator : IDisposable
     {
         private readonly Model runtimeModel;
         private readonly IWorker worker;
@@ -62,5 +63,10 @@ namespace Perrinn424.AISpeedEstimatorSystem
             values[8] = input.nWheelRR;
             values[9] = input.steeringAngle;
     }
+
+        public void Dispose()
+        {
+            worker.Dispose();
+        }
     } 
 }
