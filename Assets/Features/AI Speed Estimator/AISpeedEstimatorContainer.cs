@@ -42,7 +42,6 @@ namespace Perrinn424.AISpeedEstimatorSystem
 
         public override void FixedUpdateVehicle()
         {
-            //EstimatedLapDistance = 12f;
             EstimatedLapDistance += EstimatedSpeed * Time.deltaTime;
 
             if (frequency.Update(Time.deltaTime))

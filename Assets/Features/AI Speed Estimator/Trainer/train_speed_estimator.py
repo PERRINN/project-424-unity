@@ -22,10 +22,10 @@ speed_model = tf.keras.Sequential([
 
 
 speed_model.compile(loss = tf.keras.losses.MeanSquaredError(),
-                      optimizer = tf.keras.optimizers.Adam(learning_rate = 0.0001))
+                      optimizer = tf.keras.optimizers.Adam())
 
 print("\nTraining the model");
-speed_model.fit(inputs, output, batch_size = 256, epochs=20000, validation_split=0.2)
+speed_model.fit(inputs, output, batch_size = 256, epochs=1000, validation_split=0.2)
 
 # Evaluate the model
 print("\nEvaluating on test data")
