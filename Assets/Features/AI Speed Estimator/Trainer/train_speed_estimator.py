@@ -16,17 +16,16 @@ output = csv['Speed']
 
 print("\nCreating the model");
 speed_model = tf.keras.Sequential([
-    layers.Dense(64, activation='relu'),
-    layers.Dense(32, activation='relu'),
+    layers.Dense(12, activation='relu'),
     layers.Dense(1)
 ])
 
 
 speed_model.compile(loss = tf.keras.losses.MeanSquaredError(),
-                      optimizer = tf.keras.optimizers.Adam())
+                      optimizer = tf.keras.optimizers.Adam(learning_rate = 0.0001))
 
 print("\nTraining the model");
-speed_model.fit(inputs, output, epochs=10)
+speed_model.fit(inputs, output, batch_size = 256, epochs=20000, validation_split=0.2)
 
 # Evaluate the model
 print("\nEvaluating on test data")
