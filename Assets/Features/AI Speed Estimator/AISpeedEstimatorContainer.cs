@@ -1,12 +1,17 @@
 using Perrinn424.TelemetryLapSystem;
+using System;
 using Unity.Sentis;
 using UnityEngine;
 using VehiclePhysics;
+using VehiclePhysics.Timing;
 
 namespace Perrinn424.AISpeedEstimatorSystem
 {
     public class AISpeedEstimatorContainer : VehicleBehaviour
     {
+        [SerializeField]
+        private LapTimer lapTimer;
+
         [SerializeField]
         private Channels channels;
 
@@ -23,15 +28,23 @@ namespace Perrinn424.AISpeedEstimatorSystem
         [SerializeField]
         private Frequency frequency;
 
+        public float EstimatedLapDistance { get; private set; }
+
         public override void OnEnableVehicle()
         {
             aiSpeedEstimator = new AISpeedEstimator(modelAsset);
             channels.Reset(vehicle);
             frequency.Reset();
+
+            lapTimer.onBeginLap += LapBeginEventHandler;
+
         }
 
         public override void FixedUpdateVehicle()
         {
+            //EstimatedLapDistance = 12f;
+            EstimatedLapDistance += EstimatedSpeed * Time.deltaTime;
+
             if (frequency.Update(Time.deltaTime))
             {
                 EstimateSpeed();
@@ -69,6 +82,13 @@ namespace Perrinn424.AISpeedEstimatorSystem
         public override void OnDisableVehicle()
         {
             aiSpeedEstimator.Dispose();
+            lapTimer.onBeginLap -= LapBeginEventHandler;
+
+        }
+
+        private void LapBeginEventHandler()
+        {
+            EstimatedLapDistance = 0;
         }
     } 
 }
