@@ -144,5 +144,18 @@ namespace Perrinn424.TelemetryLapSystem
         {
             channelsIndex[channelIndex] = telemetryChannelIndex;
         }
+
+        public bool AreAllChannelsValid()
+        {
+            foreach(var channelIndex in channelsIndex) 
+            {
+                if (channelIndex == channelNotFoundIndex)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

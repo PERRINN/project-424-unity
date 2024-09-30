@@ -2,6 +2,7 @@ using Perrinn424.TelemetryLapSystem;
 using System;
 using Unity.Sentis;
 using UnityEngine;
+using UnityEngine.Assertions;
 using VehiclePhysics;
 using VehiclePhysics.Timing;
 
@@ -33,11 +34,15 @@ namespace Perrinn424.AISpeedEstimatorSystem
         public override void OnEnableVehicle()
         {
             aiSpeedEstimator = new AISpeedEstimator(modelAsset);
-            channels.Reset(vehicle);
             frequency.Reset();
 
             lapTimer.onBeginLap += LapBeginEventHandler;
+        }
 
+        private void Start()
+        {
+            channels.Reset(vehicle);
+            Assert.IsTrue(channels.AreAllChannelsValid());
         }
 
         public override void FixedUpdateVehicle()
