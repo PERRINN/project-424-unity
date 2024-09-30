@@ -42,7 +42,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
         private void Start()
         {
             channels.Reset(vehicle);
-            Assert.IsTrue(channels.AreAllChannelsValid());
+            Assert.IsTrue(channels.AreAllChannelsValid(), "AISpeedEstimatorContainer channels are not valid. Please check");
         }
 
         public override void FixedUpdateVehicle()
