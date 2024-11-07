@@ -32,7 +32,7 @@ public class SteeringFollowHeading : VehicleBehaviour
 		}
 
 
-	public override void UpdateVehicle ()
+	public override void FixedUpdateVehicle ()
 		{
 		float offset = 0.0f;
 
