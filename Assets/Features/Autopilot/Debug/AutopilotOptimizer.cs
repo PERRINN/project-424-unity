@@ -78,8 +78,10 @@ public class AutopilotOptimizer : VehicleBehaviour
 
     private void Reset()
     {
-        lapTimer = FindObjectOfType<LapTimer>();
         autopilot = this.GetComponent<Autopilot>();
+        if (autopilot == null)
+            return;
+
         lapsPerSample = 5;
         timeScale = 50;
         Sample s = new Sample
