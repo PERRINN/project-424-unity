@@ -465,10 +465,10 @@ public class VRCamera : MonoBehaviour
 			var inputDevices = new List<InputDevice>();
 			if (input.TryGetInputDevices(inputDevices))
 				{
-				// foreach (var device in inputDevices)
+				foreach (var device in inputDevices)
 					{
-					// if ((device.characteristics & InputDeviceCharacteristics.HeadMounted) != 0
-						// && (device.characteristics & InputDeviceCharacteristics.TrackedDevice) != 0)
+					if ((device.characteristics & InputDeviceCharacteristics.HeadMounted) != 0
+						&& (device.characteristics & InputDeviceCharacteristics.TrackedDevice) != 0)
 						{
 						// Based in the CameraOffset method of the XR legacy input helpers package.
 
