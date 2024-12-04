@@ -171,7 +171,6 @@ public class VRCamera : MonoBehaviour
 	// Public component API
 
 
-	[ContextMenu("Recenter HMD")]
 	public void Recenter ()
 		{
 		if (IsVRInitialized() && IsVRActive())
@@ -180,7 +179,7 @@ public class VRCamera : MonoBehaviour
 			if (hasPosition)
 				m_positionOffset = -position;
 			if (hasRotation)
-				m_rotationOffset = Quaternion.Inverse(rotation);
+				m_rotationOffset = ExtractVerticalRotation(Quaternion.Inverse(rotation));
 
 			if (saveRecenterPose)
 				SaveRecenterPose();
@@ -304,6 +303,16 @@ public class VRCamera : MonoBehaviour
 		}
 
 
+	static Quaternion ExtractVerticalRotation (Quaternion rotation)
+		{
+        Vector3 forward = rotation * Vector3.forward;
+        forward.y = 0.0f;
+        forward.Normalize();
+
+        return Quaternion.LookRotation(forward, Vector3.up);
+		}
+
+
 	//------------------------------------------------------------------------------------------------------
 	// Public static API
 	//------------------------------------------------------------------------------------------------------
@@ -326,7 +335,7 @@ public class VRCamera : MonoBehaviour
 		#if XR_MANAGER
 		XRGeneralSettings.Instance.Manager.InitializeLoaderSync();
 		if (XRSettings.enabled)
- 			XRGeneralSettings.Instance.Manager.StartSubsystems();
+			XRGeneralSettings.Instance.Manager.StartSubsystems();
 		#endif
 		}
 
@@ -334,7 +343,7 @@ public class VRCamera : MonoBehaviour
 	public static void StopAndReleaseVR ()
 		{
 		#if XR_MANAGER
- 		XRGeneralSettings.Instance.Manager.StopSubsystems();
+		XRGeneralSettings.Instance.Manager.StopSubsystems();
 		XRGeneralSettings.Instance.Manager.DeinitializeLoader();
 		#endif
 		}
@@ -456,10 +465,10 @@ public class VRCamera : MonoBehaviour
 			var inputDevices = new List<InputDevice>();
 			if (input.TryGetInputDevices(inputDevices))
 				{
-				foreach (var device in inputDevices)
+				// foreach (var device in inputDevices)
 					{
-					if ((device.characteristics & InputDeviceCharacteristics.HeadMounted) != 0
-						&& (device.characteristics & InputDeviceCharacteristics.TrackedDevice) != 0)
+					// if ((device.characteristics & InputDeviceCharacteristics.HeadMounted) != 0
+						// && (device.characteristics & InputDeviceCharacteristics.TrackedDevice) != 0)
 						{
 						// Based in the CameraOffset method of the XR legacy input helpers package.
 
@@ -497,6 +506,9 @@ public class VRCamera : MonoBehaviour
 
 	[ContextMenu("Stop VR")]
 	public void StopVRMenu () => StopVR();
+
+	[ContextMenu("Recenter HMD")]
+	public void RecenterHMDMenu () => RecenterHMD();
 	}
 
 }
