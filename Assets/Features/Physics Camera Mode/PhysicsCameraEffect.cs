@@ -53,7 +53,7 @@ public class PhysicsCameraEffect : VehicleBehaviour
 		Quaternion roll = Quaternion.AngleAxis(rollAngle, Vector3.forward);
 		Quaternion pitch = Quaternion.AngleAxis(pitchAngle, Vector3.right);
 		Quaternion yaw = Quaternion.AngleAxis(yawAngle, Vector3.up);
-		Quaternion rotation = roll * pitch * yaw * baseRotation;
+		Quaternion rotation = baseRotation * roll * pitch * yaw;
 
 		transform.position = m_vehicleRb.worldCenterOfMass + rotation * m_camOffset;
 		transform.rotation = Quaternion.LookRotation(rotation * m_camForward, rotation * m_camUp);
