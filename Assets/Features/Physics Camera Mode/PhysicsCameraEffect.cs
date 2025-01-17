@@ -10,11 +10,11 @@ namespace Perrinn424.CameraSystem
 
 public class PhysicsCameraEffect : VehicleBehaviour
 	{
-	[Range(-180,180)]
+	[Range(-30,30)]
 	public float rollAngle = 0.0f;
-	[Range(-180,180)]
+	[Range(-30,30)]
 	public float pitchAngle = 0.0f;
-	[Range(-180,180)]
+	[Range(-30,30)]
 	public float yawAngle = 0.0f;
 
 
@@ -49,12 +49,12 @@ public class PhysicsCameraEffect : VehicleBehaviour
 
 	void LateUpdate ()
 		{
+		Vector3 basePosition = m_baseTransform.TransformPoint(m_vehicleRb.centerOfMass);
 		Quaternion baseRotation = m_baseTransform.rotation;
 		Quaternion roll = Quaternion.AngleAxis(rollAngle, Vector3.forward);
 		Quaternion pitch = Quaternion.AngleAxis(pitchAngle, Vector3.right);
 		Quaternion yaw = Quaternion.AngleAxis(yawAngle, Vector3.up);
 		Quaternion rotation = baseRotation * roll * pitch * yaw;
-		Vector3 basePosition = m_baseTransform.TransformPoint(m_vehicleRb.centerOfMass);
 
 		transform.position = basePosition + rotation * m_camOffset;
 		transform.rotation = Quaternion.LookRotation(rotation * m_camForward, rotation * m_camUp);
