@@ -17,9 +17,9 @@ public class PhysicsCameraEffect : VehicleBehaviour
 	[Range(-180,180)]
 	public float yawAngle = 0.0f;
 
+
 	Vector3 m_originalLocalPosition;
 	Quaternion m_originalLocalRotation;
-
 
 	Rigidbody m_vehicleRb;
 	Transform m_baseTransform;
@@ -50,17 +50,13 @@ public class PhysicsCameraEffect : VehicleBehaviour
 	void LateUpdate ()
 		{
 		Quaternion baseRotation = m_baseTransform.rotation;
-		Quaternion roll = baseRotation * Quaternion.AngleAxis(rollAngle, Vector3.forward);
-		Quaternion pitch = baseRotation * Quaternion.AngleAxis(pitchAngle, Vector3.right);
-		Quaternion yaw = baseRotation * Quaternion.AngleAxis(yawAngle, Vector3.up);
+		Quaternion roll = Quaternion.AngleAxis(rollAngle, Vector3.forward);
+		Quaternion pitch = Quaternion.AngleAxis(pitchAngle, Vector3.right);
+		Quaternion yaw = Quaternion.AngleAxis(yawAngle, Vector3.up);
+		Quaternion rotation = roll * pitch * yaw * baseRotation;
 
-		// transform.position = m_vehicleRb.worldCenterOfMass + roll * m_camOffset;
-		// transform.position = m_vehicleRb.worldCenterOfMass + yaw * m_camOffset;
-		transform.position = m_vehicleRb.worldCenterOfMass + pitch * m_camOffset;
-
-		// transform.rotation = Quaternion.LookRotation(roll * m_camForward, roll * m_camUp);
-		// transform.rotation = Quaternion.LookRotation(yaw * m_camForward, yaw * m_camUp);
-		transform.rotation = Quaternion.LookRotation(pitch * m_camForward, pitch * m_camUp);
+		transform.position = m_vehicleRb.worldCenterOfMass + rotation * m_camOffset;
+		transform.rotation = Quaternion.LookRotation(rotation * m_camForward, rotation * m_camUp);
 
 		DebugUtility.DrawCrossMark(transform.position, transform, GColor.red);
 		DebugUtility.DrawCrossMark(m_vehicleRb.worldCenterOfMass, m_baseTransform, GColor.white);
