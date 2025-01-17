@@ -54,14 +54,15 @@ public class PhysicsCameraEffect : VehicleBehaviour
 		Quaternion pitch = Quaternion.AngleAxis(pitchAngle, Vector3.right);
 		Quaternion yaw = Quaternion.AngleAxis(yawAngle, Vector3.up);
 		Quaternion rotation = baseRotation * roll * pitch * yaw;
+		Vector3 basePosition = m_baseTransform.TransformPoint(m_vehicleRb.centerOfMass);
 
-		transform.position = m_vehicleRb.worldCenterOfMass + rotation * m_camOffset;
+		transform.position = basePosition + rotation * m_camOffset;
 		transform.rotation = Quaternion.LookRotation(rotation * m_camForward, rotation * m_camUp);
 
 		DebugUtility.DrawCrossMark(transform.position, transform, GColor.red);
-		DebugUtility.DrawCrossMark(m_vehicleRb.worldCenterOfMass, m_baseTransform, GColor.white);
+		DebugUtility.DrawCrossMark(basePosition, m_baseTransform, GColor.white);
 		Debug.DrawLine(transform.position, transform.position + transform.forward, GColor.red);
-		Debug.DrawLine(m_vehicleRb.worldCenterOfMass, transform.position);
+		Debug.DrawLine(basePosition, transform.position);
 		}
 
 
