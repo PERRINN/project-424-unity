@@ -10,6 +10,10 @@ namespace Perrinn424.CameraSystem
 
 public class PhysicsCameraEffect : VehicleBehaviour
 	{
+	public bool roll = true;
+	public bool pitch = true;
+	public bool yaw = false;
+
 	[Range(-30,30)]
 	public float rollAngle = 0.0f;
 	[Range(-30,30)]
@@ -44,6 +48,39 @@ public class PhysicsCameraEffect : VehicleBehaviour
 		m_camOffset = m_baseTransform.InverseTransformPoint(transform.position) - m_vehicleRb.centerOfMass;
 		m_camForward = m_baseTransform.InverseTransformDirection(transform.forward);
 		m_camUp = m_baseTransform.InverseTransformDirection(transform.up);
+		}
+
+	public override void UpdateAfterFixedUpdate ()
+		{
+		int[] customData = vehicle.data.Get(Channel.Custom);
+
+		if (roll)
+			{
+			float fronRollAngle = customData[Perrinn424Data.FrontRollAngle] / 1000.0f;
+			float rearRollAngle = customData[Perrinn424Data.RearRollAngle] / 1000.0f;
+			rollAngle = -(fronRollAngle + rearRollAngle) / 2.0f;
+			}
+		else
+			{
+			rollAngle = 0.0f;
+			}
+
+		if (pitch)
+			{
+			float groundAngle = customData[Perrinn424Data.GroundAngle] / 1000.0f;
+			float pitch = vehicle.cachedTransform.rotation.eulerAngles.x;
+			if (pitch > 180) pitch -= 360;
+			pitchAngle = -(pitch + groundAngle);
+			}
+		else
+			{
+			pitchAngle = 0.0f;
+			}
+
+		if (yaw)
+			yawAngle = vehicle.speed > 1.0f ? vehicle.speedAngle : 0.0f;
+		else
+			yawAngle = 0.0f;
 		}
 
 

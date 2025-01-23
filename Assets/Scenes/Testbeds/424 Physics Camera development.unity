@@ -1112,23 +1112,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781649, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483877716263781649, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
       propertyPath: showDisplay
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781649, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: currentTemplate
-      value: 13
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781659, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781660, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: showWidget
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781661, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
@@ -1138,6 +1143,11 @@ PrefabInstance:
     - target: {fileID: 2483877716263781662, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: compactList
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483877716263781662, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: showChannelList
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2483877716263781662, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
@@ -1145,10 +1155,20 @@ PrefabInstance:
       propertyPath: listSettings.maxLines
       value: 18
       objectReference: {fileID: 0}
+    - target: {fileID: 2483877716263781662, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: listSettings.position.x
+      value: -8
+      objectReference: {fileID: 0}
     - target: {fileID: 4441876987297680215, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
       propertyPath: torqueMaps
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441876987297680215, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
+        type: 3}
+      propertyPath: groundTracking.rideHeightRange
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5836138189955798097, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
         type: 3}
@@ -1703,14 +1723,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6905166632995387959}
-  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 2, z: -4}
+  m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
+  m_LocalPosition: {x: 0, y: 1.8, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1428899532}
   m_RootOrder: 16
-  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!4 &6905166632995612195
 Transform:
   m_ObjectHideFlags: 0
@@ -1746,6 +1766,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ace643f9182d75648885d56be30de437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roll: 1
+  pitch: 1
+  yaw: 0
   rollAngle: 0
   pitchAngle: 0
   yawAngle: 0
