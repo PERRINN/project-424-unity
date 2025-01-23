@@ -1,7 +1,6 @@
 
 using UnityEngine;
 using VehiclePhysics;
-
 using EdyCommonTools;
 
 
@@ -10,16 +9,9 @@ namespace Perrinn424.CameraSystem
 
 public class PhysicsCameraEffect : VehicleBehaviour
 	{
-	public bool roll = true;
-	public bool pitch = true;
-	public bool yaw = false;
-
-	[Range(-30,30)]
-	public float rollAngle = 0.0f;
-	[Range(-30,30)]
-	public float pitchAngle = 0.0f;
-	[Range(-30,30)]
-	public float yawAngle = 0.0f;
+	public bool enableRoll = true;
+	public bool enablePitch = true;
+	public bool enableYaw = true;
 
 
 	Vector3 m_originalLocalPosition;
@@ -31,6 +23,10 @@ public class PhysicsCameraEffect : VehicleBehaviour
 	Vector3 m_camOffset;
 	Vector3 m_camForward;
 	Vector3 m_camUp;
+
+	InterpolatedFloat m_rollAngle = new InterpolatedFloat();
+	InterpolatedFloat m_pitchAngle = new InterpolatedFloat();
+	InterpolatedFloat m_yawAngle = new InterpolatedFloat();
 
 
 	public override void OnEnableVehicle ()
@@ -50,47 +46,50 @@ public class PhysicsCameraEffect : VehicleBehaviour
 		m_camUp = m_baseTransform.InverseTransformDirection(transform.up);
 		}
 
-	public override void UpdateAfterFixedUpdate ()
+
+	public override void FixedUpdateVehicle ()
 		{
 		int[] customData = vehicle.data.Get(Channel.Custom);
 
-		if (roll)
+		if (enableRoll)
 			{
 			float fronRollAngle = customData[Perrinn424Data.FrontRollAngle] / 1000.0f;
 			float rearRollAngle = customData[Perrinn424Data.RearRollAngle] / 1000.0f;
-			rollAngle = -(fronRollAngle + rearRollAngle) / 2.0f;
+			m_rollAngle.Set(-(fronRollAngle + rearRollAngle) / 2.0f);
 			}
 		else
 			{
-			rollAngle = 0.0f;
+			m_rollAngle.Set(0.0f);
 			}
 
-		if (pitch)
+		if (enablePitch)
 			{
 			float groundAngle = customData[Perrinn424Data.GroundAngle] / 1000.0f;
 			float pitch = vehicle.cachedTransform.rotation.eulerAngles.x;
 			if (pitch > 180) pitch -= 360;
-			pitchAngle = -(pitch + groundAngle);
+			m_pitchAngle.Set(-(pitch + groundAngle));
 			}
 		else
 			{
-			pitchAngle = 0.0f;
+			m_pitchAngle.Set(0.0f);
 			}
 
-		if (yaw)
-			yawAngle = vehicle.speed > 1.0f ? vehicle.speedAngle : 0.0f;
+		if (enableYaw)
+			m_yawAngle.Set(vehicle.speed > 1.0f ? vehicle.speedAngle : 0.0f);
 		else
-			yawAngle = 0.0f;
+			m_yawAngle.Set(0.0f);
 		}
 
 
 	void LateUpdate ()
 		{
+		float frameRatio = InterpolatedFloat.GetFrameRatio();
+
 		Vector3 basePosition = m_baseTransform.TransformPoint(m_vehicleRb.centerOfMass);
 		Quaternion baseRotation = m_baseTransform.rotation;
-		Quaternion roll = Quaternion.AngleAxis(rollAngle, Vector3.forward);
-		Quaternion pitch = Quaternion.AngleAxis(pitchAngle, Vector3.right);
-		Quaternion yaw = Quaternion.AngleAxis(yawAngle, Vector3.up);
+		Quaternion roll = Quaternion.AngleAxis(m_rollAngle.GetInterpolated(frameRatio), Vector3.forward);
+		Quaternion pitch = Quaternion.AngleAxis(m_pitchAngle.GetInterpolated(frameRatio), Vector3.right);
+		Quaternion yaw = Quaternion.AngleAxis(m_yawAngle.GetInterpolated(frameRatio), Vector3.up);
 		Quaternion rotation = baseRotation * roll * pitch * yaw;
 
 		transform.position = basePosition + rotation * m_camOffset;
