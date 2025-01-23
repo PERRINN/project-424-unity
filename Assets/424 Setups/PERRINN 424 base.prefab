@@ -1828,6 +1828,7 @@ MonoBehaviour:
   gizmosAtPhysicPositions: 0
   showWheelGizmos: 0
   showLocalFrame: 1
+  showWheelHub: 0
   showContactPoints: 1
   showTireSlip: 0
   showTireForces: 1
@@ -4411,6 +4412,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5675501843065422704}
   - component: {fileID: 3393786786116538180}
+  - component: {fileID: 3067352128995004615}
   m_Layer: 0
   m_Name: Physics Camera Rear
   m_TagString: Untagged
@@ -4480,6 +4482,21 @@ MonoBehaviour:
   - {fileID: 5682389695551593254}
   - {fileID: 2748440892036001422}
   - {fileID: 4917145807862789854}
+--- !u!114 &3067352128995004615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7105571154367318676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ace643f9182d75648885d56be30de437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRoll: 1
+  enablePitch: 1
+  enableYaw: 1
 --- !u!1 &7109238782402395542
 GameObject:
   m_ObjectHideFlags: 0
@@ -4521,6 +4538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 51837496153412607}
   - component: {fileID: 4906998007872751618}
+  - component: {fileID: 2898300549840447686}
   m_Layer: 0
   m_Name: Physics Camera Front
   m_TagString: Untagged
@@ -4588,8 +4606,21 @@ MonoBehaviour:
   wheelsToShowGizmos:
   - {fileID: 7326591211390265308}
   - {fileID: 5682389695551593254}
-  - {fileID: 2748440892036001422}
-  - {fileID: 4917145807862789854}
+--- !u!114 &2898300549840447686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7192370561818121068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ace643f9182d75648885d56be30de437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableRoll: 1
+  enablePitch: 1
+  enableYaw: 1
 --- !u!1 &7382985401532202949
 GameObject:
   m_ObjectHideFlags: 0

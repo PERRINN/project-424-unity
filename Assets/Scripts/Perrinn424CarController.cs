@@ -665,6 +665,8 @@ public class Perrinn424CarController : VehicleBase
 		customData[Perrinn424Data.RearRideHeight] = (int)(m_groundTracker.rearRideHeight * 1000.0f);
 		customData[Perrinn424Data.FrontRollAngle] = (int)(m_groundTracker.frontRollAngle * 1000.0f);
 		customData[Perrinn424Data.RearRollAngle] = (int)(m_groundTracker.rearRollAngle * 1000.0f);
+		customData[Perrinn424Data.GroundAngle] = (int)(m_groundTracker.groundAngle * 1000.0f);
+		customData[Perrinn424Data.GroundSlope] = (int)(m_groundTracker.groundSlope * 1000.0f);
 
 		// Understeer
 
