@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.XR;
 using VehiclePhysics;
 
 namespace Perrinn424.UI
@@ -32,6 +33,8 @@ namespace Perrinn424.UI
         private float wideRatio = 0.35f;
 
         private bool initialized = false;
+        private bool vrEnabled = false;
+        private Mode preVrMode;
 
         private Canvas canvas;
         private Canvas Canvas
@@ -106,6 +109,26 @@ namespace Perrinn424.UI
             {
                 modes.MoveNext();
                 SetMode(modes.Current);
+            }
+
+            // Detect VR and auto-disable telemetry
+
+            if (!vrEnabled && XRSettings.isDeviceActive)
+            {
+                vrEnabled = true;
+                preVrMode = modes.Current;
+                modes.Current = Mode.Off;
+                SetMode(Mode.Off);
+            }
+            else
+            if (vrEnabled && !XRSettings.isDeviceActive)
+            {
+                vrEnabled = false;
+                if (modes.Current == Mode.Off)
+                {
+                    modes.Current = preVrMode;
+                    SetMode(preVrMode);
+                }
             }
         }
 
