@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2877097929976694760}
   - component: {fileID: 2877097929976694762}
   - component: {fileID: 2877097929976694763}
+  - component: {fileID: 3403673372634981442}
   m_Layer: 5
   m_Name: Lap Row
   m_TagString: Untagged
@@ -43,8 +44,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 31}
-  m_Pivot: {x: 0.5, y: 1}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &2877097929976694762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +92,20 @@ MonoBehaviour:
   - {fileID: 6534075150257738530}
   - {fileID: 7813069706034827036}
   - {fileID: 1822029298400268747}
+--- !u!114 &3403673372634981442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2877097929976694761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 1
 --- !u!1001 &1608229377895920003
 PrefabInstance:
   m_ObjectHideFlags: 0
