@@ -34,9 +34,8 @@ namespace Perrinn424.Utilities
             }
 
             //mode MinutesAndSeconds
-            string format = seconds > 60f ? formatWithMinutes : formatWithoutMinutes;
             TimeSpan time = TimeSpan.FromSeconds(seconds);
-            return time.ToString(format);
+            return time.ToString(formatWithMinutes);
         }
-    } 
+    }
 }

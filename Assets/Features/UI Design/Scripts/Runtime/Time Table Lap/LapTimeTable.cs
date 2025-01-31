@@ -175,6 +175,8 @@ namespace Perrinn424.UI
 
         private IEnumerator RefreshScroll()
         {
+            // For some reason...
+            yield return null;
             yield return null;
             scrollRect.verticalNormalizedPosition = 0f;
         }
