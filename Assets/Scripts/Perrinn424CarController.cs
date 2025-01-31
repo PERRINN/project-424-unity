@@ -103,6 +103,11 @@ public class Perrinn424CarController : VehicleBase
 	[System.NonSerialized]
 	public float mguLimiter = 1.0f;
 
+	// Applies full limiter until pressing brakes, then it's auto-set to false.
+
+	[System.NonSerialized]
+	public bool mguLiftAndCoast = false;
+
 	// Power balance offset applied externally
 
 	[System.NonSerialized]
@@ -528,21 +533,29 @@ public class Perrinn424CarController : VehicleBase
 			m_steerAngle = steerPosition * steering.steeringWheelRange * 0.5f;
 			}
 
+		bool brakePressed = m_brakePosition > brakePressureThreshold;
+
 		// No throttle in any case if the vehicle is turned off
 
 		int ignitionInput = inputData[InputData.Key];
 		if (ignitionInput < 0)
 			m_throttlePosition = 0.0f;
 
-		// Limiter in Reverse mode
+		// Limiter and lift-and-coast feature
+
+		if (brakePressed || m_gear != 1 || speed < 40/3.6f || ignitionInput < 0)
+			mguLiftAndCoast = false;
 
 		float effectiveLimiter = mguLimiter;
 		if (m_gear < 0)
 			effectiveLimiter = Mathf.Min(mguLimiter, reverseGearLimiter);
+		else
+		if (mguLiftAndCoast)
+			effectiveLimiter = 0.0f;
 
 		// Apply received inputs to car elements
 
-		if (m_brakePosition > brakePressureThreshold) m_throttlePosition = 0.0f;
+		if (brakePressed) m_throttlePosition = 0.0f;
 		m_frontPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset);
 		m_rearPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset);
 
