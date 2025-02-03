@@ -543,7 +543,7 @@ public class Perrinn424CarController : VehicleBase
 
 		// Limiter and lift-and-coast feature
 
-		if (brakePressed || m_gear != 1 || speed < 40/3.6f || ignitionInput < 0)
+		if (brakePressed || m_gear != 1 || ignitionInput < 0)
 			mguLiftAndCoast = false;
 
 		float effectiveLimiter = mguLimiter;

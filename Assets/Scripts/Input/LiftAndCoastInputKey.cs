@@ -22,7 +22,7 @@ public class LiftAndCoastInputKey : VehicleBehaviour
 	public override void UpdateVehicle ()
 		{
 		if (Input.GetKeyDown(key))
-			m_vehicle.mguLiftAndCoast = !m_vehicle.mguLiftAndCoast;
+			m_vehicle.mguLiftAndCoast = true;
 		}
 	}
 
