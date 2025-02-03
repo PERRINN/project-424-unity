@@ -58,6 +58,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                 currentFrame.inputData[InputData.Throttle] = (int)(csvLine["RAWTHROTTLE"]);
                 currentFrame.inputData[InputData.Brake] = (int)(csvLine["RAWBRAKE"]);
                 currentFrame.inputData[InputData.AutomaticGear] = (int)(csvLine["AUTOMATICGEAR"]);
+                currentFrame.inputData[InputData.Retarder] = (int)(csvLine["LIFTANDCOAST"]);
 
                 asset.recordedData.Add(currentFrame);
             }
@@ -71,7 +72,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
             string[] requiredHeaders = new[] {
                 "POSITIONX", "POSITIONY", "POSITIONZ",
                 "ROTATIONX", "ROTATIONY", "ROTATIONZ",
-                "RAWSTEER", "RAWTHROTTLE", "RAWBRAKE", "AUTOMATICGEAR"
+                "RAWSTEER", "RAWTHROTTLE", "RAWBRAKE", "AUTOMATICGEAR", "LIFTANDCOAST"
             };
 
             foreach (string requiredHeader in requiredHeaders)
@@ -134,6 +135,7 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                 currentFrame.inputData[InputData.Throttle] = (int)(table[rowIndex, "RAWTHROTTLE"]);
                 currentFrame.inputData[InputData.Brake] = (int)(table[rowIndex, "RAWBRAKE"]);
                 currentFrame.inputData[InputData.AutomaticGear] = (int)(table[rowIndex, "AUTOMATICGEAR"]);
+                currentFrame.inputData[InputData.Retarder] = (int)(table[rowIndex, "LIFTANDCOAST"]);
 
                 recordedData.Add(currentFrame);
             }
@@ -212,6 +214,8 @@ namespace Perrinn424.TelemetryLapSystem.Editor
                     sample.brake = table[rowIndex, "BrakePressure"];
 
                 table.TryGetValue(rowIndex, "AeroDrsPosition", out sample.drsPosition);
+                if (table.TryGetValue(rowIndex, "LiftAndCoast", out float floatValue))
+                    sample.liftAndCoast = (int)floatValue;
 
                 samples.Add(sample);
             }

@@ -17,6 +17,7 @@ namespace Perrinn424.AutopilotSystem
         public float brake;
 
         public float drsPosition;
+        public int liftAndCoast;
 
 
         public static Sample Lerp(Sample a, Sample b, float t)
@@ -30,9 +31,11 @@ namespace Perrinn424.AutopilotSystem
                 steeringAngle = Mathf.Lerp(a.steeringAngle, b.steeringAngle, t),
                 throttle = Mathf.Lerp(a.throttle, b.throttle, t),
                 brake = Mathf.Lerp(a.brake, b.brake, t),
-                gear = a.gear,
 
                 drsPosition = Mathf.Lerp(a.drsPosition, b.drsPosition, t),
+
+                gear = t >= 0.5f? b.gear : a.gear,
+                liftAndCoast = t >= 0.5f? b.liftAndCoast : a.liftAndCoast,
             };
         }
 
@@ -47,9 +50,11 @@ namespace Perrinn424.AutopilotSystem
                 steeringAngle = Mathf.LerpUnclamped(a.steeringAngle, b.steeringAngle, t),
                 throttle = Mathf.LerpUnclamped(a.throttle, b.throttle, t),
                 brake = Mathf.LerpUnclamped(a.brake, b.brake, t),
-                gear = a.gear,
 
                 drsPosition = Mathf.LerpUnclamped(a.drsPosition, b.drsPosition, t),
+
+                gear = t >= 0.5f? b.gear : a.gear,
+                liftAndCoast = t >= 0.5f? b.liftAndCoast : a.liftAndCoast,
             };
         }
     }

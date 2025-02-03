@@ -95,7 +95,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 		public override int GetChannelCount ()
 			{
-			return 5;
+			return 6;
 			}
 
 
@@ -120,6 +120,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			channelInfo[2].SetNameAndSemantic("Throttle", Telemetry.Semantic.Ratio);
 			channelInfo[3].SetNameAndSemantic("Brake", Telemetry.Semantic.Ratio);
 			channelInfo[4].SetNameAndSemantic("Speed", Telemetry.Semantic.Speed);
+			channelInfo[5].SetNameAndSemantic("LiftAndCoast", Telemetry.Semantic.Boolean);
 			}
 
 
@@ -130,6 +131,7 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			values[index+2] = m_controller.throttlePosition;
 			values[index+3] = m_controller.brakePosition;
 			values[index+4] = m_vehicle.speed;
+			values[index+5] = m_vehicle.data.Get(Channel.Input, InputData.Retarder);
 			}
 		}
 

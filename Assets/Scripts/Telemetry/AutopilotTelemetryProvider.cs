@@ -13,7 +13,7 @@ namespace Perrinn424
 
 			public override int GetChannelCount()
 			{
-                return 13;
+                return 14;
             }
 
             public override void GetChannelInfo(Telemetry.ChannelInfo[] channelInfo, Object instance)
@@ -46,12 +46,13 @@ namespace Perrinn424
 				channelInfo[8].SetNameAndSemantic("AutopilotReferenceBrake", Telemetry.Semantic.Ratio);
 				channelInfo[9].SetNameAndSemantic("AutopilotReferenceSteeringAngle", Telemetry.Semantic.SteeringWheelAngle);
 				channelInfo[10].SetNameAndSemantic("AutopilotReferenceDRS", Telemetry.Semantic.Ratio);
+				channelInfo[11].SetNameAndSemantic("AutopilotReferenceLiftAndCoast", Telemetry.Semantic.Boolean);
 
 				//Status Info
 				var flagSemantic = new Telemetry.SemanticInfo();
-				flagSemantic.SetRangeAndFormat(-1, 1, "True;False", "");
-                channelInfo[11].SetNameAndSemantic("AutopilotIsOn", Telemetry.Semantic.Custom, flagSemantic);
-                channelInfo[12].SetNameAndSemantic("AutopilotIsStartup", Telemetry.Semantic.Custom, flagSemantic);
+				flagSemantic.SetRangeAndFormat(0, 1, "True;;False", "");
+                channelInfo[12].SetNameAndSemantic("AutopilotIsOn", Telemetry.Semantic.Custom, flagSemantic);
+                channelInfo[13].SetNameAndSemantic("AutopilotIsStartup", Telemetry.Semantic.Custom, flagSemantic);
             }
 
 			public override Telemetry.PollFrequency GetPollFrequency()
@@ -75,12 +76,14 @@ namespace Perrinn424
 				values[index + 8] = autopilot.ReferenceSample.brake/100f;
 				values[index + 9] = autopilot.ReferenceSample.steeringAngle;
 				values[index + 10] = autopilot.ReferenceSample.drsPosition/100;
+				values[index + 11] = autopilot.ReferenceSample.liftAndCoast;
 
 				//Status Info
 				//we insert 1,-1 instead of 1,0 to be able to use conditional format
 				//https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings
-				values[index + 11] = autopilot.IsOn ? 1f : -1f;
-				values[index + 12] = autopilot.IsStartup ? 1f : -1f;
+				//EDY: Why don't just use the three-section conditional format, "True;;False", instead of feeding the telemetry with formatting-related values?
+				values[index + 12] = autopilot.IsOn ? 1 : 0;
+				values[index + 13] = autopilot.IsStartup ? 1 : 0;
 			}
 		}
 	}

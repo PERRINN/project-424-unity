@@ -177,6 +177,7 @@ namespace Perrinn424.AutopilotSystem
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputThrottlePosition, (int)(s.throttle * 100.0f));
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputBrakePosition, (int)(s.brake * 100.0f));
             vehicle.data.Set(Channel.Custom, Perrinn424Data.InputGear, s.gear); //TODO
+            vehicle.data.Set(Channel.Custom, Perrinn424Data.InputLiftAndCoast, s.liftAndCoast);
         }
 
         private void OnDrawGizmos()
