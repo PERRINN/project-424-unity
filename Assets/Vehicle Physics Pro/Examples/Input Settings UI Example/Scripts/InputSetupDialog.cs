@@ -52,6 +52,8 @@ public class InputSetupDialog : MonoBehaviour
 	public ButtonDetectDialog buttonDetectDialog;
 
 
+	// Names must match those in Perrinn424Input
+
 	class InputSetupDialogUser : InputUser
 		{
 		public InputSetupDialogUser (string idName) : base(idName) { }

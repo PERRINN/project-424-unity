@@ -61,6 +61,7 @@ public struct Perrinn424Data					// ID			DESCRIPTION							UNITS		RESOLUTION		EX
 	public const int InputSteerAngle			= 53;		// Steer angle for the steering column	deg			10000			155000 = 15.5 degrees
 	public const int InputGear					= 54;		// Gear (forward / neutral / reverse)				0 = Neutral, 1 = Forward, -1 = Reverse
 	public const int InputDrsPosition			= 55;		// DRS position. 0 = closed, 1 = open	%			1000			1000 = 1.0 = 100% open
+	public const int InputLiftAndCoast			= 56;		// Lift and coast State								0 = Disabled, 1 = Enabled
 	}
 
 
@@ -102,11 +103,6 @@ public class Perrinn424CarController : VehicleBase
 
 	[System.NonSerialized]
 	public float mguLimiter = 1.0f;
-
-	// Applies full limiter until pressing brakes, then it's auto-set to false.
-
-	[System.NonSerialized]
-	public bool mguLiftAndCoast = false;
 
 	// Power balance offset applied externally
 
@@ -475,6 +471,10 @@ public class Perrinn424CarController : VehicleBase
 			float steeringHalfRange = steering.steeringWheelRange;
 			m_steerAngle = Mathf.Clamp(customData[Perrinn424Data.InputSteerAngle] / 10000.0f, -steeringHalfRange, steeringHalfRange);
 
+			// Lift and Coast. Will be read directly from the bus.
+
+			inputData[InputData.Retarder] = customData[Perrinn424Data.InputLiftAndCoast];
+
 			// Assume driving not started so disabling autopilot engages brakes
 
 			m_drivingStarted = false;
@@ -544,13 +544,13 @@ public class Perrinn424CarController : VehicleBase
 		// Limiter and lift-and-coast feature
 
 		if (brakePressed || m_gear != 1 || ignitionInput < 0)
-			mguLiftAndCoast = false;
+			inputData[InputData.Retarder] = 0;
 
 		float effectiveLimiter = mguLimiter;
 		if (m_gear < 0)
 			effectiveLimiter = Mathf.Min(mguLimiter, reverseGearLimiter);
 		else
-		if (mguLiftAndCoast)
+		if (inputData[InputData.Retarder] != 0)
 			effectiveLimiter = 0.0f;
 
 		// Apply received inputs to car elements
