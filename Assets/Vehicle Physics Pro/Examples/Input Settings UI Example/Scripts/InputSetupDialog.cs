@@ -37,6 +37,7 @@ public class InputSetupDialog : MonoBehaviour
 	public ButtonLabelGroup brakeSetup;
 	public ButtonLabelGroup gearUpSetup;
 	public ButtonLabelGroup gearDownSetup;
+	public ButtonLabelGroup liftAndCoastSetup;
 	[Space(5)]
 	public Color defaultControlColor = GColor.ParseColorHex("#CCCCCC");
 	public Color activeControlColor = GColor.lightGreenA700;
@@ -60,6 +61,7 @@ public class InputSetupDialog : MonoBehaviour
 		public InputSlider brake 		= new InputSlider("Brake");
 		public InputButton gearUp		= new InputButton("GearShiftUp");
 		public InputButton gearDown		= new InputButton("GearShiftDown");
+		public InputButton liftAndCoast	= new InputButton("LiftAndCoast");
 		}
 
 
@@ -97,6 +99,7 @@ public class InputSetupDialog : MonoBehaviour
 		UITools.AddListener(brakeSetup, OnDetectBrake);
 		UITools.AddListener(gearUpSetup, OnDetectGearUp);
 		UITools.AddListener(gearDownSetup, OnDetectGearDown);
+		UITools.AddListener(liftAndCoastSetup, OnDetectLiftAndCoast);
 
 		// Ensure this dialog can be interacted with
 
@@ -127,6 +130,7 @@ public class InputSetupDialog : MonoBehaviour
 		UITools.RemoveListener(brakeSetup, OnDetectBrake);
 		UITools.RemoveListener(gearUpSetup, OnDetectGearUp);
 		UITools.RemoveListener(gearDownSetup, OnDetectGearDown);
+		UITools.RemoveListener(liftAndCoastSetup, OnDetectLiftAndCoast);
 		}
 
 
@@ -196,6 +200,7 @@ public class InputSetupDialog : MonoBehaviour
 		UpdateActionLabel(brakeSetup, m_inputUser.brake);
 		UpdateActionLabel(gearUpSetup, m_inputUser.gearUp);
 		UpdateActionLabel(gearDownSetup, m_inputUser.gearDown);
+		UpdateActionLabel(liftAndCoastSetup, m_inputUser.liftAndCoast);
 
 		// Update colors
 
@@ -204,6 +209,7 @@ public class InputSetupDialog : MonoBehaviour
 		HightlightLabel(brakeSetup, m_inputUser.brake);
 		HightlightLabel(gearUpSetup, m_inputUser.gearUp);
 		HightlightLabel(gearDownSetup, m_inputUser.gearDown);
+		HightlightLabel(liftAndCoastSetup, m_inputUser.liftAndCoast);
 		}
 
 
@@ -297,6 +303,12 @@ public class InputSetupDialog : MonoBehaviour
 	void OnDetectGearDown ()
 		{
 		StartCoroutine(DetectControl(buttonDetectDialog, m_inputUser.gearDown));
+		}
+
+
+	void OnDetectLiftAndCoast ()
+		{
+		StartCoroutine(DetectControl(buttonDetectDialog, m_inputUser.liftAndCoast));
 		}
 
 
