@@ -18,6 +18,7 @@ class Perrinn424InputUser : InputUser
 	public InputSlider brake 		= new InputSlider("Brake");
 	public InputButton gearUp		= new InputButton("GearShiftUp");
 	public InputButton gearDown		= new InputButton("GearShiftDown");
+	public InputButton liftAndCoast	= new InputButton("LiftAndCoast");
 	}
 
 
@@ -130,6 +131,10 @@ public class Perrinn424Input : VehicleBehaviour
 
 		if (m_input.gearUp.PressedThisFrame()) inputData[InputData.AutomaticGear]++;
 		if (m_input.gearDown.PressedThisFrame()) inputData[InputData.AutomaticGear]--;
+
+		// Lift and coast
+
+		if (m_input.liftAndCoast.PressedThisFrame()) inputData[InputData.Retarder] = 1;
 		}
 
 
