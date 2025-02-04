@@ -72,7 +72,9 @@ public class Perrinn424CarControllerInspector : VPInspector
 		SetMinLabelWidth(175);
 		DrawProperty("solverSubsteps");
 		DrawProperty("wheelMomentumFactor");
+		SetMinLabelWidth(220);
 		DrawProperty("asyncPhysicsQueries");
+		DrawProperty("allowLiftAndCoastOnAutopilot");
 		}
 
 

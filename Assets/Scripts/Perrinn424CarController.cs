@@ -99,6 +99,10 @@ public class Perrinn424CarController : VehicleBase
 
 	public TractionControl.Settings tractionControl = new TractionControl.Settings();
 
+	// Other
+
+	public bool allowLiftAndCoastOnAutopilot = false;
+
 	// Speed / power limiter applied externally
 
 	[System.NonSerialized]
@@ -472,8 +476,10 @@ public class Perrinn424CarController : VehicleBase
 			m_steerAngle = Mathf.Clamp(customData[Perrinn424Data.InputSteerAngle] / 10000.0f, -steeringHalfRange, steeringHalfRange);
 
 			// Lift and Coast. Will be read directly from the bus.
+			// It may also be triggered externally when the inputs are processed.
 
-			inputData[InputData.Retarder] = customData[Perrinn424Data.InputLiftAndCoast];
+			if (!allowLiftAndCoastOnAutopilot || customData[Perrinn424Data.InputLiftAndCoast] > 0)
+				inputData[InputData.Retarder] = customData[Perrinn424Data.InputLiftAndCoast];
 
 			// Assume driving not started so disabling autopilot engages brakes
 
