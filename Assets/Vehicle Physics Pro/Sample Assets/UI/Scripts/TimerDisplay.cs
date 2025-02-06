@@ -27,6 +27,8 @@ public class TimerDisplay : MonoBehaviour
 	public Text infoLabel;
 	public Text sectorsLabel;
 	public Text bestSectorsLabel;
+	public int primarySmallFont = 14;
+	public int secondarySmallFont = 10;
 
 
 	int m_lastLapTimeMs = 0;
@@ -59,7 +61,7 @@ public class TimerDisplay : MonoBehaviour
 
 		// Main display
 
-		string lapTimeText = FormatTime(ToMilliseconds(lapTime));
+		string lapTimeText = FormatTime(ToMilliseconds(lapTime), FormatMode.Lap, primarySmallFont);
 		if (invalidLap)
 			lapTimeText = FormatTextColor(lapTimeText, GColor.red);
 
@@ -97,15 +99,15 @@ public class TimerDisplay : MonoBehaviour
 			}
 
 		m_lastLapTimeMs = lapTimeMs;
-		m_lastTimeText = FormatTime(m_lastLapTimeMs, FormatMode.Lap, 14);
+		m_lastTimeText = FormatTime(m_lastLapTimeMs, FormatMode.Lap, secondarySmallFont);
 		if (isBestTime) m_lastTimeText = FormatTextColor(m_lastTimeText, GColor.accentGreen);
 
 		// Lap time label
 
 		if (isBestTime)
-			SetLabelText(mainLabel, FormatTextColor(FormatTime(lapTimeMs), GColor.accentGreen));
+			SetLabelText(mainLabel, FormatTextColor(FormatTime(lapTimeMs, FormatMode.Lap, primarySmallFont), GColor.accentGreen));
 		else
-			SetLabelText(mainLabel, FormatTime(lapTimeMs));
+			SetLabelText(mainLabel, FormatTime(lapTimeMs, FormatMode.Lap, primarySmallFont));
 
 		// Delta time
 
@@ -113,7 +115,7 @@ public class TimerDisplay : MonoBehaviour
 
 		if (hasBestTime)
 			{
-			secondLine = FormatTime(delta, FormatMode.Delta, 14);
+			secondLine = FormatTime(delta, FormatMode.Delta, secondarySmallFont);
 
 			if (delta > 0)
 				secondLine = FormatTextColor(secondLine, GColor.red);
@@ -124,7 +126,7 @@ public class TimerDisplay : MonoBehaviour
 
 		// Best time
 
-		m_bestTimeText = FormatTime(m_bestLapTimeMs, FormatMode.Lap, 14);
+		m_bestTimeText = FormatTime(m_bestLapTimeMs, FormatMode.Lap, secondarySmallFont);
 
 		// If this is the first lap, we leave it running. Otherwise, show the delta with last lap.
 
@@ -193,7 +195,7 @@ public class TimerDisplay : MonoBehaviour
 
 		// Main label: sector and time
 
-		string mainText = string.Format("S{0}   {1}", sector+1, FormatTime(sectorTimeMs, FormatMode.Sector));
+		string mainText = string.Format("S{0}   {1}", sector+1, FormatTime(sectorTimeMs, FormatMode.Sector, primarySmallFont));
 
 		if (m_isBestSector[sector])
 			SetLabelText(mainLabel, FormatTextColor(mainText, GColor.accentGreen));
@@ -206,7 +208,7 @@ public class TimerDisplay : MonoBehaviour
 
 		if (hasBestTime)
 			{
-			secondLine = FormatTime(delta, FormatMode.Delta, 14);
+			secondLine = FormatTime(delta, FormatMode.Delta, secondarySmallFont);
 
 			if (delta > 0)
 				secondLine = FormatTextColor(secondLine, GColor.red);
@@ -217,7 +219,7 @@ public class TimerDisplay : MonoBehaviour
 
 		// Third line: best
 
-		string infoText = string.Format("{0}\nBest S{1}   {2}", secondLine, sector+1, FormatTime(bestSectorTimeMs, FormatMode.Sector, 14));
+		string infoText = string.Format("{0}\nBest S{1}   {2}", secondLine, sector+1, FormatTime(bestSectorTimeMs, FormatMode.Sector, secondarySmallFont));
 		SetLabelText(infoLabel, infoText);
 
 		m_tempDisplayTime = Time.unscaledTime;
@@ -251,9 +253,9 @@ public class TimerDisplay : MonoBehaviour
 			if ((showAll || i <= m_lastSector) && time > 0)
 				{
 				if (m_isBestSector[i])
-					sectorsText += FormatTextColor(FormatTime(time, FormatMode.Sector, 14), GColor.accentGreen);
+					sectorsText += FormatTextColor(FormatTime(time, FormatMode.Sector, secondarySmallFont), GColor.accentGreen);
 				else
-					sectorsText += FormatTime(time, FormatMode.Sector, 14);
+					sectorsText += FormatTime(time, FormatMode.Sector, secondarySmallFont);
 				}
 			else
 				{
@@ -296,7 +298,8 @@ public class TimerDisplay : MonoBehaviour
 	[ContextMenu("Reset lap times")]
 	public void ResetLapTimes ()
 		{
-		string emptyTime = System.Text.RegularExpressions.Regex.Unescape("\\u2007\\u2007\\u2007-<size=10>\\u2008\\u2007\\u2007\\u2007</size>");
+		string emptyTime = Application.isPlaying? System.Text.RegularExpressions.Regex.Unescape($"\\u2007\\u2007\\u2007-<size={secondarySmallFont}>\\u2008\\u2007\\u2007\\u2007</size>")
+			: FormatTime(0, FormatMode.Lap, secondarySmallFont);
 
 		m_lastLapTimeMs = 0;
 		m_bestLapTimeMs = 0;
@@ -325,7 +328,7 @@ public class TimerDisplay : MonoBehaviour
 	enum FormatMode { Lap, Sector, Delta };
 
 
-	string FormatTime (int milliseconds, FormatMode mode = FormatMode.Lap, int smallSize = 10)
+	string FormatTime (int milliseconds, FormatMode mode, int smallSize)
 		{
 		bool negative = false;
 		if (milliseconds < 0)
