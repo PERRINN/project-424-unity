@@ -43,7 +43,8 @@ namespace Perrinn424.UI
 
             m_timeTable = new Utilities.LapTimeTable(sectorCount);
             m_uiRowList = new List<LapRow>();
-            lapUIPrefab.gameObject.SetActive(false);
+            if (lapUIPrefab != null)
+                lapUIPrefab.gameObject.SetActive(false);
             RefreshIdealLap();
         }
 
@@ -76,6 +77,8 @@ namespace Perrinn424.UI
 
         public void UpdateRollingTime(float sectorRollingTime, float lapRollingTime)
         {
+            if (lapUIPrefab == null) return;
+
             bool timeTableIsFull = m_timeTable.IsEmpty || m_timeTable[m_timeTable.LapCount - 1].IsCompleted;
             bool needUIRow = m_timeTable.LapCount == m_uiRowList.Count && timeTableIsFull;
             if (needUIRow)
@@ -118,7 +121,7 @@ namespace Perrinn424.UI
 
         private void RefreshTimes()
         {
-            for (int i = 0; i < m_timeTable.LapCount; i++)
+            for (int i = 0; i < m_uiRowList.Count; i++)
             {
                 LapTime lap = m_timeTable[i];
                 LapRow rowUI = m_uiRowList[i];
@@ -133,7 +136,8 @@ namespace Perrinn424.UI
             foreach (int improvedTimeIndex in improvedTimes)
             {
                 m_timeTable.IndexToLapSector(improvedTimeIndex, out int lapIndex, out int sectorIndex);
-                m_uiRowList[lapIndex].ApplyFormat(sectorIndex, improvementFormat);
+                if (lapIndex < m_uiRowList.Count)
+                    m_uiRowList[lapIndex].ApplyFormat(sectorIndex, improvementFormat);
             }
         }
 
@@ -163,7 +167,8 @@ namespace Perrinn424.UI
             for (int i = 0; i < columnMax; i++)
             {
                 int lapIndex = bestSectors[i];
-                m_uiRowList[lapIndex].ApplyFormat(i, bestFormat);
+                if (lapIndex < m_uiRowList.Count)
+                    m_uiRowList[lapIndex].ApplyFormat(i, bestFormat);
             }
         }
 
@@ -178,7 +183,8 @@ namespace Perrinn424.UI
             // For some reason...
             yield return null;
             yield return null;
-            scrollRect.verticalNormalizedPosition = 0f;
+            if (scrollRect != null)
+                scrollRect.verticalNormalizedPosition = 0f;
         }
     }
 }

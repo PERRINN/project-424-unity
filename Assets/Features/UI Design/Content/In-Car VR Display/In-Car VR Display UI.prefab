@@ -88,6 +88,8 @@ GameObject:
   - component: {fileID: 2548012819309215234}
   - component: {fileID: 2548012819309215235}
   - component: {fileID: 2548012819309215232}
+  - component: {fileID: 4614817357008332632}
+  - component: {fileID: 3638851280107537252}
   m_Layer: 5
   m_Name: In-Car VR Display UI
   m_TagString: Untagged
@@ -164,7 +166,53 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
+--- !u!114 &4614817357008332632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2548012819309215233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 891ca2d6d2ff3ff4caf3740654b93e91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalFormat:
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 0}
+    backgroundSprite: {fileID: 21300000, guid: fb7cb0c6132125d478a5978de874c93c, type: 3}
+  improvementFormat:
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 0}
+    backgroundSprite: {fileID: 21300000, guid: fb7cb0c6132125d478a5978de874c93c, type: 3}
+  bestFormat:
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundSprite: {fileID: 21300000, guid: fb7cb0c6132125d478a5978de874c93c, type: 3}
+  idealFormat:
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundSprite: {fileID: 21300000, guid: fb7cb0c6132125d478a5978de874c93c, type: 3}
+  lapUIPrefab: {fileID: 0}
+  rowParent: {fileID: 0}
+  scrollRect: {fileID: 0}
+  sectorCount: 5
+  idealLapRow: {fileID: 338294964632695552}
+--- !u!114 &3638851280107537252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2548012819309215233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2a3ebc8e92e4794686d6ffaafa16e52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lapTimeTable: {fileID: 4614817357008332632}
 --- !u!1 &2548012819857426412
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,6 +707,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a1800e92509bac41872c76d5cf19f91, type: 3}
+--- !u!114 &338294964632695552 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2877097929976694763, guid: 7a1800e92509bac41872c76d5cf19f91,
+    type: 3}
+  m_PrefabInstance: {fileID: 2548012819148305643}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bee89859430fcbe48ac40fcd32f68a87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &338294964632695555 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2877097929976694760, guid: 7a1800e92509bac41872c76d5cf19f91,
