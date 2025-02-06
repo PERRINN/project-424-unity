@@ -180,11 +180,14 @@ namespace Perrinn424.UI
 
         private IEnumerator RefreshScroll()
         {
-            // For some reason...
-            yield return null;
-            yield return null;
             if (scrollRect != null)
+            {
+                // Give enough frames for the UI to refresh its layout
+                for (int i = 0; i < 5; i++)
+                    yield return null;
+
                 scrollRect.verticalNormalizedPosition = 0f;
+            }
         }
     }
 }
