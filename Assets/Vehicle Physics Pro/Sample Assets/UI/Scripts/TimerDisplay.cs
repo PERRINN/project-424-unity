@@ -13,7 +13,6 @@ using EdyCommonTools;
 namespace VehiclePhysics.UI
 {
 
-[ExecuteInEditMode]
 public class TimerDisplay : MonoBehaviour
 	{
 	public double lapTime = 0.0f;
