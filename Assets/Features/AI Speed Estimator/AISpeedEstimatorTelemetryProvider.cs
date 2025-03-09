@@ -18,7 +18,11 @@ namespace Perrinn424.AISpeedEstimatorSystem
             {
                 aiSpeedEstimator = (AISpeedEstimatorContainer)instance;
                 channelInfo[0].SetNameAndSemantic("AIEstimatedSpeed", Telemetry.Semantic.Speed);
-                channelInfo[1].SetNameAndSemantic("AIEstimatedSpeedError", Telemetry.Semantic.Speed);
+
+                var errorSemantic = new Telemetry.SemanticInfo();
+                errorSemantic.SetRangeAndFormat(-50, 50, "0.00", " %", multiplier: 1.0f, quantization: 1);
+
+                channelInfo[1].SetNameAndSemantic("AIEstimatedSpeedError", Telemetry.Semantic.Custom, errorSemantic);
 
                 var distanceSemantic = new Telemetry.SemanticInfo();
                 distanceSemantic.SetRangeAndFormat(0, 21000, "0.000", " km", multiplier: 0.001f, quantization: 1000);
@@ -39,5 +43,5 @@ namespace Perrinn424.AISpeedEstimatorSystem
             }
         }
 
-    } 
+    }
 }

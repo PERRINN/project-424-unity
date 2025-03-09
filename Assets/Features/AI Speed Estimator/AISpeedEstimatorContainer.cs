@@ -66,7 +66,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
         {
             EstimatedSpeed = estimatedSpeed;
             float speed = vehicle.speed;
-            Error = Mathf.Abs(speed - EstimatedSpeed);
+            Error=Mathf.Max(-25,Mathf.Min(25,(speed-EstimatedSpeed)/speed*100));
         }
 
         private void UpdateInput()
@@ -94,5 +94,5 @@ namespace Perrinn424.AISpeedEstimatorSystem
         {
             EstimatedLapDistance = 0;
         }
-    } 
+    }
 }
