@@ -66,7 +66,7 @@ namespace Perrinn424.AISpeedEstimatorSystem
         {
             EstimatedSpeed = estimatedSpeed;
             float speed = vehicle.speed;
-            Error=Mathf.Max(-25,Mathf.Min(25,(EstimatedSpeed-speed)/speed*100));
+            Error=(EstimatedSpeed-speed)/Mathf.Max(10,speed)*100;
         }
 
         private void UpdateInput()
