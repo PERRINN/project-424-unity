@@ -4,6 +4,9 @@
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
+// NOTE IMPORTANT: OpenXR package must be 1.10.0 or lower. Newer versions crash Unity
+// when exiting Play mode, at least in Unity 2021.3.45 with the HP Reberb G2.
+
 
 using System;
 using System.Collections.Generic;
