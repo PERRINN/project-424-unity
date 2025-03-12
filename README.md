@@ -15,12 +15,12 @@ One of the first tests in Monza:
 
 ## Requirements
 
-- Unity 2021.3 LTS (using 2021.3.32f1 at the time of writing this)
+- Unity 2021.3 LTS (the project uses **Unity 2021.3.45**)
 
 ## How to set up and open the project in Unity
 
 1. Clone the repository to your computer.
-2. Add the repository folder to Unity Hub: Projects > Open > Add project from disk, select the folder with the repository. 
+2. Add the repository folder to Unity Hub: Projects > Open > Add project from disk, select the folder with the repository.
 3. Click the newly added project in the list
 
 NOTE: Don't copy the repository folder to an existing Unity project. The simulation won't likely work.
@@ -47,7 +47,7 @@ After building the project, launch the executable with these command-line option
 
     -screen-width 5760 -screen-height 1080 -screen-fullscreen 0 -popupwindow
 
-Change the values according to the combined resolution.
+Change the values according to the combined resolution of your displays.
 
 ## Development guidelines
 
@@ -62,7 +62,7 @@ Code should follow the conventions of the Unity API:
 
 #### Components
 
-Components must support the same operations supported by built-in Unity components without errors, including:
+Components must support the same operations supported by built-in Unity components without issues, including:
 
 - Enable / disable in runtime.
 - Instance / destroy in runtime.
@@ -90,6 +90,6 @@ Components must support the same operations supported by built-in Unity componen
 ### Runtime use
 - The simulator uses by default the output model of the training process, 'model/speed_estimator.onnx' as runtime model.
 - This can be change in the Main Scene. Go to GameObject '424 Nordschleife Scene/PERRINN 424 Nordschleife/AISpeedEstimator '. Change 'ModelAsset' in AISpeedEstimatorContainer component
-- AISpeedEstimatorContainer is the class that uses the trained model to estimate the speed 
+- AISpeedEstimatorContainer is the class that uses the trained model to estimate the speed
 
 
