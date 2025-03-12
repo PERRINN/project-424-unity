@@ -22,11 +22,12 @@ namespace Perrinn424
         public void Update()
         {
             count++;
-            if (Time.unscaledTime > timer + refreshRate)
+            float t = Time.unscaledTime;
+            if (t > timer + refreshRate)
             {
-                Current = count / refreshRate;
+                Current = count / (t - timer);
                 count = 0;
-                timer = Time.unscaledTime;
+                timer = t;
             }
         }
     }
