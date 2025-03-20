@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2023 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -19,6 +19,8 @@ public class IgnoreCollisions : MonoBehaviour
 	{
 	public Collider thisCollider;
 	public bool includeChildren = false;
+
+	[Space(5)]
 	public Collider[] otherColliders;
 
 
