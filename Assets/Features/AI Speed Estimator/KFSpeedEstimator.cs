@@ -12,6 +12,9 @@ public class KFSpeedEstimator : VehicleBehaviour
     public float KFSpeed => kfSpeed;
     public float KFError => kfError;
 
+    public float EstimatedLapDistance { get; private set; }
+
+
     private float kfSpeed;
     private float kfError;
     private float absError;
@@ -26,6 +29,8 @@ public class KFSpeedEstimator : VehicleBehaviour
     public override void FixedUpdateVehicle()
     {
         GetKFByChannels();
+        EstimatedLapDistance += KFSpeed * Time.deltaTime;
+
     }
 
     private void GetKFByChannels()

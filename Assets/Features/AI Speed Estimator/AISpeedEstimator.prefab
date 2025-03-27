@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2353373484725641783}
   - component: {fileID: 2353373484725641780}
-  - component: {fileID: 2353373484725641781}
   - component: {fileID: 8391331809037729897}
+  - component: {fileID: 2353373484725641781}
+  - component: {fileID: 1563660680}
   m_Layer: 0
   m_Name: AISpeedEstimator
   m_TagString: Untagged
@@ -59,24 +60,10 @@ MonoBehaviour:
     - nWheelRL
     - nWheelRR
     - SteeringAngle
-  modelAsset: {fileID: 5022602860645237092, guid: 4af776958b104204b974c7622ea5613d,
+  modelAsset: {fileID: 5022602860645237092, guid: 3fbec756ec546d64a963be8b00a98398,
     type: 3}
   frequency:
     frequency: 50
---- !u!114 &2353373484725641781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2353373484725641782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 522ecfa4373b6194ea483c507265f715, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  emitTelemetry: 1
-  component: {fileID: 2353373484725641780}
 --- !u!114 &8391331809037729897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,3 +83,31 @@ MonoBehaviour:
     - WheelSpinFR
     - WheelSpinRL
     - WheelSpinRR
+--- !u!114 &2353373484725641781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353373484725641782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522ecfa4373b6194ea483c507265f715, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
+  component: {fileID: 2353373484725641780}
+--- !u!114 &1563660680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353373484725641782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a80d4142f84454848b7af6c297c71b96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
+  component: {fileID: 8391331809037729897}
