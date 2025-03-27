@@ -11,7 +11,10 @@ namespace Perrinn424.SpeedEstimatorSystem
         [SerializeField]
         private Channels channels;
 
-        public float KFSpeed => kfSpeed;
+        /// <summary>
+        /// Kalman Filter Speed in m/s
+        /// </summary>
+        public float KFSpeed => kfSpeed/3.6f;
         public float KFError => kfError;
 
         public float EstimatedLapDistance { get; private set; }
