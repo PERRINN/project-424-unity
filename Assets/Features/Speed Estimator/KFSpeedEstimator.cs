@@ -2,11 +2,15 @@ using Perrinn424.TelemetryLapSystem;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VehiclePhysics;
+using VehiclePhysics.Timing;
 
 namespace Perrinn424.SpeedEstimatorSystem
 {
     public class KFSpeedEstimator : VehicleBehaviour
     {
+
+        [SerializeField]
+        private LapTimer lapTimer;
 
         [SerializeField]
         private Channels channels;
@@ -30,6 +34,22 @@ namespace Perrinn424.SpeedEstimatorSystem
             channels.Reset(vehicle);
             Assert.IsTrue(channels.AreAllChannelsValid(), "KFSpeedEstimator channels are not valid. Please check");
         }
+
+        public override void OnEnableVehicle()
+        {
+            lapTimer.onBeginLap += LapBeginEventHandler;
+        }
+
+        private void LapBeginEventHandler()
+        {
+            EstimatedLapDistance = 0;
+        }
+
+        public override void OnDisableVehicle()
+        {
+            lapTimer.onBeginLap -= LapBeginEventHandler;
+        }
+
 
         public override void FixedUpdateVehicle()
         {

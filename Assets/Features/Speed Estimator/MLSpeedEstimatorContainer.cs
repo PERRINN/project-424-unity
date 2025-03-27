@@ -86,7 +86,6 @@ namespace Perrinn424.SpeedEstimatorSystem
         {
             aiSpeedEstimator.Dispose();
             lapTimer.onBeginLap -= LapBeginEventHandler;
-
         }
 
         private void LapBeginEventHandler()
