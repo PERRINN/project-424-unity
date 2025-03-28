@@ -109,16 +109,16 @@ namespace Perrinn424.SpeedEstimatorSystem
             float wheelSpeedFL, float wheelSpeedFR, float wheelSpeedRL, float wheelSpeedRR,
             float longitudinalAcceleration)
         {
+            float averageWheelSpeed = wheelSpeedFL + wheelSpeedFR + wheelSpeedRL + wheelSpeedRR;
+            averageWheelSpeed /= 4;
+            float KFSpeedCandidate = previousKFSpeed + longitudinalAcceleration * Time.deltaTime * 9.81f * 3.6f;
             if (longitudinalAcceleration > 0)
             {
-                float averageWheelSpeed = wheelSpeedFL + wheelSpeedFR + wheelSpeedRL + wheelSpeedRR;
-                averageWheelSpeed /= 4;
-                float KFSpeedCandidate = previousKFSpeed + longitudinalAcceleration * Time.deltaTime * 9.81f * 3.6f;
-                return Mathf.Min(averageWheelSpeed, KFSpeedCandidate, Mathf.Max(averageWheelSpeed, KFSpeedCandidate));
+                return Mathf.Min(averageWheelSpeed, KFSpeedCandidate);
             }
             else
             {
-                return previousKFSpeed;
+                return Mathf.Max(averageWheelSpeed, KFSpeedCandidate);
             }
         }
 
@@ -130,8 +130,8 @@ namespace Perrinn424.SpeedEstimatorSystem
         /// <returns></returns>
         private static float CalculateKFError(float KFSpeed, float speed)
         {
-            float absError = Mathf.Abs(KFSpeed - speed);
-            return 100f * (absError / Mathf.Max(10f, speed));
+            float error = KFSpeed - speed;
+            return 100f * (error / Mathf.Max(10f, speed));
         }
     } 
 }
