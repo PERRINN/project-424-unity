@@ -46,6 +46,7 @@ public class Perrinn424Input : VehicleBehaviour
 	public float externalBrake;
 	[Range(-1,1)]
 	public float externalSteer;
+	public bool externalLiftAndCoast;
 
 
 	// Private fields
@@ -134,7 +135,7 @@ public class Perrinn424Input : VehicleBehaviour
 
 		// Lift and coast
 
-		if (m_input.liftAndCoast.PressedThisFrame()) inputData[InputData.Retarder] = 1;
+		if (m_input.liftAndCoast.PressedThisFrame() || externalLiftAndCoast) inputData[InputData.Retarder] = 1;
 		}
 
 
