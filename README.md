@@ -71,10 +71,10 @@ Components must support the same operations supported by built-in Unity componen
 - Modify the public properties from other scripts, both in editor and runtime (use public fields instead of serializable private fields for the properties available in the inspector)
 - Hot script reload (use OnEnable/Ondisable instead of Start/Awake/OnDestroy unless it's specifically justified)
 
-## AI Speed Estimator
+## ML Speed Estimator
 
 ### Setup
-- Go to 'Assets/Features/AI Speed Estimator/Trainer'
+- Go to 'Assets/Features/Speed Estimator/Trainer'
 - Create a python environment ```python3 -m venv .venv```
 - Activate the virtual environment
 - Install the requirements ```pip install -r requirements.txt```
@@ -89,7 +89,7 @@ Components must support the same operations supported by built-in Unity componen
 
 ### Runtime use
 - The simulator uses by default the output model of the training process, 'model/speed_estimator.onnx' as runtime model.
-- This can be change in the Main Scene. Go to GameObject '424 Nordschleife Scene/PERRINN 424 Nordschleife/AISpeedEstimator '. Change 'ModelAsset' in AISpeedEstimatorContainer component
-- AISpeedEstimatorContainer is the class that uses the trained model to estimate the speed
+- This can be change in the Main Scene. Go to GameObject '424 Nordschleife Scene/PERRINN 424 Nordschleife/SpeedEstimator '. Change 'ModelAsset' in MLSpeedEstimatorContainer component
+- MLSpeedEstimatorContainer is the class that uses the trained model to estimate the speed
 
 

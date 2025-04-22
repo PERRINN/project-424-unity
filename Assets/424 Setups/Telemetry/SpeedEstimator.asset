@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1032675510, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: SpeedEstimator
+  m_EditorClassIdentifier: 
+  settings:
+    templateName: Speed Estimator
+    verticalRange: 10
+    channels:
+    - name: Speed
+      displayName: Speed
+      labelOffset: 0
+      displayOrigin: 0
+      displayRange: 10
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0.5019608, g: 0.69803923, b: 0.27058825, a: 1}
+    - name: LapDistance
+      displayName: Lap Distance
+      labelOffset: 6.07
+      displayOrigin: 0
+      displayRange: 10
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 1, g: 0.60784316, b: 0, a: 1}
+    - name: MLEstimatedSpeed
+      displayName: ML Estimated Speed
+      labelOffset: 1.83
+      displayOrigin: 0
+      displayRange: 10
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 1, g: 0, b: 0, a: 1}
+    - name: MLEstimatedSpeedError
+      displayName: ML Error
+      labelOffset: 3.96
+      displayOrigin: 5
+      displayRange: 7
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 1, g: 0, b: 0, a: 1}
+    - name: MLEstimatedLapDistance
+      displayName: ML Lap Distance
+      labelOffset: 7.85
+      displayOrigin: 0
+      displayRange: 10
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 1, g: 0, b: 0, a: 1}
+    - name: KFEstimatedSpeed
+      displayName: KF Estimated Speed
+      labelOffset: 3.08
+      displayOrigin: 0
+      displayRange: 10
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0, g: 1, b: 1, a: 1}
+    - name: KFEstimatedSpeedError
+      displayName: KF Error
+      labelOffset: 5.26
+      displayOrigin: 5
+      displayRange: 7
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0, g: 1, b: 1, a: 1}
+    - name: KFEstimatedLapDistance
+      displayName: KF Lap Distance
+      labelOffset: 9.05
+      displayOrigin: 0
+      displayRange: 10
+      fitPositiveRange: 0
+      mirror: 0
+      logarithmic: 0
+      logScale: 100
+      displayColor: {r: 0, g: 1, b: 1, a: 1}

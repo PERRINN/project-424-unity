@@ -4,10 +4,11 @@
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
-// NOTE IMPORTANT: OpenXR package must be 1.10.0 or lower. Newer versions crash Unity
+// NOTE !IMPORTANT: OpenXR package must be 1.10.0 or lower. Newer versions crash Unity
 // when exiting Play mode, at least in Unity 2021.3.45 with the HP Reberb G2.
 
 
+#if UNITY_2020_3_OR_NEWER
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,7 +83,7 @@ public class VRCamera : MonoBehaviour
 
 	void Update ()
 		{
-		if (m_doAutoInitializeVr)
+		if (m_doAutoInitializeVr && IsVRSystemReady())
 			{
 			// VR must be initialized after Start
 
@@ -333,6 +334,16 @@ public class VRCamera : MonoBehaviour
 		}
 
 
+	public static bool IsVRSystemReady ()
+		{
+		#if XR_MANAGER
+		return XRGeneralSettings.Instance != null && XRGeneralSettings.Instance.Manager != null;
+		#else
+		return false;
+		#endif
+		}
+
+
 	public static void InitializeAndStartVR ()
 		{
 		#if XR_MANAGER
@@ -515,3 +526,4 @@ public class VRCamera : MonoBehaviour
 	}
 
 }
+#endif

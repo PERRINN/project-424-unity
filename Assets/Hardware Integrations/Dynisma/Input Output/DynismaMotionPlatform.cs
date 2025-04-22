@@ -103,6 +103,7 @@ public class DynismaMotionPlatform : VehicleBehaviour
 			{
 			Debug.LogWarning($"DynismaMotionPlatform connection error: {ex.Message}. Component disabled.");
 			enabled = false;
+			return;
 			}
 
 		// Locate the Perrinn424Input component for the force feedback data

@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2353373484725641782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2353373484725641783}
+  - component: {fileID: 2353373484725641780}
+  - component: {fileID: 8391331809037729897}
+  - component: {fileID: 2353373484725641781}
+  - component: {fileID: 1563660680}
+  m_Layer: 0
+  m_Name: SpeedEstimator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2353373484725641783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353373484725641782}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2353373484725641780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353373484725641782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da077c39214d04347b3bc385d5d15849, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lapTimer: {fileID: 0}
+  channels:
+    channels:
+    - Throttle
+    - Brake
+    - AccelerationLat
+    - AccelerationLong
+    - AccelerationVert
+    - nWheelFL
+    - nWheelFR
+    - nWheelRL
+    - nWheelRR
+    - SteeringAngle
+  modelAsset: {fileID: 5022602860645237092, guid: 3fbec756ec546d64a963be8b00a98398,
+    type: 3}
+  frequency:
+    frequency: 50
+--- !u!114 &8391331809037729897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353373484725641782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb2b2e01fb4da9449c0a59b67a7d63c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  channels:
+    channels:
+    - AccelerationLong
+    - WheelSpinFL
+    - WheelSpinFR
+    - WheelSpinRL
+    - WheelSpinRR
+--- !u!114 &2353373484725641781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353373484725641782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522ecfa4373b6194ea483c507265f715, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
+  component: {fileID: 2353373484725641780}
+--- !u!114 &1563660680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353373484725641782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a80d4142f84454848b7af6c297c71b96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitTelemetry: 1
+  component: {fileID: 8391331809037729897}

@@ -48,7 +48,16 @@ namespace Perrinn424.UI
 
         protected override void OnEnable()
         {
-            modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.ChannelList, Mode.Off });
+            if (telemetryDisplay == null || !telemetryDisplay.enabled)
+            {
+                modes = new CircularIterator<Mode>(new Mode[] { Mode.ChannelList, Mode.Off });
+                if (mode == Mode.Slim || mode == Mode.Wide)
+                    mode = Mode.Off;
+            }
+            else
+            {
+                modes = new CircularIterator<Mode>(new Mode[] { Mode.Slim, Mode.Wide, Mode.ChannelList, Mode.Off });
+            }
 
             screenCoordinatesUtility.RectTransformDimensionsChanged += UpdateTelemetryDimensions;
             modes.Current = mode;

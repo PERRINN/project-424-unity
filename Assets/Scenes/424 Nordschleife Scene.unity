@@ -12417,6 +12417,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 4798faf1eb7464f268fe7bae22d48e06,
         type: 2}
+    - target: {fileID: 6028877664637876172, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6975231246497589389, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
       propertyPath: emitTelemetry
@@ -12725,6 +12730,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1308062750}
   - component: {fileID: 1308062751}
+  - component: {fileID: 1308062752}
   m_Layer: 0
   m_Name: User Interfaces
   m_TagString: Untagged
@@ -12767,6 +12773,18 @@ MonoBehaviour:
   - {fileID: 1536732955}
   fullScreen:
   - {fileID: 361772926}
+--- !u!114 &1308062752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308062749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94962cea1e627514aaddedf7e3bd87b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1308067444 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5167941506821221344, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
@@ -12978,16 +12996,10 @@ PrefabInstance:
       propertyPath: lapTimer
       value: 
       objectReference: {fileID: 114863622256485037}
-    - target: {fileID: 2353373484725641780, guid: deca9c939019064418f2f9d2c77dd6de,
-        type: 3}
-      propertyPath: modelAsset
-      value: 
-      objectReference: {fileID: 5022602860645237092, guid: 3fbec756ec546d64a963be8b00a98398,
-        type: 3}
     - target: {fileID: 2353373484725641782, guid: deca9c939019064418f2f9d2c77dd6de,
         type: 3}
       propertyPath: m_Name
-      value: 'AISpeedEstimator '
+      value: 'SpeedEstimator '
       objectReference: {fileID: 0}
     - target: {fileID: 2353373484725641783, guid: deca9c939019064418f2f9d2c77dd6de,
         type: 3}
@@ -13044,6 +13056,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8391331809037729897, guid: deca9c939019064418f2f9d2c77dd6de,
+        type: 3}
+      propertyPath: lapTimer
+      value: 
+      objectReference: {fileID: 114863622256485037}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: deca9c939019064418f2f9d2c77dd6de, type: 3}
 --- !u!114 &1536732955 stripped
