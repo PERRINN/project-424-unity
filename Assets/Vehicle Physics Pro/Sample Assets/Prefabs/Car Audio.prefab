@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489258901874998}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &82749586566495700
 AudioSource:
@@ -328,7 +328,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489258901874998}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &82838061138449548
 AudioSource:
@@ -499,7 +499,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489258901874998}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &82503947899393094
 AudioSource:
@@ -661,7 +661,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489258901874998}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &82762013342699160
 AudioSource:
@@ -803,6 +803,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4489258901874998}
   - component: {fileID: 114462316325742096}
+  - component: {fileID: 2644521831261358049}
   m_Layer: 8
   m_Name: Car Audio
   m_TagString: Untagged
@@ -823,6 +824,7 @@ Transform:
   m_Children:
   - {fileID: 4613578466509208}
   - {fileID: 4275731641937160}
+  - {fileID: 3490086206207875064}
   - {fileID: 4841798175975954}
   - {fileID: 4701580497467164}
   - {fileID: 4797382344548800}
@@ -877,7 +879,7 @@ MonoBehaviour:
     retarderMaxVolume: 0.8
   wheels:
     skidAudioSource: {fileID: 82807704671967478}
-    skidMinSlip: 0.2
+    skidMinSlip: 1.3
     skidMaxSlip: 7
     skidMinPitch: 0.9
     skidMaxPitch: 0.8
@@ -905,8 +907,8 @@ MonoBehaviour:
     minPitch: 0.4
     maxPitch: 0.6
     randomPitch: 0.2
-    minVolume: 0.3
-    maxVolume: 0.5
+    minVolume: 0.7
+    maxVolume: 1
     randomVolume: 0.2
   drags:
     hardDragAudioSource: {fileID: 82097769819773674}
@@ -915,16 +917,16 @@ MonoBehaviour:
     maxSpeed: 20
     minPitch: 0.6
     maxPitch: 0.8
-    minVolume: 0
-    maxVolume: 0
+    minVolume: 0.8
+    maxVolume: 1
     scratchAudioClip: {fileID: 8300000, guid: b75c88da945e230429739740c8b1f102, type: 3}
     scratchRandomThreshold: 0.02
     scratchMinSpeed: 2
     scratchMinInterval: 0.2
     scratchMinPitch: 0.7
     scratchMaxPitch: 1.1
-    scratchMinVolume: 0
-    scratchMaxVolume: 0
+    scratchMinVolume: 0.9
+    scratchMaxVolume: 1
   wind:
     windAudioSource: {fileID: 82749586566495700}
     minSpeed: 3
@@ -932,6 +934,28 @@ MonoBehaviour:
     minPitch: 0.5
     maxPitch: 1
     maxVolume: 0.5
+--- !u!114 &2644521831261358049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606757270840104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -23991241, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  output: {fileID: 0}
+  enginePosition: {fileID: 3490086206207875064}
+  engineStartupClip: {fileID: 8300000, guid: efcdfdecc03ce4f4fb144ce19f9ebe61, type: 3}
+  engineStartupVolume: 0.2
+  engineStartupPitch: 1
+  minDistance: 1
+  maxDistance: 100
+  attenuationDistance: 20
+  attenuatedVolume: 0.05
+  interiorCameraFilter: 0.15
 --- !u!1 &1620073806927670
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,7 +986,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489258901874998}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &82110351989643958
 AudioSource:
@@ -1124,7 +1148,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489258901874998}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &82097769819773674
 AudioSource:
@@ -1457,7 +1481,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489258901874998}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &82807704671967478
 AudioSource:
@@ -1589,3 +1613,33 @@ AudioLowPassFilter:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!1 &1028310854879252541
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3490086206207875064}
+  m_Layer: 8
+  m_Name: Engine Startup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3490086206207875064
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028310854879252541}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.805, z: -0.635}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4489258901874998}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

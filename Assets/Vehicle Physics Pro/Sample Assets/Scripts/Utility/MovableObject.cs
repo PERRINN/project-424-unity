@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2023 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -24,14 +24,15 @@ public class MovableObject : MonoBehaviour
 	public AutoMovement autoMode = AutoMovement.None;
 	public float autoAmplitude = 0.2f;
 	public float autoFrequency = 1.0f;
+	public bool autoPositiveOnly = false;
 
 	public KeyCode keyIncrement = KeyCode.KeypadPlus;
 	public KeyCode keyDecrement = KeyCode.KeypadMinus;
 
 
-	private Rigidbody m_rb;
-	private Vector3 m_basePos;
-	private float m_offset;
+	Rigidbody m_rb;
+	Vector3 m_basePos;
+	float m_offset;
 
 
 	void OnEnable ()
@@ -44,6 +45,8 @@ public class MovableObject : MonoBehaviour
 
 	void OnDisable ()
 		{
+		if (m_rb)
+			m_rb.MovePosition(m_basePos);
 		transform.position = m_basePos;
 		}
 
@@ -71,6 +74,9 @@ public class MovableObject : MonoBehaviour
 				m_offset = 0.0f;
 				break;
 			}
+
+		if (autoPositiveOnly)
+			m_offset = Mathf.Abs(m_offset);
 
 		position = Mathf.Clamp(position, min, max);
 		Vector3 newPos = m_basePos + direction * (position + m_offset);

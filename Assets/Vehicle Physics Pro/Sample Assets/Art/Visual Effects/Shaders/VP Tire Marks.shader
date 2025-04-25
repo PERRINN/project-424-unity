@@ -12,16 +12,10 @@ Properties
 SubShader
 	{
 	Tags { "RenderType"="Opaque" "IgnoreProjector"="True" "Queue"="Geometry+1" }
+	Offset -1, -1
 	LOD 200
 
 	CGPROGRAM
-	// WARNING!! (Unity 5.1)
-	//		Shader receives or not shadows depending on the Rendering Mode from the material
-	//		(in the Standard Shader inspector)
-	//
-	// I.e: Selecting the Standard shader, then changing Rendering Mode to Fade, and selecting
-	// back this shader, then shadows won't be collected by objects using this material.
-
 	#pragma surface surf Standard fullforwardshadows decal:blend vertex:vert
 	#pragma target 3.0
 

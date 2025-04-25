@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2023 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -33,15 +33,10 @@ public class BankedPlatform : MonoBehaviour
 	Rigidbody m_rigidbody;
 
 
-	void Start ()
+	void OnEnable ()
 		{
 		m_state = 3;
 		m_wakeUpTime = Time.time + pauseAtLimits;
-		}
-
-
-	void OnEnable ()
-		{
 		m_rigidbody = GetComponent<Rigidbody>();
 		}
 
@@ -133,7 +128,12 @@ public class BankedPlatform : MonoBehaviour
 	void OnGUI ()
 		{
 		if (showAngle)
-			GUI.Label(new Rect(labelPosition.x, labelPosition.y, 300, 100), string.Format("Platform angle: {0,4:0.0}°", transform.localEulerAngles.x), labelStyle);
+			{
+			float angle = transform.localEulerAngles.x;
+			float grade = Mathf.Tan(angle * Mathf.Deg2Rad) * 100.0f;
+
+			GUI.Label(new Rect(labelPosition.x, labelPosition.y, 300, 100), string.Format("Platform angle: {0,4:0.0}° grade: {1,4:0.0}%", angle, grade), labelStyle);
+			}
 		}
 
 
