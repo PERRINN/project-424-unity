@@ -295,13 +295,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7107032679735233751, guid: 8cbcbed958cfd4f769a62a65db789986,
         type: 3}
+      propertyPath: m_ProbeAnchor
+      value: 
+      objectReference: {fileID: 1103541310}
+    - target: {fileID: -7107032679735233751, guid: 8cbcbed958cfd4f769a62a65db789986,
+        type: 3}
+      propertyPath: m_ReflectionProbeUsage
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -7107032679735233751, guid: 8cbcbed958cfd4f769a62a65db789986,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: bdf81352b5fcc9f42aeceaa19804c32b, type: 2}
+      objectReference: {fileID: 2100000, guid: 69581516e265d904d8c0e8c3fc2ecec0, type: 2}
+    - target: {fileID: -564421378888180936, guid: 8cbcbed958cfd4f769a62a65db789986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8cbcbed958cfd4f769a62a65db789986,
         type: 3}
       propertyPath: m_Name
       value: chassis narrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8cbcbed958cfd4f769a62a65db789986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8cbcbed958cfd4f769a62a65db789986,
         type: 3}
@@ -12846,6 +12866,12 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4251215812570826035, guid: 8368094040e50bc48a2a58a0a8db460a,
     type: 3}
   m_PrefabInstance: {fileID: 470636970}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1103541310 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 888917427318975118, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+    type: 3}
+  m_PrefabInstance: {fileID: 773184381}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1290832887 stripped
 MonoBehaviour:
