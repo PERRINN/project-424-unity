@@ -41,7 +41,8 @@ namespace Perrinn424.CameraSystem
             {
                 cameraController.NextMode();
             }
-
+            // Disable F-keys on WebGL
+            #if !UNITY_WEBGL
             if (Input.GetKeyDown(driverMode))
             {
                 cameraController.SetMode(CameraController.Mode.Driver);
@@ -74,6 +75,7 @@ namespace Perrinn424.CameraSystem
             {
                 cameraController.SetMode(CameraController.Mode.PhysicsRear);
             }
+            #endif
         }
 
         private void Reset()

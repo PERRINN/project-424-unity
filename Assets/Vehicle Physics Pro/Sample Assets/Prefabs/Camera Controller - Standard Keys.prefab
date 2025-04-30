@@ -45,10 +45,9 @@ Camera:
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
   m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
+  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -136,12 +135,12 @@ MonoBehaviour:
   m_Script: {fileID: 1403093141, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 0
+  mode: 1
   target: {fileID: 0}
   changeCameraKey: 99
   customCameraIndex: 0
   timeMode: 1
-  driverCameraFov: 45
+  driverCameraFov: 70
   driver:
     hotKey: 282
     attachTarget: {fileID: 0}
@@ -184,7 +183,7 @@ MonoBehaviour:
   orbit:
     hotKey: 284
     distance: 14
-    minVerticalAngle: -10
+    minVerticalAngle: 1.8
     maxVerticalAngle: 70
     horizontalSpeed: 5
     verticalSpeed: 2.5
@@ -209,10 +208,10 @@ MonoBehaviour:
     autoFov: 1
     targetRadius: 5
     targetRadiusSpeed: 5
-    adjustNearPlane: 1
-    nearPlaneAtMinFov: 8
+    adjustNearPlane: 0
+    nearPlaneAtMinFov: 1.5
     fovAxis: Mouse ScrollWheel
-    enableMovement: 1
+    enableMovement: 0
     movementSpeed: 10
     movementDamping: 5
     forwardAxis: Forwards
@@ -225,7 +224,7 @@ MonoBehaviour:
     horizontalSpeed: 4
     verticalSpeed: 2
     damping: 4
-    adjustFov: 0
+    adjustFov: 1
     minFov: 10
     maxFov: 60
     fovSpeed: 20

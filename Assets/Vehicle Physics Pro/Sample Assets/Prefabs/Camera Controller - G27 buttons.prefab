@@ -140,9 +140,37 @@ MonoBehaviour:
   changeCameraKey: 99
   customCameraIndex: 0
   timeMode: 1
-  attachTo:
+  driverCameraFov: 70
+  driver:
     hotKey: 330
     attachTarget: {fileID: 0}
+    enableRotation: 0
+    resetRotationOnEnable: 0
+    requireKeyPressedToRotate: 0
+    keyToRequire: 324
+    lookAtTarget: {fileID: 0}
+    horizontal:
+      angle: 0
+      mode: 1
+      targetOffset: 0
+      damped: 1
+      damping: 4
+      clamped: 1
+      minAngle: -90
+      maxAngle: 90
+    vertical:
+      angle: 0
+      mode: 1
+      targetOffset: 0
+      damped: 1
+      damping: 4
+      clamped: 1
+      minAngle: -60
+      maxAngle: 60
+    horizontalAxis: Mouse X
+    verticalAxis: Mouse Y
+    horizontalSensitivity: 4
+    verticalSensitivity: 4
   smoothFollow:
     hotKey: 331
     distance: 10
@@ -164,6 +192,8 @@ MonoBehaviour:
     maxDistance: 50
     distanceSpeed: 10
     distanceDamping: 4
+    requireKeyPressed: 0
+    requiredKey: 324
     horizontalAxis: Mouse X
     verticalAxis: Mouse Y
     distanceAxis: Mouse ScrollWheel
