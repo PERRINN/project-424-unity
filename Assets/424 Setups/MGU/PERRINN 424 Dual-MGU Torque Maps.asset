@@ -13,34 +13,36 @@ MonoBehaviour:
   m_Name: PERRINN 424 Dual-MGU Torque Maps
   m_EditorClassIdentifier: 
   settings:
-    packPowerMax: 700
-    packPowerMin: -450
-    packTorqueOverrun: -500
-    powerBalanceDrive: 0.5
-    powerBalanceOverrun: 0.1
-    powerBalanceRegen: 0.65
+    packPowerMax: 800
+    packPowerMin: -800
+    packTorqueOverrun: -300
+    powerBalanceDrive: 0.333
+    powerBalanceDriveShape: 1
+    powerBalanceOverrun: 0.15
+    powerBalanceRegen: 0.7
+    powerBalanceRegenShape: 1
     packBrakeGain: 33
     clutch: 0.15
     limiter: 1
     limiterRamp: 0.03
     powerRampStart: 1
     powerRampEnd: 2
-    inertiaFront: 1.1
-    inertiaRear: 1.1
+    inertiaFront: 0.57
+    inertiaRear: 1.14
     muFront: 1
     muRear: 1
     maxRpmFront: 2800
     maxRpmRear: 2800
-    efficiencyZeroRpmFront: 0.76
-    efficiencyZeroRpmRear: 0.76
+    efficiencyZeroRpmFront: 0.77
+    efficiencyZeroRpmRear: 0.77
     efficiencyPeakFront: 0.95
     efficiencyPeakRear: 0.95
-    efficiencyPeakRpmFront: 2000
-    efficiencyPeakRpmRear: 2000
-    maxPowerFront: 350
-    maxPowerRear: 350
-    unrestrictedPowerFront: 785
-    unrestrictedPowerRear: 785
+    efficiencyPeakRpmFront: 2040
+    efficiencyPeakRpmRear: 2040
+    maxPowerFront: 300
+    maxPowerRear: 600
+    unrestrictedPowerFront: 700
+    unrestrictedPowerRear: 1400
     throttleShape: 1.6
     brakeShape: 1
     hydraulicBrakeGain: 100
