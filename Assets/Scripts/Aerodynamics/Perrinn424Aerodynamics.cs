@@ -32,6 +32,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 	public float frontFlapDeflectionPreload   = 470.0f;
 	public float frontFlapDeflectionStiffness = -0.006f;
 	public float frontFlapDeflectionMax       = -5.0f;
+	public float frontFlapMaxSlewRate         = 100.0f;
 
 	public float heaveFactor 				  = 1.333f;
 
@@ -179,13 +180,13 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 
 			if (DRSopenButton)
             {
-				DRSpos += Time.deltaTime * (1 / dRSActivationTime);
+				DRSpos += Time.deltaTime / dRSActivationTime;
 			}
             else
             {
 				DRStime -= Time.deltaTime;
 				if (DRStime <= 0.0f)
-					DRSpos += Time.deltaTime * (1 / dRSActivationTime);
+					DRSpos += Time.deltaTime / dRSActivationTime;
 			}
 		}
 		else
@@ -196,7 +197,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 			{
 				DRSclosing = false;
 			}
-			DRSpos -= Time.deltaTime * (1 / dRSActivationTime);
+			DRSpos -= Time.deltaTime / dRSActivationTime;
 			DRStime = dRSActivationDelay;
 		}
 		DRSpos = Mathf.Clamp(DRSpos, 0, 1.0f);
@@ -269,10 +270,14 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		heave = frontRideHeight + heaveFactor * rearRideHeight;
 		pitch = - frontRideHeight + 1/heaveFactor * rearRideHeight;
 
+
 		// Calculating front flap deflection due to aeroelasticity
 		flapForce = (frontFlapSCz0 + frontFlapSCz_perDeg * flapAngle) * dynamicPressure;
 		flapDeflection = Mathf.Max(frontFlapDeflectionMax, Mathf.Max(0, flapForce - frontFlapDeflectionPreload) * frontFlapDeflectionStiffness);
-		flapAngle = Mathf.Clamp(frontFlapStaticAngle + flapDeflection + DRS * frontFlapDRSAngle, -15, 15);
+		float flapAngleDesired = Mathf.Clamp(frontFlapStaticAngle + flapDeflection + DRS * frontFlapDRSAngle, frontFlapDRSAngle + frontFlapStaticAngle, frontFlapStaticAngle);
+		
+		// Clip flap angle to maximum slew rate to avoid numerical instability
+		flapAngle += Mathf.Max(-Time.deltaTime * frontFlapMaxSlewRate, Mathf.Min(Time.deltaTime * frontFlapMaxSlewRate, flapAngleDesired - flapAngle));
 
 		// Calculating aero forces
 		if (front.applicationPoint != null)
