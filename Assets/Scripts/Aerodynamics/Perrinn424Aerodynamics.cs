@@ -274,7 +274,7 @@ public class Perrinn424Aerodynamics : VehicleBehaviour
 		// Calculating front flap deflection due to aeroelasticity
 		flapForce = (frontFlapSCz0 + frontFlapSCz_perDeg * flapAngle) * dynamicPressure;
 		flapDeflection = Mathf.Max(frontFlapDeflectionMax, Mathf.Max(0, flapForce - frontFlapDeflectionPreload) * frontFlapDeflectionStiffness);
-		float flapAngleDesired = Mathf.Clamp(frontFlapStaticAngle + flapDeflection + DRS * frontFlapDRSAngle, frontFlapDRSAngle + frontFlapStaticAngle, frontFlapStaticAngle);
+		float flapAngleDesired = Mathf.Clamp(frontFlapStaticAngle + flapDeflection + DRS * frontFlapDRSAngle, -15, 15);
 		
 		// Clip flap angle to maximum slew rate to avoid numerical instability
 		flapAngle += Mathf.Max(-Time.deltaTime * frontFlapMaxSlewRate, Mathf.Min(Time.deltaTime * frontFlapMaxSlewRate, flapAngleDesired - flapAngle));
