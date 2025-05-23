@@ -770,6 +770,7 @@ Transform:
   m_Children:
   - {fileID: 2483877716415502929}
   - {fileID: 2483877716124499243}
+  - {fileID: 7204547395444665497}
   - {fileID: 6423044869952790433}
   - {fileID: 3284246218944085873}
   m_Father: {fileID: 2483877716221292743}
@@ -944,7 +945,7 @@ MonoBehaviour:
     dRS_Coefficient: -1.3965
     frontFlapCoefficient: -0.038
   drag:
-    applicationPoint: {fileID: 2483877716124499243}
+    applicationPoint: {fileID: 7204547395444665497}
     constantHeavePitch: 0.998
     heaveCoefficient: 0.00333
     heave2Coefficient: -0.00000969
@@ -2125,7 +2126,7 @@ Transform:
   - {fileID: 4829892283867516816}
   - {fileID: 2209396665434650757}
   m_Father: {fileID: 2483877715235533905}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2777815221197631934
 GameObject:
@@ -4144,7 +4145,7 @@ Transform:
   - {fileID: 3138034683719753726}
   - {fileID: 5609221771532909897}
   m_Father: {fileID: 2483877715235533905}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5646198266606701774
 GameObject:
@@ -5089,6 +5090,37 @@ MonoBehaviour:
     host: 127.0.0.1
     port: 42477
     maxTransferFrequency: 150
+--- !u!1 &7804659682295448996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7204547395444665497}
+  m_Layer: 8
+  m_Name: Aero Drag
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7204547395444665497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804659682295448996}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2483877715235533905}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7858371211814414405
 GameObject:
   m_ObjectHideFlags: 0
