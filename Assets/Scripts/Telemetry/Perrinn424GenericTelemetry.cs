@@ -22,16 +22,19 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.minGearPosition = -1;
 		vehicle.telemetry.specs.maxAcceleration = 6 * Gravity.reference;
 		vehicle.telemetry.specs.maxAngularAcceleration = 4000 * Mathf.Deg2Rad;
-		vehicle.telemetry.specs.maxWheelTorque = 3000;
-		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;
-		vehicle.telemetry.specs.maxWheelLoad = 2000.0f * Gravity.magnitude;
-		vehicle.telemetry.specs.maxTireForce = 30000.0f;
 		vehicle.telemetry.specs.maxEngineRpm = 2900.0f;
 		vehicle.telemetry.specs.maxEnginePowerKw = 600.0f;
 		vehicle.telemetry.specs.minEnginePowerKw = -300.0f;
 		vehicle.telemetry.specs.maxEngineTorque = 4400.0f;
 		vehicle.telemetry.specs.minEngineTorque = -4400.0f;
+		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;
+		vehicle.telemetry.specs.maxSuspensionSpring = 230000.0f;
+		vehicle.telemetry.specs.maxSuspensionDamper = 6000.0f;
+		vehicle.telemetry.specs.maxSuspensionSpeed = 0.4f;
+		vehicle.telemetry.specs.maxWheelLoad = 20000.0f;
+		vehicle.telemetry.specs.maxWheelTorque = 3000.0f;
 		vehicle.telemetry.specs.maxWheelRpm = 2900.0f;
+		vehicle.telemetry.specs.maxTireForce = 30000.0f;
 
 		vehicle.telemetry.ApplySpecifications();
 
