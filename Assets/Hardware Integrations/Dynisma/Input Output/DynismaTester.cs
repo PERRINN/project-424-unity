@@ -6,6 +6,7 @@ using UnityEngine;
 using EdyCommonTools;
 using System.Text;
 using System.Runtime.InteropServices;
+using VersionCompatibility;
 
 
 namespace Perrinn424

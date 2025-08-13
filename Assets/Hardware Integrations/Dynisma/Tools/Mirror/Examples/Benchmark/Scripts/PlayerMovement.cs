@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using VersionCompatibility;
+
 
 namespace Mirror.Examples.Benchmark
 {

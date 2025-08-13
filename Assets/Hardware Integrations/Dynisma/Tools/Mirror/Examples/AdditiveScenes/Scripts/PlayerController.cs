@@ -1,4 +1,5 @@
 using UnityEngine;
+using VersionCompatibility;
 
 namespace Mirror.Examples.AdditiveScenes
 {

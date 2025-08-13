@@ -6,6 +6,7 @@
 
 using UnityEngine;
 using System.Collections;
+using VersionCompatibility;
 
 
 [RequireComponent(typeof(Rigidbody))]

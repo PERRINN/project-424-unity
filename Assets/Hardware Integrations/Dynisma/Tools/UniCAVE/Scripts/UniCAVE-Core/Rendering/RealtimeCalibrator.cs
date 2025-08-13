@@ -8,6 +8,7 @@ using Mirror;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
+using VersionCompatibility;
 
 namespace UniCAVE
 {

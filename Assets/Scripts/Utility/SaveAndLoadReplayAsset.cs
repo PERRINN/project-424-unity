@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using VehiclePhysics;
+using VersionCompatibility;
 
 
 [RequireComponent(typeof(VPReplayController))]

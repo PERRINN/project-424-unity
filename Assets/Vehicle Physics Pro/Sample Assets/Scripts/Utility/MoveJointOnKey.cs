@@ -5,6 +5,7 @@
 //--------------------------------------------------------------
 
 using UnityEngine;
+using VersionCompatibility;
 
 namespace VehiclePhysics.Utility
 {

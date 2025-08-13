@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using VehiclePhysics;
+using VersionCompatibility;
 
 
 public class VehicleSpawnPoints : MonoBehaviour

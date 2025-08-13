@@ -6,6 +6,7 @@
 
 using UnityEngine;
 using EdyCommonTools;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.Utility

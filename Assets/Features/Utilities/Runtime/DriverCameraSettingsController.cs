@@ -2,6 +2,7 @@
 using UnityEngine;
 using VehiclePhysics;
 using EdyCommonTools;
+using VersionCompatibility;
 
 namespace Perrinn424.Utilities
 {

@@ -16,6 +16,7 @@ using UnityEngine.XR;
 #if XR_MANAGER
 using UnityEngine.XR.Management;
 #endif
+using VersionCompatibility;
 
 
 namespace VehiclePhysics

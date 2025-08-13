@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using VersionCompatibility;
 
 namespace Perrinn424.UI
 {
@@ -27,5 +28,5 @@ namespace Perrinn424.UI
                 component.enabled = isEnable;
             }
         }
-    } 
+    }
 }

@@ -14,6 +14,7 @@
 //       mode.
 using UnityEngine;
 using System.Collections.Generic;
+using VersionCompatibility;
 
 namespace Mirror
 {

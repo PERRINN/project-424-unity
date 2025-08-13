@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VersionCompatibility;
 
 namespace Mirror.Examples.MultipleAdditiveScenes
 {

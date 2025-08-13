@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using VehiclePhysics;
+using VersionCompatibility;
 
 namespace Perrinn424.CameraSystem
 {

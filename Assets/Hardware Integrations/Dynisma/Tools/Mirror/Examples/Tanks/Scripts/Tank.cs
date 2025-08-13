@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using VersionCompatibility;
 
 namespace Mirror.Examples.Tanks
 {

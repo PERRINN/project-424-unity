@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using VehiclePhysics;
 using VehiclePhysics.InputManagement;
+using VersionCompatibility;
 
 
 namespace Perrinn424.AutopilotSystem
