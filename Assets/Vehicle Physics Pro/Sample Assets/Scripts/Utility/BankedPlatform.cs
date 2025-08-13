@@ -43,7 +43,7 @@ public class BankedPlatform : MonoBehaviour
 
 	void Update ()
 		{
-		if (Input.GetKeyDown(KeyCode.KeypadEnter))
+		if (UnityInput.GetKeyDown(UnityKey.NumpadEnter))
 			{
 			manual = !manual;
 			showAngle = manual;
@@ -56,7 +56,7 @@ public class BankedPlatform : MonoBehaviour
 		Vector3 eulerVelocity = new Vector3(eulerAngleVelocity, 0, 0);
 		Quaternion deltaRotation = Quaternion.identity;
 
-		if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+		if (UnityInput.ctrlKeyPressed)
 			eulerVelocity *= multiplerOnCtrl;
 
 		float currentAngle = transform.eulerAngles.x;
@@ -64,10 +64,10 @@ public class BankedPlatform : MonoBehaviour
 
 		if (manual)
 			{
-			if (Input.GetKey(KeyCode.Keypad0))
+			if (UnityInput.GetKey(UnityKey.Numpad0))
 				m_state = 0;
 			else
-			if (Input.GetKey(KeyCode.KeypadPeriod))
+			if (UnityInput.GetKey(UnityKey.NumpadPeriod))
 				m_state = 2;
 			else
 			if (!m_uiPressed)

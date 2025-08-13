@@ -34,11 +34,11 @@ public class Perrinn424RenderClient : NetworkBehaviour
 	public GameObject clientOverlay;
 	public Text packetsPerSecondText;
 	public bool enableOverlayToggleKey = false;
-	public KeyCode overlayToggleKey = KeyCode.R;
+	public UnityKey overlayToggleKey = UnityKey.R;
 
 	[Header("Top Panel")]
 	public GameObject clientTopPanel;
-	public KeyCode topPanelToggleKey = KeyCode.P;
+	public UnityKey topPanelToggleKey = UnityKey.P;
 
 	[Header("Other")]
 	public Transform miniDashboard;
@@ -337,12 +337,12 @@ public class Perrinn424RenderClient : NetworkBehaviour
 
 	void Update ()
 		{
-		if (enableOverlayToggleKey && Input.GetKeyDown(overlayToggleKey) && clientOverlay != null)
+		if (enableOverlayToggleKey && UnityInput.GetKeyDown(overlayToggleKey) && clientOverlay != null)
 			{
 			clientOverlay.SetActive(!clientOverlay.activeSelf);
 			}
 
-		if (Input.GetKeyDown(topPanelToggleKey) && clientTopPanel != null)
+		if (UnityInput.GetKeyDown(topPanelToggleKey) && clientTopPanel != null)
 			{
 			clientTopPanel.SetActive(!clientTopPanel.activeSelf);
 			}

@@ -46,7 +46,7 @@ namespace Mirror.Examples.Chat
         // Called by UI element MessageField.OnEndEdit
         public void OnEndEdit(string input)
         {
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetButtonDown("Submit"))
+            if (UnityInput.GetKeyDown(UnityKey.Enter) || UnityInput.GetKeyDown(UnityKey.NumpadEnter))
                 SendMessage();
         }
 

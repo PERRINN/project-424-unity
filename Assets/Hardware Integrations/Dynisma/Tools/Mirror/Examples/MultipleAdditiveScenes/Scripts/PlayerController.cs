@@ -45,23 +45,23 @@ namespace Mirror.Examples.MultipleAdditiveScenes
             if (!isLocalPlayer || characterController == null || !characterController.enabled)
                 return;
 
-            horizontal = Input.GetAxis("Horizontal");
-            vertical = Input.GetAxis("Vertical");
+            horizontal = UnityInput.GetAxis(UnityAxis.Horizontal);
+            vertical = UnityInput.GetAxis(UnityAxis.Vertical);
 
             // Q and E cancel each other out, reducing the turn to zero
-            if (Input.GetKey(KeyCode.Q))
+            if (UnityInput.GetKey(UnityKey.Q))
                 turn = Mathf.MoveTowards(turn, -maxTurnSpeed, turnSensitivity);
-            if (Input.GetKey(KeyCode.E))
+            if (UnityInput.GetKey(UnityKey.E))
                 turn = Mathf.MoveTowards(turn, maxTurnSpeed, turnSensitivity);
-            if (Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
+            if (UnityInput.GetKey(UnityKey.Q) && UnityInput.GetKey(UnityKey.E))
                 turn = Mathf.MoveTowards(turn, 0, turnSensitivity);
-            if (!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E))
+            if (!UnityInput.GetKey(UnityKey.Q) && !UnityInput.GetKey(UnityKey.E))
                 turn = Mathf.MoveTowards(turn, 0, turnSensitivity);
 
             if (isGrounded)
                 isFalling = false;
 
-            if ((isGrounded || !isFalling) && jumpSpeed < 1f && Input.GetKey(KeyCode.Space))
+            if ((isGrounded || !isFalling) && jumpSpeed < 1f && UnityInput.GetKey(UnityKey.Space))
             {
                 jumpSpeed = Mathf.Lerp(jumpSpeed, 1f, 0.5f);
             }

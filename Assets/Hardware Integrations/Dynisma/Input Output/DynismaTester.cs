@@ -294,20 +294,20 @@ public class DynismaTester : MonoBehaviour
 
 	void UpdatePlatformPosition ()
 		{
-		bool ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-		bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+		bool ctrl = UnityInput.ctrlKeyPressed;
+		bool shift = UnityInput.shiftKeyPressed;
 		bool translate = !ctrl || shift;
 		bool rotate = ctrl || shift;
 
 		Vector3 targetPos = Vector3.zero;
 		if (translate)
 			{
-			if (Input.GetKey(KeyCode.LeftArrow)) targetPos.x = -1;
-			if (Input.GetKey(KeyCode.RightArrow)) targetPos.x = +1;
-			if (Input.GetKey(KeyCode.PageDown)) targetPos.y = -1;
-			if (Input.GetKey(KeyCode.PageUp)) targetPos.y = +1;
-			if (Input.GetKey(KeyCode.DownArrow)) targetPos.z = -1;
-			if (Input.GetKey(KeyCode.UpArrow)) targetPos.z = +1;
+			if (UnityInput.GetKey(UnityKey.LeftArrow)) targetPos.x = -1;
+			if (UnityInput.GetKey(UnityKey.RightArrow)) targetPos.x = +1;
+			if (UnityInput.GetKey(UnityKey.PageDown)) targetPos.y = -1;
+			if (UnityInput.GetKey(UnityKey.PageUp)) targetPos.y = +1;
+			if (UnityInput.GetKey(UnityKey.DownArrow)) targetPos.z = -1;
+			if (UnityInput.GetKey(UnityKey.UpArrow)) targetPos.z = +1;
 			}
 
 		if (autoLoop)
@@ -324,12 +324,12 @@ public class DynismaTester : MonoBehaviour
 		Vector3 targetAngles = Vector3.zero;
 		if (rotate)
 			{
-			if (Input.GetKey(KeyCode.LeftArrow)) targetAngles.y = -1;
-			if (Input.GetKey(KeyCode.RightArrow)) targetAngles.y = +1;
-			if (Input.GetKey(KeyCode.PageDown)) targetAngles.z = +1;
-			if (Input.GetKey(KeyCode.PageUp)) targetAngles.z = -1;
-			if (Input.GetKey(KeyCode.DownArrow)) targetAngles.x = -1;
-			if (Input.GetKey(KeyCode.UpArrow)) targetAngles.x = +1;
+			if (UnityInput.GetKey(UnityKey.LeftArrow)) targetAngles.y = -1;
+			if (UnityInput.GetKey(UnityKey.RightArrow)) targetAngles.y = +1;
+			if (UnityInput.GetKey(UnityKey.PageDown)) targetAngles.z = +1;
+			if (UnityInput.GetKey(UnityKey.PageUp)) targetAngles.z = -1;
+			if (UnityInput.GetKey(UnityKey.DownArrow)) targetAngles.x = -1;
+			if (UnityInput.GetKey(UnityKey.UpArrow)) targetAngles.x = +1;
 			}
 
 		targetPos = targetPos.normalized * maxDisplacement;

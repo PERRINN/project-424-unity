@@ -30,14 +30,14 @@ public class ReplayPanel : MonoBehaviour
 	[Header("Advanced")]
     public bool enableHotKeys = false;
 
-	public KeyCode rewindKey = KeyCode.F9;
-	public KeyCode playPauseKey = KeyCode.F10;
-	public KeyCode forwardKey = KeyCode.F11;
-	public KeyCode recordKey = KeyCode.F12;
+	public UnityKey rewindKey = UnityKey.F9;
+	public UnityKey playPauseKey = UnityKey.F10;
+	public UnityKey forwardKey = UnityKey.F11;
+	public UnityKey recordKey = UnityKey.F12;
 
 	[Space(5)]
 	public bool manualShowAndHide = false;
-	public KeyCode showHideKey = KeyCode.Backspace;
+	public UnityKey showHideKey = UnityKey.Backspace;
 
 	// Private fields
 
@@ -126,16 +126,16 @@ public class ReplayPanel : MonoBehaviour
 
 		if (enableHotKeys)
 			{
-			if (Input.GetKeyDown(forwardKey)) forwardPressed = true;
-			if (Input.GetKeyUp(forwardKey)) forwardPressed = false;
+			if (UnityInput.GetKeyDown(forwardKey)) forwardPressed = true;
+			if (UnityInput.GetKeyUp(forwardKey)) forwardPressed = false;
 
-			if (Input.GetKeyDown(rewindKey)) rewindPressed = true;
-			if (Input.GetKeyUp(rewindKey)) rewindPressed = false;
+			if (UnityInput.GetKeyDown(rewindKey)) rewindPressed = true;
+			if (UnityInput.GetKeyUp(rewindKey)) rewindPressed = false;
 
-			if (Input.GetKeyDown(playPauseKey)) PlayPauseClick();
-			if (Input.GetKeyDown(recordKey)) ReturnClick();
+			if (UnityInput.GetKeyDown(playPauseKey)) PlayPauseClick();
+			if (UnityInput.GetKeyDown(recordKey)) ReturnClick();
 
-			if (Input.GetKeyDown(showHideKey)) m_manualShowPanel = !m_manualShowPanel;
+			if (UnityInput.GetKeyDown(showHideKey)) m_manualShowPanel = !m_manualShowPanel;
 			}
 
 		// Apply the events

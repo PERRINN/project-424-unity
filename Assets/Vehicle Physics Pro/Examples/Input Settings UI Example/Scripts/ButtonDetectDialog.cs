@@ -19,7 +19,7 @@ namespace VehiclePhysics.UI
 
 public class ButtonDetectDialog : InputDetectionDialogBase
 	{
-	public KeyCode cancelKey = KeyCode.Escape;
+	public UnityKey cancelKey = UnityKey.Escape;
 
 	[Header("UI")]
 	public Text deviceText;
@@ -98,7 +98,7 @@ public class ButtonDetectDialog : InputDetectionDialogBase
 
 		// Detect Esc
 
-		if (Input.GetKeyDown(cancelKey))
+		if (UnityInput.GetKeyDown(cancelKey))
 			OnCancel();
 		}
 

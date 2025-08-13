@@ -109,7 +109,7 @@ namespace Perrinn424.UI
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.T))
+            if (UnityInput.GetKeyDown(UnityKey.T))
             {
                 modes.MoveNext();
                 SetMode(modes.Current);

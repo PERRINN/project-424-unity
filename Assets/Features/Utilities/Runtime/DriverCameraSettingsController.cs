@@ -11,14 +11,14 @@ namespace Perrinn424.Utilities
         [Header("Cockpit Camera Adjustment")]
         public Transform firstPersonCameraTarget;
         [Space(5)]
-        public KeyCode increaseHeight;
-        public KeyCode decreaseHeight;
+        public UnityKey increaseHeight;
+        public UnityKey decreaseHeight;
         public float heightStep = 0.025f;
         public float heightMax = 0.1f;
         public float heightMin = -0.1f;
         [Space(5)]
-        public KeyCode increaseRotation;
-        public KeyCode decreaseRotation;
+        public UnityKey increaseRotation;
+        public UnityKey decreaseRotation;
         public float rotationStep = 0.2f;
         public float rotationMin = 0.0f;
         public float rotationMax = 25.0f;
@@ -26,21 +26,21 @@ namespace Perrinn424.Utilities
         [Header("FOV Adjustment")]
         public VPCameraController firstPersonCamera;
         [Space(5)]
-        public KeyCode increaseFOV;
-        public KeyCode decreaseFOV;
+        public UnityKey increaseFOV;
+        public UnityKey decreaseFOV;
         public float fovStep = 5f;
         public float fovMin = 25f;
         public float fovMax = 45f;
 
         [Header("View Damping")]
         public VPHeadMotion headMotion;
-        public KeyCode toggleViewDamping = KeyCode.N;
+        public UnityKey toggleViewDamping = UnityKey.N;
 
         [Header("Minidashboard Adjustment")]
         public Transform miniDashboard;
         [Space(5)]
-        public KeyCode increaseMiniDashboardPosition = KeyCode.Alpha5;
-        public KeyCode decreaseMiniDashboardPosition = KeyCode.Alpha4;
+        public UnityKey increaseMiniDashboardPosition = UnityKey.Digit5;
+        public UnityKey decreaseMiniDashboardPosition = UnityKey.Digit4;
         public float miniDashboardHeightStep = 0.0025f;
 
         public event Action onSettingsChanged;
@@ -53,47 +53,47 @@ namespace Perrinn424.Utilities
 
         private void Update()
         {
-            if (Input.GetKeyDown(increaseHeight))
+            if (UnityInput.GetKeyDown(increaseHeight))
             {
                 SetCameraHeightDelta(heightStep);
             }
 
-            if (Input.GetKeyDown(decreaseHeight))
+            if (UnityInput.GetKeyDown(decreaseHeight))
             {
                 SetCameraHeightDelta(-heightStep);
             }
 
-            if (Input.GetKeyDown(increaseRotation))
+            if (UnityInput.GetKeyDown(increaseRotation))
             {
                 SetCameraRotationDelta(rotationStep);
             }
 
-            if (Input.GetKeyDown(decreaseRotation))
+            if (UnityInput.GetKeyDown(decreaseRotation))
             {
                 SetCameraRotationDelta(-rotationStep);
             }
 
-            if (Input.GetKeyDown(increaseFOV))
+            if (UnityInput.GetKeyDown(increaseFOV))
             {
                 SetCameraFovDelta(fovStep);
             }
 
-            if (Input.GetKeyDown(decreaseFOV))
+            if (UnityInput.GetKeyDown(decreaseFOV))
             {
                 SetCameraFovDelta(-fovStep);
             }
 
-            if (Input.GetKeyDown(toggleViewDamping))
+            if (UnityInput.GetKeyDown(toggleViewDamping))
             {
                 ToggleViewDamping();
             }
 
-            if (Input.GetKeyDown(increaseMiniDashboardPosition))
+            if (UnityInput.GetKeyDown(increaseMiniDashboardPosition))
             {
                 SetMiniDashboardPositionDelta(miniDashboardHeightStep);
             }
 
-            if (Input.GetKeyDown(decreaseMiniDashboardPosition))
+            if (UnityInput.GetKeyDown(decreaseMiniDashboardPosition))
             {
                 SetMiniDashboardPositionDelta(-miniDashboardHeightStep);
             }

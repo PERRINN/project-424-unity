@@ -22,7 +22,7 @@ public class LapTimer : MonoBehaviour
 	public bool startCounting = true;
 
 	[Space(5)]
-	public KeyCode resetKey = KeyCode.Escape;
+	public UnityKey resetKey = UnityKey.Escape;
 	public bool enableTestKeys = false;
 	public bool debugLog = false;
 
@@ -143,20 +143,20 @@ public class LapTimer : MonoBehaviour
 
 		if (enableTestKeys)
 			{
-			if (Input.GetKeyDown(KeyCode.Alpha1)) DebugOnTimerHit(0, Time.fixedTime, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha2)) DebugOnTimerHit(1, Time.fixedTime, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha3)) DebugOnTimerHit(2, Time.fixedTime, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha4)) DebugOnTimerHit(3, Time.fixedTime, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha5)) DebugOnTimerHit(4, Time.fixedTime, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha6)) DebugOnTimerHit(5, Time.fixedTime, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha7)) DebugOnTimerHit(6, Time.fixedTime, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha8)) DebugOnTimerHit(7, Time.fixedTime, 0.0f);
-			if (Input.GetKeyDown(KeyCode.Alpha9)) DebugOnTimerHit(8, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit1)) DebugOnTimerHit(0, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit2)) DebugOnTimerHit(1, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit3)) DebugOnTimerHit(2, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit4)) DebugOnTimerHit(3, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit5)) DebugOnTimerHit(4, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit6)) DebugOnTimerHit(5, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit7)) DebugOnTimerHit(6, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit8)) DebugOnTimerHit(7, Time.fixedTime, 0.0f);
+			if (UnityInput.GetKeyDown(UnityKey.Digit9)) DebugOnTimerHit(8, Time.fixedTime, 0.0f);
 
-			if (Input.GetKeyDown(KeyCode.Alpha0)) InvalidateLap();
+			if (UnityInput.GetKeyDown(UnityKey.Digit0)) InvalidateLap();
 			}
 
-		if (Input.GetKey(resetKey))
+		if (UnityInput.GetKey(resetKey))
 			{
 			m_trackStartTime = startCounting? Time.fixedTime : 0.0f;
 			m_currentSector = 0;

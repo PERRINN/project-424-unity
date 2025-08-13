@@ -20,9 +20,9 @@ public class SaveAndLoadReplayAsset : MonoBehaviour
 
 	void Update ()
 		{
-		if (Input.GetKeyDown(m_controller.saveReplayKey))
+		if (UnityInput.GetKeyDown(m_controller.saveReplayKey))
 			{
-			if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+			if (UnityInput.shiftKeyPressed)
 				LoadReplayFromAssetFile(m_controller.saveReplayFileName);
 			else
 				SaveReplayToAssetFile(m_controller.saveReplayFileName);

@@ -19,7 +19,7 @@ namespace VehiclePhysics.UI
 
 public class WheelDetectDialog : InputDetectionDialogBase
 	{
-	public KeyCode cancelKey = KeyCode.Escape;
+	public UnityKey cancelKey = UnityKey.Escape;
 
 	[Header("UI")]
 	public Text deviceText;
@@ -267,7 +267,7 @@ public class WheelDetectDialog : InputDetectionDialogBase
 
 		// Detect Esc
 
-		if (Input.GetKeyDown(cancelKey))
+		if (UnityInput.GetKeyDown(cancelKey))
 			OnCancel();
 		}
 

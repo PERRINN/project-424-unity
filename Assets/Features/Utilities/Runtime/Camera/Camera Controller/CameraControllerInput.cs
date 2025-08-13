@@ -12,22 +12,22 @@ namespace Perrinn424.CameraSystem
         [SerializeField]
         private VPCameraController VPCameraController;
 
-        public KeyCode nextMode = KeyCode.C;
-        public KeyCode driverMode = KeyCode.F1;
-        public KeyCode followMode = KeyCode.F2;
-        public KeyCode orbitMode = KeyCode.F3;
-        public KeyCode tvMode = KeyCode.F4;
-        public KeyCode physicsFrontMode = KeyCode.F5;
-        public KeyCode physicsRearMode = KeyCode.F6;
+        public UnityKey nextMode = UnityKey.C;
+        public UnityKey driverMode = UnityKey.F1;
+        public UnityKey followMode = UnityKey.F2;
+        public UnityKey orbitMode = UnityKey.F3;
+        public UnityKey tvMode = UnityKey.F4;
+        public UnityKey physicsFrontMode = UnityKey.F5;
+        public UnityKey physicsRearMode = UnityKey.F6;
 
 
-        private KeyCode vpCameraControllerKey;
+        private UnityKey vpCameraControllerKey;
 
 
         private void OnEnable()
         {
             vpCameraControllerKey = VPCameraController.changeCameraKey;
-            VPCameraController.changeCameraKey = KeyCode.None;
+            VPCameraController.changeCameraKey = UnityKey.None;
         }
 
         private void OnDisable()
@@ -37,23 +37,23 @@ namespace Perrinn424.CameraSystem
 
         private void Update()
         {
-            if (Input.GetKeyDown(nextMode))
+            if (UnityInput.GetKeyDown(nextMode))
             {
                 cameraController.NextMode();
             }
             // Disable F-keys on WebGL
             #if !UNITY_WEBGL
-            if (Input.GetKeyDown(driverMode))
+            if (UnityInput.GetKeyDown(driverMode))
             {
                 cameraController.SetMode(CameraController.Mode.Driver);
             }
 
-            if (Input.GetKeyDown(followMode))
+            if (UnityInput.GetKeyDown(followMode))
             {
                 cameraController.SetMode(CameraController.Mode.SmoothFollow);
             }
 
-            if (Input.GetKeyDown(orbitMode))
+            if (UnityInput.GetKeyDown(orbitMode))
             {
                 if (VPCameraController.orbit.targetRelative)
                     cameraController.SetMode(CameraController.Mode.OrbitFixed);
@@ -61,17 +61,17 @@ namespace Perrinn424.CameraSystem
                     cameraController.SetMode(CameraController.Mode.Orbit);
             }
 
-            if (Input.GetKeyDown(tvMode))
+            if (UnityInput.GetKeyDown(tvMode))
             {
                 cameraController.SetMode(CameraController.Mode.Tv);
             }
 
-            if (Input.GetKeyDown(physicsFrontMode))
+            if (UnityInput.GetKeyDown(physicsFrontMode))
             {
                 cameraController.SetMode(CameraController.Mode.PhysicsFront);
             }
 
-            if (Input.GetKeyDown(physicsRearMode))
+            if (UnityInput.GetKeyDown(physicsRearMode))
             {
                 cameraController.SetMode(CameraController.Mode.PhysicsRear);
             }

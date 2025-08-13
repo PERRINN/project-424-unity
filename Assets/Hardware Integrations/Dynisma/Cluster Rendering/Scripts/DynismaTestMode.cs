@@ -112,8 +112,8 @@ public class DynismaTestMode : MonoBehaviour
 						{
 						replayController.enableShortcuts = true;
 						replayController.showPanel = true;
-						replayController.recordKey = KeyCode.None;
-						replayController.saveReplayKey = KeyCode.None;
+						replayController.recordKey = UnityKey.None;
+						replayController.saveReplayKey = UnityKey.None;
 						}
 					}
 				else

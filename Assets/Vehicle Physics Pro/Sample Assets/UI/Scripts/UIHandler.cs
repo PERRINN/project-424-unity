@@ -156,7 +156,7 @@ public class UIHandler : MonoBehaviour
 		//
 		// TO-DO: This should be deprecated and use a n-averaged value instead.
 
-		m_acceleration = Input.acceleration;
+		m_acceleration = UnityInput.acceleration;
 
 		// Fallback to regular touch mode if no accelerometer nor gyro are present
 
@@ -236,12 +236,12 @@ public class UIHandler : MonoBehaviour
 		{
 		if (steeringMode == SteeringMode.Tilt)
 			{
-			if (!Input.gyro.enabled) Input.gyro.enabled = true;
+			if (!UnityInput.gyroEnabled) UnityInput.gyroEnabled = true;
 
 			// compensateSensors must be true so the steering is correctly computed no matter
 			// the screen orientation (Screen.orientation).
 
-			Input.compensateSensors = true;
+			UnityInput.compensateSensors = true;
 
 			float angle = ComputeTiltAngle(GetAcceleration());
 			float steerInput = Mathf.Clamp(angle / maxTiltAngle, -1.0f, +1.0f);
@@ -267,7 +267,7 @@ public class UIHandler : MonoBehaviour
 
 	float ComputeTiltAngle (Vector3 gravityDir)
 		{
-		// Vector3.right assumes Input.compensateSensors is true.
+		// Vector3.right assumes UnityInput.compensateSensors is true.
 
 		return Vector3.Angle(gravityDir, Vector3.ProjectOnPlane(gravityDir, Vector3.right))
 			* Mathf.Sign(Vector3.Dot(gravityDir, Vector3.right));
@@ -278,18 +278,18 @@ public class UIHandler : MonoBehaviour
 		{
 		if (SystemInfo.supportsGyroscope)
 			{
-			return Input.gyro.gravity;
+			return UnityInput.gyroGravity;
 			}
 		else
 		if (SystemInfo.supportsAccelerometer)
 			{
-			m_acceleration = Vector3.Lerp(m_acceleration, Input.acceleration, accelerometerFilterPass * Time.deltaTime);
+			m_acceleration = Vector3.Lerp(m_acceleration, UnityInput.acceleration, accelerometerFilterPass * Time.deltaTime);
 			return m_acceleration;
 			}
 		else
 			{
 			// Final fallback. At least the steering wheel will stay at the center position.
-			// -Vector3.up assumes Input.compensateSensors is true.
+			// -Vector3.up assumes UnityInput.compensateSensors is true.
 
 			return -Vector3.up;
 			}

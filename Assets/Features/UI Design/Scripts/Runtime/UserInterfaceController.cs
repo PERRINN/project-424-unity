@@ -12,7 +12,7 @@ namespace Perrinn424.UI
         private bool isFullUI = true;
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (UnityInput.GetKeyDown(UnityKey.Space))
             {
                 isFullUI = !isFullUI;
                 SetEnable(fullUI, isFullUI);

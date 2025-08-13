@@ -9,10 +9,10 @@ namespace Perrinn424.Utilities
         private TimeScaleController timeScaleController = default;
 
         [SerializeField]
-        private KeyCode nextTimeScale = KeyCode.UpArrow;
+        private UnityKey nextTimeScale = UnityKey.UpArrow;
 
         [SerializeField]
-        private KeyCode previousTimeScale = KeyCode.DownArrow;
+        private UnityKey previousTimeScale = UnityKey.DownArrow;
 
         private void Update()
         {
@@ -31,9 +31,9 @@ namespace Perrinn424.Utilities
             timeScaleController = this.GetComponent<TimeScaleController>();
         }
 
-        private bool GetKeyDownAndShift(KeyCode key)
+        private bool GetKeyDownAndShift(UnityKey key)
         {
-            return Input.GetKeyDown(key) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+            return UnityInput.GetKeyDown(key) && UnityInput.shiftKeyPressed;
         }
-    } 
+    }
 }

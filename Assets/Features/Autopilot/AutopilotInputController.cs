@@ -20,7 +20,7 @@ namespace Perrinn424.AutopilotSystem
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (UnityInput.GetKeyDown(UnityKey.Q))
             {
                 autopilot.ToggleStatus();
                 InputManager.instance.runtime.disableForceFeedback = autopilot.IsOn;

@@ -19,7 +19,7 @@ namespace VehiclePhysics.UI
 
 public class InputSetupDialog : MonoBehaviour
 	{
-	public KeyCode closeKey = KeyCode.Escape;
+	public UnityKey closeKey = UnityKey.Escape;
 	public string carInputUser = "PlayerCar";
 
 	[Header("UI")]
@@ -159,7 +159,7 @@ public class InputSetupDialog : MonoBehaviour
 
 		// Detect Esc
 
-		if (Input.GetKeyDown(closeKey)
+		if (UnityInput.GetKeyDown(closeKey)
 			&& !UITools.IsEnabled(wheelDetectDialog)
 			&& !UITools.IsEnabled(pedalDetectDialog)
 			&& !UITools.IsEnabled(buttonDetectDialog))
