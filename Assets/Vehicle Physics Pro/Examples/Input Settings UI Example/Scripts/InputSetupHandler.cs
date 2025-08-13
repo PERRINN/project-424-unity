@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Collections;
 using VehiclePhysics.InputManagement;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.UI
@@ -36,7 +37,7 @@ public class InputSetupHandler : MonoBehaviour
 
 	[Space(5)]
 	public bool enableHotKey = false;
-	public KeyCode hotKey = KeyCode.I;
+	public UnityKey hotKey = UnityKey.I;
 
 
 	[Serializable]
@@ -96,7 +97,7 @@ public class InputSetupHandler : MonoBehaviour
 
 		if (enableHotKey)
 			{
-			if (Input.GetKey(hotKey) && !UITools.IsEnabled(inputSetupDialog))
+			if (UnityInput.GetKey(hotKey) && !UITools.IsEnabled(inputSetupDialog))
 				StartCoroutine(ShowSetupDialog(inputSetupDialog));
 			}
 		}

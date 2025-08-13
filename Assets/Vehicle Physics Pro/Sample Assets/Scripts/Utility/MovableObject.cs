@@ -5,6 +5,7 @@
 //--------------------------------------------------------------
 
 using UnityEngine;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.Utility
@@ -26,8 +27,8 @@ public class MovableObject : MonoBehaviour
 	public float autoFrequency = 1.0f;
 	public bool autoPositiveOnly = false;
 
-	public KeyCode keyIncrement = KeyCode.KeypadPlus;
-	public KeyCode keyDecrement = KeyCode.KeypadMinus;
+	public UnityKey keyIncrement = UnityKey.NumpadPlus;
+	public UnityKey keyDecrement = UnityKey.NumpadMinus;
 
 
 	Rigidbody m_rb;
@@ -53,8 +54,8 @@ public class MovableObject : MonoBehaviour
 
 	void FixedUpdate ()
 		{
-		if (Input.GetKey(keyIncrement)) position += rate * Time.deltaTime;
-		if (Input.GetKey(keyDecrement)) position -= rate * Time.deltaTime;
+		if (UnityInput.GetKey(keyIncrement)) position += rate * Time.deltaTime;
+		if (UnityInput.GetKey(keyDecrement)) position -= rate * Time.deltaTime;
 
 		switch (autoMode)
 			{

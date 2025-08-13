@@ -8,6 +8,7 @@ using Mirror;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
+using VersionCompatibility;
 
 namespace UniCAVE
 {
@@ -567,22 +568,22 @@ namespace UniCAVE
 
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.Space))
+            if(UnityInput.GetKeyDown(UnityKey.Space))
             {
                 this.CycleNextCalibrationType();
             }
 
-            if(Input.GetKeyDown(KeyCode.KeypadPlus))
+            if(UnityInput.GetKeyDown(UnityKey.NumpadPlus))
             {
                 this.AdjustGridSelectSize(true);
             }
 
-            if(Input.GetKeyDown(KeyCode.KeypadMinus))
+            if(UnityInput.GetKeyDown(UnityKey.NumpadMinus))
             {
                 this.AdjustGridSelectSize(false);
             }
 
-            if(Input.GetKeyDown(KeyCode.Home))
+            if(UnityInput.GetKeyDown(UnityKey.Home))
             {
                 this.InterpolateFromCorners();
             }
@@ -591,9 +592,9 @@ namespace UniCAVE
             bool anyPressed = false;
             bool noOptions = allOptions.Count == 0;
 
-            if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            if(UnityInput.shiftKeyPressed)
             {
-                if(Input.GetKeyDown(KeyCode.Return))
+                if(UnityInput.GetKeyDown(UnityKey.Enter))
                 {
                     int index = this.selectedIndex - 1;
                     if(index < 0)
@@ -612,7 +613,7 @@ namespace UniCAVE
                 }
 
             }
-            else if(Input.GetKeyDown(KeyCode.Return))
+            else if(UnityInput.GetKeyDown(UnityKey.Enter))
             {
                 this.selectedIndex = (selectedIndex + 1) % allOptions.Count;
                 if(!noOptions)
@@ -622,7 +623,7 @@ namespace UniCAVE
                 }
             }
 
-            if(Input.GetKeyDown(KeyCode.A))
+            if(UnityInput.GetKeyDown(UnityKey.A))
             {
 
                 int lastIndex = this.vertexIndex - 1;
@@ -636,7 +637,7 @@ namespace UniCAVE
 
             }
 
-            if(Input.GetKeyDown(KeyCode.D))
+            if(UnityInput.GetKeyDown(UnityKey.D))
             {
                 this.vertexIndex = (vertexIndex + 1) % 64;
                 if(!noOptions)
@@ -646,7 +647,7 @@ namespace UniCAVE
                 }
             }
 
-            if(Input.GetKeyDown(KeyCode.W))
+            if(UnityInput.GetKeyDown(UnityKey.W))
             {
                 this.vertexIndex = (vertexIndex + 8) % 64;
                 if(!noOptions)
@@ -656,7 +657,7 @@ namespace UniCAVE
                 }
             }
 
-            if(Input.GetKeyDown(KeyCode.S))
+            if(UnityInput.GetKeyDown(UnityKey.S))
             {
                 this.vertexIndex = (vertexIndex + (64 - 8)) % 64;
                 if(!noOptions)
@@ -668,32 +669,32 @@ namespace UniCAVE
 
             if(noOptions) { return; }
 
-            if(Input.GetKey(KeyCode.RightArrow))
+            if(UnityInput.GetKey(UnityKey.RightArrow))
             {
                 direction.x = 1;
                 anyPressed = true;
             }
-            else if(Input.GetKey(KeyCode.UpArrow))
+            else if(UnityInput.GetKey(UnityKey.UpArrow))
             {
                 direction.y = 1;
                 anyPressed = true;
             }
-            else if(Input.GetKey(KeyCode.LeftArrow))
+            else if(UnityInput.GetKey(UnityKey.LeftArrow))
             {
                 direction.x = -1;
                 anyPressed = true;
             }
-            else if(Input.GetKey(KeyCode.DownArrow))
+            else if(UnityInput.GetKey(UnityKey.DownArrow))
             {
                 direction.y = -1;
                 anyPressed = true;
             }
-            else if(Input.GetKey(KeyCode.Keypad8))
+            else if(UnityInput.GetKey(UnityKey.Numpad8))
             {
                 direction.z = -1;
                 anyPressed = true;
             }
-            else if(Input.GetKey(KeyCode.Keypad2))
+            else if(UnityInput.GetKey(UnityKey.Numpad2))
             {
                 direction.z = 1;
                 anyPressed = true;

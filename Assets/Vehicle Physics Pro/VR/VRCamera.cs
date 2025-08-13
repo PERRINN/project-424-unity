@@ -16,6 +16,7 @@ using UnityEngine.XR;
 #if XR_MANAGER
 using UnityEngine.XR.Management;
 #endif
+using VersionCompatibility;
 
 
 namespace VehiclePhysics
@@ -28,7 +29,7 @@ public class VRCamera : MonoBehaviour
 	public bool autoEnableVRCamera = false;	// NOTE: May crash Unity if enabled while domain reload
 	public bool forceDeviceTrackingMode = true;
 	[Space(5)]
-	public KeyCode recenterKey = KeyCode.H;
+	public UnityKey recenterKey = UnityKey.H;
 	public bool saveRecenterPose = true;
 	[Space(5)]
 	public bool debugLog = false;
@@ -106,7 +107,7 @@ public class VRCamera : MonoBehaviour
 
 		// Monitor recenter key
 
-		if (Input.GetKeyDown(recenterKey))
+		if (UnityInput.GetKeyDown(recenterKey))
 			Recenter();
 		}
 

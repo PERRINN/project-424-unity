@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using VersionCompatibility;
 
 namespace Perrinn424.CameraSystem
 {
@@ -7,15 +8,15 @@ namespace Perrinn424.CameraSystem
     {
         [SerializeField]
         private OnboardCamerasController onboardCamerasController;
-        
+
         [SerializeField]
-        private KeyCode nextCameraKey = KeyCode.V;
-        
+        private UnityKey nextCameraKey = UnityKey.V;
+
         private void Update()
         {
-            if (Input.GetKeyDown(nextCameraKey))
+            if (UnityInput.GetKeyDown(nextCameraKey))
             {
-                if (Input.GetKey(KeyCode.LeftShift))
+                if (UnityInput.GetKey(UnityKey.LeftShift))
                 {
                     onboardCamerasController.PreviousCamera();
                 }
@@ -30,5 +31,5 @@ namespace Perrinn424.CameraSystem
         {
             onboardCamerasController = this.GetComponent<OnboardCamerasController>();
         }
-    } 
+    }
 }

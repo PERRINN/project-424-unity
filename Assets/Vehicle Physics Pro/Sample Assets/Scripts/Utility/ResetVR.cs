@@ -6,6 +6,7 @@
 
 using UnityEngine;
 using EdyCommonTools;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.Utility
@@ -13,11 +14,11 @@ namespace VehiclePhysics.Utility
 
 public class ResetVR : MonoBehaviour
 	{
-	public KeyCode recenterKey = KeyCode.H;
+	public UnityKey recenterKey = UnityKey.H;
 
 	void Update ()
 		{
-		if (Input.GetKeyDown(recenterKey))
+		if (UnityInput.GetKeyDown(recenterKey))
 			VrUtility.Recenter();
 		}
 	}

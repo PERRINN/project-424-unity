@@ -1,11 +1,12 @@
 ﻿using System;
 using UnityEngine;
+using VersionCompatibility;
 
 namespace Perrinn424.Utilities
 {
     public class SteeringWheelVisibilityController : MonoBehaviour
     {
-        public KeyCode nextOptionKey;
+        public UnityKey nextOptionKey;
         public GameObject steeringWheel;
         private CircularIndex visibilityOption;
 
@@ -22,7 +23,7 @@ namespace Perrinn424.Utilities
 
         private void Update()
         {
-            if (Input.GetKeyDown(nextOptionKey))
+            if (UnityInput.GetKeyDown(nextOptionKey))
             {
                 SetVisbilityOption(visibilityOption + 1);
             }

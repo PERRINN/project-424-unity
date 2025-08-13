@@ -6,6 +6,7 @@
 
 using UnityEngine;
 using System.Collections;
+using VersionCompatibility;
 
 
 [RequireComponent(typeof(Rigidbody))]
@@ -16,7 +17,7 @@ public class RigidbodyImpulse : MonoBehaviour
 	public float velocity = 6.0f;
 	public Vector3 direction = Vector3.up;
 	public Mode mode = Mode.World;
-	public KeyCode key = KeyCode.E;
+	public UnityKey key = UnityKey.E;
 
 	Rigidbody m_rigidbody;
 
@@ -29,7 +30,7 @@ public class RigidbodyImpulse : MonoBehaviour
 
 	void Update ()
 		{
-		if (Input.GetKeyDown(key))
+		if (UnityInput.GetKeyDown(key))
 			{
 			if (mode == Mode.World)
 				m_rigidbody.AddForce(direction.normalized * velocity, ForceMode.VelocityChange);

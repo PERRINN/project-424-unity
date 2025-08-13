@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Globalization;
 using System.Collections.Generic;
+using VersionCompatibility;
 
 
 namespace Perrinn424
@@ -20,7 +21,7 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 	[Tooltip("Read the setup file and apply the changes when the component is enabled")]
 	public bool applyOnEnable = true;
 
-	public KeyCode hotKeyApply = KeyCode.R;
+	public UnityKey hotKeyApply = UnityKey.R;
 	public bool ctrlModifier = true;
 
 	[Header("Debug"), Tooltip("When reading the setup from file, the combined values applied to the vehicle will show here")]
@@ -155,7 +156,7 @@ public class Perrinn424RuntimeSetup : VehicleBehaviour
 
 	public override void UpdateVehicle ()
 		{
-		if (Input.GetKeyDown(hotKeyApply) && ctrlModifier == Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+		if (UnityInput.GetKeyDown(hotKeyApply) && ctrlModifier == UnityInput.ctrlKeyPressed)
 			{
 			ReadAndApplySetupFile();
 			}

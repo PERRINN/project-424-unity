@@ -5,6 +5,7 @@
 //--------------------------------------------------------------
 
 using UnityEngine;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.Utility
@@ -31,13 +32,13 @@ public class EndlessMovingSurface : MonoBehaviour
 
 	void Update ()
 		{
-		if (Input.GetKeyDown(KeyCode.KeypadPlus))
+		if (UnityInput.GetKeyDown(UnityKey.NumpadPlus))
 			velocity += deltaVelocityOnKey;
 
-		if (Input.GetKeyDown(KeyCode.KeypadMinus))
+		if (UnityInput.GetKeyDown(UnityKey.NumpadMinus))
 			velocity -= deltaVelocityOnKey;
 
-		if (Input.GetKeyDown(KeyCode.KeypadMultiply))
+		if (UnityInput.GetKeyDown(UnityKey.NumpadMultiply))
 			move = !move;
 		}
 

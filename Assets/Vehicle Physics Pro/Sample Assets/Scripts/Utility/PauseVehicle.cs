@@ -5,6 +5,7 @@
 //--------------------------------------------------------------
 
 using UnityEngine;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics
@@ -13,7 +14,7 @@ namespace VehiclePhysics
 public class PauseVehicle : VehicleBehaviour
 	{
 	public bool pause = false;
-	public KeyCode key = KeyCode.P;
+	public UnityKey key = UnityKey.P;
 
 
 	bool m_pausedState = false;
@@ -54,7 +55,7 @@ public class PauseVehicle : VehicleBehaviour
 
 	void Update ()
 		{
-		if (Input.GetKeyDown(key)) pause = !pause;
+		if (UnityInput.GetKeyDown(key)) pause = !pause;
 		}
 	}
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using VersionCompatibility;
 
 namespace Mirror.Examples.Tanks
 {
@@ -15,7 +16,7 @@ namespace Mirror.Examples.Tanks
         public float rotationSpeed = 100;
 
         [Header("Firing")]
-        public KeyCode shootKey = KeyCode.Space;
+        public UnityKey shootKey = UnityKey.Space;
         public GameObject projectilePrefab;
         public Transform projectileMount;
 
@@ -32,17 +33,17 @@ namespace Mirror.Examples.Tanks
             if (isLocalPlayer)
             {
                 // rotate
-                float horizontal = Input.GetAxis("Horizontal");
+                float horizontal = UnityInput.GetAxis(UnityAxis.Horizontal);
                 transform.Rotate(0, horizontal * rotationSpeed * Time.deltaTime, 0);
 
                 // move
-                float vertical = Input.GetAxis("Vertical");
+                float vertical = UnityInput.GetAxis(UnityAxis.Vertical);
                 Vector3 forward = transform.TransformDirection(Vector3.forward);
                 agent.velocity = forward * Mathf.Max(vertical, 0) * agent.speed;
                 animator.SetBool("Moving", agent.velocity != Vector3.zero);
 
                 // shoot
-                if (Input.GetKeyDown(shootKey))
+                if (UnityInput.GetKeyDown(shootKey))
                 {
                     CmdFire();
                 }
@@ -80,7 +81,7 @@ namespace Mirror.Examples.Tanks
 
         void RotateTurret()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(UnityInput.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100))
             {

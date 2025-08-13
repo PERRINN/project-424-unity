@@ -1,10 +1,12 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
 using UnityEngine;
+using VersionCompatibility;
+
 
 namespace VehiclePhysics.Utility
 {
@@ -19,8 +21,8 @@ public class MoveJointOnKey : MonoBehaviour
 	public Anchor anchor = Anchor.ThisAnchor;
 	public Vector3 direction = Vector3.up;
 	public float speed = 0.01f;
-	public KeyCode moveForwardKey = KeyCode.KeypadPlus;
-	public KeyCode moveReverseKey = KeyCode.KeypadMinus;
+	public UnityKey moveForwardKey = UnityKey.NumpadPlus;
+	public UnityKey moveReverseKey = UnityKey.NumpadMinus;
 
 
     VPVehicleJoint m_joint;
@@ -34,7 +36,7 @@ public class MoveJointOnKey : MonoBehaviour
 
 	void Update ()
 		{
-		if (Input.GetKey(moveForwardKey))
+		if (UnityInput.GetKey(moveForwardKey))
 			{
 			Vector3 delta = direction * speed * Time.deltaTime;
 
@@ -45,7 +47,7 @@ public class MoveJointOnKey : MonoBehaviour
 			}
 
 
-		if (Input.GetKey(moveReverseKey))
+		if (UnityInput.GetKey(moveReverseKey))
 			{
 			Vector3 delta = direction * speed * Time.deltaTime;
 

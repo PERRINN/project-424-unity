@@ -13,7 +13,7 @@ using EdyCommonTools.EditorTools;
 namespace VehiclePhysics.EditorTools
 {
 [CustomEditor(typeof(Perrinn424CarController))]
-public class Perrinn424CarControllerInspector : VPInspector
+public class Perrinn424CarControllerInspector : CustomInspector
 	{
 	static bool s_inertiaExpanded = false;
 

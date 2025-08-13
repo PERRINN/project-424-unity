@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -8,8 +8,8 @@
 
 
 using UnityEngine;
-using EdyCommonTools;
 using System.IO;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.Utility
@@ -17,7 +17,7 @@ namespace VehiclePhysics.Utility
 
 public class CaptureScreenshot : MonoBehaviour
 	{
-	public KeyCode key = KeyCode.F12;
+	public UnityKey key = UnityKey.F12;
 	public string fileName = "Screenshot{0}.png";
 	public int sizeMultiplier = 1;
 
@@ -25,7 +25,7 @@ public class CaptureScreenshot : MonoBehaviour
 
     void Update()
 		{
-		if (Input.GetKeyDown(key))
+		if (UnityInput.GetKeyDown(key))
 			{
 			string fileNameToUse = fileName;
 

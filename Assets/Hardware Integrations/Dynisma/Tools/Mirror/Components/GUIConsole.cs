@@ -14,6 +14,7 @@
 //       mode.
 using UnityEngine;
 using System.Collections.Generic;
+using VersionCompatibility;
 
 namespace Mirror
 {
@@ -43,7 +44,7 @@ namespace Mirror
         // hotkey to show/hide at runtime for easier debugging
         // (sometimes we need to temporarily hide/show it)
         // => F12 makes sense. nobody can find ^ in other games.
-        public KeyCode hotKey = KeyCode.F12;
+        public UnityKey hotKey = UnityKey.F12;
 
         // GUI
         bool visible;
@@ -90,7 +91,7 @@ namespace Mirror
 
         void Update()
         {
-            if (Input.GetKeyDown(hotKey))
+            if (UnityInput.GetKeyDown(hotKey))
                 visible = !visible;
         }
 

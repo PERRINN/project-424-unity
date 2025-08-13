@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using VehiclePhysics;
+using VersionCompatibility;
 
 
 public class VehicleSpawnPoints : MonoBehaviour
@@ -62,29 +63,29 @@ public class VehicleSpawnPoints : MonoBehaviour
 	void Update()
 		{
 
-		bool modifier = !keysRequireAlt || Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+		bool modifier = !keysRequireAlt || UnityInput.altKeyPressed;
 
 		if (modifier)
 			{
 			if (enableAlphaKeys)
 				{
-				if (Input.GetKeyDown(KeyCode.Alpha1)) Respawn(0);
-				if (Input.GetKeyDown(KeyCode.Alpha2)) Respawn(1);
-				if (Input.GetKeyDown(KeyCode.Alpha3)) Respawn(2);
-				if (Input.GetKeyDown(KeyCode.Alpha4)) Respawn(3);
-				if (Input.GetKeyDown(KeyCode.Alpha5)) Respawn(4);
-				if (Input.GetKeyDown(KeyCode.Alpha6)) Respawn(5);
-				if (Input.GetKeyDown(KeyCode.Alpha7)) Respawn(6);
-				if (Input.GetKeyDown(KeyCode.Alpha8)) Respawn(7);
-				if (Input.GetKeyDown(KeyCode.Alpha9)) Respawn(8);
-				if (Input.GetKeyDown(KeyCode.Alpha0)) Respawn(9);
+				if (UnityInput.GetKeyDown(UnityKey.Digit1)) Respawn(0);
+				if (UnityInput.GetKeyDown(UnityKey.Digit2)) Respawn(1);
+				if (UnityInput.GetKeyDown(UnityKey.Digit3)) Respawn(2);
+				if (UnityInput.GetKeyDown(UnityKey.Digit4)) Respawn(3);
+				if (UnityInput.GetKeyDown(UnityKey.Digit5)) Respawn(4);
+				if (UnityInput.GetKeyDown(UnityKey.Digit6)) Respawn(5);
+				if (UnityInput.GetKeyDown(UnityKey.Digit7)) Respawn(6);
+				if (UnityInput.GetKeyDown(UnityKey.Digit8)) Respawn(7);
+				if (UnityInput.GetKeyDown(UnityKey.Digit9)) Respawn(8);
+				if (UnityInput.GetKeyDown(UnityKey.Digit0)) Respawn(9);
 				}
 
 			if (enableNumpadKeys)
 				{
-				if (Input.GetKeyDown(KeyCode.KeypadPlus)) NextPoint();
-				if (Input.GetKeyDown(KeyCode.KeypadMinus)) PrevPoint();
-				if (Input.GetKeyDown(KeyCode.KeypadMultiply)) ResetPoint();
+				if (UnityInput.GetKeyDown(UnityKey.NumpadPlus)) NextPoint();
+				if (UnityInput.GetKeyDown(UnityKey.NumpadMinus)) PrevPoint();
+				if (UnityInput.GetKeyDown(UnityKey.NumpadMultiply)) ResetPoint();
 				}
 			}
 		}

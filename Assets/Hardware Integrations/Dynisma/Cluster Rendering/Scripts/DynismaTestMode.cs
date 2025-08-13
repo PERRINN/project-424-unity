@@ -7,6 +7,7 @@ using UnityEngine;
 using UniCAVE;
 using EdyCommonTools;
 using VehiclePhysics;
+using VersionCompatibility;
 
 
 namespace Perrinn424
@@ -112,8 +113,8 @@ public class DynismaTestMode : MonoBehaviour
 						{
 						replayController.enableShortcuts = true;
 						replayController.showPanel = true;
-						replayController.recordKey = KeyCode.None;
-						replayController.saveReplayKey = KeyCode.None;
+						replayController.recordKey = UnityKey.None;
+						replayController.saveReplayKey = UnityKey.None;
 						}
 					}
 				else

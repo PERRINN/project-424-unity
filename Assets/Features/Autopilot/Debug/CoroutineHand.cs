@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VersionCompatibility;
 
 public class CoroutineHand : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class CoroutineHand : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (UnityInput.GetKeyDown(UnityKey.Space))
         {
             float[] roots = new float[] { 3, -2, -4 };
             float[] parameters = twiddleEnumerator.parameters;

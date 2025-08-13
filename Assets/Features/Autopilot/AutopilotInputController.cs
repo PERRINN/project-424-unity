@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using VehiclePhysics;
 using VehiclePhysics.InputManagement;
+using VersionCompatibility;
 
 
 namespace Perrinn424.AutopilotSystem
@@ -20,7 +21,7 @@ namespace Perrinn424.AutopilotSystem
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (UnityInput.GetKeyDown(UnityKey.Q))
             {
                 autopilot.ToggleStatus();
                 InputManager.instance.runtime.disableForceFeedback = autopilot.IsOn;

@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using VehiclePhysics.InputManagement;
 using System;
 using System.Collections.Generic;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.UI
@@ -19,7 +20,7 @@ namespace VehiclePhysics.UI
 
 public class PedalDetectDialog : InputDetectionDialogBase
 	{
-	public KeyCode cancelKey = KeyCode.Escape;
+	public UnityKey cancelKey = UnityKey.Escape;
 
 	[Header("UI")]
 	public Text deviceText;
@@ -162,7 +163,7 @@ public class PedalDetectDialog : InputDetectionDialogBase
 
 		// Detect Esc
 
-		if (Input.GetKeyDown(cancelKey))
+		if (UnityInput.GetKeyDown(cancelKey))
 			OnCancel();
 		}
 

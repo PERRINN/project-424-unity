@@ -1,4 +1,5 @@
 using UnityEngine;
+using VersionCompatibility;
 
 namespace Mirror.Examples.RigidbodyPhysics
 {
@@ -22,7 +23,7 @@ namespace Mirror.Examples.RigidbodyPhysics
         [ServerCallback]
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (UnityInput.GetKeyDown(UnityKey.Space))
                 rigidbody3d.AddForce(Vector3.up * force);
         }
     }

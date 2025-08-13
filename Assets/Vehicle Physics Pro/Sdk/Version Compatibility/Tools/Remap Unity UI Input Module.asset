@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1820110533, guid: b8535f898910b5d4ebb7a7c6a7dded9b, type: 3}
+  m_Name: Remap Unity UI Input Module
+  m_EditorClassIdentifier: 
+  description: 'This remapper replaces all occurrences of StandaloneInputModule and
+    InputSystemUIInputModule with UnityInputModule, which spawns the correct input
+    module in runtime depending on the active input method.
+
+
+    THIS REMAP CANNOT
+    BE REVERTED. Ensure to have a VCS snapshot of your project before proceeding.'
+  path: Assets\
+  extensions: .unity;.prefab;.asset
+  guidRemaps:
+  - name: StandaloneInputModule
+    fromGuid: 4f231c4fb786f3946a6b90b886c48677
+    toGuid: e8183510bae16cc49b4b895e5b4fb03a
+  - name: InputSystemUIInputModule
+    fromGuid: 01614664b831546d2ae94a42149d80ac
+    toGuid: e8183510bae16cc49b4b895e5b4fb03a
