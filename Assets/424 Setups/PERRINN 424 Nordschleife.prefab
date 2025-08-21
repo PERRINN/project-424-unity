@@ -684,9 +684,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emitTelemetry: 1
   regenPowerSegments:
-  - segmentStart: 1000
+  - segmentStart: 0
+    segmentEnd: 750
+    regenPowerGain: 0
+  - segmentStart: 750
     segmentEnd: 2000
-    regenPowerGain: 0.1
+    regenPowerGain: 0.25
 --- !u!114 &4431790063855590246 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4441876987297680215, guid: 1c2bc6b582ebcdb4e8baff52cef5108f,
