@@ -23,8 +23,8 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 		vehicle.telemetry.specs.maxAcceleration = 6 * Gravity.reference;
 		vehicle.telemetry.specs.maxAngularAcceleration = 4000 * Mathf.Deg2Rad;
 		vehicle.telemetry.specs.maxEngineRpm = 2900.0f;
-		vehicle.telemetry.specs.maxEnginePowerKw = 600.0f;
-		vehicle.telemetry.specs.minEnginePowerKw = -300.0f;
+		vehicle.telemetry.specs.maxEnginePowerKw = 800.0f;
+		vehicle.telemetry.specs.minEnginePowerKw = -500.0f;
 		vehicle.telemetry.specs.maxEngineTorque = 4400.0f;
 		vehicle.telemetry.specs.minEngineTorque = -4400.0f;
 		vehicle.telemetry.specs.maxSuspensionTravel = 0.08f;

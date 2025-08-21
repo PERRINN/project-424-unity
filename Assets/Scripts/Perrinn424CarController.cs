@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -113,6 +113,11 @@ public class Perrinn424CarController : VehicleBase
 	[System.NonSerialized]
 	public float powerBalanceOffset = 0.0f;
 
+	// Regen power gain applied externally
+
+	[System.NonSerialized]
+	public float regenPowerGain = 1.0f;
+
 	// Mostly internal settings not exposed in the inspector
 
 	[System.NonSerialized]
@@ -178,7 +183,7 @@ public class Perrinn424CarController : VehicleBase
 			}
 
 
-		public void SetInputs (int gearInput, float throttleInput, float brakeInput, float limiter, float powerBalanceOffset)
+		public void SetInputs (int gearInput, float throttleInput, float brakeInput, float limiter, float powerBalanceOffset, float regenPowerGain)
 			{
 			// MGU
 
@@ -187,6 +192,7 @@ public class Perrinn424CarController : VehicleBase
 			mgu.brakeInput = brakeInput;
 			mgu.limiterInput = Mathf.Clamp01(limiter);
 			mgu.powerBalanceOffset = powerBalanceOffset;
+			mgu.regenPowerGain = regenPowerGain;
 
 			// Wheel brakes
 
@@ -562,8 +568,8 @@ public class Perrinn424CarController : VehicleBase
 		// Apply received inputs to car elements
 
 		if (brakePressed) m_throttlePosition = 0.0f;
-		m_frontPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset);
-		m_rearPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset);
+		m_frontPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset, regenPowerGain);
+		m_rearPowertrain.SetInputs(m_gear, m_throttlePosition, m_brakePosition, effectiveLimiter, powerBalanceOffset, regenPowerGain);
 
 		m_steering.steerInput = m_steerAngle / steering.steeringWheelRange * 2.0f;
 		m_steering.DoUpdate();
