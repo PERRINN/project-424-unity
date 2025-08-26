@@ -418,9 +418,11 @@ MonoBehaviour:
   tireProperties:
     verticalStiffness: 450000
     verticalDamping: 4000
+    lateralCompliance: 1
     lateralStiffness: 450000
     lateralDamping: 4000
-    longitudinalStiffness: 0
+    longitudinalCompliance: 0
+    longitudinalStiffness: 1
     longitudinalDamping: 0
   rimPhysicsMaterial: {fileID: 0}
   suspensionTravel:
@@ -535,9 +537,11 @@ MonoBehaviour:
   tireProperties:
     verticalStiffness: 450000
     verticalDamping: 4000
+    lateralCompliance: 1
     lateralStiffness: 450000
     lateralDamping: 4000
-    longitudinalStiffness: 0
+    longitudinalCompliance: 0
+    longitudinalStiffness: 1
     longitudinalDamping: 0
   rimPhysicsMaterial: {fileID: 0}
   suspensionTravel:
@@ -912,12 +916,12 @@ MonoBehaviour:
   dRSActivationTime: 0.25
   noDRSSegment: []
   frontFlapStaticAngle: 2.5
-  frontFlapDRSAngle: -13
+  frontFlapDRSAngle: -15
   frontFlapSCz0: 0.39
   frontFlapSCz_perDeg: 0.0333
   frontFlapDeflectionPreload: 456
-  frontFlapDeflectionStiffness: -0.005
-  frontFlapDeflectionMax: -5
+  frontFlapDeflectionStiffness: -0.01
+  frontFlapDeflectionMax: -7
   frontFlapMaxSlewRate: 100
   heaveFactor: 1.333
   front:
@@ -2295,9 +2299,11 @@ MonoBehaviour:
   tireProperties:
     verticalStiffness: 450000
     verticalDamping: 4000
+    lateralCompliance: 1
     lateralStiffness: 450000
     lateralDamping: 4000
-    longitudinalStiffness: 0
+    longitudinalCompliance: 0
+    longitudinalStiffness: 1
     longitudinalDamping: 0
   rimPhysicsMaterial: {fileID: 0}
   suspensionTravel:
@@ -2413,9 +2419,11 @@ MonoBehaviour:
   tireProperties:
     verticalStiffness: 450000
     verticalDamping: 4000
+    lateralCompliance: 1
     lateralStiffness: 450000
     lateralDamping: 4000
-    longitudinalStiffness: 0
+    longitudinalCompliance: 0
+    longitudinalStiffness: 1
     longitudinalDamping: 0
   rimPhysicsMaterial: {fileID: 0}
   suspensionTravel:
