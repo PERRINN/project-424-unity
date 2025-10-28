@@ -1,7 +1,12 @@
-﻿using VehiclePhysics;
-using UnityEngine;
-using System;
 
+using System;
+using UnityEngine;
+﻿using VehiclePhysics;
+using VehiclePhysics.Timing;
+
+
+namespace Perrinn424
+{
 
 public class Perrinn424RegenPower : VehicleBehaviour
 	{
@@ -25,6 +30,8 @@ public class Perrinn424RegenPower : VehicleBehaviour
 	// Private members
 	Perrinn424CarController m_vehicle;
 	float m_currentGain = 1.0f;
+	LapTimer m_lapTimer = null;
+	bool m_lapStarted;
 
 
 	float GetRegenPowerGain (float lapDistance)
@@ -39,9 +46,33 @@ public class Perrinn424RegenPower : VehicleBehaviour
 		}
 
 
+	void BeginLap ()
+		{
+		m_lapStarted = true;
+		}
+
+
 	public override void OnEnableVehicle()
 		{
 		m_vehicle = vehicle as Perrinn424CarController;
+
+		m_lapTimer = FindObjectOfType<LapTimer>();
+		if (m_lapTimer != null)
+			{
+			m_lapTimer.onBeginLap += BeginLap;
+			m_lapStarted = false;
+			}
+		else
+			{
+			m_lapStarted = true;
+			}
+		}
+
+
+	public override void OnDisableVehicle ()
+		{
+		if (m_lapTimer != null)
+			m_lapTimer.onBeginLap -= BeginLap;
 		}
 
 
@@ -50,7 +81,7 @@ public class Perrinn424RegenPower : VehicleBehaviour
 		// Getting traveled distance in current lap
 
 		Telemetry.DataRow telemetryDataRow = vehicle.telemetry.latest;
-		float distance = (float)telemetryDataRow.distance;
+		float distance = m_lapStarted? (float)telemetryDataRow.distance : 0.0f;
 
 		// check if car is in regen power gain segment and return the override value
 
@@ -112,5 +143,6 @@ public class Perrinn424RegenPower : VehicleBehaviour
 			values[index + 0] = regenPower.m_currentGain;
 			}
 		}
-
 	}
+
+}

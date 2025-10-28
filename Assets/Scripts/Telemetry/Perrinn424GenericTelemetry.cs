@@ -2,6 +2,7 @@
 using UnityEngine;
 using VehiclePhysics;
 using VehiclePhysics.InputManagement;
+using VehiclePhysics.Timing;
 using EdyCommonTools;
 
 
@@ -302,6 +303,10 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 	public class Perrinn424Distance : Telemetry.ChannelGroup
 		{
+		LapTimer m_lapTimer = null;
+		bool m_lapStarted = false;
+
+
 		public override int GetChannelCount ()
 			{
 			return 2;
@@ -327,6 +332,19 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 
 			channelInfo[0].SetNameAndSemantic("LapDistance", Telemetry.Semantic.Custom, distanceSemantic);
 			channelInfo[1].SetNameAndSemantic("TotalDistance", Telemetry.Semantic.Custom, distanceSemantic);
+
+			// Check for first lap start
+
+			m_lapTimer = FindObjectOfType<LapTimer>();
+			if (m_lapTimer != null)
+				{
+				m_lapTimer.onBeginLap += BeginLap;
+				m_lapStarted = false;
+				}
+			else
+				{
+				m_lapStarted = true;
+				}
 			}
 
 
@@ -335,9 +353,16 @@ public class Perrinn424GenericTelemetry : VehicleBehaviour
 			VehicleBase vehicle = instance as VehicleBase;
 
 			Telemetry.DataRow latest = vehicle.telemetry.latest;
+			float distance = m_lapStarted? (float)latest.distance : 0.0f;
 
-			values[index+0] = (float)latest.distance;
+			values[index+0] = distance;
 			values[index+1] = (float)latest.totalDistance;
+			}
+
+
+		void BeginLap ()
+			{
+			m_lapStarted = true;
 			}
 		}
 
