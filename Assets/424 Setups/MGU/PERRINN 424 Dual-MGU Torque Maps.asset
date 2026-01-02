@@ -15,14 +15,15 @@ MonoBehaviour:
   settings:
     packPowerMax: 750
     packPowerMin: -450
-    packTorqueOverrun: -500
+    packTorqueOverrun: -350
+    packPowerOverrun: -50
     powerBalanceDrive: 0.5
     powerBalanceDriveShape: 2
-    powerBalanceOverrun: 0.1
-    powerBalanceRegen: 0.65
+    powerBalanceOverrun: 0.12
+    powerBalanceRegen: 0.67
     powerBalanceRegenShape: 0.75
     packBrakeGain: 33
-    clutch: 0.15
+    clutch: 0.1
     limiter: 1
     limiterRamp: 0.03
     powerRampStart: 1
@@ -46,4 +47,4 @@ MonoBehaviour:
     throttleShape: 1.6
     brakeShape: 1
     hydraulicBrakeGain: 100
-    hydraulicBrakeBalance: 0.65
+    hydraulicBrakeBalance: 0.67

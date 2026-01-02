@@ -43,15 +43,22 @@
 //	bool GetKeyDown (UnityKey key)			True when the key has been pressed this frame.
 //	bool GetKeyUp (UnityKey key)			True when the key has been released this frame.
 //
-//	bool shiftKeyPressed					True while any shift key is pressed.
-//	bool ctrlKeyPressed						True while any control key is pressed.
-//	bool altKeyPressed						True while any alt key is pressed.
+//	void UpdateFocusedControl (string focusedControlName)
+//											Call with the name of the focused control that is receiving the
+//											input, or null/"" when no text field control is focused.
+//
+//	bool escapeKeyPressed					True while the Escape key is pressed. This bypasses input focus.
 //
 //	bool anyKey								Any key or mouse button is pressed.
 //	bool anyKeyDown							True when the key or mouse button was pressed this frame.
 //	bool anyMouseButton						Any mouse button is pressed
 //	bool anyMouseButtonDown					True when the mouse button was pressed this frame.
 //
+//	bool shiftKeyPressed					True while any shift key is pressed.
+//	bool ctrlKeyPressed						True while any control key is pressed.
+//	bool altKeyPressed						True while any alt key is pressed.
+//
+//	bool mousePresent						Is a mouse or touchpad available?
 //	Vector2 mousePosition					Current mouse position in screen coordinates
 //	Vector2 mousePositionDelta				Mouse movement
 //	float mouseScrollDelta					Scroll wheel movement (raw, without sensitivity)
@@ -558,6 +565,8 @@ public static class UnityInput
 	{
 	// Private state vars updated from the player loop
 
+	static bool m_escapeKeyPressed = false;
+
 	static bool m_anyKey = false;
 	static bool m_anyKeyDown = false;
 	static bool m_anyMouseButton = false;
@@ -566,6 +575,9 @@ public static class UnityInput
 	static bool m_shiftKeyPressed = false;
 	static bool m_ctrlKeyPressed = false;
 	static bool m_altKeyPressed = false;
+
+	static bool m_hasFocusedControl = false;
+	static bool m_inputFocused = false;
 
 
 	// Public axis
@@ -677,6 +689,8 @@ public static class UnityInput
 
 
 	// Public API
+
+	public static bool escapeKeyPressed => m_escapeKeyPressed;
 
 	public static bool anyKey => m_anyKey;
 	public static bool anyKeyDown => m_anyKeyDown;
@@ -850,6 +864,16 @@ public static class UnityInput
 		}
 
 
+	// Call with the name of the text field that is focused and receiving the input.
+	// Call with null or empty string when no control is receiving input.
+	// When focused, inhibits the keyboard input and events except UnityInput.escapeKeyPressed.
+
+	public static void UpdateFocusedControl (string focusedControlName)
+		{
+		m_hasFocusedControl |= !string.IsNullOrEmpty(focusedControlName);
+		}
+
+
 	// Debug information (slow)
 
 	public static string DebugString ()
@@ -888,7 +912,14 @@ public static class UnityInput
 		}
 
 
+	//------------------------------------------------------------------------------------------------------
+	// Platform-specific implementation
+
+
 	#if ENABLE_LEGACY_INPUT_MANAGER
+
+	// Legacy input automatically disables key presses when input is focused in a text field.
+	// No need to do extra handling.
 
 	public static bool GetKey (UnityKey key) => Input.GetKey((KeyCode)key);
 	public static bool GetKeyDown (UnityKey key) => Input.GetKeyDown((KeyCode)key);
@@ -896,6 +927,8 @@ public static class UnityInput
 
 	static void UpdateCollectiveControls ()
 		{
+		m_escapeKeyPressed = Input.GetKey(KeyCode.Escape);
+
 		m_anyKey = Input.anyKey;
 		m_anyKeyDown = Input.anyKeyDown;
 		m_anyMouseButton = Input.GetKey(KeyCode.Mouse0) || Input.GetKey(KeyCode.Mouse1) || Input.GetKey(KeyCode.Mouse2);
@@ -941,7 +974,7 @@ public static class UnityInput
 			{
 			// Key.None throws an Out Of Range exception in Keyboard.current[]
 			Key keyCode = m_keys[(int)key];
-			return keyCode != Key.None && Keyboard.current != null? Keyboard.current[keyCode].isPressed : false;
+			return keyCode != Key.None && !m_inputFocused && Keyboard.current != null? Keyboard.current[keyCode].isPressed : false;
 			}
 		}
 
@@ -964,7 +997,7 @@ public static class UnityInput
 			{
 			// Key.None throws an Out Of Range exception in Keyboard.current[]
 			Key keyCode = m_keys[(int)key];
-			return keyCode != Key.None && Keyboard.current != null? Keyboard.current[keyCode].wasPressedThisFrame : false;
+			return keyCode != Key.None && !m_inputFocused && Keyboard.current != null? Keyboard.current[keyCode].wasPressedThisFrame : false;
 			}
 		}
 
@@ -1012,7 +1045,7 @@ public static class UnityInput
 		// "AnyKey" includes any mouse button, as they're included in the UnityKey list
 
 		Keyboard keyboard = Keyboard.current;
-		if (keyboard != null)
+		if (!m_inputFocused && keyboard != null)
 			{
 			ButtonControl anyKey = Keyboard.current.anyKey;
 			m_anyKey = m_anyMouseButton || anyKey.isPressed;
@@ -1023,7 +1056,12 @@ public static class UnityInput
 			m_anyKey = m_anyMouseButton;
 			m_anyKeyDown = m_anyMouseButtonDown;
 			}
+
+		// Escape key presses bypassing input focus
+
+		m_escapeKeyPressed = keyboard != null && keyboard.escapeKey.wasPressedThisFrame;
 		}
+
 
 	static Key[] m_keys = CreateKeyArrayFromUnityKey();
 	static Key[] CreateKeyArrayFromUnityKey()
@@ -1177,6 +1215,9 @@ public static class UnityInput
 	static void OnUpdate()
 		{
 		// This runs just before all MonoBehaviour.Update() calls
+
+		m_inputFocused = m_hasFocusedControl;
+		m_hasFocusedControl = false;
 
 		horizontalAxis.Update();
 		verticalAxis.Update();
