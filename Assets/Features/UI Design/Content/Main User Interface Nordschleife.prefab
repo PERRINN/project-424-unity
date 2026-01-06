@@ -411,7 +411,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2104333495734261430}
   m_HandleRect: {fileID: 916966434265387194}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1149,7 +1149,7 @@ GameObject:
   - component: {fileID: 4251215812570826029}
   - component: {fileID: 4251215812570826030}
   m_Layer: 5
-  m_Name: Main User Interface
+  m_Name: Main User Interface Nordschleife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2498,6 +2498,11 @@ PrefabInstance:
       propertyPath: m_FontData.m_VerticalOverflow
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 615222640026183864, guid: 03c1d693fc6b10248a750551230db282,
+        type: 3}
+      propertyPath: m_Name
+      value: Ideal Lap 5 sectors
+      objectReference: {fileID: 0}
     - target: {fileID: 615222640026183865, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -2770,11 +2775,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4494186032104731797, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
-      propertyPath: sectorCount
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4494186032104731797, guid: 03c1d693fc6b10248a750551230db282,
-        type: 3}
       propertyPath: bestFormat.textColor.b
       value: 1
       objectReference: {fileID: 0}
@@ -2970,12 +2970,12 @@ PrefabInstance:
     - target: {fileID: 5520105544071718996, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5520105544071718996, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5520105544071718996, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
@@ -2985,7 +2985,7 @@ PrefabInstance:
     - target: {fileID: 5520105544071718996, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 5978632962720847447, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
@@ -3175,7 +3175,7 @@ PrefabInstance:
     - target: {fileID: 7892802198616205330, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
       propertyPath: m_Name
-      value: Time Table
+      value: Time Table 5 sectors
       objectReference: {fileID: 0}
     - target: {fileID: 7892802198616205333, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
@@ -3305,7 +3305,7 @@ PrefabInstance:
     - target: {fileID: 7892802199387513913, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7892802199648162489, guid: 03c1d693fc6b10248a750551230db282,
         type: 3}
