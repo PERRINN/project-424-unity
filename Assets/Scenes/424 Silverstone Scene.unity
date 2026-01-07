@@ -1565,6 +1565,11 @@ PrefabInstance:
     - target: {fileID: 2366694805963099143, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2366694805963099143, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: speedLimiterSegments.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2476090975396258033, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
@@ -2020,7 +2025,7 @@ PrefabInstance:
     - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
       propertyPath: noDRSSegment.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
@@ -2031,6 +2036,26 @@ PrefabInstance:
         type: 3}
       propertyPath: altitudeConverter.altitudeReference
       value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[0].segmentEnd
+      value: 1215
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[1].segmentEnd
+      value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[0].segmentStart
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316897267511221357, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: noDRSSegment.Array.data[1].segmentStart
+      value: 3675
       objectReference: {fileID: 0}
     - target: {fileID: 5356114093574380229, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
@@ -2141,6 +2166,11 @@ PrefabInstance:
     - target: {fileID: 6788394269000091462, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
         type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6788394269000091462, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
+        type: 3}
+      propertyPath: regenPowerSegments.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6975231246497589389, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
@@ -6629,7 +6659,7 @@ PrefabInstance:
     - target: {fileID: 4951290183979982000, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.2301499
+      value: -0.23014988
       objectReference: {fileID: 0}
     - target: {fileID: 4951290183979982000, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
@@ -6639,7 +6669,7 @@ PrefabInstance:
     - target: {fileID: 4951290183979982000, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.97240937
+      value: 0.9724093
       objectReference: {fileID: 0}
     - target: {fileID: 4951290183979982000, guid: 45808ba070a2cb14faa0c7dba5c9ff79,
         type: 3}
