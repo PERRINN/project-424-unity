@@ -12,6 +12,7 @@ namespace Perrinn424.TrackMapSystem
         public Image mapImage;
         public Image referenceImage;
         public VPReplayAsset replay;
+        public float timestep = 0.5f;
 
         private CircularIterator<Vector3> iterator;
 
@@ -28,11 +29,10 @@ namespace Perrinn424.TrackMapSystem
         }
 
 
-        private void Awake()
+        private void OnEnable()
         {
-            replay.GetPositions(1.0f, out var positions, out _);
+            replay.GetPositions(timestep, out var positions, out _);
             iterator = new CircularIterator<Vector3>(positions);
-
 
             trackPositions = new TrackPosition[positions.Length];
 
@@ -78,5 +78,5 @@ namespace Perrinn424.TrackMapSystem
                 trackPositions[i].image.transform.localPosition = localPos;
             }
         }
-    } 
+    }
 }

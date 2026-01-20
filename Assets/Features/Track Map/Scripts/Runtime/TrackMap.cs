@@ -6,7 +6,7 @@ namespace Perrinn424.TrackMapSystem
     {
         public float scale;
         public float rotation;
-        public float position;
+        public Vector2 position;
 
         public Matrix4x4 TransformationMatrix { get; private set; }
 
@@ -14,7 +14,7 @@ namespace Perrinn424.TrackMapSystem
         public Quaternion RotationTransformationMatrix { get; private set; }
         public Vector3 TranslationTransformationMatrix { get; private set; }
 
-        public TrackMap(float scale, float rotation, float position)
+        public TrackMap(float scale, float rotation, Vector2 position)
         {
             this.scale = scale;
             this.rotation = rotation;
@@ -43,7 +43,7 @@ namespace Perrinn424.TrackMapSystem
             RotationTransformationMatrix = Quaternion.AngleAxis(rotation, Vector3.forward) * Quaternion.AngleAxis(-90f, Vector3.right);
 
             // Translation in local coordinates. Position is [0-1]. Pivot translation is applied also
-            TranslationTransformationMatrix = new Vector3((position - pivot.x) * rect.width, (position - pivot.y) * rect.height);
+            TranslationTransformationMatrix = new Vector3((position.x - pivot.x) * rect.width, (position.y - pivot.y) * rect.height);
 
             TransformationMatrix = Matrix4x4.TRS(TranslationTransformationMatrix, RotationTransformationMatrix, ScaleTransformationMatrix);
         }
@@ -52,5 +52,5 @@ namespace Perrinn424.TrackMapSystem
         {
             return TransformationMatrix.MultiplyPoint3x4(worldPosition);
         }
-    } 
+    }
 }

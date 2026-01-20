@@ -8,8 +8,7 @@ namespace Perrinn424.TrackMapSystem
         public Sprite map;
         public float scale;
         public float rotation;
-        [Range(0, 1f)]
-        public float position;
+        public Vector2 position = new Vector2(0.5f, 0.5f);
 
         public TrackMap CreateTrackMap()
         {
