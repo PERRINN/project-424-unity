@@ -133,8 +133,9 @@ public class DynismaMotionPlatformDMGS : VehicleBehaviour
 	int m_sendInterval;
 
 	bool m_heartbeat;
-	double m_slipD;
-	double m_slipD2;
+	double m_slip1;
+	double m_slip2;
+	double m_slip3;
 
 
 	public override int GetUpdateOrder ()
@@ -151,8 +152,9 @@ public class DynismaMotionPlatformDMGS : VehicleBehaviour
 		m_skipCount = 0;
 
 		m_heartbeat = false;
-		m_slipD = 0.0;
-		m_slipD2 = 0.0;
+		m_slip1 = vehicle.speedAngle;
+		m_slip2 = 0.0;
+		m_slip3 = 0.0;
 
 		// Connect with host
 
@@ -222,9 +224,18 @@ public class DynismaMotionPlatformDMGS : VehicleBehaviour
 		m_motionData.nPitchDemand = angularAccel.x;
 		m_motionData.nYawDemand = -angularAccel.y;
 
-		// Slip
+		// Slip - Second order backward differentiation (more accurate)
 
+		double dt = Time.deltaTime;
+		float slip = vehicle.speedAngle;
 
+		m_motionData.aSlipCar = slip;
+		m_motionData.nSlipCar = (float)((3 * slip - 4 * m_slip1 + m_slip2) / (2 * dt));
+		m_motionData.dnSlipCar = (float)((2 * slip - 5 * m_slip1 + 4 * m_slip2 - m_slip3) / (dt * dt));
+
+		m_slip3 = m_slip2;
+		m_slip2 = m_slip1;
+		m_slip1 = slip;
 
 		// Speed and time
 
