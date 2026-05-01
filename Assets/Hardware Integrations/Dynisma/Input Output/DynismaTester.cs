@@ -36,7 +36,9 @@ public class DynismaTester : MonoBehaviour
 	public bool autoCenter = true;
 	public bool autoLoop = false;
 
+	public enum MotionProtocol { DMG1, DMGS };
 	[Header("Motion Data")]
+	public MotionProtocol motionProtocol = MotionProtocol.DMG1;
 	public int listeningPort = 56236;
 
 	[Header("Debug")]
@@ -44,7 +46,7 @@ public class DynismaTester : MonoBehaviour
 	public GUITextBox.Settings widget = new GUITextBox.Settings();
 
 
-	struct MotionData
+	struct MotionDataDMG1
 		{
 		public double accelerationX;			// m/s2
 		public double accelerationY;			// m/s2
@@ -55,6 +57,75 @@ public class DynismaTester : MonoBehaviour
 		public double steeringTorque;			// Nm
 		public double carSpeed;					// m/s
 		public double simulationTime;			// s
+		}
+
+
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	struct MotionDataDMGS
+		{
+		public byte MotionConsent;
+		public byte SimulationRunningHeartbeat;		// Switch between 0 and 1 each frame
+		public sbyte NSimRequest;
+		public sbyte SteeringTorqueEnableRequest;
+		public byte BResetAvailable;
+
+		public float rWashoutLong;
+		public float rWashoutLat;
+		public float rWashoutVert;
+		public float rWashoutRoll;
+		public float rWashoutPitch;
+		public float rWashoutYaw;
+		public float fWashoutLong;
+		public float fWashoutLat;
+		public float fWashoutVert;
+		public float fWashoutRoll;
+		public float fWashoutPitch;
+		public float fWashoutYaw;
+		public float zWashoutLong;
+		public float zWashoutLat;
+		public float zWashoutVert;
+		public float zWashoutRoll;
+		public float zWashoutPitch;
+		public float zWashoutYaw;
+		public float sLongPrepos1;
+		public float sLongPrepos2;
+		public float vCarLongPrepos1;
+		public float vCarLongPrepos2;
+		public float rSideslipCue;
+		public float rEngineCue;
+		public float rUpshiftCue;
+		public float rDownshiftCue;
+
+		public float gLongDemand;				// m/s²		Chassis longitudinal acceleration
+		public float gLatDemand;				// m/s²		Chassis lateral acceleration
+		public float gVertDemand;				// m/s²		Chassis vertical acceleration
+		public float dnRollDemand;				// rad/s²	Chassis roll acceleration
+		public float dnPitchDemand;				// rad/s²	Chassis pitch acceleration
+		public float dnYawDemand;				// rad/s²	Chassis yaw acceleration
+
+		public float vLongDemand;
+		public float vLatDemand;
+		public float vVertDemand;
+		public float nRollDemand;
+		public float nPitchDemand;
+		public float nYawDemand;
+		public float xLongDemand;
+		public float xLatDemand;
+		public float xVertDemand;
+		public float aRollDemand;
+		public float aPitchDemand;
+		public float aYawDemand;
+
+		public float vCar;						// m/s		Chassis longitudinal velocity
+
+		public float MSteer;
+		public float nEngine;
+		public float NGear;
+
+		public float aSlipCar;					// rad		Vehicle slip angle
+		public float nSlipCar;					// rad/s	Vehicle slip angle - first derivative
+		public float dnSlipCar;					// rad/s²	Vehicle slip angle - second derivative
+		public float Timestamp;					// s		Unix timestamp
 		}
 
 
@@ -96,7 +167,8 @@ public class DynismaTester : MonoBehaviour
 	UdpListenThread m_thread = new UdpListenThread();
 	byte[] m_buffer = new byte[1024];
 	int m_size = 0;
-	MotionData m_motionData = new MotionData();
+	MotionDataDMG1 m_motionDataDMG1 = new MotionDataDMG1();
+	MotionDataDMGS m_motionDataDMGS = new MotionDataDMGS();
 	int m_received = 0;
 	int m_packetCount = 0;
 	float m_packetCountTime;
@@ -134,7 +206,7 @@ public class DynismaTester : MonoBehaviour
 		{
 		// Show runtime byte sizes of each struct
 
-		Debug.Log($"InputData: {Marshal.SizeOf(typeof(InputData))}  MotionData: {Marshal.SizeOf(typeof(MotionData))}  EyePointData: {Marshal.SizeOf(typeof(EyePointData))}");
+		Debug.Log($"InputData: {Marshal.SizeOf(typeof(InputData))}  MotionDataDMG1: {Marshal.SizeOf(typeof(MotionDataDMG1))}  MotionDataDMGS: {Marshal.SizeOf(typeof(MotionDataDMGS))}  EyePointData: {Marshal.SizeOf(typeof(EyePointData))}");
 
 		// Initialize widget
 
@@ -144,6 +216,10 @@ public class DynismaTester : MonoBehaviour
 		// Initialize connections
 
 		Connect();
+
+		// Allow run in background in the editor
+
+		Application.runInBackground = true;
 		}
 
 
@@ -161,7 +237,12 @@ public class DynismaTester : MonoBehaviour
 			{
 			if (m_size > 0)
 				{
-				m_motionData = ObjectUtility.GetStructFromBytes<MotionData>(m_buffer);
+				if (motionProtocol == MotionProtocol.DMG1)
+					m_motionDataDMG1 = ObjectUtility.GetStructFromBytes<MotionDataDMG1>(m_buffer);
+				else
+				if (motionProtocol == MotionProtocol.DMGS)
+					m_motionDataDMGS = ObjectUtility.GetStructFromBytes<MotionDataDMGS>(m_buffer);
+
 				m_size = 0;
 				}
 			}
@@ -451,11 +532,31 @@ public class DynismaTester : MonoBehaviour
 
 		m_text.Append("Motion Platform Data (Received)\n\n");
 		m_text.Append($"Packets:               {m_received}  ({m_packetFrequency:0.} Hz)\n");
-		m_text.Append($"Acceleration:          X:{m_motionData.accelerationX,10:0.000000}  Y:{m_motionData.accelerationY,10:0.000000}  Z:{m_motionData.accelerationZ,10:0.000000}  m/s2\n");
-		m_text.Append($"Angular Acceleration:  X:{m_motionData.angularAccelerationX,10:0.000000}  Y:{m_motionData.angularAccelerationY,10:0.000000}  Z:{m_motionData.angularAccelerationZ,10:0.000000}  rad/s2\n");
-		m_text.Append($"Steering Torque:      {m_motionData.steeringTorque,11:0.000000}  Nm\n");
-		m_text.Append($"Car Speed:            {m_motionData.carSpeed,11:0.000000}  m/s\n");
-		m_text.Append($"Simulation Time:      {m_motionData.simulationTime,11:0.000000}  s\n");
+
+		if (motionProtocol == MotionProtocol.DMG1)
+			{
+			m_text.Append($"Protocol:              DMG-1\n");
+			m_text.Append($"Acceleration:          X:{m_motionDataDMG1.accelerationX,10:0.000000}  Y:{m_motionDataDMG1.accelerationY,10:0.000000}  Z:{m_motionDataDMG1.accelerationZ,10:0.000000}  m/s²\n");
+			m_text.Append($"Angular Acceleration:  X:{m_motionDataDMG1.angularAccelerationX,10:0.000000}  Y:{m_motionDataDMG1.angularAccelerationY,10:0.000000}  Z:{m_motionDataDMG1.angularAccelerationZ,10:0.000000}  rad/s²\n");
+			m_text.Append($"Steering Torque:      {m_motionDataDMG1.steeringTorque,11:0.000000}  Nm\n");
+			m_text.Append($"Car Speed:            {m_motionDataDMG1.carSpeed,11:0.000000}  m/s\n");
+			m_text.Append($"Simulation Time:      {m_motionDataDMG1.simulationTime,11:0.000000}  s\n");
+			}
+		else
+		if (motionProtocol == MotionProtocol.DMGS)
+			{
+			m_text.Append($"Protocol:              DMG-S\n");
+			m_text.Append($"Heartbeat:             {m_motionDataDMGS.SimulationRunningHeartbeat}\n");
+			m_text.Append($"Acceleration:          Long:{m_motionDataDMGS.gLongDemand,10:0.000000}    Lat:{m_motionDataDMGS.gLatDemand,10:0.000000}  Vert:{m_motionDataDMGS.gVertDemand,10:0.000000}  m/s²\n");
+			m_text.Append($"Angular Acceleration:  Roll:{m_motionDataDMGS.dnRollDemand,10:0.000000}  Pitch:{m_motionDataDMGS.dnPitchDemand,10:0.000000}   Yaw:{m_motionDataDMGS.dnYawDemand,10:0.000000}  rad/s²\n");
+			m_text.Append($"Car Slip Angle:        rad:{m_motionDataDMGS.aSlipCar,10:0.000000}  rad/s:{m_motionDataDMGS.nSlipCar,10:0.00000}  rad/s²:{m_motionDataDMGS.dnSlipCar,10:0.0000}\n");
+			m_text.Append($"Car Speed:            {m_motionDataDMGS.vCar,11:0.000000}  m/s\n");
+			m_text.Append($"Timestamp:            {m_motionDataDMGS.Timestamp,11:0.000000}  s\n");
+			}
+		else
+			{
+			m_text.Append($"Protocol:              Not implemented\n");
+			}
 
 		m_text.Append("\nInput Data (Sent)\n\n");
 		m_text.Append($"Steer Angle:          {m_inputData.steerAngle,8:0.000}\n");

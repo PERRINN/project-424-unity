@@ -222,9 +222,9 @@ public class DynismaMotionPlatformDMGS : VehicleBehaviour
 		// Unity: Each axis is positive in the counterclockwise direction, when looking in the positive direction of that axis.
 
 		Vector3 angularAccel = vehicle.localAngularAcceleration;
-		m_motionData.nRollDemand = -angularAccel.z;
-		m_motionData.nPitchDemand = angularAccel.x;
-		m_motionData.nYawDemand = -angularAccel.y;
+		m_motionData.dnRollDemand = -angularAccel.z;
+		m_motionData.dnPitchDemand = angularAccel.x;
+		m_motionData.dnYawDemand = -angularAccel.y;
 
 		// Slip - Second order backward differentiation (more accurate)
 
