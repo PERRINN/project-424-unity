@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 namespace Perrinn424
 {
 
-public class DynismaMotionPlatform : VehicleBehaviour
+public class DynismaMotionPlatformDMG1 : VehicleBehaviour
 	{
 	public bool motionEnabled = true;
 	public Settings settings = new Settings();
@@ -97,11 +97,11 @@ public class DynismaMotionPlatform : VehicleBehaviour
 			m_udp.StartConnection(settings.port+20);
 			m_udp.SetDestination(settings.host, settings.port);
 
-			Debug.Log($"DynismaMotionPlatform: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz), frame size {Marshal.SizeOf(m_motionData)} bytes");
+			Debug.Log($"DynismaMotionPlatformDMG1: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz), frame size {Marshal.SizeOf(m_motionData)} bytes");
 			}
 		catch (Exception ex)
 			{
-			Debug.LogWarning($"DynismaMotionPlatform connection error: {ex.Message}. Component disabled.");
+			Debug.LogWarning($"DynismaMotionPlatformDMG1 connection error: {ex.Message}. Component disabled.");
 			enabled = false;
 			return;
 			}

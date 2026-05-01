@@ -152,7 +152,7 @@ public class DynismaMotionPlatformDMGS : VehicleBehaviour
 		m_skipCount = 0;
 
 		m_heartbeat = false;
-		m_slip1 = vehicle.speedAngle;
+		m_slip1 = vehicle.speedAngle * Mathf.Deg2Rad;
 		m_slip2 = 0.0;
 		m_slip3 = 0.0;
 
@@ -162,11 +162,11 @@ public class DynismaMotionPlatformDMGS : VehicleBehaviour
 			m_udp.StartConnection(settings.port+20);
 			m_udp.SetDestination(settings.host, settings.port);
 
-			Debug.Log($"DynismaMotionPlatform: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz), frame size {Marshal.SizeOf(m_motionData)} bytes");
+			Debug.Log($"DynismaMotionPlatformDMGS: sending motion data to {settings.host}:{settings.port} (max {settings.maxTransferFrequency} Hz), frame size {Marshal.SizeOf(m_motionData)} bytes");
 			}
 		catch (Exception ex)
 			{
-			Debug.LogWarning($"DynismaMotionPlatform connection error: {ex.Message}. Component disabled.");
+			Debug.LogWarning($"DynismaMotionPlatformDMGS connection error: {ex.Message}. Component disabled.");
 			enabled = false;
 			return;
 			}
@@ -227,7 +227,7 @@ public class DynismaMotionPlatformDMGS : VehicleBehaviour
 		// Slip - Second order backward differentiation (more accurate)
 
 		double dt = Time.deltaTime;
-		float slip = vehicle.speedAngle;
+		float slip = vehicle.speedAngle * Mathf.Deg2Rad;
 
 		m_motionData.aSlipCar = slip;
 		m_motionData.nSlipCar = (float)((3 * slip - 4 * m_slip1 + m_slip2) / (2 * dt));

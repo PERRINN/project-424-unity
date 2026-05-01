@@ -12,8 +12,17 @@ namespace Perrinn424
 
 public class DynismaSettings : MonoBehaviour
 	{
+	// When both MotionPlatform objects are specified, then the selector chooses one.
+	// Otherwise, if theres only one available, it will be used.
+
+	public enum MotionPlatformProtocol { DMG1, DMGS };
+	public MotionPlatformProtocol motionPlatformProtocol = MotionPlatformProtocol.DMG1;
+
+	[UnityEngine.Serialization.FormerlySerializedAs("motionPlatform")]
+	public DynismaMotionPlatformDMG1 motionPlatformDMG1;
+	public DynismaMotionPlatformDMGS motionPlatformDMGS;
+	[Space(5)]
 	public DynismaInputProvider inputProvider;
-	public DynismaMotionPlatform motionPlatform;
 	public DynismaEyePointClient eyePointClient;
 	public string fileName = "DynismaSettings.json";
 
@@ -22,19 +31,22 @@ public class DynismaSettings : MonoBehaviour
 	private class SavedSettings
 		{
 		public DynismaInputDevice.Settings inputSettings = new DynismaInputDevice.Settings();
-		public DynismaMotionPlatform.Settings motionSettings = new DynismaMotionPlatform.Settings();
+		public DynismaMotionPlatformDMG1.Settings motionSettingsDMG1 = new DynismaMotionPlatformDMG1.Settings();
+		public DynismaMotionPlatformDMGS.Settings motionSettingsDMGS = new DynismaMotionPlatformDMGS.Settings();
 		public DynismaEyePointClient.Settings clientEyePointSettings = new DynismaEyePointClient.Settings();
 		}
 
 
 	void Awake ()
 		{
-		// Ensure dynisma components are disabled beforehand when this component is active
+		// Ensure dynisma components don't become enabled before we configure them.
 
 		if (isActiveAndEnabled)
 			{
 			if (inputProvider != null) inputProvider.enabled = false;
-			if (motionPlatform != null) motionPlatform.enabled = false;
+			if (motionPlatformDMG1 != null) motionPlatformDMG1.enabled = false;
+			if (motionPlatformDMGS != null) motionPlatformDMGS.enabled = false;
+			if (eyePointClient != null) eyePointClient.enabled = false;
 			}
 		}
 
@@ -64,20 +76,25 @@ public class DynismaSettings : MonoBehaviour
 			if (inputProvider != null)
 				{
 				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaInputDevice.Settings>(settings.inputSettings, ref inputProvider.settings);
-
 				inputProvider.enabled = true;
 				}
 
-			if (motionPlatform != null)
+			if (motionPlatformDMG1 != null)
 				{
-				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaMotionPlatform.Settings>(settings.motionSettings, ref motionPlatform.settings);
+				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaMotionPlatformDMG1.Settings>(settings.motionSettingsDMG1, ref motionPlatformDMG1.settings);
+				motionPlatformDMG1.enabled = motionPlatformDMGS == null || motionPlatformProtocol == MotionPlatformProtocol.DMG1;
+				}
 
-				motionPlatform.enabled = true;
+			if (motionPlatformDMGS != null)
+				{
+				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaMotionPlatformDMGS.Settings>(settings.motionSettingsDMGS, ref motionPlatformDMGS.settings);
+				motionPlatformDMGS.enabled = motionPlatformDMG1 == null || motionPlatformProtocol == MotionPlatformProtocol.DMGS;
 				}
 
 			if (eyePointClient != null)
 				{
 				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaEyePointClient.Settings>(settings.clientEyePointSettings, ref eyePointClient.settings);
+				eyePointClient.enabled = true;
 				}
 			}
 		}
@@ -86,9 +103,13 @@ public class DynismaSettings : MonoBehaviour
 	[ContextMenu("Save current settings to file")]
 	public void SaveCurrentSettings ()
 		{
-		SavedSettings settings = new SavedSettings();
-		if (inputProvider != null) settings.inputSettings = inputProvider.settings;
-		if (motionPlatform != null) settings.motionSettings = motionPlatform.settings;
+		SavedSettings settings = new SavedSettings()
+			{
+			inputSettings = inputProvider?.settings,
+			motionSettingsDMG1 = motionPlatformDMG1?.settings,
+			motionSettingsDMGS = motionPlatformDMGS?.settings,
+			clientEyePointSettings = eyePointClient?.settings
+			};
 
 		string json = JsonUtility.ToJson(settings, prettyPrint: true);
 		string path = Path.Combine(Application.persistentDataPath, fileName);

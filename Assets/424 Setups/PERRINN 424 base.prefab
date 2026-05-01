@@ -415,7 +415,7 @@ MonoBehaviour:
     contactStart: 0.92
     contactDetection: 1
     groundMaterialDetection: 2
-  tireProperties:
+  tireCompliance:
     verticalStiffness: 450000
     verticalDamping: 2000
     lateralCompliance: 1
@@ -534,7 +534,7 @@ MonoBehaviour:
     contactStart: 0.92
     contactDetection: 1
     groundMaterialDetection: 2
-  tireProperties:
+  tireCompliance:
     verticalStiffness: 450000
     verticalDamping: 2000
     lateralCompliance: 1
@@ -2296,7 +2296,7 @@ MonoBehaviour:
     contactStart: 0.92
     contactDetection: 1
     groundMaterialDetection: 2
-  tireProperties:
+  tireCompliance:
     verticalStiffness: 450000
     verticalDamping: 2000
     lateralCompliance: 1
@@ -2416,7 +2416,7 @@ MonoBehaviour:
     contactStart: 0.92
     contactDetection: 1
     groundMaterialDetection: 2
-  tireProperties:
+  tireCompliance:
     verticalStiffness: 450000
     verticalDamping: 2000
     lateralCompliance: 1
@@ -5036,6 +5036,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6611051989778264180}
   - component: {fileID: 7125089967652458897}
+  - component: {fileID: 5260040419703420619}
   - component: {fileID: 6981771551158905988}
   m_Layer: 8
   m_Name: Motion Platforms
@@ -5087,6 +5088,35 @@ MonoBehaviour:
     angularAccelerationZ: 0
     steeringTorque: 0
     carSpeed: 0
+--- !u!114 &5260040419703420619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7733069672857150506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46f3fd425e4c57f47ae9dd82efb12fbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionEnabled: 1
+  settings:
+    host: 127.0.0.1
+    port: 56236
+    maxTransferFrequency: 150
+  testModeEnabled: 0
+  testData:
+    gLongDemand: 0
+    gLatDemand: 0
+    gVertDemand: 0
+    dnRollDemand: 0
+    dnPitchDemand: 0
+    dnYawDemand: 0
+    vCar: 0
+    aSlipCar: 0
+    nSlipCar: 0
+    dnSlipCar: 0
 --- !u!114 &6981771551158905988
 MonoBehaviour:
   m_ObjectHideFlags: 0
