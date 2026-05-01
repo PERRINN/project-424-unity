@@ -7,7 +7,7 @@ using UnityEngine;
 public class VIOSOCamera : MonoBehaviour
 {
     // We have several VIOSOCamera components around, but there's only one eye point.
-    // DynismaInputDevice pass the values here directly as they come.
+    // DynismaEyePointClient passes the values here directly as they come.
 
     public static Vector3 eyePointPos;
     public static Vector3 eyePointRot;
