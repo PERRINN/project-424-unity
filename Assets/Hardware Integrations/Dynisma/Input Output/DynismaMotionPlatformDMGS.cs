@@ -59,6 +59,8 @@ public class DynismaMotionPlatformDMGS : VehicleBehaviour
 		public float dnSlipCar;
 		}
 
+
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	struct MotionData
 		{
 		public byte MotionConsent;

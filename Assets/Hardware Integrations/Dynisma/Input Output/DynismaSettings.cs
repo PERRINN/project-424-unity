@@ -18,12 +18,16 @@ public class DynismaSettings : MonoBehaviour
 	public enum MotionPlatformProtocol { DMG1, DMGS };
 	public MotionPlatformProtocol motionPlatformProtocol = MotionPlatformProtocol.DMG1;
 
+	// Motion platform components should be disabled in the vehicle prefab. We will enable them from here.
+
 	[UnityEngine.Serialization.FormerlySerializedAs("motionPlatform")]
 	public DynismaMotionPlatformDMG1 motionPlatformDMG1;
 	public DynismaMotionPlatformDMGS motionPlatformDMGS;
+
 	[Space(5)]
 	public DynismaInputProvider inputProvider;
 	public DynismaEyePointClient eyePointClient;
+	[Space(5)]
 	public string fileName = "DynismaSettings.json";
 
 
@@ -34,20 +38,6 @@ public class DynismaSettings : MonoBehaviour
 		public DynismaMotionPlatformDMG1.Settings motionSettingsDMG1 = new DynismaMotionPlatformDMG1.Settings();
 		public DynismaMotionPlatformDMGS.Settings motionSettingsDMGS = new DynismaMotionPlatformDMGS.Settings();
 		public DynismaEyePointClient.Settings clientEyePointSettings = new DynismaEyePointClient.Settings();
-		}
-
-
-	void Awake ()
-		{
-		// Ensure dynisma components don't become enabled before we configure them.
-
-		if (isActiveAndEnabled)
-			{
-			if (inputProvider != null) inputProvider.enabled = false;
-			if (motionPlatformDMG1 != null) motionPlatformDMG1.enabled = false;
-			if (motionPlatformDMGS != null) motionPlatformDMGS.enabled = false;
-			if (eyePointClient != null) eyePointClient.enabled = false;
-			}
 		}
 
 
@@ -71,13 +61,8 @@ public class DynismaSettings : MonoBehaviour
 			{
 			SavedSettings settings = JsonUtility.FromJson<SavedSettings>(json);
 
-			// Copy settings to preserve current references
-
-			if (inputProvider != null)
-				{
-				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaInputDevice.Settings>(settings.inputSettings, ref inputProvider.settings);
-				inputProvider.enabled = true;
-				}
+			// Copy settings to preserve current references.
+			// Enable the corresponding motion platform script. They should be disabled in the GameObject.
 
 			if (motionPlatformDMG1 != null)
 				{
@@ -91,9 +76,21 @@ public class DynismaSettings : MonoBehaviour
 				motionPlatformDMGS.enabled = motionPlatformDMG1 == null || motionPlatformProtocol == MotionPlatformProtocol.DMGS;
 				}
 
-			if (eyePointClient != null)
+			// Apply settings to these components and restart them if they're enabled.
+
+			if (inputProvider != null && inputProvider.isActiveAndEnabled)
 				{
+				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaInputDevice.Settings>(settings.inputSettings, ref inputProvider.settings);
+				inputProvider.enabled = false;
+				inputProvider.enabled = true;
+				}
+
+			if (eyePointClient != null && eyePointClient.isActiveAndEnabled)
+				{
+				// Apply settings and restart the component
+
 				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaEyePointClient.Settings>(settings.clientEyePointSettings, ref eyePointClient.settings);
+				eyePointClient.enabled = false;
 				eyePointClient.enabled = true;
 				}
 			}
