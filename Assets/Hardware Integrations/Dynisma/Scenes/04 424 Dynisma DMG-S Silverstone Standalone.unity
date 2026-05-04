@@ -341,6 +341,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69e59ea7d6a35e64ab4cf1fb5c1be598, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &275404956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 275404957}
+  - component: {fileID: 275404958}
+  m_Layer: 0
+  m_Name: EyePoint Client
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &275404957
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275404956}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 570963769}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &275404958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275404956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c9653f1769b6ac45aac687f999c8202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  protocol: 1
+  settings:
+    listeningPort: 56232
 --- !u!4 &295459827 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2476090976206688042, guid: f4b41eff2d99ceb45bcfc5a4a5e57b1e,
@@ -1230,6 +1277,7 @@ Transform:
   - {fileID: 1308067444}
   - {fileID: 1646482523}
   - {fileID: 1796731535}
+  - {fileID: 275404957}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4591,7 +4639,7 @@ MonoBehaviour:
   motionPlatformDMG1: {fileID: 2111449869}
   motionPlatformDMGS: {fileID: 46264596}
   inputProvider: {fileID: 531594965}
-  eyePointClient: {fileID: 0}
+  eyePointClient: {fileID: 275404958}
   fileName: DynismaSettings.json
 --- !u!114 &1796731537
 MonoBehaviour:

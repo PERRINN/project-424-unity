@@ -12,6 +12,9 @@ namespace Perrinn424
 
 public class DynismaEyePointClient : MonoBehaviour
 	{
+	public enum Protocol { Vioso, DomeProjection }
+	public Protocol protocol = Protocol.Vioso;
+
 	public Settings settings = new Settings();
 
 	[Serializable]
@@ -35,11 +38,27 @@ public class DynismaEyePointClient : MonoBehaviour
 		// 48 bytes
 		}
 
+	struct EyePointData32
+		{
+		// Eye point position from motion platform
+		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
+
+		public float xLongWorld;		// m
+		public float xLatWorld;			// m
+		public float xVertWorld;		// m
+		public float aRollWorld;		// rad
+		public float aPitchWorld;		// rad
+		public float aYawWorld; 		// rad
+
+		// 24 bytes
+		}
+
 	UdpConnection m_listener = new UdpConnection();
 	UdpListenThread m_thread = new UdpListenThread();
 	byte[] m_buffer = new byte[1024];
 	int m_size = 0;
 	EyePointData m_eyePointData = new EyePointData();
+	EyePointData32 m_eyePointData32 = new EyePointData32();
 
 
 	void OnEnable ()
@@ -63,7 +82,17 @@ public class DynismaEyePointClient : MonoBehaviour
 			lock (m_buffer)
 				{
 				if (m_size > 0)
-					m_eyePointData = ObjectUtility.GetStructFromBytes<EyePointData>(m_buffer);
+					{
+					if (protocol == Protocol.Vioso)
+						{
+						m_eyePointData = ObjectUtility.GetStructFromBytes<EyePointData>(m_buffer);
+						}
+					else
+					if (protocol == Protocol.DomeProjection)
+						{
+						m_eyePointData32 = ObjectUtility.GetStructFromBytes<EyePointData32>(m_buffer);
+						}
+					}
 				}
 			});
 		}
@@ -80,25 +109,48 @@ public class DynismaEyePointClient : MonoBehaviour
 		{
 		lock (m_buffer)
 			{
-			// Eyepoint data passed directly to all VIOSOCamera component instances.
-			// Values come in ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html).
-			// Convert to Unity coordinates.
-
-			VIOSOCamera.eyePointPos = new Vector3()
+			if (protocol == Protocol.Vioso)
 				{
-				x = -(float)m_eyePointData.eyePointPosY,
-				y = (float)m_eyePointData.eyePointPosZ,
-				z = (float)m_eyePointData.eyePointPosX,
-				};
+				// Eyepoint data passed directly to all VIOSOCamera component instances.
+				// Values come in ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html).
+				// Convert to Unity coordinates.
 
-			// For some reason VIOSO expects X and Z rotations with opposite sign, despite using the same rotation axes as Unity.
+				VIOSOCamera.eyePointPos = new Vector3()
+					{
+					x = -(float)m_eyePointData.eyePointPosY,
+					y = (float)m_eyePointData.eyePointPosZ,
+					z = (float)m_eyePointData.eyePointPosX,
+					};
 
-			VIOSOCamera.eyePointRot = new Vector3()
+				// For some reason VIOSO expects X and Z rotations with opposite sign, despite using the same rotation axes as Unity.
+
+				VIOSOCamera.eyePointRot = new Vector3()
+					{
+					x = -(float)m_eyePointData.eyePointRotY,
+					y = -(float)m_eyePointData.eyePointRotZ,
+					z = (float)m_eyePointData.eyePointRotX,
+					};
+				}
+			else
+			if (protocol == Protocol.DomeProjection)
 				{
-				x = -(float)m_eyePointData.eyePointRotY,
-				y = -(float)m_eyePointData.eyePointRotZ,
-				z = (float)m_eyePointData.eyePointRotX,
-				};
+				// Eyepoint data passed directly to the DynismaDomeProjectionOrigin component.
+				// Values come in ISO 8855, with semantic names. Convert to Unity coordinates.
+
+				DynismaDomeProjectionOrigin.eyePointPos = new Vector3()
+					{
+					x = -m_eyePointData32.xLatWorld,
+					y = m_eyePointData32.xVertWorld,
+					z = m_eyePointData32.xLongWorld,
+					};
+
+				DynismaDomeProjectionOrigin.eyePointRot = new Vector3()
+					{
+					x = m_eyePointData32.aPitchWorld * Mathf.Rad2Deg,
+					y = -m_eyePointData32.aYawWorld * Mathf.Rad2Deg,
+					z = -m_eyePointData32.aRollWorld * Mathf.Rad2Deg,
+					};
+				}
 			}
 		}
 	}
