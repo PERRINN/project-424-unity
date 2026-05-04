@@ -10,6 +10,7 @@ using System.IO;
 namespace Perrinn424
 {
 
+[DefaultExecutionOrder(-100)]
 public class DynismaSettings : MonoBehaviour
 	{
 	// When both MotionPlatform objects are specified, then the selector chooses one.
