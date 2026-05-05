@@ -5,7 +5,7 @@ using UnityEditor.Build.Reporting;
 using UnityEngine;
 using System.IO;
 
-
+#if _DYNISMA_DMG1
 class MyCustomBuildProcessor : IPostprocessBuildWithReport
 	{
 	public int callbackOrder => 0;
@@ -47,3 +47,4 @@ class MyCustomBuildProcessor : IPostprocessBuildWithReport
 			}
 		}
 	}
+#endif
