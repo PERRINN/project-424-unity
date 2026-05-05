@@ -24,7 +24,9 @@ public class DynismaTester : MonoBehaviour
 	public int inputPort = 56234;
 	public int steerAngleRange = 300;
 
+	public enum EyePointProtocol { Vioso, DomeProjection }
 	[Header("Eye Point Data")]
+	public EyePointProtocol eyePointProtocol = EyePointProtocol.Vioso;
 	public string eyePointHost = "127.0.0.1";
 	public int eyePointPort = 56232;
 
@@ -143,7 +145,7 @@ public class DynismaTester : MonoBehaviour
 
 	struct EyePointData
 		{
-		// Eye point position from motion platform
+		// Eye point position from motion platform (Vioso protocol)
 		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
 
 		public double eyePointPosX;		// m
@@ -152,6 +154,20 @@ public class DynismaTester : MonoBehaviour
 		public double eyePointRotX;		// rad
 		public double eyePointRotY;		// rad
 		public double eyePointRotZ;		// rad
+		}
+
+
+	struct EyePointData32
+		{
+		// Eye point position from motion platform (DomeProjection protocol)
+		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
+
+		public float xLongWorld;		// m
+		public float xLatWorld;			// m
+		public float xVertWorld;		// m
+		public float aRollWorld;		// rad
+		public float aPitchWorld;		// rad
+		public float aYawWorld; 		// rad
 		}
 
 
@@ -192,6 +208,7 @@ public class DynismaTester : MonoBehaviour
 
 	UdpSender m_eyePointSender = null;
 	EyePointData m_eyePointData = new EyePointData();
+	EyePointData32 m_eyePointData32 = new EyePointData32();
 	int m_autoLoopDir = 1;
 
 
@@ -206,7 +223,7 @@ public class DynismaTester : MonoBehaviour
 		{
 		// Show runtime byte sizes of each struct
 
-		Debug.Log($"InputData: {Marshal.SizeOf(typeof(InputData))}  MotionDataDMG1: {Marshal.SizeOf(typeof(MotionDataDMG1))}  MotionDataDMGS: {Marshal.SizeOf(typeof(MotionDataDMGS))}  EyePointData: {Marshal.SizeOf(typeof(EyePointData))}");
+		Debug.Log($"InputData: {Marshal.SizeOf(typeof(InputData))}  MotionDataDMG1: {Marshal.SizeOf(typeof(MotionDataDMG1))}  MotionDataDMGS: {Marshal.SizeOf(typeof(MotionDataDMGS))}  EyePointData: {Marshal.SizeOf(typeof(EyePointData))}  EyePointData32: {Marshal.SizeOf(typeof(EyePointData32))}");
 
 		// Initialize widget
 
@@ -363,14 +380,36 @@ public class DynismaTester : MonoBehaviour
 		Vector3 position = transform.localPosition;
 		Vector3 rotation = transform.localRotation.eulerAngles;
 
-		m_eyePointData.eyePointPosX = position.z;
-		m_eyePointData.eyePointPosY = -position.x;
-		m_eyePointData.eyePointPosZ = position.y;
-		m_eyePointData.eyePointRotX = -MathUtility.ClampAngle(rotation.z) * Mathf.Deg2Rad;
-		m_eyePointData.eyePointRotY = MathUtility.ClampAngle(rotation.x) * Mathf.Deg2Rad;
-		m_eyePointData.eyePointRotZ = -MathUtility.ClampAngle(rotation.y) * Mathf.Deg2Rad;
+		float posX = position.z;
+		float posY = -position.x;
+		float posZ = position.y;
+		float rotX = -MathUtility.ClampAngle(rotation.z) * Mathf.Deg2Rad;
+		float rotY = MathUtility.ClampAngle(rotation.x) * Mathf.Deg2Rad;
+		float rotZ = -MathUtility.ClampAngle(rotation.y) * Mathf.Deg2Rad;
 
-		m_eyePointSender.SendSync(ObjectUtility.GetBytesFromStruct<EyePointData>(m_eyePointData));
+		// Send pose using the specified protocol
+
+		if (eyePointProtocol == EyePointProtocol.Vioso)
+			{
+			m_eyePointData.eyePointPosX = posX;
+			m_eyePointData.eyePointPosY = posY;
+			m_eyePointData.eyePointPosZ = posZ;
+			m_eyePointData.eyePointRotX = rotX;
+			m_eyePointData.eyePointRotY = rotY;
+			m_eyePointData.eyePointRotZ = rotZ;
+			m_eyePointSender.SendSync(ObjectUtility.GetBytesFromStruct<EyePointData>(m_eyePointData));
+			}
+		else
+		if (eyePointProtocol == EyePointProtocol.DomeProjection)
+			{
+			m_eyePointData32.xLongWorld = posX;
+			m_eyePointData32.xLatWorld = posY;
+			m_eyePointData32.xVertWorld = posZ;
+			m_eyePointData32.aRollWorld = rotX;
+			m_eyePointData32.aPitchWorld = rotY;
+			m_eyePointData32.aYawWorld = rotZ;
+			m_eyePointSender.SendSync(ObjectUtility.GetBytesFromStruct<EyePointData32>(m_eyePointData32));
+			}
 		}
 
 
@@ -576,8 +615,22 @@ public class DynismaTester : MonoBehaviour
 		m_text.Append($"Rotary 2:              {rotary1}\n");
 
 		m_text.Append("\nEye Point Data (Sent)\n\n");
-		m_text.Append($"Eye Point Position:    {m_eyePointData.eyePointPosX,6:0.000}, {m_eyePointData.eyePointPosY,6:0.000}, {m_eyePointData.eyePointPosZ,6:0.000}  m\n");
-		m_text.Append($"Eye Point Rotation:    {m_eyePointData.eyePointRotX,6:0.000}, {m_eyePointData.eyePointRotY,6:0.000}, {m_eyePointData.eyePointRotZ,6:0.000}  rad\n");
+		m_text.Append($"Protocol: {eyePointProtocol}\n");
+		if (eyePointProtocol == EyePointProtocol.Vioso)
+			{
+			m_text.Append($"Eye Point Position:    {m_eyePointData.eyePointPosX,6:0.000}, {m_eyePointData.eyePointPosY,6:0.000}, {m_eyePointData.eyePointPosZ,6:0.000}  m\n");
+			m_text.Append($"Eye Point Rotation:    {m_eyePointData.eyePointRotX,6:0.000}, {m_eyePointData.eyePointRotY,6:0.000}, {m_eyePointData.eyePointRotZ,6:0.000}  rad\n");
+			}
+		else
+		if (eyePointProtocol == EyePointProtocol.DomeProjection)
+			{
+			m_text.Append($"Eye Point Position:    {m_eyePointData32.xLongWorld,6:0.000}, {m_eyePointData32.xLatWorld,6:0.000}, {m_eyePointData32.xVertWorld,6:0.000}  m\n");
+			m_text.Append($"Eye Point Rotation:    {m_eyePointData32.aRollWorld,6:0.000}, {m_eyePointData32.aPitchWorld,6:0.000}, {m_eyePointData32.aYawWorld,6:0.000}  rad\n");
+			}
+		else
+			{
+			m_text.Append("Protocol not implemented\n");
+			}
 
 		m_text.Append("\nMove eye point with arrows, page up/down, and ctrl/shift.");
 

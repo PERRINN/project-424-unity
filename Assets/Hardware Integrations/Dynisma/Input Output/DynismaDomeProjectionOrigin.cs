@@ -47,8 +47,8 @@ public class DynismaDomeProjectionOrigin : MonoBehaviour
 
 		// Apply eyepoint correction to the origin. The rotation is relative to the camera position.
 
-		Quaternion rotation = Quaternion.Inverse(Quaternion.Euler(testEyePointRot));
-		transform.localPosition = -testEyePointPos + rotation * m_offset;
+		Quaternion rotation = Quaternion.Inverse(Quaternion.Euler(eyePointRot * Mathf.Rad2Deg));
+		transform.localPosition = -eyePointPos + rotation * m_offset;
 		transform.localRotation = rotation;
 		}
 

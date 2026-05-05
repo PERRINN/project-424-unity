@@ -25,7 +25,7 @@ public class DynismaEyePointClient : MonoBehaviour
 
 	struct EyePointData
 		{
-		// Eye point position from motion platform
+		// Eye point position from motion platform (Vioso protocol)
 		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
 
 		public double eyePointPosX;		// m
@@ -40,7 +40,7 @@ public class DynismaEyePointClient : MonoBehaviour
 
 	struct EyePointData32
 		{
-		// Eye point position from motion platform
+		// Eye point position from motion platform (DomeProjection protocol)
 		// ISO 8855 (https://www.mathworks.com/help/driving/ug/coordinate-systems.html)
 
 		public float xLongWorld;		// m
@@ -146,9 +146,9 @@ public class DynismaEyePointClient : MonoBehaviour
 
 				DynismaDomeProjectionOrigin.eyePointRot = new Vector3()
 					{
-					x = m_eyePointData32.aPitchWorld * Mathf.Rad2Deg,
-					y = -m_eyePointData32.aYawWorld * Mathf.Rad2Deg,
-					z = -m_eyePointData32.aRollWorld * Mathf.Rad2Deg,
+					x = m_eyePointData32.aPitchWorld,
+					y = -m_eyePointData32.aYawWorld,
+					z = -m_eyePointData32.aRollWorld,
 					};
 				}
 			}
