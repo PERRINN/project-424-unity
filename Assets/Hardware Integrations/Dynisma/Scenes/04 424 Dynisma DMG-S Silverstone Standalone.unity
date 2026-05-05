@@ -4622,6 +4622,7 @@ MonoBehaviour:
   motionPlatformDMGS: {fileID: 46264596}
   inputProvider: {fileID: 531594965}
   eyePointClient: {fileID: 275404958}
+  domeProjectionCorrection: {fileID: 7921384829514702526}
   fileName: DynismaSettings.json
 --- !u!114 &1796731537
 MonoBehaviour:
@@ -5290,11 +5291,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 570963769}
     m_Modifications:
-    - target: {fileID: 1275743134823251065, guid: b23e8bf63450bee40b143d6a98b99590,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1950971957213894758, guid: b23e8bf63450bee40b143d6a98b99590,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5405,11 +5401,6 @@ PrefabInstance:
       propertyPath: physicsCameraFront
       value: 
       objectReference: {fileID: 446934096}
-    - target: {fileID: 5451541061777365364, guid: b23e8bf63450bee40b143d6a98b99590,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 7610890017810178136, guid: b23e8bf63450bee40b143d6a98b99590,
         type: 3}
       propertyPath: m_LookAt
@@ -5422,3 +5413,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b23e8bf63450bee40b143d6a98b99590, type: 3}
+--- !u!114 &7921384829514702526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3527640678558022482, guid: b23e8bf63450bee40b143d6a98b99590,
+    type: 3}
+  m_PrefabInstance: {fileID: 7921384829514702525}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1207998753, guid: 6f03dedfdcac89946803cb382aa1c7e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

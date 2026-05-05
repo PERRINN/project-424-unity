@@ -1,17 +1,33 @@
 {
     "inputSettings":
-	{
+    {
         "listeningPort": 56234
     },
-    "motionSettings":
-	{
+    "motionSettingsDMG1":
+    {
         "host": "127.0.0.1",
         "port": 56236,
         "maxTransferFrequency": 150,
         "maxSteeringTorque": 20.0
     },
+    "motionSettingsDMGS":
+    {
+        "host": "127.0.0.1",
+        "port": 56236,
+        "maxTransferFrequency": 150
+    },
     "clientEyePointSettings":
     {
         "listeningPort": 56232
+    },
+    "domeProjectionSettings":
+    {
+        "configFile": "Correction/config.xml",
+        "eyePointOrigin":
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0
+        }
     }
 }

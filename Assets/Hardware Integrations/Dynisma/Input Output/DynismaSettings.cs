@@ -28,9 +28,17 @@ public class DynismaSettings : MonoBehaviour
 	[Space(5)]
 	public DynismaInputProvider inputProvider;
 	public DynismaEyePointClient eyePointClient;
+	public dpCorrection domeProjectionCorrection;
 	[Space(5)]
 	public string fileName = "DynismaSettings.json";
 
+	[Serializable]
+	private class DomeProjectionSettings
+		{
+		public string configFile = "Correction/config.xml";
+		// ISO8855 coordinates (long, lat, vert)
+		public Vector3 eyePointOrigin = new Vector3(0, 0, 1);
+		}
 
 	[Serializable]
 	private class SavedSettings
@@ -39,6 +47,7 @@ public class DynismaSettings : MonoBehaviour
 		public DynismaMotionPlatformDMG1.Settings motionSettingsDMG1 = new DynismaMotionPlatformDMG1.Settings();
 		public DynismaMotionPlatformDMGS.Settings motionSettingsDMGS = new DynismaMotionPlatformDMGS.Settings();
 		public DynismaEyePointClient.Settings clientEyePointSettings = new DynismaEyePointClient.Settings();
+		public DomeProjectionSettings domeProjectionSettings = new DomeProjectionSettings();
 		}
 
 
@@ -88,11 +97,32 @@ public class DynismaSettings : MonoBehaviour
 
 			if (eyePointClient != null && eyePointClient.isActiveAndEnabled)
 				{
-				// Apply settings and restart the component
-
 				EdyCommonTools.ObjectUtility.CopyObjectOverwrite<DynismaEyePointClient.Settings>(settings.clientEyePointSettings, ref eyePointClient.settings);
 				eyePointClient.enabled = false;
 				eyePointClient.enabled = true;
+				}
+
+			// DomeProjection: configure setting and enable.
+			// The component should start disabled.
+
+			if (domeProjectionCorrection != null)
+				{
+				if (!string.IsNullOrEmpty(settings.domeProjectionSettings.configFile))
+					domeProjectionCorrection._configurationFile = settings.domeProjectionSettings.configFile;
+
+				if (settings.domeProjectionSettings.eyePointOrigin != Vector3.zero && domeProjectionCorrection._origin != null)
+					{
+					Vector3 iso = settings.domeProjectionSettings.eyePointOrigin;
+					Vector3 origin = new Vector3
+						{
+						x = -iso.y,
+						y = iso.z,
+						z = iso.x
+						};
+					domeProjectionCorrection._origin.localPosition = -origin;
+					}
+
+				domeProjectionCorrection.enabled = true;
 				}
 			}
 		}
