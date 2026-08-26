@@ -53,7 +53,7 @@ public class AutoBrakeZone : MonoBehaviour
 			&& MathUtility.FastAbs(relativePos.x) < range.x * 0.5f
 			&& MathUtility.FastAbs(relativePos.y) < range.y * 0.5f)
 			{
-			float speed = -m_transform.InverseTransformDirection(vehicle.cachedRigidbody.velocity).z;
+			float speed = -m_transform.InverseTransformDirection(vehicle.cachedRigidbody.linearVelocity).z;
 			distance -= speed * speed * Time.deltaTime;
 			if (distance < 0.0f) distance = 0.0f;
 
