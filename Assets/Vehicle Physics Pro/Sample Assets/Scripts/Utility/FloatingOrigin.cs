@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2023 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -17,6 +17,7 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using EdyCommonTools;
 
 
 namespace VehiclePhysics.Utility
@@ -108,7 +109,7 @@ public class FloatingOrigin : MonoBehaviour
 
 	private void NotifyVehicles (Vector3 offset)
 		{
-		var vehicles = FindObjectsOfType<VehicleBase>();
+		var vehicles = ObjectUtility.FindObjectsOfType<VehicleBase>();
 		foreach (var v in vehicles)
 			v.NotifyPositionChanged(offset);
 		}
@@ -116,7 +117,7 @@ public class FloatingOrigin : MonoBehaviour
 
 	private void MoveTrailRenderers (Vector3 offset)
 		{
-		var trails = FindObjectsOfType<TrailRenderer>() as TrailRenderer[];
+		var trails = ObjectUtility.FindObjectsOfType<TrailRenderer>() as TrailRenderer[];
 		foreach (var trail in trails)
 			{
 			Vector3[] positions = new Vector3[trail.positionCount];
@@ -131,7 +132,7 @@ public class FloatingOrigin : MonoBehaviour
 
 	private void MoveLineRenderers (Vector3 offset)
 		{
-		var lines = FindObjectsOfType<LineRenderer>() as LineRenderer[];
+		var lines = ObjectUtility.FindObjectsOfType<LineRenderer>() as LineRenderer[];
 		foreach (var line in lines)
 			{
 			Vector3[] positions = new Vector3[line.positionCount];
@@ -146,7 +147,7 @@ public class FloatingOrigin : MonoBehaviour
 
 	private void MoveParticles (Vector3 offset)
 		{
-		var particeSystems = FindObjectsOfType<ParticleSystem>() as ParticleSystem[];
+		var particeSystems = ObjectUtility.FindObjectsOfType<ParticleSystem>() as ParticleSystem[];
 		foreach (ParticleSystem ps in particeSystems)
 			{
 			if (ps.main.simulationSpace != ParticleSystemSimulationSpace.World)

@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -39,7 +39,7 @@ public class SpeedLimitZone : MonoBehaviour
 		m_transform = GetComponent<Transform>();
 
 		if (autoFindVehicles)
-			vehicles = FindObjectsOfType<VehicleBase>();
+			vehicles = ObjectUtility.FindObjectsOfType<VehicleBase>();
 		}
 
 

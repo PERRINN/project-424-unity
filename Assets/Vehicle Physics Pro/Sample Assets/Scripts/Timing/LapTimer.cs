@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
@@ -135,12 +135,10 @@ public class LapTimer : MonoBehaviour
 
 	void Update ()
 		{
-		/*
 		VPTelemetry.customData = "";
 
 		foreach (LapTime lap in m_lapTimeList)
 			VPTelemetry.customData += $"\n{lap.ToString()}";
-		*/
 
 		if (enableTestKeys)
 			{
@@ -558,7 +556,7 @@ public class LapTimer : MonoBehaviour
 		{
 		// Find some vehicle in the scene to use as debug.
 
-		VehicleBase vehicle = FindObjectOfType<VehicleBase>();
+		VehicleBase vehicle = ObjectUtility.FindObjectOfType<VehicleBase>();
 		if (vehicle != null)
 			OnTimerHit(vehicle, sector, hitTime, hitDistance);
 		}

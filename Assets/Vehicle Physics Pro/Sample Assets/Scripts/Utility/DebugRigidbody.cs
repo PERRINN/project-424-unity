@@ -1,11 +1,12 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
 using UnityEngine;
 using EdyCommonTools;
+using VersionCompatibility;
 
 namespace VehiclePhysics.Utility
 {
@@ -17,7 +18,7 @@ public class DebugRigidbody : MonoBehaviour
 
 	#if UNITY_EDITOR
 
-	Rigidbody m_rigidbody;
+	UnityRigidbody m_rigidbody;
 	Vector3 m_drawPosition;
 
 
@@ -62,11 +63,11 @@ public class DebugRigidbody : MonoBehaviour
 			{
 			if (showLabel)
 				{
-				UnityEditor.Handles.Label(m_drawPosition, m_rigidbody.name
+				UnityEditor.Handles.Label(m_drawPosition, m_rigidbody.transform.name
 					+ "\nM: " + m_rigidbody.mass
 					+ "\nI: " + m_rigidbody.inertiaTensor + " - " + m_rigidbody.inertiaTensor.magnitude.ToString("0.0")
 					+ "\nR: " + m_rigidbody.inertiaTensorRotation.eulerAngles
-					+ $"\nV: {m_rigidbody.velocity.ToString("0.000")}"
+					+ $"\nV: {m_rigidbody.linearVelocity.ToString("0.000")}"
 					);
 				}
 

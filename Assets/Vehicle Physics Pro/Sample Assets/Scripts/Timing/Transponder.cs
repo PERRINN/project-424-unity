@@ -1,12 +1,15 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
 using UnityEngine;
 using System;
 using EdyCommonTools;
+#if !UNITY_6000_0_OR_NEWER
+using PhysicsMaterial = UnityEngine.PhysicMaterial;
+#endif
 
 
 namespace VehiclePhysics.Timing
@@ -15,7 +18,7 @@ namespace VehiclePhysics.Timing
 public class Transponder : VehicleBehaviour
 	{
 	public Transform detectionPoint;
-	public PhysicMaterial[] trackMaterials = new PhysicMaterial[0];
+	public PhysicsMaterial[] trackMaterials = new PhysicsMaterial[0];
 
 	[Space(5)]
 	public bool debugGizmos = false;
@@ -34,7 +37,7 @@ public class Transponder : VehicleBehaviour
 
 	public override void OnEnableVehicle ()
 		{
-		m_lapTimer = FindObjectOfType<LapTimer>();
+		m_lapTimer = ObjectUtility.FindObjectOfType<LapTimer>();
 		}
 
 
@@ -83,7 +86,7 @@ public class Transponder : VehicleBehaviour
 		}
 
 
-	bool IsValidMaterial (PhysicMaterial material)
+	bool IsValidMaterial (PhysicsMaterial material)
 		{
 		// No valid materials specified = all materials valid
 		if (trackMaterials.Length == 0) return true;

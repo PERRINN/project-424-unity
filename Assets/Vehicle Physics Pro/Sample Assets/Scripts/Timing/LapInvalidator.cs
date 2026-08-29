@@ -1,10 +1,12 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
 using UnityEngine;
+using EdyCommonTools;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.Timing
@@ -21,7 +23,7 @@ public class LapInvalidator : MonoBehaviour
 
 	void OnEnable ()
 		{
-		m_lapTimer = FindObjectOfType<LapTimer>();
+		m_lapTimer = ObjectUtility.FindObjectOfType<LapTimer>();
 
 		if (m_lapTimer == null)
 			{
@@ -35,11 +37,11 @@ public class LapInvalidator : MonoBehaviour
 		{
 		if (!enabled) return;
 
-		Rigidbody otherRigidbody = other.attachedRigidbody;
+		UnityRigidbody otherRigidbody = other.attachedRigidbody;
 
 		if (otherRigidbody != null
 			&& (vehicleLayers & (1<<otherRigidbody.gameObject.layer)) != 0
-			&& otherRigidbody.velocity.magnitude > maxAllowedSpeed)
+			&& otherRigidbody.linearVelocity.magnitude > maxAllowedSpeed)
 			{
 			m_lapTimer.InvalidateLap();
 

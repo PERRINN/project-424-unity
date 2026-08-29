@@ -1,10 +1,11 @@
 ﻿//--------------------------------------------------------------
 //      Vehicle Physics Pro: advanced vehicle physics kit
-//          Copyright © 2011-2020 Angel Garcia "Edy"
+//          Copyright © 2011-2025 Angel Garcia "Edy"
 //        http://vehiclephysics.com | @VehiclePhysics
 //--------------------------------------------------------------
 
 using UnityEngine;
+using VersionCompatibility;
 
 
 namespace VehiclePhysics.Timing.EverLaps
@@ -34,12 +35,12 @@ public class VPLoop : MonoBehaviour
 		{
 		if (!enabled) return;
 
-		Rigidbody rb = other.attachedRigidbody;
+		UnityRigidbody rb = other.attachedRigidbody;
 
-		VPTransponder transponder = rb.GetComponent<VPTransponder>();
+		VPTransponder transponder = rb.transform.GetComponent<VPTransponder>();
 		if (transponder != null)
 			{
-			Vector3 velocity = rb.velocity;
+			Vector3 velocity = rb.linearVelocity;
 			velocity.y = 0.0f;
 
 			m_decoder.Pass(this, transponder, Time.time, velocity.magnitude);
