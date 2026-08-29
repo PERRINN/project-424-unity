@@ -415,7 +415,7 @@ MonoBehaviour:
     contactStart: 0.92
     contactDetection: 1
     groundMaterialDetection: 2
-  tireProperties:
+  tireCompliance:
     verticalStiffness: 450000
     verticalDamping: 4000
     lateralCompliance: 1
@@ -534,7 +534,7 @@ MonoBehaviour:
     contactStart: 0.92
     contactDetection: 1
     groundMaterialDetection: 2
-  tireProperties:
+  tireCompliance:
     verticalStiffness: 450000
     verticalDamping: 4000
     lateralCompliance: 1
@@ -1659,6 +1659,7 @@ MonoBehaviour:
   centerOfMass: {fileID: 2483877715601729047}
   solverSubsteps: 2
   wheelMomentumFactor: 0.1
+  staticFrictionRadius: 0.3
   hasRadialTires: 0
   climbStepAngle: 15
   climbStepLowSpeed: 5
@@ -2296,7 +2297,7 @@ MonoBehaviour:
     contactStart: 0.92
     contactDetection: 1
     groundMaterialDetection: 2
-  tireProperties:
+  tireCompliance:
     verticalStiffness: 450000
     verticalDamping: 4000
     lateralCompliance: 1
@@ -2416,7 +2417,7 @@ MonoBehaviour:
     contactStart: 0.92
     contactDetection: 1
     groundMaterialDetection: 2
-  tireProperties:
+  tireCompliance:
     verticalStiffness: 450000
     verticalDamping: 4000
     lateralCompliance: 1
@@ -3904,7 +3905,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4721859151469286427}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.228, z: 0.656}
+  m_LocalPosition: {x: 0, y: 0.39, z: -0.666}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5334,7 +5335,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8337750237695088802}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.228, z: 0.656}
+  m_LocalPosition: {x: 0, y: 0.39, z: -0.666}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
