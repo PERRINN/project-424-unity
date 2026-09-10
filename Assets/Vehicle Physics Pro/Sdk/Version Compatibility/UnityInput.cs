@@ -8,6 +8,7 @@
 //
 //	enum UnityAxis		Pre-configured input axes, specific for vehicles, camera and mouse motions.
 //	enum UnityKey		Standard key set for keyboards. Replaces Input.KeyCode.
+//	enum UpdateMode		Rate at which input is updated (Default, Update, FixedUpdate).
 //
 // Available axes:
 //
@@ -46,6 +47,8 @@
 //	void UpdateFocusedControl (string focusedControlName)
 //											Call with the name of the focused control that is receiving the
 //											input, or null/"" when no text field control is focused.
+//
+//	UpdateMode updateMode					Rate at which input is polled and updated (Default, Update or FixedUpdate).
 //
 //	bool escapeKeyPressed					True while the Escape key is pressed. This bypasses input focus.
 //
@@ -356,6 +359,7 @@ public class UnityAxisControl
 		{
 		float target = 0.0f;
 		float rate = centerRate;
+		float dt = Time.deltaTime;
 
 		if (positivePressed || negativePressed)
 			{
@@ -387,7 +391,7 @@ public class UnityAxisControl
 
 				// Ensure to hit the center at large rates
 
-				if (rate * Time.deltaTime > FastAbs(currentValue))
+				if (rate * dt > FastAbs(currentValue))
 					{
 					currentValue = 0.0f;
 					rate = moveRate;
@@ -395,7 +399,7 @@ public class UnityAxisControl
 				}
 			}
 
-		return Mathf.MoveTowards(currentValue, target, rate * Time.deltaTime);
+		return Mathf.MoveTowards(currentValue, target, rate * dt);
 		}
 	}
 
@@ -578,6 +582,12 @@ public static class UnityInput
 
 	static bool m_hasFocusedControl = false;
 	static bool m_inputFocused = false;
+
+
+	// Input poll mode
+
+	public enum UpdateMode { Default, Update, FixedUpdate };
+	public static UpdateMode updateMode = UpdateMode.Default;
 
 
 	// Public axis
@@ -953,6 +963,14 @@ public static class UnityInput
 		set => Input.compensateSensors = value;
 		}
 
+	static UpdateMode GetUpdateMode ()
+		{
+		if (updateMode != UpdateMode.Default)
+			return updateMode;
+
+		return UpdateMode.Update;
+		}
+
 	#else
 
 	public static bool GetKey (UnityKey key)
@@ -1145,12 +1163,23 @@ public static class UnityInput
 		set => InputSystem.settings.compensateForScreenOrientation = value;
 		}
 
+	static UpdateMode GetUpdateMode ()
+		{
+		if (updateMode != UpdateMode.Default)
+			return updateMode;
+
+		if (InputSystem.settings.updateMode == InputSettings.UpdateMode.ProcessEventsInFixedUpdate)
+			return UpdateMode.FixedUpdate;
+
+		return UpdateMode.Update;
+		}
+
 	#endif
 
 
 	//------------------------------------------------------------------------------------------------------
 	// Low-level: hook into Unity's PlayerLoop so we can update our axis from the input
-	// before Update is called.
+	// before Update or FixedUpdate is called.
 	//
 	// The player loop is re-initialized every domain reload, so we don't need to remove our system from it.
 
@@ -1158,66 +1187,104 @@ public static class UnityInput
 	static UnityInput ()
 		{
 		// NOTE: The constructor is not called if there's no code referring the UnityInput class.
-		InjectBeforeMonoBehaviourUpdate();
+		InjectPlayerLoopSystems();
 		}
 
 
-	static void InjectBeforeMonoBehaviourUpdate()
+	static void InjectPlayerLoopSystems ()
 		{
 		PlayerLoopSystem loop = PlayerLoop.GetCurrentPlayerLoop();
 
-		for (int i = 0; i < loop.subSystemList.Length; i++)
+		PlayerLoopSystem updateSystem = new PlayerLoopSystem
 			{
-			if (loop.subSystemList[i].type == typeof(UnityEngine.PlayerLoop.Update))
+			type = typeof(UnityInput),
+			updateDelegate = OnUpdate
+			};
+
+		PlayerLoopSystem fixedUpdateSystem = new PlayerLoopSystem
+			{
+			type = typeof(UnityInput),
+			updateDelegate = OnFixedUpdate
+			};
+
+		bool okUpdate = InsertBeforeSubSystem(
+			ref loop,
+			typeof(UnityEngine.PlayerLoop.Update),
+			typeof(UnityEngine.PlayerLoop.Update.ScriptRunBehaviourUpdate),
+			updateSystem);
+
+		bool okFixedUpdate = InsertBeforeSubSystem(
+			ref loop,
+			typeof(UnityEngine.PlayerLoop.FixedUpdate),
+			typeof(UnityEngine.PlayerLoop.FixedUpdate.ScriptRunBehaviourFixedUpdate),
+			fixedUpdateSystem);
+
+		if (okUpdate && okFixedUpdate)
+			{
+			PlayerLoop.SetPlayerLoop(loop);
+			}
+		else
+			{
+			Debug.LogError("[UnityInput] Failed to inject into PlayerLoop - UnityInput won't work properly");
+			}
+		}
+
+
+	static bool InsertBeforeSubSystem (ref PlayerLoopSystem rootLoop, Type parentCategoryType, Type targetSubType, PlayerLoopSystem systemToInsert)
+		{
+		if (rootLoop.subSystemList == null)
+			return false;
+
+		for (int i = 0, c = rootLoop.subSystemList.Length; i < c; i++)
+			{
+			if (rootLoop.subSystemList[i].type == parentCategoryType)
 				{
-				PlayerLoopSystem[] updateList = loop.subSystemList[i].subSystemList;
-				PlayerLoopSystem[] newList = new PlayerLoopSystem[updateList.Length + 1];
+				PlayerLoopSystem[] subList = rootLoop.subSystemList[i].subSystemList;
+				if (subList == null)
+					return false;
 
-				int insertIndex = 0;
-
-				// Find where ScriptRunBehaviourUpdate is
-
-				for (int j = 0; j < updateList.Length; j++)
+				int insertIndex = -1;
+				for (int j = 0, d = subList.Length; j < d; j++)
 					{
-					if (updateList[j].type == typeof(UnityEngine.PlayerLoop.Update.ScriptRunBehaviourUpdate))
+					if (subList[j].type == targetSubType)
 						{
 						insertIndex = j;
 						break;
 						}
 					}
 
-				// Define the injected system
-
-				PlayerLoopSystem unityInputSystem = new PlayerLoopSystem
+				if (insertIndex >= 0)
 					{
-					type = typeof(UnityInput),
-					updateDelegate = OnUpdate
-					};
+					PlayerLoopSystem[] newList = new PlayerLoopSystem[subList.Length + 1];
+					System.Array.Copy(subList, 0, newList, 0, insertIndex);
+					newList[insertIndex] = systemToInsert;
+					System.Array.Copy(subList, insertIndex, newList, insertIndex + 1, subList.Length - insertIndex);
+					rootLoop.subSystemList[i].subSystemList = newList;
+					return true;
+					}
 
-				// Insert our system just before ScriptRunBehaviourUpdate
-
-				System.Array.Copy(updateList, 0, newList, 0, insertIndex);
-				newList[insertIndex] = unityInputSystem;
-				System.Array.Copy(updateList, insertIndex, newList, insertIndex + 1, updateList.Length - insertIndex);
-
-				// Replace update list and set loop
-
-				loop.subSystemList[i].subSystemList = newList;
-				PlayerLoop.SetPlayerLoop(loop);
-				return;
+				return false;
 				}
 			}
 
-		Debug.LogError("[UnityInput] Failed to inject into PlayerLoop - UnityInput won't work");
+		return false;
 		}
 
 
-	static void OnUpdate()
+	static void OnUpdate ()
 		{
 		// This runs just before all MonoBehaviour.Update() calls
 
-		m_inputFocused = m_hasFocusedControl;
-		m_hasFocusedControl = false;
+		if (GetUpdateMode() != UpdateMode.Update)
+			return;
+
+		DoUpdate();
+		}
+
+
+	static void OnFixedUpdate ()
+		{
+		// Axes always update on FixedUpdate (time-dependent)
 
 		horizontalAxis.Update();
 		verticalAxis.Update();
@@ -1230,8 +1297,22 @@ public static class UnityInput
 		sidewaysAxis.Update();
 		forwardsAxis.Update();
 		upwardsAxis.Update();
-		mouse.Update();
 
+		// This runs just before all MonoBehaviour.FixedUpdate() calls
+
+		if (GetUpdateMode() != UpdateMode.FixedUpdate)
+			return;
+
+		DoUpdate();
+		}
+
+
+	static void DoUpdate ()
+		{
+		m_inputFocused = m_hasFocusedControl;
+		m_hasFocusedControl = false;
+
+		mouse.Update();
 		UpdateCollectiveControls();
 
 		m_shiftKeyPressed = GetKey(UnityKey.LeftShift) || GetKey(UnityKey.RightShift);
