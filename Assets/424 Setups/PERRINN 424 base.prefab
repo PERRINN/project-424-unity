@@ -916,7 +916,7 @@ MonoBehaviour:
   dRSActivationTime: 0.25
   noDRSSegment: []
   frontFlapStaticAngle: 2.5
-  frontFlapDRSAngle: -15
+  frontFlapDRSAngle: -10
   frontFlapSCz0: 0.39
   frontFlapSCz_perDeg: 0.0333
   frontFlapDeflectionPreload: 456
@@ -926,39 +926,39 @@ MonoBehaviour:
   heaveFactor: 1.333
   front:
     applicationPoint: {fileID: 2483877716415502929}
-    constantHeavePitch: 2.82
-    heaveCoefficient: 0.018
-    heave2Coefficient: -0.000109
-    pitchCoefficient: 0.0372
-    pitch2Coefficient: -0.000544
-    absoluteYawCoefficient: -0.019
+    constantHeavePitch: 4.15
+    heaveCoefficient: -0.0082
+    heave2Coefficient: -0.0000218
+    pitchCoefficient: 0.0361
+    pitch2Coefficient: -0.000229
+    absoluteYawCoefficient: -0.02
     absoluteSteerCoefficient: -0.01
-    absoluteRollCoefficient: -0.162
-    dRS_Coefficient: 0.0475
-    frontFlapCoefficient: 0.086
+    absoluteRollCoefficient: -0.03
+    dRS_Coefficient: 0.07
+    frontFlapCoefficient: 0.103
   rear:
     applicationPoint: {fileID: 2483877716124499243}
-    constantHeavePitch: 2.33
-    heaveCoefficient: 0.0312
-    heave2Coefficient: -0.000124
-    pitchCoefficient: -0.0078
-    pitch2Coefficient: -0.00019
-    absoluteYawCoefficient: -0.01
-    absoluteSteerCoefficient: 0
-    absoluteRollCoefficient: -0.11
-    dRS_Coefficient: -1.3965
-    frontFlapCoefficient: -0.038
+    constantHeavePitch: 4.37
+    heaveCoefficient: 0.0027
+    heave2Coefficient: -0.0000286
+    pitchCoefficient: -0.0122
+    pitch2Coefficient: -0.00009
+    absoluteYawCoefficient: -0.05
+    absoluteSteerCoefficient: 0.02
+    absoluteRollCoefficient: 0.01
+    dRS_Coefficient: -1.679
+    frontFlapCoefficient: -0.034
   drag:
     applicationPoint: {fileID: 7204547395444665497}
-    constantHeavePitch: 0.998
-    heaveCoefficient: 0.00333
-    heave2Coefficient: -0.00000969
-    pitchCoefficient: 0.00125
-    pitch2Coefficient: -0.0000242
+    constantHeavePitch: 1.18
+    heaveCoefficient: 0.00164
+    heave2Coefficient: -0.00000432
+    pitchCoefficient: 0.00146
+    pitch2Coefficient: -0.0000182
     absoluteYawCoefficient: 0
     absoluteSteerCoefficient: 0
     absoluteRollCoefficient: 0
-    dRS_Coefficient: -0.316
+    dRS_Coefficient: -0.334
     frontFlapCoefficient: 0.001
   emitTelemetry: 1
   drsFlap: {fileID: 5650179999687691602}
