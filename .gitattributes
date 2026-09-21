@@ -1,0 +1,42 @@
+
+# Unity YAML. Uses UnityYAMLMerge if configured in .git/config
+*.asset         merge=unityyamlmerge
+*.prefab        merge=unityyamlmerge
+*.unity         merge=unityyamlmerge
+*.mat           merge=unityyamlmerge
+*.anim          merge=unityyamlmerge
+*.controller    merge=unityyamlmerge
+*.overrideController merge=unityyamlmerge
+*.physicMaterial merge=unityyamlmerge
+*.terrainlayer  merge=unityyamlmerge
+*.meta          merge=unityyamlmerge
+
+*.cs            diff=csharp
+
+# Binary assets
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.tga    binary
+*.tif    binary
+*.tiff   binary
+*.psd    binary
+*.pct    binary
+*.fbx    binary
+*.blend  binary
+*.obj    binary
+*.wav    binary
+*.aiff   binary
+*.mp3    binary
+*.ogg    binary
+*.avi    binary
+*.mp4    binary
+*.dll    binary
+*.so     binary
+*.dylib  binary
+*.pdb    binary
+*.onnx   binary
+*.pdf    binary
+*.ttf    binary
+*.otf    binary
+*.unitypackage binary
