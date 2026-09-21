@@ -1,11 +1,11 @@
+> **Security notice — clones taken between 2026-09-15 and 2026-09-21**
+>
+> Commits pushed to this repository during that window contained a malicious VS Code auto-run task. If you cloned, pulled or forked in that period, please check your copy and re-clone: see [#96](https://github.com/PERRINN/project-424-unity/issues/96). Current clones are unaffected.
+
 # PERRINN 424 Simulation
 Simulation of the PERRINN 424 electric hypercar in Unity using Vehicle Physics Pro.
 
 [More information on 424 Simulation](https://discover.perrinn.com/424/424-unity-simulation)
-
-> **Security notice — clones taken between 2026-09-15 and 2026-09-21**
->
-> Commits pushed to this repository during that window contained a malicious VS Code auto-run task. If you cloned, pulled or forked in that period, please check your copy and re-clone: see [#96](https://github.com/PERRINN/project-424-unity/issues/96). Current clones are unaffected.
 
 ## Videos
 
