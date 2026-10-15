@@ -41,6 +41,29 @@ class RecordingHarness
             if (reader.BaseStream.Position != reader.BaseStream.Length) throw new Exception("Unexpected bytes");
         }
         if (File.ReadAllLines(Path.Combine(path, "changes.jsonl")).Length != 6) throw new Exception("Lost changes");
+        string trajectoryPath = "/tmp/perrinn-live-link/trajectory-recording";
+        if (Directory.Exists(trajectoryPath)) Directory.Delete(trajectoryPath, true);
+        string trajectoryMetadata = "{\"protocol\":2,\"session\":\"trajectory-test\",\"complete\":false,\"recordedSamples\":0,\"recordedEvents\":0,\"channels\":[";
+        string[] names = { "Speed", "Throttle", "Brake", "SteeringAngle", "RideHeightFront", "RideHeightRear", "UndersteerAngle", "MotorRpmFront", "MotorRpmRear", "ElectricalPowerTotal", "PositionX", "PositionY", "PositionZ" };
+        string[] units = { "km/h", "%", "%", "degrees", "mm", "mm", "degrees", "rpm", "rpm", "kW", "m", "m", "m" };
+        for (int c = 0; c < names.Length; c++) { if (c > 0) trajectoryMetadata += ","; trajectoryMetadata += "{\"id\":\"" + names[c] + "\",\"unit\":\"" + units[c] + "\",\"sourceHz\":50,\"available\":true}"; }
+        trajectoryMetadata += "],\"parameters\":[]}";
+        using (var trajectory = new SessionRecording(trajectoryPath, trajectoryMetadata, 13))
+        {
+            for (int i = 1; i <= 90000; i++)
+            {
+                double angle = i / 50.0 * Math.PI / 60;
+                var values = new float[13];
+                for (int c = 0; c < 10; c++) values[c] = (float)(Math.Sin(angle * 3 + c) * (c + 1));
+                values[0] = (float)(150 + 100 * Math.Sin(angle * 3));
+                values[10] = (float)(1000 + 600 * Math.Cos(angle)); values[11] = (float)(30 + 5 * Math.Sin(angle)); values[12] = (float)(-2000 + 300 * Math.Sin(angle));
+                if (i >= 40000 && i < 40020) values[10] = float.NaN;
+                trajectory.Append(new SessionRecording.Sample { frame = i, time = i / 50.0, simulationTime = i / 50.0, values = values });
+                if (i % 100 == 0) Thread.Sleep(2);
+            }
+        }
+        if (new FileInfo(Path.Combine(trajectoryPath, "samples.bin")).Length != 8 + 90000 * 77) throw new Exception("Invalid 13-channel size");
+        Console.WriteLine("PASS: 13-channel 30-minute trajectory recording with world X/Y/Z and missing positions");
         Console.WriteLine("PASS: 90000 recorded rows, binary round-trip, missing values, six changes, complete close flush. samples.bin = " + new FileInfo(Path.Combine(path, "samples.bin")).Length + " bytes; accelerated recording + history serialization " + timer.ElapsedMilliseconds + " ms");
     }
 }

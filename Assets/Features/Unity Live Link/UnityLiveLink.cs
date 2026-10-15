@@ -24,15 +24,19 @@ namespace Perrinn424.LiveLink
         string recordingError;
         double startedAt;
         const int Rate = 50;
-        static readonly string[] Names = { "Speed", "Throttle", "Brake", "SteeringAngle", "RideHeightFront", "RideHeightRear", "UndersteerAngle", "MotorRpmFront", "MotorRpmRear", "ElectricalPowerTotal" };
+        static readonly string[] Names = { "Speed", "Throttle", "Brake", "SteeringAngle", "RideHeightFront", "RideHeightRear", "UndersteerAngle", "MotorRpmFront", "MotorRpmRear", "ElectricalPowerTotal", "PositionX", "PositionY", "PositionZ",
+            "ElectricalPowerFront", "ElectricalPowerRear", "RpmDiffFront", "RpmDiffRear",
+            "AccelerationLat", "AccelerationLong", "AccelerationVert", "WheelLoadFL", "WheelLoadFR", "WheelLoadRL", "WheelLoadRR",
+            "PowerBalanceDelivered", "WheelTorqueBalance", "AeroRoll", "AeroScx", "AeroSczFront", "AeroSczRear", "AeroBalance" };
         readonly Queue<Request> commands = new Queue<Request>();
         readonly Dictionary<string, string> responses = new Dictionary<string, string>();
         readonly Queue<string> responseOrder = new Queue<string>();
-        readonly int[] indices = new int[10];
-        readonly float[] multipliers = new float[10];
-        readonly ChannelDescription[] descriptions = new ChannelDescription[10];
+        readonly int[] indices = new int[Names.Length];
+        readonly float[] multipliers = new float[Names.Length];
+        readonly ChannelDescription[] descriptions = new ChannelDescription[Names.Length];
 
         Perrinn424CarController car;
+        Rigidbody body;
         Autopilot autopilot;
         WheelColliderBehaviour left, right;
         KinematicWheel.SuspensionDamper leftOriginalDamper, rightOriginalDamper;
@@ -57,6 +61,7 @@ namespace Perrinn424.LiveLink
             previousRunInBackground = Application.runInBackground;
             Application.runInBackground = true;
             car = GetComponent<Perrinn424CarController>();
+            body = GetComponent<Rigidbody>();
             autopilot = car.GetComponentInChildren<Autopilot>(true);
             left = car.frontAxle.leftWheel;
             right = car.frontAxle.rightWheel;
@@ -212,12 +217,16 @@ namespace Perrinn424.LiveLink
         {
             for (int n = 0; n < Names.Length; n++)
             {
+                if (n >= 10 && n <= 12) { descriptions[n] = new ChannelDescription { id = Names[n], available = true, unit = "m", sourceHz = Rate }; continue; }
                 int index = car.telemetry.GetChannelIndex(Names[n]);
                 indices[n] = index;
                 bool active = index >= 0 && car.telemetry.channels[index].group.instance != null;
                 var semantic = index >= 0 ? car.telemetry.GetChannelSemmantic(index) : null;
                 multipliers[n] = semantic == null ? 1 : semantic.displayMultiplier;
-                descriptions[n] = new ChannelDescription { id = Names[n], available = active, unit = semantic == null ? "" : semantic.displayUnits.Trim(), sourceHz = index < 0 ? 0 : car.telemetry.channels[index].group.actualFrequency };
+                string unit = semantic == null ? "" : semantic.displayUnits.Trim();
+                if (Names[n].StartsWith("WheelLoad", StringComparison.Ordinal)) { multipliers[n] = 1; unit = "N"; }
+                if (Names[n] == "AeroScx" || Names[n] == "AeroSczFront" || Names[n] == "AeroSczRear") unit = "m²";
+                descriptions[n] = new ChannelDescription { id = Names[n], available = active, unit = unit, sourceHz = index < 0 ? 0 : car.telemetry.channels[index].group.actualFrequency };
             }
         }
         Welcome DescribeSession()
@@ -236,7 +245,7 @@ namespace Perrinn424.LiveLink
             {
                 string path = Path.Combine(Application.persistentDataPath, "LiveLink", DateTime.UtcNow.ToString("yyyyMMdd-HHmmss") + "-" + session);
                 var metadata = DescribeSession(); metadata.recordingPath = path;
-                recording = new SessionRecording(path, JsonUtility.ToJson(metadata));
+                recording = new SessionRecording(path, JsonUtility.ToJson(metadata), Names.Length);
             }
             catch (Exception ex) { recordingError = "Cannot create recording: " + ex.Message; Debug.LogError(recordingError, this); }
         }
@@ -250,12 +259,23 @@ namespace Perrinn424.LiveLink
             EnsureRecording();
             if (recording == null) return;
             var row = car.telemetry.latest;
-            var values = new float[10];
+            var values = new float[Names.Length];
             for (int n = 0; n < Names.Length; n++)
             {
+                if (n >= 10 && n <= 12) continue;
                 int index = indices[n];
                 values[n] = index < 0 || index >= row.values.Length || car.telemetry.channels[index].group.instance == null ? float.NaN : row.values[index] * multipliers[n];
             }
+            // Front / signed total: zero totals are undefined, including when both axles are idle.
+            if (descriptions[24].available) values[24] = TelemetryRatios.FrontPercent(values[13], values[14]);
+            if (descriptions[25].available)
+            {
+                int[] custom = car.data.Get(Channel.Custom);
+                values[25] = TelemetryRatios.FrontPercent(custom[Perrinn424Data.FrontMguBase + Perrinn424Data.WheelsTorque], custom[Perrinn424Data.RearMguBase + Perrinn424Data.WheelsTorque]);
+            }
+            // Unity world coordinates; X/Z form the ground plane and Y is elevation.
+            Vector3 position = body != null ? body.position : car.transform.position;
+            values[10] = position.x; values[11] = position.y; values[12] = position.z;
             var sample = new SessionRecording.Sample { frame = row.frame, time = Time.realtimeSinceStartupAsDouble - startedAt, simulationTime = row.totalTime, paused = Paused, values = values };
             recording.Append(sample);
             if (authenticated != 0 && authenticated == server.ClientId)

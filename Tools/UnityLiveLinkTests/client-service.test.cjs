@@ -121,6 +121,15 @@ try {
     clock = 2200; component.render(); assert.equal(component.overview, peakOverview, 'ordinary overview updates remain throttled');
     clock = 3200; component.render(); assert.notEqual(component.overview, peakOverview, 'overview must finish refreshing even if no further samples arrive');
     displayWidth = 900; component.render(); assert.equal(component.overviewResolution, 1800, 'resizing invalidates overview resolution');
+    model.state = 'Recorded session'; component.render();
+    assert.equal(component.full, true); assert.equal(component.follow, false);
+    assert.equal(component.start, renderHistory.start); assert.equal(component.end, renderHistory.end);
+    component.zoom(.5); component.render(); assert.equal(component.full, false, 'loaded sessions remain zoomable');
+    const replacement = new SessionHistory(); replacement.append(sample(1)); replacement.append(sample(2));
+    model.history = replacement; component.render();
+    assert.equal(component.full, true, 'reopening the same session identity resets to full duration');
+    assert.equal(component.start, replacement.start); assert.equal(component.end, replacement.end);
+
   } finally { global.performance = originalPerformance; global.window = originalWindow; }
   console.log('PASS: high-DPI sizing, resize invalidation and final overview refresh after catch-up');
   console.log('PASS: connected constant traces, ordered extrema, exact gap/null breaks at overview scale and adaptive resolution');
@@ -162,11 +171,11 @@ try {
   cursorComponent.start = 40; assert.equal(cursorComponent.cursorVisible, false); assert.equal(cursorComponent.cursor.time, 30.02, 'pan hides out-of-range markers but retains the pinned values');
   cursorComponent.clearCursor(true); assert.equal(cursorComponent.cursorTime, undefined); assert.equal(cursorComponent.cursorPinned, false);
   console.log('PASS: click pinning, persistent values, keyboard stepping, out-of-window markers and explicit unpin');
-  const captured = new Set();
-  const dragChart = { getBoundingClientRect: () => ({ left: 10, width: 200 }), setPointerCapture: id => captured.add(id), hasPointerCapture: id => captured.has(id), releasePointerCapture: id => captured.delete(id) };
-  const dragEvent = (clientX, pointerId = 1) => ({ clientX, pointerId, button: 0, isPrimary: true, currentTarget: dragChart });
+  const captured = new Set(); let pointerDefaultsPrevented=0, pointerBlurred=0;
+  const dragChart = { blur:()=>pointerBlurred++, getBoundingClientRect: () => ({ left: 10, width: 200 }), setPointerCapture: id => captured.add(id), hasPointerCapture: id => captured.has(id), releasePointerCapture: id => captured.delete(id) };
+  const dragEvent = (clientX, pointerId = 1) => ({ clientX, pointerId, button: 0, isPrimary: true, currentTarget: dragChart, preventDefault:()=>pointerDefaultsPrevented++ });
   cursorComponent.start = 0; cursorComponent.end = 60;
-  cursorComponent.startDrag(dragEvent(60)); assert.equal(cursorComponent.cursor.time, 15); assert.equal(captured.has(1), true);
+  cursorComponent.startDrag(dragEvent(60)); assert.equal(cursorComponent.cursor.time, 15); assert.equal(captured.has(1), true); assert.ok(pointerDefaultsPrevented && pointerBlurred,'pointer chart selection suppresses pointer focus outlines');
   cursorComponent.hover(dragEvent(110)); assert.equal(cursorComponent.cursor.time, 30);
   cursorComponent.hover(dragEvent(170, 2)); assert.equal(cursorComponent.cursor.time, 30, 'another pointer must not move the active drag');
   cursorComponent.hover(dragEvent(300)); assert.equal(cursorComponent.cursor.time, 60, 'captured dragging beyond the chart clamps to its edge');
@@ -197,21 +206,44 @@ try {
   assert.equal(new SessionHistory().hasRange(0), false, 'new sessions reset learned ranges');
   const onlyNulls = new SessionHistory(); onlyNulls.append({...sample(1),values:Array(10).fill(null)}); assert.equal(onlyNulls.hasRange(0), false);
   console.log('PASS: full-session Y ranges, zoom stability, independent channels, null-only windows, live expansion and new-session reset');
+  const { timeAxis } = load('timeAxis');
+  assert.deepEqual(timeAxis(0,136.89,1000).map(t=>t.value), [0,50,100]);
+  assert.deepEqual(timeAxis(107,137,500).map(t=>t.value), [110,120,130]);
+  assert.deepEqual(timeAxis(108,138,500).map(t=>t.value), [110,120,130], 'panning retains zero-anchored round ticks');
+  assert.ok(timeAxis(0,1800,220).length < timeAxis(0,1800,1000).length, 'narrow charts reduce tick density');
+  assert.ok(timeAxis(0,30,500).every(t=>/^\d+ s$/.test(t.label)), 'whole-second grids have no decimal padding');
+  assert.ok(timeAxis(.101,.301,500).some(t=>t.label.includes('.')), 'subsecond zoom adds decimal precision');
+  for (const [start,end,width] of [[0,1800,220],[107,137,500],[.101,.301,500],[1799.8,1800,220]]) {
+    const ticks=timeAxis(start,end,width);
+    assert.equal(new Set(ticks.map(t=>t.label)).size,ticks.length);
+    for (const tick of ticks) { assert.ok(tick.value>=start && tick.value<=end); assert.ok(Math.abs(tick.position-(tick.value-start)/(end-start)*100)<1e-7); }
+  }
+  assert.deepEqual(timeAxis(0,0),[]);
+  console.log('PASS: round time intervals, zero-anchored panning, adaptive precision and width-dependent density');
   const axesWindow = global.window; global.window = {devicePixelRatio:1};
   try {
     cursorComponent.live.history = learned; cursorComponent.session = 'cursor-test'; cursorComponent.full = cursorComponent.follow = false;
     cursorComponent.start = .02; cursorComponent.end = .10; cursorComponent.rendered = ''; cursorComponent.render();
-    assert.deepEqual(cursorComponent.timeTicks.map(t=>t.position), [0,50,100]);
-    assert.deepEqual(cursorComponent.timeTicks.map(t=>+t.value.toFixed(2)), [.02,.06,.10]);
-    assert.deepEqual(cursorComponent.traces[0].ticks, [{value:20,y:8},{value:5,y:30},{value:-10,y:52}]);
+    assert.deepEqual(cursorComponent.timeTicks.map(t=>+t.position.toFixed(2)), [0,25,50,75,100]);
+    assert.deepEqual(cursorComponent.timeTicks.map(t=>+t.value.toFixed(2)), [.02,.04,.06,.08,.10]);
+    assert.deepEqual(cursorComponent.traces[0].ticks, [{value:20,y:8},{value:10,y:19},{value:0,y:30},{value:-10,y:41},{value:-20,y:52}]);
     const originalTicks = cursorComponent.traces[0].ticks;
     cursorComponent.start = .06; cursorComponent.end = .10; cursorComponent.render();
     assert.deepEqual(cursorComponent.traces[0].ticks, originalTicks, 'Y tick labels retain the session range during zoom');
-    assert.deepEqual(cursorComponent.timeTicks.map(t=>+t.value.toFixed(2)), [.06,.08,.10]);
-    assert.deepEqual(cursorComponent.valueTicks(0,0), [{value:0,y:52}], 'constant channels show a single value label');
+    assert.deepEqual(cursorComponent.timeTicks.map(t=>+t.value.toFixed(2)), [.06,.07,.08,.09,.10]);
+    assert.equal(cursorComponent.traces[0].axis.min, -20, 'signed session range is centered at zero');
   } finally { global.window = axesWindow; }
   console.log('PASS: elapsed time ticks, session-fixed Y labels, trace/grid alignment and constant-channel labels');
-  const { formatTelemetryValue, precisionForRange } = load('sessionHistory');
+  const { formatTelemetryValue, precisionForRange, formatAxisValue } = load('sessionHistory');
+  for (const step of [100, 25, 1]) assert.equal(formatAxisValue(0, step), '0');
+  for (const step of [2.5, .5, .1]) assert.equal(formatAxisValue(0, step), '0.0');
+  assert.equal(formatAxisValue(100, 25), '100');
+  assert.equal(formatAxisValue(.25, .25), '0.25');
+  assert.equal(formatAxisValue(.05, .05), '0.05');
+  assert.equal(formatAxisValue(.075, .025), '0.075');
+  assert.equal(formatAxisValue(.0025, .0025), '0.0025');
+  assert.equal(formatAxisValue(-.00001, .1), '0.0');
+  assert.equal(formatAxisValue(2.5e-12, 2.5e-12), '2.5E-12');
   assert.equal(precisionForRange(0, 358.17), 1); assert.equal(formatTelemetryValue(242.895, 0, 358.17), '242.9');
   assert.equal(precisionForRange(0, .8), 2); assert.equal(formatTelemetryValue(.4567, 0, .8), '0.46');
   assert.equal(precisionForRange(0, .08), 3); assert.equal(formatTelemetryValue(.04567, 0, .08), '0.046');
@@ -228,6 +260,58 @@ try {
   adapting.append({...sample(3),values:Array(10).fill(.8)}); assert.equal(adapting.displayPrecision(0),2);
   adapting.append({...sample(4),values:Array(10).fill(8)}); assert.equal(adapting.displayPrecision(0),1);
   console.log('PASS: adaptive learned precision, one-DP normal values, small/constant ranges, scientific notation, negative zero and unchanged raw samples');
+  const { fixedChartRange } = load('chartChannels');
+  const balances = new SessionHistory(4), balanceIds=['Speed','PowerBalanceDelivered','WheelTorqueBalance','AeroBalance'];
+  const balanceRows=[[50,-20,101,50],[51,500,0,null],[52,null,-300,100],[53,50,50,120]];
+  balanceRows.forEach((values,i)=>balances.append({...sample(i+1),values}));
+  const rawBalances=balanceRows.map((_,i)=>balances.sampleAt(i).values);
+  for(const id of balanceIds.slice(1)) assert.deepEqual(fixedChartRange(id),{min:0,max:100});
+  assert.equal(fixedChartRange('Throttle'),undefined,'ordinary channels retain learned scales');
+  for(const resolution of [1,300]) {
+    const clipped=balances.trace(1,balances.start,balances.end,resolution,fixedChartRange('PowerBalanceDelivered'));
+    assert.deepEqual(clipped.axis.ticks.map(t=>t.value),[100,75,50,25,0]);
+    assert.equal(clipped.min,-20);assert.equal(clipped.max,500,'learned extrema are preserved separately from display bounds');
+    assert.ok(clipped.above.includes('V8'));assert.ok(clipped.below.includes('V56'));
+    assert.ok([...clipped.path.matchAll(/[,](\d+\.\d+)/g)].every(m=>+m[1]>=8 && +m[1]<=52));
+    assert.equal((clipped.path.match(/M/g)||[]).length,2,'nulls still break bounded traces');
+  }
+  const exactBounds=balances.trace(2,.04,.04,300,fixedChartRange('WheelTorqueBalance'));
+  assert.equal(exactBounds.above,'');assert.equal(exactBounds.below,'','zero is on the scale, not an outlier');
+  const denseOutliers=new SessionHistory(1);
+  for(let i=1;i<=1000;i++)denseOutliers.append({...sample(i),values:[i%2?-100:200]});
+  const reducedOutliers=denseOutliers.trace(0,0,20,2,{min:0,max:100});
+  assert.equal((reducedOutliers.above.match(/M/g)||[]).length,2);assert.equal((reducedOutliers.below.match(/M/g)||[]).length,2,'edge marker count follows screen resolution, not sample count');
+  assert.deepEqual(balanceRows.map((_,i)=>balances.sampleAt(i).values),rawBalances,'display clipping never changes recorded samples');
+  const priorBalanceWindow=global.window;global.window={devicePixelRatio:1};
+  try {
+    const balanceComponent=new UnityLiveLinkComponent({history:balances,session:'balance-test',state:'Recorded session',parameters:[],channels:balanceIds.map(id=>({id}))},{runOutsideAngular:()=>{}},{nativeElement:{querySelector:()=>null}});
+    balanceComponent.render();balanceComponent.inspectTime(.04);balanceComponent.pinCursor();
+    assert.equal(balanceComponent.cursorY(1),8);assert.equal(balanceComponent.cursorOverflow(1),true);assert.equal(balances.formatValue(1,balanceComponent.cursor.values[1]),'500.0');
+    balanceComponent.inspectTime(.02);assert.equal(balanceComponent.cursorY(1),52);assert.equal(balanceComponent.cursor.values[1],-20);
+    balanceComponent.zoom(.5);balanceComponent.render();
+    assert.ok(balanceComponent.traces.slice(1).every(t=>t.axis.min===0 && t.axis.max===100),'balance axes remain fixed through zoom');
+    assert.ok(balanceComponent.traces[0].axis.min>0,'other channel axes still follow their session ranges');
+  } finally {global.window=priorBalanceWindow;}
+  console.log('PASS: fixed balance bounds, both edge markers before decimation, null breaks, bounded marker density, zoom stability, original extrema and raw cursor values');
+  const { verticalAxis, axisY } = load('verticalAxis');
+  assert.deepEqual(verticalAxis(0,358.17).ticks.map(t=>t.value), [400,300,200,100,0]);
+  assert.deepEqual(verticalAxis(0,100).ticks.map(t=>t.value), [100,75,50,25,0]);
+  assert.deepEqual(verticalAxis(-169,105).ticks.map(t=>t.value), [200,100,0,-100,-200]);
+  assert.deepEqual(verticalAxis(-500,800).ticks.map(t=>t.value), [1000,500,0,-500,-1000]);
+  assert.deepEqual(verticalAxis(-16,140).ticks.map(t=>t.value), [150,100,50,0,-50]);
+  assert.equal(axisY(0,verticalAxis(-169,105)),30);
+  const noise = verticalAxis(-.0008,358.17);
+  assert.deepEqual(noise.ticks.map(t=>t.value), [400,300,200,100,0]); assert.ok(noise.min<=-.0008, 'tiny sign noise remains covered without a whole negative grid interval');
+  assert.deepEqual(verticalAxis(-.023,2754.87).ticks.map(t=>t.value), [3000,2000,1000,0]);
+  for (const [low,high] of [[0,0],[50,50],[-.8,10.4],[.001,.008],[1000.001,1000.008],[-1e-8,3e-8],[-500,800],[1e12,1e12+1e8]]) {
+    const axis=verticalAxis(low,high);
+    assert.ok(axis.min <= low + Math.abs(low)*1e-10 && axis.max >= high - Math.abs(high)*1e-10, 'rounded axis encloses all session values');
+    assert.ok(axis.max > axis.min && axis.ticks.length>=2 && axis.ticks.length<=5);
+    for(let i=1;i<axis.ticks.length;i++) assert.ok(Math.abs((axis.ticks[i-1].value-axis.ticks[i].value)/axis.step-1)<1e-5, 'grid intervals are uniform');
+    for(const tick of axis.ticks) assert.equal(tick.y,axisY(tick.value,axis));
+  }
+  const axisBefore=learned.trace(0,.02,.1).axis; assert.deepEqual(learned.trace(0,.06,.1).axis,axisBefore, 'rounded axes stay fixed across zoom');
+  console.log('PASS: rounded grid intervals, centered bipolar signals, constant/tiny/offset ranges, complete range coverage and zoom stability');
   const costs = [];
   for (let pass = 0; pass < 40; pass++) {
     const t = performance.now();
@@ -259,19 +343,33 @@ try {
   assert.equal(service.state, 'Connecting', 'cancelled import must not overwrite a new connection');
   const originalFetch = global.fetch, originalDocument = global.document;
   const sampleDirectory = path.join(client, 'src/assets/unity-live-link/sample');
+  const initial = new UnityLiveLinkService({runOutsideAngular: fn => fn()});
+  const initialComponent = new UnityLiveLinkComponent(initial, {runOutsideAngular: () => {}}, {nativeElement:{}});
   const sampleMetadata = JSON.parse(fs.readFileSync(path.join(sampleDirectory, 'session.json'), 'utf8'));
-  assert.equal(sampleMetadata.recordedSamples, 6861); assert.equal(sampleMetadata.complete, true);
+  assert.equal(sampleMetadata.channels.length,31); assert.deepEqual(sampleMetadata.channels.slice(10,13).map(c=>c.id),['PositionX','PositionY','PositionZ']);
+  assert.equal(sampleMetadata.recordedSamples, 22409); assert.equal(sampleMetadata.complete, true);
   assert.equal(sampleMetadata.recordingPath, 'Bundled sample session');
-  assert.equal(fs.readFileSync(path.join(sampleDirectory, 'samples.bin')).length, 8 + 6861 * 65);
-  const originalRecording = path.join(require('node:os').homedir(), 'Library/Application Support/Perrinn/Project 424/LiveLink', '20261013-213020-03a500c7d9494eddbb33470cd7eb8ed1');
+  assert.ok(sampleMetadata.channels.every(c=>c.available), 'all new sample channels have active providers');
+  assert.equal(fs.readFileSync(path.join(sampleDirectory, 'samples.bin')).length, 8 + 22409 * (25 + 4 * 31));
+  const originalRecording = path.join(require('node:os').homedir(), 'Library/Application Support/Perrinn/Project 424/LiveLink', '20261015-084802-a3054acc88e848ea86000c68798470bf');
   if (fs.existsSync(originalRecording)) assert.deepEqual(fs.readFileSync(path.join(sampleDirectory, 'samples.bin')), fs.readFileSync(path.join(originalRecording, 'samples.bin')), 'bundled telemetry must be an unchanged copy');
   const sampleResponse = url => { const u = new URL(url); assert.ok(u.pathname.startsWith('/subapp/assets/unity-live-link/sample/')); return new Response(fs.readFileSync(path.join(sampleDirectory, path.basename(u.pathname)))); };
   global.document = { baseURI: 'https://example.test/subapp/' };
   try {
     global.fetch = async url => sampleResponse(url);
+    initialComponent.ngOnInit();
+    while(initial.loadingSample) await new Promise(resolve => setImmediate(resolve));
+    assert.equal(initial.sampleSession, true); assert.equal(initial.history.length,22409); assert.equal(initial.ready,false);
+    initialComponent.ngOnDestroy();
     await service.openSample();
-    assert.equal(service.sampleSession, true); assert.equal(service.loadingSample, false); assert.equal(service.history.length, 6861); assert.equal(service.ready, false);
+    assert.equal(service.sampleSession, true); assert.equal(service.loadingSample, false); assert.equal(service.history.length, 22409); assert.equal(service.ready, false);
     assert.equal(service.session, sampleMetadata.session); assert.equal(service.history.events.length, 0);
+    assert.equal(load('chartChannels').chartIndices(service.channels).length,29);
+    for (let c=0;c<31;c++) assert.ok(service.history.hasRange(c), 'each bundled channel must contain finite recorded values');
+    const realMap = new (load('trackTrajectory').TrackTrajectory)();
+    realMap.update(service.history, service.channels.map(c=>c.id));
+    assert.ok(realMap.path.length>100, 'bundled real sample must display a trajectory');
+    assert.ok(realMap.position(service.history.sampleAt(500)), 'bundled sample provides cursor positions');
     global.fetch = async () => new Response('', {status:404});
     await service.openSample(); assert.equal(service.loadingSample, false); assert.match(service.error, /Cannot load the sample session/);
     const finishFetches = [];
@@ -281,5 +379,80 @@ try {
   } finally { global.fetch = originalFetch; global.document = originalDocument; }
   console.log('PASS: bundled real session, exact binary copy, base-path asset URLs, read-only sample, fetch errors and cancellation');
   console.log('PASS: completed binary recording import, metadata/count verification, missing/incomplete files and import cancellation');
+  const trajectoryDirectory = '/tmp/perrinn-live-link/trajectory-recording';
+  const trajectoryFiles = ['session.json','samples.bin','changes.jsonl'].map(name=>({name,text:async()=>fs.readFileSync(path.join(trajectoryDirectory,name),'utf8'),arrayBuffer:async()=>{const b=fs.readFileSync(path.join(trajectoryDirectory,name));return b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength);}}));
+  const expanded = new UnityLiveLinkService({runOutsideAngular:fn=>fn()});
+  await expanded.openRecording(trajectoryFiles);
+  assert.equal(expanded.error,''); assert.equal(expanded.channels.length,13); assert.equal(expanded.history.channelCount,13); assert.equal(expanded.history.length,90000);
+  assert.equal(expanded.history.sampleAt(1).values.length,13);
+  const { TrackTrajectory } = load('trackTrajectory');
+  const map = new TrackTrajectory(), mapStart=performance.now();
+  map.update(expanded.history,expanded.channels.map(c=>c.id));
+  assert.equal((map.path.match(/M/g)||[]).length,2,'missing positions break the map trajectory');
+  assert.ok(map.path.length<90000*10,'map reduction bounds visual density');
+  const raw=expanded.history.sampleAt(45000), dot=map.position(raw), selected=map.nearest(dot.x,dot.y,raw.time);
+  assert.ok(Math.abs(selected.time-raw.time)<.1,'repeated laps prefer the cursor time at the same location');
+  const mapMs=performance.now()-mapStart;
+  map.update(new SessionHistory(),channels.map(c=>c.id)); assert.equal(map.path,''); assert.equal(map.position(raw),undefined,'legacy sessions do not invent a trajectory');
+  const oldWindow=global.window; global.window={devicePixelRatio:1};
+  try {
+    const nav=new UnityLiveLinkComponent(expanded,{runOutsideAngular:()=>{}},{nativeElement:{querySelector:()=>null}});
+    nav.render(); assert.equal(nav.full,true);
+    assert.deepEqual(nav.chartIndices,[0,1,2,3,6,4,5,7,8,9,11],'visible charts preserve original channel indices and hide world X/Z');
+    assert.equal(nav.channelName('PositionY'),'Altitude'); assert.equal(nav.channelName('Speed'),'Speed');
+    nav.span=300; nav.pan(600); nav.render();
+    const capture=new Set(), overviewChart={blur:()=>{},getBoundingClientRect:()=>({left:10,top:0,width:300,height:120}),setPointerCapture:id=>capture.add(id),hasPointerCapture:id=>capture.has(id),releasePointerCapture:id=>capture.delete(id)};
+    const pointer={button:0,isPrimary:true,pointerId:77,preventDefault:()=>{},currentTarget:overviewChart,clientX:10+(750-expanded.history.start)/(expanded.history.end-expanded.history.start)*300};
+    nav.startNavigation(pointer); assert.ok(Math.abs(nav.start-600)<1e-8,'press inside selection preserves its grab offset');
+    nav.moveNavigation({...pointer,clientX:pointer.clientX+50}); assert.ok(Math.abs(nav.start-(600+(expanded.history.end-expanded.history.start)/6))<1e-8); assert.equal(nav.end-nav.start,300);
+    nav.moveNavigation({...pointer,pointerId:78,clientX:0}); assert.ok(nav.start>800,'other pointers cannot hijack a drag');
+    nav.moveNavigation({...pointer,clientX:1000}); assert.equal(nav.end,1800,'outside drag clamps at session end'); nav.endNavigation(pointer); assert.equal(capture.size,0);
+    const atTime=time=>({...pointer,clientX:10+(time-expanded.history.start)/(expanded.history.end-expanded.history.start)*300});
+    nav.span=300;nav.pan(600);nav.startNavigation(atTime(600));assert.equal(nav.resizingNavigation,true);
+    nav.moveNavigation(atTime(450));assert.equal(nav.start,450);assert.equal(nav.end,900,'left edge holds the right boundary');assert.equal(nav.span,450);
+    nav.moveNavigation(atTime(1000));assert.ok(Math.abs(nav.end-nav.start-.2)<1e-8,'left edge cannot cross the minimum window');
+    nav.moveNavigation(atTime(-500));assert.equal(nav.start,expanded.history.start,'left resize clamps at the session start');nav.endNavigation(pointer);
+    nav.span=300;nav.pan(600);nav.startNavigation(atTime(900));nav.moveNavigation(atTime(1200));
+    assert.equal(nav.start,600);assert.equal(nav.end,1200,'right edge holds the left boundary');assert.equal(nav.span,600);
+    nav.moveNavigation(atTime(500));assert.ok(Math.abs(nav.end-nav.start-.2)<1e-8,'right edge cannot cross the minimum window');
+    nav.moveNavigation(atTime(3000));assert.equal(nav.end,expanded.history.end,'right resize clamps at session end');nav.endNavigation(pointer);assert.equal(capture.size,0);
+    assert.equal(nav.resizingNavigation,false);assert.equal(nav.follow,false);
+    nav.span=300;nav.pan(600);nav.startNavigation(atTime(750));assert.equal(nav.resizingNavigation,false,'selection center still pans');nav.endNavigation(pointer);
+    console.log('PASS: captured left/right overview resizing, fixed opposite boundary, minimum duration, session bounds, cleanup and pointer focus suppression');
+    nav.span=300;nav.pan(600); nav.render();
+    const target=expanded.history.sampleAt(5000), point=nav.track.position(target);
+    nav.selectMap({currentTarget:{getBoundingClientRect:()=>({left:0,top:0,width:160,height:160})},clientX:point.x,clientY:point.y});
+    assert.equal(nav.cursorPinned,true); assert.ok(nav.cursor.time>=nav.start && nav.cursor.time<=nav.end,'map selection brings its sample into the visible window');
+    assert.ok(nav.mapDot); assert.equal(nav.follow,false); nav.ngOnDestroy();
+  } finally {global.window=oldWindow;}
+  expanded.connect('a'.repeat(32)); const expandedSocket=Socket.instances.at(-1); expandedSocket.onopen();
+  expandedSocket.receive({...welcome,session:'expanded-stream',channels:JSON.parse(await trajectoryFiles[0].text()).channels});
+  expandedSocket.receive({type:'history',total:1,eventTotal:0,events:[],samples:[{...sample(1),values:Array(13).fill(1)}]});
+  expandedSocket.receive({type:'telemetry',sample:{...sample(1),values:Array(13).fill(2)}});
+  assert.equal(expanded.error,''); assert.equal(expanded.history.channelCount,13); assert.equal(expanded.history.length,1); assert.equal(expanded.latest.values.length,13); expanded.disconnect();
+  console.log(`PASS: 13-channel C# binary import and stream, 30-minute trajectory/gap projection and lap selection (${mapMs.toFixed(1)} ms), legacy placeholder, map cursor and captured overview dragging`);
+  const unitySource=fs.readFileSync('Assets/Features/Unity Live Link/UnityLiveLink.cs','utf8');
+  const streamNames=[...unitySource.match(/static readonly string\[\] Names = \{([\s\S]*?)\};/)[1].matchAll(/"([^"]+)"/g)].map(m=>m[1]);
+  const presentation=load('chartChannels');
+  assert.equal(streamNames.length,31); assert.equal(new Set(streamNames).size,31);
+  assert.ok(presentation.chartChannels.every(([id])=>streamNames.includes(id)), 'every requested chart must be included in the Unity catalogue');
+  const requested=streamNames.map(id=>({id,unit:'test',available:true,sourceHz:50}));
+  const sorted=presentation.chartIndices(requested);
+  assert.equal(sorted.length,29); assert.deepEqual(sorted.map(i=>requested[i].id),presentation.chartChannels.map(([id])=>id));
+  assert.equal(sorted.at(-1),11,'altitude keeps its recorded world Y index after sorting');
+  const fullService=new UnityLiveLinkService({runOutsideAngular:fn=>fn()});
+  fullService.connect('a'.repeat(32)); const fullSocket=Socket.instances.at(-1); fullSocket.onopen();
+  fullSocket.receive({...welcome,session:'full-catalogue',channels:requested});
+  const fullRow={...sample(1),values:Array.from({length:31},(_,i)=>i===25?null:i+0.25)};
+  fullSocket.receive({type:'history',total:1,eventTotal:0,events:[],samples:[fullRow]});
+  assert.equal(fullService.error,''); assert.equal(fullService.history.channelCount,31); assert.deepEqual(fullService.history.sampleAt(0).values,fullRow.values);
+  const header=Buffer.alloc(8+25+4*31); header.write('ULL2');header.writeInt32LE(31,4); header.writeInt32LE(1,8);header.writeInt32LE(10,12);header.writeDoubleLE(.02,16);header.writeDoubleLE(.02,24);
+  fullRow.values.forEach((v,i)=>header.writeFloatLE(v??NaN,33+i*4));
+  const fullMetadata={protocol:2,session:'full-file',complete:true,recordedSamples:1,recordedEvents:0,channels:requested,parameters:[]};
+  await fullService.openRecording([{name:'session.json',text:async()=>JSON.stringify(fullMetadata)},{name:'samples.bin',arrayBuffer:async()=>header.buffer.slice(header.byteOffset,header.byteOffset+header.byteLength)},{name:'changes.jsonl',text:async()=>''}]);
+  assert.equal(fullService.error,'');assert.equal(fullService.history.channelCount,31);assert.deepEqual(fullService.history.sampleAt(0).values,fullRow.values); fullService.disconnect();
+  console.log('PASS: all 31 catalogue channels, 29 logically ordered charts, preserved indices, null balances, streaming and expanded binary import');
+
+
 } finally { service.ngOnDestroy(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

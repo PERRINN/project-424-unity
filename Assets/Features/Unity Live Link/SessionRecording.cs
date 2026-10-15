@@ -39,12 +39,15 @@ namespace Perrinn424.LiveLink
         readonly BlockingCollection<Write> writes = new BlockingCollection<Write>(4096);
         readonly Thread worker;
         readonly string metadata;
+        readonly int channelCount;
         public readonly string DirectoryPath;
         public volatile string Error;
         public int Count => samples.Count;
         public int EventCount => changes.Count;
-        public SessionRecording(string directory, string metadata)
+        public SessionRecording(string directory, string metadata, int channelCount = 10)
         {
+            if (channelCount < 1 || channelCount > 64) throw new ArgumentOutOfRangeException(nameof(channelCount));
+            this.channelCount = channelCount;
             DirectoryPath = directory; this.metadata = metadata;
             Directory.CreateDirectory(directory);
             File.WriteAllText(Path.Combine(directory, "session.json"), metadata);
@@ -53,6 +56,7 @@ namespace Perrinn424.LiveLink
         }
         public void Append(Sample sample)
         {
+            if (sample.values == null || sample.values.Length != channelCount) throw new ArgumentException("Sample channel count differs from recording header");
             sample.sequence = samples.Count + 1;
             samples.Add(sample);
             Enqueue(new Write { sample = sample });
@@ -80,8 +84,8 @@ namespace Perrinn424.LiveLink
                 using (var binary = new BinaryWriter(new FileStream(Path.Combine(DirectoryPath, "samples.bin"), FileMode.Create, FileAccess.Write, FileShare.Read, 65536)))
                 using (var events = new StreamWriter(new FileStream(Path.Combine(DirectoryPath, "changes.jsonl"), FileMode.Create, FileAccess.Write, FileShare.Read)))
                 {
-                    // Little endian: ULL2 + channel count; each row is 65 bytes for ten channels.
-                    binary.Write(Encoding.ASCII.GetBytes("ULL2")); binary.Write(10);
+                    // Little endian: ULL2 + channel count; each row has 25 header bytes plus 4 per channel.
+                    binary.Write(Encoding.ASCII.GetBytes("ULL2")); binary.Write(channelCount);
                     int unflushed = 0;
                     while (!writes.IsCompleted)
                     {

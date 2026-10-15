@@ -8,3 +8,6 @@ node Tools/UnityLiveLinkTests/transport.test.cjs
 "$perrinn_unity_contents/MonoBleedingEdge/bin/mcs" -langversion:latest -out:/tmp/perrinn-live-link/RecordingHarness.exe 'Assets/Features/Unity Live Link/SessionRecording.cs' Tools/UnityLiveLinkTests/RecordingHarness.cs
 "$perrinn_unity_contents/MonoBleedingEdge/bin/mono" /tmp/perrinn-live-link/RecordingHarness.exe
 node Tools/UnityLiveLinkTests/client-service.test.cjs
+
+"$perrinn_unity_contents/MonoBleedingEdge/bin/mcs" -out:/tmp/perrinn-live-link/TelemetryRatiosHarness.exe 'Assets/Features/Unity Live Link/TelemetryRatios.cs' Tools/UnityLiveLinkTests/TelemetryRatiosHarness.cs
+"$perrinn_unity_contents/MonoBleedingEdge/bin/mono" /tmp/perrinn-live-link/TelemetryRatiosHarness.exe
