@@ -29,7 +29,7 @@ namespace Perrinn424.LiveLink
         static readonly string[] Names = { "Speed", "Throttle", "Brake", "SteeringAngle", "RideHeightFront", "RideHeightRear", "UndersteerAngle", "MotorRpmFront", "MotorRpmRear", "ElectricalPowerTotal", "PositionX", "PositionY", "PositionZ",
             "ElectricalPowerFront", "ElectricalPowerRear", "RpmDiffFront", "RpmDiffRear",
             "AccelerationLat", "AccelerationLong", "AccelerationVert", "WheelLoadFL", "WheelLoadFR", "WheelLoadRL", "WheelLoadRR",
-            "PowerBalanceDelivered", "WheelTorqueBalance", "AeroRoll", "AeroScx", "AeroSczFront", "AeroSczRear", "AeroBalance", "LapDistance", "LapTrigger", "SectorTrigger", "SectorIndex", "SectorTime", "SectorValid", "LapTime", "LapValid", "LapCompleteTrigger", "AutopilotDistanceError" };
+            "PowerBalanceDelivered", "WheelTorqueBalance", "AeroRoll", "AeroScx", "AeroSczFront", "AeroSczRear", "AeroBalance", "LapDistance", "LapTrigger", "SectorTrigger", "SectorIndex", "SectorTime", "SectorValid", "LapTime", "LapValid", "LapCompleteTrigger", "AutopilotDistanceError", "AeroFrontFlap", "AeroDrsPosition" };
         readonly Queue<Request> commands = new Queue<Request>();
         readonly Dictionary<string, string> responses = new Dictionary<string, string>();
         readonly Queue<string> responseOrder = new Queue<string>();

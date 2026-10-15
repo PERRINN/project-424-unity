@@ -49,9 +49,9 @@ public class Perrinn424CarController
     public Perrinn424.AutopilotSystem.Autopilot pilot=new Perrinn424.AutopilotSystem.Autopilot();
     public T GetComponentInChildren<T>(bool include) where T:class{return pilot as T;}
     public Telemetry telemetry=new Telemetry();public Data data=new Data();public class Data {public int[] Get(VehiclePhysics.Channel c){return new int[2];}}
-    public class Telemetry {public Row latest=new Row();public Descriptor[] channels={new Descriptor {group=new Group {instance=new object(),actualFrequency=50}}};public int GetChannelIndex(string id){return id=="AutopilotDistanceError"?0:-1;}public Semantic GetChannelSemmantic(int i){return new Semantic {displayMultiplier=1000,displayUnits=" mm"};}}
-    public class Row {public int frame=1;public double totalTime;public float[] values={.0125f};}
-    public class Descriptor {public Group group=new Group();}public class Group {public object instance;public float actualFrequency;}
+    public class Telemetry {public Row latest=new Row();public Descriptor[] channels={new Descriptor(),new Descriptor(),new Descriptor()};public int GetChannelIndex(string id){return id=="AutopilotDistanceError"?0:id=="AeroFrontFlap"?1:id=="AeroDrsPosition"?2:-1;}public Semantic GetChannelSemmantic(int i){return new Semantic {displayMultiplier=i==0?1000:i==2?100:1,displayUnits=i==0?" mm":i==2?" %":" °"};}}
+    public class Row {public int frame=1;public double totalTime;public float[] values={.0125f,-8.5f,.75f};}
+    public class Descriptor {public Group group=new Group();}public class Group {public object instance=new object();public float actualFrequency=50;}
     public class Semantic {public float displayMultiplier;public string displayUnits;}
 }
 namespace Perrinn424.LiveLink
@@ -81,11 +81,16 @@ class SessionRunHarness
         var bridge=new UnityLiveLink();Call(bridge,"OnEnable");
         Call(bridge,"ResolveChannels");
         var catalogue=(UnityLiveLink.ChannelDescription[])typeof(UnityLiveLink).GetField("descriptions",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(bridge);
-        Check(catalogue.Length==41 && catalogue[40].id=="AutopilotDistanceError" && catalogue[40].unit=="mm" && catalogue[40].available,"trajectory error uses the existing provider and millimetre semantic");
+        Check(catalogue.Length==43 && catalogue[40].id=="AutopilotDistanceError" && catalogue[40].unit=="mm" && catalogue[40].available,"trajectory error uses the existing provider and millimetre semantic");
         Call(bridge,"Capture");Check(Math.Abs(SessionRecording.Last.values[40]-12.5f)<.001,"capture converts trajectory error to mm without treating it as a lap timing field");
+        Check(catalogue[41].id=="AeroFrontFlap" && catalogue[41].unit=="°" && catalogue[42].id=="AeroDrsPosition" && catalogue[42].unit=="%","flap and DRS retain provider semantics");
+        Check(Math.Abs(SessionRecording.Last.values[41]+8.5f)<.001 && Math.Abs(SessionRecording.Last.values[42]-75f)<.001,"capture flap degrees and DRS percent");
+        Scene.Car.telemetry.channels[1].group.instance=null;Scene.Car.telemetry.channels[2].group.instance=null;Call(bridge,"Capture");
+        Check(float.IsNaN(SessionRecording.Last.values[41]) && float.IsNaN(SessionRecording.Last.values[42]),"missing aero providers remain unavailable");
+        Scene.Car.telemetry.channels[1].group.instance=new object();Scene.Car.telemetry.channels[2].group.instance=new object();
         Scene.Car.telemetry.channels[0].group.instance=null;Call(bridge,"Capture");Check(float.IsNaN(SessionRecording.Last.values[40]),"missing error provider stays unavailable");
         Scene.Car.telemetry.channels[0].group.instance=new object();
-        Console.WriteLine("PASS: appended trajectory error channel, unchanged timing indices, provider unit conversion, real capture and missing-provider handling");
+        Console.WriteLine("PASS: appended trajectory error, flap and DRS channels, unchanged timing indices, provider unit conversion, real capture and missing-provider handling");
         try {bridge.ConfigureSession(new[]{Change("frontSpringRate","gain",100),Change("","offset",0)});throw new Exception("out of range plan accepted");}catch(ArgumentException){}
         bridge.ConfigureSession(new[]{Change("frontSpringRate","gain",1.05f),Change("autopilotPositionOffset","offset",.1f)});
         Scene.Timer.onLap(10,false,new float[0],new bool[0]);Check(!Scene.Car.paused,"ignore initial partial lap");

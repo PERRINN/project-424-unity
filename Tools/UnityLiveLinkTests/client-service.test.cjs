@@ -209,6 +209,24 @@ try {
   cursorComponent.inspectScatter();assert.equal(cursorComponent.cursorTime,undefined,'leaving scatter clears the shared cursor');
   console.log('PASS: scatter raw-row hit testing, empty space, pixel distance, synchronized cursor and clearing');
   console.log('PASS: original paired scatter dots, null exclusion, missing channels, time/distance windows and lap colours');
+  const { telemetryPlots }=load('telemetryPlots');
+  const errorChannels=['AutopilotDistanceError','LapTrigger','Speed'].map(id=>({id,unit:'test',sourceHz:50,available:true}));
+  const errors=new SessionHistory(3);
+  const appendError=(error,lap,speed)=>{const i=errors.length+1;errors.append({sequence:i,frame:i,time:i*.02,simulationTime:i*.02,paused:false,values:[error,lap,speed]});};
+  appendError(-10000,0,300);appendError(20000,0,10);
+  const startup=telemetryPlots(errors,errorChannels,0,1,300)[0];
+  assert.equal(startup.axis.min,-50);assert.equal(startup.axis.max,50);assert.deepEqual(startup.ticks.map(t=>t.value),[50,25,0,-25,-50]);
+  appendError(-2,1,20);appendError(3,1,30);appendError(null,1,40);appendError(500,2,50);
+  const errorPlot=telemetryPlots(errors,errorChannels,0,1,300)[0];
+  assert.deepEqual(errorPlot.axis,startup.axis,'startup, lap crossings and later outliers cannot rescale trajectory error');
+  assert.equal(errors.range(0).min,-10000);assert.equal(errors.range(0).max,20000,'original outliers remain recorded');assert.ok(errorPlot.above && errorPlot.below);
+  assert.deepEqual(telemetryPlots(errors,errorChannels,.08,.1,128)[0].axis,startup.axis,'zoom keeps fixed error bounds');
+  assert.deepEqual(telemetryPlots(errors,errorChannels,0,100,128,{trace:()=>[]})[0].axis,startup.axis,'distance view uses identical fixed bounds');
+  assert.equal(telemetryPlots(errors,errorChannels,0,1,300)[2].axis.max,300,'other channel scales remain unchanged');
+  const missingTriggerChannels=errorChannels.map(c=>c.id==='LapTrigger'?{...c,id:'Other'}:c);
+  assert.deepEqual(telemetryPlots(errors,missingTriggerChannels,0,1,300)[0].axis,startup.axis,'fixed bounds require no lap metadata');
+  const emptyErrors=new SessionHistory(3);assert.deepEqual(telemetryPlots(emptyErrors,errorChannels,0,1,300)[0].axis,startup.axis,'new and empty sessions use the fixed range');
+  console.log('PASS: fixed +/-50 mm trajectory error axis across startup, later laps, time/distance zoom, missing metadata and empty sessions; raw values preserved');
   const learned = new SessionHistory();
   learned.append({ ...sample(1), values: Array.from({length:10}, (_,c) => -2 * (c + 1)) });
   learned.append({ ...sample(2), values: Array.from({length:10}, (_,c) => 4 * (c + 1)) });
@@ -276,6 +294,13 @@ try {
   adapting.append({...sample(3),values:Array(10).fill(.8)}); assert.equal(adapting.displayPrecision(0),2);
   adapting.append({...sample(4),values:Array(10).fill(8)}); assert.equal(adapting.displayPrecision(0),1);
   console.log('PASS: adaptive learned precision, one-DP normal values, small/constant ranges, scientific notation, negative zero and unchanged raw samples');
+  for(const [low,high,value] of [[-.587,4.688,2],[-21,190,40],[-24,142,60]]) {
+    const axis=load('verticalAxis').verticalAxis(low,high), raw=new SessionHistory(1);
+    raw.append({...sample(1),values:[value]});const rendered=raw.trace(0,.02,.02,300,axis);
+    assert.equal(rendered.axis,axis,'resolved axes must be reused rather than rounded again');
+    const y=Number(rendered.path.match(/M[-\d.]+,([-\d.]+)/)[1]);assert.ok(Math.abs(y-load('verticalAxis').axisY(value,axis))<.001);
+  }
+  console.log('PASS: already-resolved axes retain exact bounds and sample coordinates when signed-range rounding would change them');
   const { fixedChartRange } = load('chartChannels');
   const balances = new SessionHistory(4), balanceIds=['Speed','PowerBalanceDelivered','WheelTorqueBalance','AeroBalance'];
   const balanceRows=[[50,-20,101,50],[51,500,0,null],[52,null,-300,100],[53,50,50,120]];
@@ -362,12 +387,12 @@ try {
   const initial = new TelemetryService({runOutsideAngular: fn => fn()});
   const initialComponent = new TelemetryComponent(initial, {runOutsideAngular: () => {}}, {nativeElement:{}});
   const sampleMetadata = JSON.parse(fs.readFileSync(path.join(sampleDirectory, 'session.json'), 'utf8'));
-  assert.equal(sampleMetadata.channels.length,40); assert.deepEqual(sampleMetadata.channels.slice(10,13).map(c=>c.id),['PositionX','PositionY','PositionZ']);
+  assert.equal(sampleMetadata.channels.length,43); assert.deepEqual(sampleMetadata.channels.slice(10,13).map(c=>c.id),['PositionX','PositionY','PositionZ']);
   assert.equal(sampleMetadata.recordedSamples, 45395); assert.equal(sampleMetadata.complete, true);
   assert.equal(sampleMetadata.recordingPath, 'Bundled sample session');
   assert.ok(sampleMetadata.channels.every(c=>c.available), 'all new sample channels have active providers');
-  assert.equal(fs.readFileSync(path.join(sampleDirectory, 'samples.bin')).length, 8 + 45395 * (25 + 4 * 40));
-  const originalRecording = path.join(require('node:os').homedir(), 'Library/Application Support/Perrinn/Project 424/LiveLink', '20261015-123124-5485cd1c0d7a41cb91a448deb0a25cdc');
+  assert.equal(fs.readFileSync(path.join(sampleDirectory, 'samples.bin')).length, 8 + 45395 * (25 + 4 * 43));
+  const originalRecording = path.join(require('node:os').homedir(), 'Library/Application Support/Perrinn/Project 424/LiveLink', '20261015-141851-bb0beed849ba4d7797ca236cdf65d836');
   if (fs.existsSync(originalRecording)) assert.deepEqual(fs.readFileSync(path.join(sampleDirectory, 'samples.bin')), fs.readFileSync(path.join(originalRecording, 'samples.bin')), 'bundled telemetry must be an unchanged copy');
   const sampleResponse = url => { const u = new URL(url); assert.ok(u.pathname.startsWith('/subapp/assets/unity-live-link/sample/')); return new Response(fs.readFileSync(path.join(sampleDirectory, path.basename(u.pathname)))); };
   global.document = { baseURI: 'https://example.test/subapp/' };
@@ -380,8 +405,8 @@ try {
     await service.openSample();
     assert.equal(service.sampleSession, true); assert.equal(service.loadingSample, false); assert.equal(service.history.length, 45395); assert.equal(service.ready, false);
     assert.equal(service.session, sampleMetadata.session); assert.equal(service.history.events.length, 0);
-    assert.equal(load('chartChannels').chartIndices(service.channels).length,30);
-    for (let c=0;c<40;c++) assert.ok(service.history.hasRange(c), 'each bundled channel must contain finite recorded values');
+    assert.equal(load('chartChannels').chartIndices(service.channels).length,33);
+    for (let c=0;c<41;c++) assert.ok(service.history.hasRange(c), 'each bundled channel must contain finite recorded values');
     const realMap = new (load('trackTrajectory').TrackTrajectory)();
     realMap.update(service.history, service.channels.map(c=>c.id));
     assert.ok(realMap.path.length>100, 'bundled real sample must display a trajectory');
@@ -398,6 +423,18 @@ try {
     realOverlay.inspect(1000);assert.ok(realOverlay.readings.filter(r=>r.sample).length>=2);
     assert.ok(new Set(realOverlay.readings.filter(r=>r.sample).map(r=>r.sample.time)).size>=2,'one distance resolves independent lap times');
     assert.equal(realOverlay.trace(0,load('verticalAxis').verticalAxis(0,400),0,realOverlay.max,300).filter(l=>l.path).length,3);
+    const {verticalAxis:resolvedAxis,axisY:resolvedY}=load('verticalAxis');
+    const firstTrack=realOverlay.tracks[0], at=firstTrack.distances.findIndex((d,i)=>i>100 && d>firstTrack.distances[i-1] && d<firstTrack.distances[i+1]);
+    assert.ok(at>100);const exactDistance=firstTrack.distances[at], exactSample=service.history.sampleAt(firstTrack.rows[at]);
+    for(const id of ['AeroSczFront','AeroSczRear','RideHeightFront','RideHeightRear']) {
+      const c=service.channels.findIndex(channel=>channel.id===id), raw=service.history.range(c), axis=resolvedAxis(raw.min,raw.max);
+      const curve=realOverlay.trace(c,axis,exactDistance,exactDistance,128)[0].path;
+      const plotted=Number(curve.match(/M[-\d.]+,([-\d.]+)/)[1]);
+      assert.ok(Math.abs(plotted-resolvedY(exactSample.values[c],axis))<.001,`${id}: trace uses the tick axis at the exact raw sample`);
+      assert.ok(Math.abs(plotted-realOverlay.dotY(exactSample,c,axis))<.001,`${id}: cursor dot follows the trace`);
+    }
+    console.log('PASS: real recording front/rear downforce and ride-height traces exactly align with their axes and raw-sample cursor dots');
+
 
 
     global.fetch = async () => new Response('', {status:404});
@@ -428,7 +465,7 @@ try {
   try {
     const nav=new TelemetryComponent(expanded,{runOutsideAngular:()=>{}},{nativeElement:{querySelector:()=>null}});
     nav.render(); assert.equal(nav.full,true);
-    assert.deepEqual(nav.chartIndices,[0,1,2,3,6,4,5,7,8,9,11],'visible charts preserve original channel indices and hide world X/Z');
+    assert.deepEqual(nav.chartGroups.flatMap(group=>group.indices),[0,11,1,2,3,6,4,5,7,8,9],'visible charts preserve original channel indices and hide world X/Z');
     assert.equal(nav.channelName('PositionY'),'Altitude'); assert.equal(nav.channelName('Speed'),'Speed');
     nav.span=300; nav.pan(600); nav.render();
     const capture=new Set(), overviewChart={blur:()=>{},getBoundingClientRect:()=>({left:10,top:0,width:300,height:120}),setPointerCapture:id=>capture.add(id),hasPointerCapture:id=>capture.has(id),releasePointerCapture:id=>capture.delete(id)};
@@ -464,24 +501,34 @@ try {
   const unitySource=fs.readFileSync('Assets/Features/Unity Live Link/UnityLiveLink.cs','utf8');
   const streamNames=[...unitySource.match(/static readonly string\[\] Names = \{([\s\S]*?)\};/)[1].matchAll(/"([^"]+)"/g)].map(m=>m[1]);
   const presentation=load('chartChannels');
-  assert.equal(streamNames.length,41); assert.equal(new Set(streamNames).size,41);
+  assert.equal(streamNames.length,43); assert.equal(new Set(streamNames).size,43);
   assert.ok(presentation.chartChannels.every(([id])=>streamNames.includes(id)), 'every requested chart must be included in the Unity catalogue');
   const requested=streamNames.map(id=>({id,unit:'test',available:true,sourceHz:50}));
   const sorted=presentation.chartIndices(requested);
-  assert.equal(sorted.length,31); assert.deepEqual(sorted.map(i=>requested[i].id),presentation.chartChannels.map(([id])=>id));
-  assert.equal(sorted.at(-1),11,'altitude keeps its recorded world Y index after sorting');
+  assert.equal(sorted.length,33); assert.deepEqual(sorted.map(i=>requested[i].id),presentation.chartChannels.map(([id])=>id));
+  assert.deepEqual(sorted.map(i=>requested[i].id).slice(-6,-3),['AeroFrontFlap','AeroDrsPosition','AeroScx']);
+  assert.deepEqual(presentation.fixedChartRange('AeroDrsPosition'),{min:0,max:100});
+  const grouped=presentation.chartGroups(requested);
+  assert.deepEqual(grouped.map(g=>g.label),['Session & trajectory','Driver inputs','Vehicle dynamics','Chassis','Tire loads','Powertrain','Aerodynamics']);
+  assert.deepEqual(grouped.flatMap(g=>g.indices),sorted,'grouping preserves every visible channel exactly once at its original index');
+  const sparseGroups=presentation.chartGroups([{id:'Speed'},{id:'Brake'},{id:'PositionX'},{id:'CustomSensor'}]);
+  assert.deepEqual(sparseGroups.map(g=>g.label),['Session & trajectory','Driver inputs','Other channels'],'empty groups disappear and unknown channels remain visible');
+  assert.deepEqual(sparseGroups.flatMap(g=>g.indices),[0,1,3]);assert.deepEqual(presentation.chartGroups([]),[]);
+  console.log('PASS: engineering groups, original channel indices, no duplicates, sparse catalogues, unknown channels and empty sessions');
+
+  assert.equal(sorted[3],11,'altitude keeps its recorded world Y index in the session group');
   const fullService=new TelemetryService({runOutsideAngular:fn=>fn()});
   fullService.connect('a'.repeat(32)); const fullSocket=Socket.instances.at(-1); fullSocket.onopen();
   fullSocket.receive({...welcome,session:'full-catalogue',channels:requested});
-  const fullRow={...sample(1),values:Array.from({length:41},(_,i)=>i===25?null:i+0.25)};
+  const fullRow={...sample(1),values:Array.from({length:43},(_,i)=>i===25?null:i+0.25)};
   fullSocket.receive({type:'history',total:1,eventTotal:0,events:[],samples:[fullRow]});
-  assert.equal(fullService.error,''); assert.equal(fullService.history.channelCount,41); assert.deepEqual(fullService.history.sampleAt(0).values,fullRow.values);
-  const header=Buffer.alloc(8+25+4*41); header.write('ULL2');header.writeInt32LE(41,4); header.writeInt32LE(1,8);header.writeInt32LE(10,12);header.writeDoubleLE(.02,16);header.writeDoubleLE(.02,24);
+  assert.equal(fullService.error,''); assert.equal(fullService.history.channelCount,43); assert.deepEqual(fullService.history.sampleAt(0).values,fullRow.values);
+  const header=Buffer.alloc(8+25+4*43); header.write('ULL2');header.writeInt32LE(43,4); header.writeInt32LE(1,8);header.writeInt32LE(10,12);header.writeDoubleLE(.02,16);header.writeDoubleLE(.02,24);
   fullRow.values.forEach((v,i)=>header.writeFloatLE(v??NaN,33+i*4));
   const fullMetadata={protocol:2,session:'full-file',complete:true,recordedSamples:1,recordedEvents:0,channels:requested,parameters:[]};
   await fullService.openRecording([{name:'session.json',text:async()=>JSON.stringify(fullMetadata)},{name:'samples.bin',arrayBuffer:async()=>header.buffer.slice(header.byteOffset,header.byteOffset+header.byteLength)},{name:'changes.jsonl',text:async()=>''}]);
-  assert.equal(fullService.error,'');assert.equal(fullService.history.channelCount,41);assert.deepEqual(fullService.history.sampleAt(0).values,fullRow.values); fullService.disconnect();
-  console.log('PASS: all 41 catalogue channels, 31 logically ordered charts, preserved indices, null balances, streaming and expanded binary import');
+  assert.equal(fullService.error,'');assert.equal(fullService.history.channelCount,43);assert.deepEqual(fullService.history.sampleAt(0).values,fullRow.values); fullService.disconnect();
+  console.log('PASS: all 43 catalogue channels, 33 logically ordered charts, preserved indices, null balances, streaming and expanded binary import');
 
   const { SessionAnalysis, lapTime } = load('sessionAnalysis');
   const timing = new SessionHistory(streamNames.length), analysis = new SessionAnalysis();
