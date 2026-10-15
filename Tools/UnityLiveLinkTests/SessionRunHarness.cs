@@ -49,8 +49,8 @@ public class Perrinn424CarController
     public Perrinn424.AutopilotSystem.Autopilot pilot=new Perrinn424.AutopilotSystem.Autopilot();
     public T GetComponentInChildren<T>(bool include) where T:class{return pilot as T;}
     public Telemetry telemetry=new Telemetry();public Data data=new Data();public class Data {public int[] Get(VehiclePhysics.Channel c){return new int[2];}}
-    public class Telemetry {public Row latest=new Row();public Descriptor[] channels=new Descriptor[0];public int GetChannelIndex(string id){return -1;}public Semantic GetChannelSemmantic(int i){return null;}}
-    public class Row {public int frame=1;public double totalTime;public float[] values=new float[0];}
+    public class Telemetry {public Row latest=new Row();public Descriptor[] channels={new Descriptor {group=new Group {instance=new object(),actualFrequency=50}}};public int GetChannelIndex(string id){return id=="AutopilotDistanceError"?0:-1;}public Semantic GetChannelSemmantic(int i){return new Semantic {displayMultiplier=1000,displayUnits=" mm"};}}
+    public class Row {public int frame=1;public double totalTime;public float[] values={.0125f};}
     public class Descriptor {public Group group=new Group();}public class Group {public object instance;public float actualFrequency;}
     public class Semantic {public float displayMultiplier;public string displayUnits;}
 }
@@ -61,7 +61,7 @@ namespace Perrinn424.LiveLink
         public string Error,DirectoryPath="/tmp/session";public int Count,EventCount;public static bool Closed;public static List<string> Changes=new List<string>();
         public SessionRecording(string p,string m,int n){Closed=false;}
         public class Sample {public int frame;public double time,simulationTime;public bool paused;public float[] values;public string ToJson(){return "{}";}}
-        public void Append(Sample s){Count++;}public void AddChange(string s){EventCount++;Changes.Add(s);}public string History(int a,int e,int l){return "{}";}public void Dispose(){Closed=true;}
+        public static Sample Last;public void Append(Sample s){Last=s;Count++;}public void AddChange(string s){EventCount++;Changes.Add(s);}public string History(int a,int e,int l){return "{}";}public void Dispose(){Closed=true;}
     }
     public class LocalWebSocketServer:IDisposable
     {
@@ -79,6 +79,13 @@ class SessionRunHarness
     static void Main()
     {
         var bridge=new UnityLiveLink();Call(bridge,"OnEnable");
+        Call(bridge,"ResolveChannels");
+        var catalogue=(UnityLiveLink.ChannelDescription[])typeof(UnityLiveLink).GetField("descriptions",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(bridge);
+        Check(catalogue.Length==41 && catalogue[40].id=="AutopilotDistanceError" && catalogue[40].unit=="mm" && catalogue[40].available,"trajectory error uses the existing provider and millimetre semantic");
+        Call(bridge,"Capture");Check(Math.Abs(SessionRecording.Last.values[40]-12.5f)<.001,"capture converts trajectory error to mm without treating it as a lap timing field");
+        Scene.Car.telemetry.channels[0].group.instance=null;Call(bridge,"Capture");Check(float.IsNaN(SessionRecording.Last.values[40]),"missing error provider stays unavailable");
+        Scene.Car.telemetry.channels[0].group.instance=new object();
+        Console.WriteLine("PASS: appended trajectory error channel, unchanged timing indices, provider unit conversion, real capture and missing-provider handling");
         try {bridge.ConfigureSession(new[]{Change("frontSpringRate","gain",100),Change("","offset",0)});throw new Exception("out of range plan accepted");}catch(ArgumentException){}
         bridge.ConfigureSession(new[]{Change("frontSpringRate","gain",1.05f),Change("autopilotPositionOffset","offset",.1f)});
         Scene.Timer.onLap(10,false,new float[0],new bool[0]);Check(!Scene.Car.paused,"ignore initial partial lap");

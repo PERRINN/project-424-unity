@@ -29,7 +29,7 @@ namespace Perrinn424.LiveLink
         static readonly string[] Names = { "Speed", "Throttle", "Brake", "SteeringAngle", "RideHeightFront", "RideHeightRear", "UndersteerAngle", "MotorRpmFront", "MotorRpmRear", "ElectricalPowerTotal", "PositionX", "PositionY", "PositionZ",
             "ElectricalPowerFront", "ElectricalPowerRear", "RpmDiffFront", "RpmDiffRear",
             "AccelerationLat", "AccelerationLong", "AccelerationVert", "WheelLoadFL", "WheelLoadFR", "WheelLoadRL", "WheelLoadRR",
-            "PowerBalanceDelivered", "WheelTorqueBalance", "AeroRoll", "AeroScx", "AeroSczFront", "AeroSczRear", "AeroBalance", "LapDistance", "LapTrigger", "SectorTrigger", "SectorIndex", "SectorTime", "SectorValid", "LapTime", "LapValid", "LapCompleteTrigger" };
+            "PowerBalanceDelivered", "WheelTorqueBalance", "AeroRoll", "AeroScx", "AeroSczFront", "AeroSczRear", "AeroBalance", "LapDistance", "LapTrigger", "SectorTrigger", "SectorIndex", "SectorTime", "SectorValid", "LapTime", "LapValid", "LapCompleteTrigger", "AutopilotDistanceError" };
         readonly Queue<Request> commands = new Queue<Request>();
         readonly Dictionary<string, string> responses = new Dictionary<string, string>();
         readonly Queue<string> responseOrder = new Queue<string>();
@@ -332,7 +332,7 @@ namespace Perrinn424.LiveLink
             for (int n = 0; n < Names.Length; n++)
             {
                 if (n >= 10 && n <= 12) { descriptions[n] = new ChannelDescription { id = Names[n], available = true, unit = "m", sourceHz = Rate }; continue; }
-                if (n >= 32) { descriptions[n] = new ChannelDescription { id = Names[n], available = lapTimer != null, unit = n == 35 || n == 37 ? "s" : "", sourceHz = Rate }; continue; }
+                if (n >= 32 && n <= 39) { descriptions[n] = new ChannelDescription { id = Names[n], available = lapTimer != null, unit = n == 35 || n == 37 ? "s" : "", sourceHz = Rate }; continue; }
                 int index = car.telemetry.GetChannelIndex(Names[n]);
                 indices[n] = index;
                 bool active = index >= 0 && car.telemetry.channels[index].group.instance != null;
@@ -384,7 +384,7 @@ namespace Perrinn424.LiveLink
             var values = new float[Names.Length];
             for (int n = 0; n < Names.Length; n++)
             {
-                if (n >= 10 && n <= 12 || n >= 32) continue;
+                if (n >= 10 && n <= 12 || n >= 32 && n <= 39) continue;
                 int index = indices[n];
                 values[n] = index < 0 || index >= row.values.Length || car.telemetry.channels[index].group.instance == null ? float.NaN : row.values[index] * multipliers[n];
             }
