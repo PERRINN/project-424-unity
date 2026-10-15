@@ -51,7 +51,7 @@ namespace Perrinn424.LiveLink
             DirectoryPath = directory; this.metadata = metadata;
             Directory.CreateDirectory(directory);
             File.WriteAllText(Path.Combine(directory, "session.json"), metadata);
-            worker = new Thread(WriteFiles) { IsBackground = true, Name = "Unity Live Link recording" };
+            worker = new Thread(WriteFiles) { IsBackground = true, Name = "424 Telemetry recording" };
             worker.Start();
         }
         public void Append(Sample sample)

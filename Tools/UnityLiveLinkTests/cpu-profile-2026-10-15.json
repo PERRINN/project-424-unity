@@ -1,0 +1,258 @@
+{
+  "capture": "20261015-120633-71f16a6bfa684f4cba0a4667b683b422",
+  "frames": 11,
+  "seconds": 11.125726292000003,
+  "workers": 11,
+  "mainThreadMarkers": [
+    {
+      "thread": "Main Thread",
+      "name": "Semaphore.WaitForSignal",
+      "inclusiveMs": 5603.3840209458795,
+      "selfMs": 5603.3840209458795,
+      "calls": 42444
+    },
+    {
+      "thread": "Main Thread",
+      "name": "VehiclePhysics.dll!VehiclePhysics::VehicleBase.FixedUpdate() [Invoke]",
+      "inclusiveMs": 1899.8976780995727,
+      "selfMs": 1037.523492196633,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Assembly-CSharp.dll!::Perrinn424CarController.PostPhysicsUpdate() [Coroutine: MoveNext] [Invoke]",
+      "inclusiveMs": 554.5033853445202,
+      "selfMs": 464.08952745980787,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "JobHandle.Complete",
+      "inclusiveMs": 605.2903553565266,
+      "selfMs": 291.93790323690337,
+      "calls": 58664
+    },
+    {
+      "thread": "Main Thread",
+      "name": "TransformChangedDispatch",
+      "inclusiveMs": 374.32181323316036,
+      "selfMs": 267.4182240945811,
+      "calls": 30810
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Physics.Raycast",
+      "inclusiveMs": 161.33186178241158,
+      "selfMs": 161.33186178241158,
+      "calls": 146672
+    },
+    {
+      "thread": "Main Thread",
+      "name": "WaitForJobGroupID",
+      "inclusiveMs": 5806.395303742836,
+      "selfMs": 100.57224804422731,
+      "calls": 65413
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Assembly-CSharp.dll!Perrinn424.TelemetryLapSystem::TelemetryLapWriter.FixedUpdate() [Invoke]",
+      "inclusiveMs": 104.67975480245514,
+      "selfMs": 100.52254183313198,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "BatchQuery.ExecuteRaycastJob",
+      "inclusiveMs": 95.0743207116684,
+      "selfMs": 95.0743207116684,
+      "calls": 30345
+    },
+    {
+      "thread": "Main Thread",
+      "name": "VehiclePhysics.dll!VehiclePhysics::VPHeadMotion.FixedUpdate() [Invoke]",
+      "inclusiveMs": 89.76000572252087,
+      "selfMs": 89.76000572252087,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Dense",
+      "inclusiveMs": 85.32496582902968,
+      "selfMs": 85.3247158290178,
+      "calls": 1833
+    },
+    {
+      "thread": "Main Thread",
+      "name": "FixedUpdate.PhysicsFixedUpdate",
+      "inclusiveMs": 5950.982349455357,
+      "selfMs": 69.15732447553455,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Assembly-CSharp.dll!Perrinn424.LiveLink::UnityLiveLink.Update() [Invoke]",
+      "inclusiveMs": 57.22891712188721,
+      "selfMs": 55.228154138472746,
+      "calls": 11
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Physics.Simulate",
+      "inclusiveMs": 5429.531457811594,
+      "selfMs": 49.12707245349884,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Physics.FetchResults",
+      "inclusiveMs": 39.60177983291214,
+      "selfMs": 39.60177983291214,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "MatMul",
+      "inclusiveMs": 37.57664688420482,
+      "selfMs": 37.56902188411914,
+      "calls": 1833
+    },
+    {
+      "thread": "Main Thread",
+      "name": "UnityEngine.CoreModule.dll!::UpdateFunction.Invoke() [Invoke]",
+      "inclusiveMs": 35.4329208356794,
+      "selfMs": 35.4329208356794,
+      "calls": 18356
+    },
+    {
+      "thread": "Main Thread",
+      "name": "EditorLoop",
+      "inclusiveMs": 34.0542079731822,
+      "selfMs": 34.0542079731822,
+      "calls": 23
+    },
+    {
+      "thread": "Main Thread",
+      "name": "CoroutinesDelayedCalls",
+      "inclusiveMs": 606.0488423499773,
+      "selfMs": 33.35733686083404,
+      "calls": 18368
+    },
+    {
+      "thread": "Main Thread",
+      "name": "FixedBehaviourUpdate",
+      "inclusiveMs": 2138.914174672216,
+      "selfMs": 30.217170011397684,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Physics.UpdateBodies",
+      "inclusiveMs": 30.42945186595898,
+      "selfMs": 30.070436868794786,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "ScalarMad",
+      "inclusiveMs": 25.253687912016176,
+      "selfMs": 25.253687912016176,
+      "calls": 1833
+    },
+    {
+      "thread": "Main Thread",
+      "name": "GC.Alloc",
+      "inclusiveMs": 19.017881955478515,
+      "selfMs": 19.017881955478515,
+      "calls": 521541
+    },
+    {
+      "thread": "Main Thread",
+      "name": "VehiclePhysics.dll!VehiclePhysics::VPInputManager.FixedUpdate() [Invoke]",
+      "inclusiveMs": 12.492829014285235,
+      "selfMs": 12.492829014285235,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Main Thread",
+      "inclusiveMs": 8905.54541015625,
+      "selfMs": 12.36380135127547,
+      "calls": 11
+    },
+    {
+      "thread": "Main Thread",
+      "name": "VehiclePhysics.dll!VehiclePhysics::VPTelemetry.PostFixedUpdate() [Coroutine: MoveNext] [Invoke]",
+      "inclusiveMs": 13.217102006135974,
+      "selfMs": 11.68433299305616,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "PlayerLoop",
+      "inclusiveMs": 8855.824484835852,
+      "selfMs": 9.365977625355299,
+      "calls": 23
+    },
+    {
+      "thread": "Main Thread",
+      "name": "UnityEditor.CoreModule.dll!UnityEditor::MaterialEditor.ApplyMaterialPropertyDrawersFromNative() [Invoke]",
+      "inclusiveMs": 8.62708443403244,
+      "selfMs": 8.232493434130447,
+      "calls": 3
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Sentis.SizeAllocator.Release",
+      "inclusiveMs": 7.612514966574963,
+      "selfMs": 7.612514966574963,
+      "calls": 7332
+    },
+    {
+      "thread": "Main Thread",
+      "name": "AudioManager.FixedUpdate",
+      "inclusiveMs": 6.465805122454185,
+      "selfMs": 6.465805122454185,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "UnityEngine.InputModule.dll!UnityEngineInternal.Input::NativeInputSystem.ShouldRunUpdate() [Invoke]",
+      "inclusiveMs": 6.297986125704483,
+      "selfMs": 6.297986125704483,
+      "calls": 18346
+    },
+    {
+      "thread": "Main Thread",
+      "name": "sequential/dense/MatMul",
+      "inclusiveMs": 92.3317248057574,
+      "selfMs": 4.2220599834108725,
+      "calls": 1833
+    },
+    {
+      "thread": "Main Thread",
+      "name": "Physics.SyncBatchQueries",
+      "inclusiveMs": 9.720429097840679,
+      "selfMs": 3.9118260499308235,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "FixedUpdate.NewInputFixedUpdate",
+      "inclusiveMs": 9.855647052056156,
+      "selfMs": 3.5624109264317667,
+      "calls": 18334
+    },
+    {
+      "thread": "Main Thread",
+      "name": "StoreInterpolationPoses",
+      "inclusiveMs": 3.2885420622042147,
+      "selfMs": 3.2885420622042147,
+      "calls": 36550
+    }
+  ],
+  "notes": [
+    "CPU markers include elapsed wait time; inclusive timings overlap and must not be added.",
+    "Short capture with Deep Profiling disabled; do not use instrumented throughput as the speed benchmark.",
+    "Native macOS sample independently identified PhysicsManager::Simulate job-fence waiting."
+  ]
+}

@@ -19,6 +19,10 @@ class TransportHarness
                     {
                         for (int n = 0; n < 10000; n++) server.Publish(message.client, "{\"sample\":" + n + "}");
                     }
+                    else if (message.json == "receipt")
+                    {
+                        if (server.ReplyWithReceipt(message.client, "delivered").GetAwaiter().GetResult()) server.Disconnect(message.client);
+                    }
                     else server.Reply(message.client, message.json);
                 }
                 Thread.Sleep(1);

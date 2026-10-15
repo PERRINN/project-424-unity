@@ -21,22 +21,36 @@ namespace Perrinn424.LiveLink
         readonly CancellationTokenSource stop = new CancellationTokenSource();
         readonly ConcurrentQueue<Incoming> incoming = new ConcurrentQueue<Incoming>();
         readonly object gate = new object();
+        readonly Task accepting;
+        readonly List<Task> connections = new List<Task>();
+        readonly HashSet<TcpClient> clients = new HashSet<TcpClient>();
+        int disposed;
         Connection current;
         int nextId;
         int handshakes;
         public string Error { get; private set; }
         public int ClientId { get { lock (gate) return current == null ? 0 : current.id; } }
 
+        sealed class Outgoing
+        {
+            public byte[] bytes;
+            public TaskCompletionSource<bool> receipt;
+        }
         sealed class Connection : IDisposable
         {
             public int id;
             public TcpClient tcp;
             public WebSocket socket;
-            public readonly ConcurrentQueue<byte[]> replies = new ConcurrentQueue<byte[]>();
+            public readonly ConcurrentQueue<Outgoing> replies = new ConcurrentQueue<Outgoing>();
             public byte[] latest;
             public readonly SemaphoreSlim signal = new SemaphoreSlim(0, 1);
             public void Wake() { try { signal.Release(); } catch (SemaphoreFullException) { } }
-            public void Dispose() { socket?.Abort(); tcp.Close(); Wake(); }
+            public void Dispose()
+            {
+                socket?.Abort(); tcp.Close(); Wake();
+                Outgoing reply;
+                while (replies.TryDequeue(out reply)) reply.receipt?.TrySetResult(false);
+            }
         }
 
         public LocalWebSocketServer(int port, IEnumerable<string> allowedOrigins)
@@ -44,17 +58,24 @@ namespace Perrinn424.LiveLink
             origins = new HashSet<string>(allowedOrigins, StringComparer.Ordinal);
             listener = new TcpListener(IPAddress.Loopback, port);
             listener.Start(4);
-            _ = AcceptLoop();
+            accepting = AcceptLoop();
         }
 
         public bool TryRead(out Incoming message) { return incoming.TryDequeue(out message); }
-        public void Reply(int id, string json)
+        public void Reply(int id, string json) { EnqueueReply(id, json, null); }
+        public Task<bool> ReplyWithReceipt(int id, string json)
+        {
+            var receipt = new TaskCompletionSource<bool>();
+            EnqueueReply(id, json, receipt);
+            return receipt.Task;
+        }
+        void EnqueueReply(int id, string json, TaskCompletionSource<bool> receipt)
         {
             lock (gate)
             {
-                if (current == null || current.id != id) return;
-                if (current.replies.Count >= 32) { current.Dispose(); return; }
-                current.replies.Enqueue(Encoding.UTF8.GetBytes(json));
+                if (current == null || current.id != id) { receipt?.TrySetResult(false); return; }
+                if (current.replies.Count >= 32) { current.Dispose(); receipt?.TrySetResult(false); return; }
+                current.replies.Enqueue(new Outgoing { bytes = Encoding.UTF8.GetBytes(json), receipt = receipt });
                 current.Wake();
             }
         }
@@ -82,11 +103,17 @@ namespace Perrinn424.LiveLink
                 {
                     tcp = await listener.AcceptTcpClientAsync().ConfigureAwait(false);
                     tcp.NoDelay = true;
-                    lock (gate) { if (current != null) { tcp.Close(); tcp = null; } }
-                    if (tcp != null)
+                    lock (gate)
                     {
-                        if (Interlocked.Increment(ref handshakes) <= 4) _ = Serve(tcp);
-                        else { Interlocked.Decrement(ref handshakes); tcp.Close(); }
+                        if (current != null || stop.IsCancellationRequested || handshakes >= 4) tcp.Close();
+                        else
+                        {
+                            handshakes++;
+                            clients.Add(tcp);
+                            connections.RemoveAll(task => task.IsCompleted);
+                            connections.Add(Serve(tcp));
+                        }
+                        tcp = null;
                     }
                 }
                 catch (Exception ex)
@@ -136,10 +163,12 @@ namespace Perrinn424.LiveLink
             }
             finally
             {
-                Interlocked.Decrement(ref handshakes);
+                lock (gate) { handshakes--; clients.Remove(tcp); if (current == connection) current = null; }
                 connection?.Dispose();
+                // Dispose after both socket loops finish, including the WebSocket keepalive timer.
+                connection?.socket?.Dispose();
+                connection?.signal.Dispose();
                 tcp.Close();
-                lock (gate) { if (current == connection) current = null; }
             }
         }
 
@@ -197,9 +226,13 @@ namespace Perrinn424.LiveLink
             while (!stop.IsCancellationRequested && connection.socket.State == WebSocketState.Open)
             {
                 await connection.signal.WaitAsync(stop.Token).ConfigureAwait(false);
-                byte[] bytes;
-                while (connection.replies.TryDequeue(out bytes)) await Send(connection, bytes).ConfigureAwait(false);
-                bytes = Interlocked.Exchange(ref connection.latest, null);
+                Outgoing reply;
+                while (connection.replies.TryDequeue(out reply))
+                {
+                    try { await Send(connection, reply.bytes).ConfigureAwait(false); reply.receipt?.TrySetResult(true); }
+                    catch { reply.receipt?.TrySetResult(false); throw; }
+                }
+                byte[] bytes = Interlocked.Exchange(ref connection.latest, null);
                 if (bytes != null) await Send(connection, bytes).ConfigureAwait(false);
             }
         }
@@ -213,9 +246,22 @@ namespace Perrinn424.LiveLink
         }
         public void Dispose()
         {
+            if (Interlocked.Exchange(ref disposed, 1) != 0) return;
             stop.Cancel();
             listener.Stop();
-            lock (gate) { current?.Dispose(); }
+            lock (gate)
+            {
+                current?.Dispose();
+                // Include connections still waiting for HTTP headers, not just the active WebSocket.
+                foreach (var client in new List<TcpClient>(clients)) client.Close();
+            }
+            // ConfigureAwait(false) keeps every network continuation independent of Unity's main thread.
+            // Join the accept loop first so no connection can be added after taking this snapshot.
+            accepting.GetAwaiter().GetResult();
+            Task[] pending;
+            lock (gate) pending = connections.ToArray();
+            Task.WhenAll(pending).GetAwaiter().GetResult();
+            stop.Dispose();
         }
     }
 }

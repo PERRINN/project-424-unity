@@ -1,0 +1,142 @@
+{
+  "runs": [
+    {
+      "session": "c5a4c9109b7d406288e6197663c70855",
+      "complete": true,
+      "profile": "telemetry-fast-v1",
+      "samples": 45395,
+      "warmupSecondsExcluded": 5,
+      "measuredWallSeconds": 213.053,
+      "simulatedSeconds": 886.712,
+      "averageRatio": 4.162,
+      "medianFiveSecondRatio": 4.181,
+      "fixedDeltaTime": 0.0020000000949949026,
+      "recording": "20261015-115141-c5a4c9109b7d406288e6197663c70855",
+      "workers": 11
+    },
+    {
+      "session": "81cef9d922634a3e8ea0d0fc2b9b17ec",
+      "complete": true,
+      "profile": "telemetry-fast-v1",
+      "samples": 13320,
+      "warmupSecondsExcluded": 5,
+      "measuredWallSeconds": 32.503,
+      "simulatedSeconds": 230.208,
+      "averageRatio": 7.083,
+      "medianFiveSecondRatio": 7.113,
+      "fixedDeltaTime": 0.0020000000949949026,
+      "recording": "20261015-120438-81cef9d922634a3e8ea0d0fc2b9b17ec",
+      "workers": 1
+    },
+    {
+      "session": "4edd05beaddb41b5ac0357b10b62c67f",
+      "complete": true,
+      "profile": "telemetry-fast-v1",
+      "samples": 12495,
+      "warmupSecondsExcluded": 5,
+      "measuredWallSeconds": 31.596,
+      "simulatedSeconds": 215.188,
+      "averageRatio": 6.811,
+      "medianFiveSecondRatio": 6.814,
+      "fixedDeltaTime": 0.0020000000949949026,
+      "recording": "20261015-120527-4edd05beaddb41b5ac0357b10b62c67f",
+      "workers": 2
+    },
+    {
+      "session": "9ad51e4c13f34828b303986856510947",
+      "complete": true,
+      "profile": "telemetry-fast-v2",
+      "samples": 45395,
+      "warmupSecondsExcluded": 5,
+      "measuredWallSeconds": 124.304,
+      "simulatedSeconds": 872.452,
+      "averageRatio": 7.019,
+      "medianFiveSecondRatio": 7.047,
+      "fixedDeltaTime": 0.0020000000949949026,
+      "recording": "20261015-120810-9ad51e4c13f34828b303986856510947",
+      "workers": 1
+    }
+  ],
+  "matchedCompletedRuns": {
+    "simulationStart": 35.040001664310694,
+    "simulationEnd": 907.4920431035571,
+    "previousWallSeconds": 209.65436462499997,
+    "optimizedWallSeconds": 124.30399575,
+    "previousRatio": 4.161382678580362,
+    "optimizedRatio": 7.018696673226182,
+    "throughputGainPercent": 68.66261085175131,
+    "wallTimeReductionPercent": 40.71003674436381
+  },
+  "sameChannels": true,
+  "sameParameters": true,
+  "sameLapPlan": true,
+  "lapTimesBothRuns": [
+    299.4486389160156,
+    299.3357849121094,
+    299.3353271484375
+  ],
+  "repeatValidation": {
+    "session": "8fe44783e39d47509372c9878f997b86",
+    "complete": true,
+    "profile": "telemetry-fast-v2",
+    "samples": 45395,
+    "warmupSecondsExcluded": 5,
+    "measuredWallSeconds": 123.82,
+    "simulatedSeconds": 871.952,
+    "averageRatio": 7.042,
+    "medianFiveSecondRatio": 7.082,
+    "fixedDeltaTime": 0.0020000000949949026,
+    "recording": "20261015-121129-8fe44783e39d47509372c9878f997b86",
+    "workers": 1
+  },
+  "remainingIssue": null,
+  "cleanExitValidation": {
+    "recording": "20261015-122702-4f8dab79f4d544bda0d76cc968292d55",
+    "measurement": {
+      "session": "4f8dab79f4d544bda0d76cc968292d55",
+      "complete": true,
+      "profile": "telemetry-fast-v2",
+      "samples": 45395,
+      "warmupSecondsExcluded": 5,
+      "measuredWallSeconds": 124.123,
+      "simulatedSeconds": 871.172,
+      "averageRatio": 7.019,
+      "medianFiveSecondRatio": 7.052,
+      "fixedDeltaTime": 0.0020000000949949026
+    },
+    "matchedPrevious": {
+      "simulationStart": 36.32000172510743,
+      "simulationEnd": 907.4920431035571,
+      "wallSeconds": 209.35492191699996,
+      "ratio": 4.161220731766847
+    },
+    "matchedCleanExit": {
+      "simulationStart": 36.32000172510743,
+      "simulationEnd": 907.4920431035571,
+      "wallSeconds": 124.12324329200001,
+      "ratio": 7.018605204578943
+    },
+    "sameChannels": true,
+    "sameParameters": true,
+    "sameLapPlan": true,
+    "sameLapTimes": true,
+    "laps": [
+      {
+        "number": 1.0,
+        "seconds": 299.4486389160156,
+        "valid": 1.0
+      },
+      {
+        "number": 2.0,
+        "seconds": 299.3357849121094,
+        "valid": 1.0
+      },
+      {
+        "number": 3.0,
+        "seconds": 299.3353271484375,
+        "valid": 1.0
+      }
+    ],
+    "validation": "Manual smoke stop and three-lap automatic stop in the same Unity process; no native crash recorded; Editor control responds after exit."
+  }
+}

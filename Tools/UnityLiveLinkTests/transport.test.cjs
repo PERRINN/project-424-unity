@@ -34,6 +34,8 @@ async function rejected(origin, endpoint) {
   await delay(100);
   ws = socket(); await bounded(once(ws, 'open'));
   reply = once(ws, 'message'); ws.send('reconnected'); assert.equal(String((await bounded(reply))[0]), 'reconnected');
+  reply=once(ws,'message');const receiptClosed=once(ws,'close');ws.send('receipt');assert.equal(String((await bounded(reply))[0]),'delivered');await bounded(receiptClosed);
+  await delay(100);ws=socket();await bounded(once(ws,'open'));
   const binaryClosed = once(ws, 'close'); ws.send(Buffer.from([1, 2, 3])); await bounded(binaryClosed);
   console.log('PASS: origin/path rejection, text round trip, fragmentation, bounded latest telemetry, single client, oversized/binary rejection, reconnect');
 })().catch(error => { console.error(error); process.exitCode = 1; }).finally(() => server.kill());
